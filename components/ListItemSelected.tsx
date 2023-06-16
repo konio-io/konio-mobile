@@ -1,0 +1,30 @@
+import { TouchableHighlight, View } from "react-native";
+import { useTheme } from "../hooks";
+import { JSXElementConstructor } from "react";
+import { AntDesign } from '@expo/vector-icons';
+
+export default (props: {
+    ItemComponent: JSXElementConstructor<any>
+    onPress: Function,
+    selected: boolean
+  }) => {
+    
+    const ItemComponent = props.ItemComponent;
+    const theme = useTheme().get();
+    const { Color } = theme.vars;
+    const styles = theme.styles;
+
+    return (
+      <TouchableHighlight onPress={() => {
+        props.onPress();
+      }}>
+        <View style={styles.listItemContainer}>
+          <ItemComponent/>
+  
+          { props.selected &&
+            <AntDesign name="check" size={24} color={Color.primary} />
+          }
+        </View>
+      </TouchableHighlight>
+    );
+  }
