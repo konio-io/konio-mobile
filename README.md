@@ -1,4 +1,4 @@
-# Konio Wallet
+# Konio Mobile Wallet
 
 ## Build
 ### Local build
