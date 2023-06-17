@@ -89,6 +89,5 @@ export type ThemeVars = {
 export type Theme = {
     name: string,
     vars: ThemeVars,
-    statusBarStyle: StatusBarStyle,
     styles: any
 }

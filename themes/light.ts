@@ -44,7 +44,6 @@ export const getTheme = () : Theme => {
     return {
         name: 'light',
         vars,
-        styles,
-        statusBarStyle: 'dark-content'
+        styles
     };
 }
