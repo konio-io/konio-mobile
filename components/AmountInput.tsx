@@ -5,6 +5,7 @@ import type { Theme } from '../types/store';
 import TextInput from './TextInput';
 import Text from './Text';
 import i18n from '../locales';
+import { useEffect } from 'react';
 
 export default (props: {
     contractId: string,
@@ -25,6 +26,10 @@ export default (props: {
             }
         }
     }
+
+    useEffect(() => {
+        setAmauntPerc(100)
+    }, [props.contractId]);
 
     return (
         <View>

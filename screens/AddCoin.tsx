@@ -47,7 +47,7 @@ export default () => {
     <Wrapper>
       <TextInput
         value={contractId.get()}
-        onChangeText={(v: string) => contractId.set(v)}
+        onChangeText={(v: string) => contractId.set(v.trim())}
         placeholder={i18n.t('contract_address')}
       />
 
