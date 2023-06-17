@@ -11,6 +11,9 @@
     ],
     "primaryColor":"#6f00f6",
     "ios": {
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "supportsTablet": true,
       "bundleIdentifier": "com.adrihoke.konio",
       "splash": {
