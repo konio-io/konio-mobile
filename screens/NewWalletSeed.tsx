@@ -7,6 +7,7 @@ import { useTheme } from '../hooks';
 import type { Theme } from '../types/store';
 import { useNavigation } from '@react-navigation/native';
 import type { NewWalletSeedNavigationProp } from '../types/navigation';
+import i18n from '../locales';
 
 export default () => {
     const navigation = useNavigation<NewWalletSeedNavigationProp>();
@@ -21,7 +22,7 @@ export default () => {
         if (!name.get()) {
             showToast({
                 type: 'error',
-                text1: 'Missing name',
+                text1: i18n.t('missing_account_name'),
             });
         } else {
             navigation.push('NewWalletSeedConfirm', { seed: seed.get(), name: name.get() })
@@ -31,14 +32,14 @@ export default () => {
     return (
         <Wrapper>
 
-            <Text>Choose a name for your main wallet:</Text>
+            <Text>{i18n.t('choose_account_name')}</Text>
 
             <TextInput
                 value={name.get()}
-                placeholder='Account name'
+                placeholder={i18n.t('account_name')}
                 onChangeText={(text: string) => name.set(text)} />
 
-            <Text>Save this 12 words seed phrase in a secure place:</Text>
+            <Text>{i18n.t('save_seed')}</Text>
 
             <TextInput
                 style={{...styles.textInputMultiline}}
@@ -51,14 +52,14 @@ export default () => {
             <View style={styles.buttonContainer}>
                 <View style={{ flex: 1 }}>
                     <ButtonPrimaryEmpty
-                        title="Generate"
+                        title={i18n.t('generate')}
                         icon={<Feather name="refresh-cw" size={18} color={Color.primary} />}
                         onPress={() => seed.set(generateSeed())} />
                 </View>
 
                 <View style={{ flex: 1 }}>
                     <ButtonPrimary
-                        title="Next"
+                        title={i18n.t('next')}
                         icon={<Feather name="arrow-right" size={18} color={Color.primaryContrast} />}
                         onPress={next}
                     />

@@ -4,6 +4,7 @@ import { useCoinBalance, useTheme } from '../hooks';
 import type { Theme } from '../types/store';
 import TextInput from './TextInput';
 import Text from './Text';
+import i18n from '../locales';
 
 export default (props: {
     contractId: string,
@@ -30,7 +31,7 @@ export default (props: {
             <TextInput
                 keyboardType='numeric'
                 value={amount.get().toString()}
-                placeholder='Amount'
+                placeholder={i18n.t('amount')}
                 onChangeText={(v: string) => {
                     amount.set(v);
                     if (props.onChange) {
@@ -40,11 +41,11 @@ export default (props: {
             />
 
             <View style={styles.buttonPercentListContainer}>
-                <ButtonPercent onPress={() => setAmauntPerc(10)} title="10%" />
-                <ButtonPercent onPress={() => setAmauntPerc(20)} title="20%" />
-                <ButtonPercent onPress={() => setAmauntPerc(50)} title="50%" />
-                <ButtonPercent onPress={() => setAmauntPerc(70)} title="70%" />
-                <ButtonPercent onPress={() => setAmauntPerc(100)} title="100%" />
+                <ButtonPercent onPress={() => setAmauntPerc(10)} title={i18n.t('perc_10')} />
+                <ButtonPercent onPress={() => setAmauntPerc(20)} title={i18n.t('perc_20')} />
+                <ButtonPercent onPress={() => setAmauntPerc(50)} title={i18n.t('perc_50')} />
+                <ButtonPercent onPress={() => setAmauntPerc(70)} title={i18n.t('perc_70')} />
+                <ButtonPercent onPress={() => setAmauntPerc(100)} title={i18n.t('perc_100')} />
             </View>
         </View>
     )

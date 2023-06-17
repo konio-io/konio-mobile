@@ -3,6 +3,7 @@ import { Text, Logo, Wrapper, Address } from '../components';
 import { useTheme } from '../hooks';
 import type { Theme } from '../types/store';
 import Constants from 'expo-constants';
+import i18n from '../locales';
 
 export default () => {
 
@@ -20,7 +21,7 @@ export default () => {
             </View>
 
             <View>
-                <Text style={{ ...styles.textCenter, ...styles.text }}>My wallet for donations</Text>
+                <Text style={{ ...styles.textCenter, ...styles.text }}>{i18n.t('donations')}</Text>
                 <Address address="1Pbh4S8iSXRJrsa4rm4DKSBr9QhbPA4Sxj" />
             </View>
 

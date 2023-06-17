@@ -3,6 +3,7 @@ import { ButtonPrimary, Text, Wrapper } from '../components';
 import type { IntroNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
 import { useTheme } from '../hooks';
+import i18n from '../locales';
 
 export default () => {
     const navigation = useNavigation<IntroNavigationProp>();
@@ -13,19 +14,19 @@ export default () => {
     return (
         <Wrapper>
 
-            <Text>Do you already have a wallet? You can use your existing wallet by importing it via seed or private key.</Text>
+            <Text>{i18n.t('new_wallet_desc')}</Text>
 
             <ButtonPrimary
-                title="12 word seed"
+                title={i18n.t('word_seed')}
                 icon={<Feather name="arrow-right" size={18} color={Color.primaryContrast} />}
                 onPress={() => {
                     navigation.push('ImportWalletSeed');
                 }} />
 
-            <Text>Do you not have a wallet yet? Create one!</Text>
+            <Text>{i18n.t('have_a_wallet')}</Text>
 
             <ButtonPrimary
-                title="new wallet"
+                title={i18n.t('new_wallet')}
                 icon={<Feather name="plus" size={18} color={Color.primaryContrast} />}
                 onPress={() => {
                     navigation.push('NewWalletSeed');

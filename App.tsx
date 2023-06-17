@@ -13,6 +13,7 @@ import { useCurrentAddress, usePassword, useTheme } from './hooks';
 import { useHookstate } from '@hookstate/core';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import i18n from './locales';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -103,7 +104,7 @@ const Tabs = () => {
         name="WalletStack"
         component={WalletStack}
         options={{
-          title: 'Wallet',
+          title: i18n.t('Wallet'),
           header: () => (<View />),
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="wallet" size={size} color={color} />
@@ -113,6 +114,7 @@ const Tabs = () => {
       <Tab.Screen name="Swap"
         component={Unavailable}
         options={{
+          title: i18n.t('Swap'),
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="swap" size={size} color={color} />
           )
@@ -122,6 +124,7 @@ const Tabs = () => {
         name="Dapps"
         component={Unavailable}
         options={{
+          title: i18n.t('Dapps'),
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="appstore-o" size={size} color={color} />
           )
@@ -131,7 +134,7 @@ const Tabs = () => {
         name="SettingStack"
         component={SettingStack}
         options={{
-          title: 'Settings',
+          title: i18n.t('Settings'),
           header: () => (<View />),
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="setting" size={size} color={color} />

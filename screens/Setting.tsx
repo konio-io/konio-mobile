@@ -3,43 +3,31 @@ import { useNavigation } from '@react-navigation/native';
 import type { SettingNavigationProp } from '../types/navigation';
 import type { Theme } from '../types/store';
 import type { FlatMenuItem } from '../types/ui';
-import { reset } from '../stores';
 import { useTheme } from '../hooks';
 import { Text } from '../components';
 import { Feather } from '@expo/vector-icons';
+import i18n from '../locales';
 
 export default () => {
   const navigation = useNavigation<SettingNavigationProp>();
 
   const items: Array<FlatMenuItem> = [
     {
-      title: 'Network',
-      name: 'Network',
-      description: 'Choose the network provider',
+      title: i18n.t('network'),
+      name: i18n.t('network'),
+      description: i18n.t('choose_network'),
       onPress: (name: string) => { navigation.push('Network') }
     },
     {
-      title: 'Add wallet account',
+      title: i18n.t('add_wallet_account'),
       name: 'NewWalletAccount',
-      description: 'Add a new wallet account based on seed wallet',
+      description: i18n.t('add_wallet_account_desc'),
       onPress: (name: string) => { navigation.push('NewWalletAccount') }
     },
-    /*{
-      title: 'Reset settings',
-      name: 'Reset',
-      description: 'Reset all application persistent data',
-      onPress: (name: string) => {
-        if (Platform.OS === 'web') {
-          reset();
-        } else {
-          resetAlert();
-        }
-      }
-    },*/
     {
-      title: 'About',
-      name: 'About',
-      description: 'Show app info',
+      title: i18n.t('about'),
+      name: i18n.t('about'),
+      description: i18n.t('show_app_info'),
       onPress: (name: string) => { navigation.push('About') }
     },
   ];
@@ -64,19 +52,6 @@ export default () => {
     </View>
   );
 }
-
-const resetAlert = () =>
-  Alert.alert('Wipe data', 'Are you sure you want to wipe all data?', [
-    {
-      text: 'No',
-      style: 'cancel',
-      onPress: () => { },
-    },
-    {
-      text: 'Yes',
-      onPress: () => { reset() }
-    }
-  ]);
 
 const MenuItem = (props: {
   title: string,

@@ -6,6 +6,7 @@ import { withdrawCoin, confirmTransaction, showToast } from '../actions'
 import { Feather } from '@expo/vector-icons';
 import { useTheme } from '../hooks';
 import { useEffect } from 'react';
+import i18n from '../locales';
 
 export default () => {
     const route = useRoute<WithdrawRouteProp>();
@@ -32,21 +33,21 @@ export default () => {
         if (!contractId.get()) {
             showToast({
                 type: 'error',
-                text1: 'Missing coin'
+                text1: i18n.t('missing_coin')
             });
             return;
         }
         if (!to.get()) {
             showToast({
                 type: 'error',
-                text1: 'Missing destination address'
+                text1: i18n.t('missing_destination')
             });
             return;
         }
         if (!amount.get()) {
             showToast({
                 type: 'error',
-                text1: 'Missing amount'
+                text1: i18n.t('missing_amount')
             });
             return;
         }
@@ -72,20 +73,20 @@ export default () => {
 
                 showToast({
                     type: 'success',
-                    text1: 'Transaction committed',
+                    text1: i18n.t('transaction_committed'),
                 });
 
                 confirmTransaction(transaction).then(tsx => {
                     showToast({
                         type: 'success',
-                        text1: 'Transaction confirmed',
+                        text1: i18n.t('transaction_confirmed'),
                     });
                 })
                     .catch(e => {
                         console.log(e);
                         showToast({
                             type: 'error',
-                            text1: 'Transaction confirm failed'
+                            text1: i18n.t('transaction_confirm_failed')
                         });
                     });
             })
@@ -93,7 +94,7 @@ export default () => {
                 console.log(e);
                 showToast({
                     type: 'error',
-                    text1: 'Transaction commit failed'
+                    text1: i18n.t('transaction_commit_failed')
                 });
             });
     };
@@ -108,7 +109,7 @@ export default () => {
             <AmountInput contractId={contractId.get()} onChange={(v: string) => amount.set(v)} />
 
             <ButtonPrimary
-                title="Send"
+                title={i18n.t('send')}
                 onPress={send}
                 icon={<Feather name="arrow-up-right" size={18} color={Color.primaryContrast} />}
             />

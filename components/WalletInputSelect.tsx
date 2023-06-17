@@ -7,13 +7,13 @@ import TextInput from './TextInput';
 import { useNavigation } from '@react-navigation/native';
 import { WithdrawNavigationProp } from '../types/navigation';
 import { useEffect } from 'react';
+import i18n from '../locales';
 
 export default (props: {
     value: string,
     onChangeText: Function
 }) => {
     const navigation = useNavigation<WithdrawNavigationProp>();
-
     const address = useHookstate('');
     const theme = useTheme().get();
     const { Color } = theme.vars;
@@ -26,12 +26,12 @@ export default (props: {
     return (
         <View>
             <View style={{ flexDirection: 'row' }}>
-                <View style={{ flexGrow: 1, flex: 1, height: 45 }}>
+                <View style={{ flexGrow: 1, flex: 1, height: 48 }}>
                     <TextInput
                         style={{ ...styles.textInput, ...styles.textSmall }}
                         multiline={true}
                         value={address.get()}
-                        placeholder='Destination address'
+                        placeholder={i18n.t('destination_address')}
                         onChangeText={(v: string) => {
                             props.onChangeText(v);
                         }}

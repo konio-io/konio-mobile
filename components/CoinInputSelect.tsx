@@ -29,7 +29,7 @@ export default (props: {
     return (
         <View>
             <View style={{ flexDirection: 'row' }}>
-                <View style={{ flexGrow: 1, flex: 1, height: 45 }}>
+                <View style={{ flexGrow: 1, flex: 1, height: 48 }}>
                     <TextInput
                         value={coinSymbol.get()}
                         placeholder='Coin'

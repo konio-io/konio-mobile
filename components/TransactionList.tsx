@@ -6,6 +6,7 @@ import { UserStore } from '../stores';
 import ActivityIndicator from './ActivityIndicator';
 import Text from './Text';
 import type { Theme } from '../types/store';
+import i18n from '../locales';
 
 export default (props: {
     contractId: string
@@ -61,7 +62,7 @@ export const TransactionListItem = (props: {
                         { transaction.status === TRANSACTION_STATUS_ERROR && 
                             <AntDesign name="warning" size={24} color={Color.warning}/>
                         }
-                        <Text>{transaction.type.toLowerCase()}</Text>
+                        <Text>{i18n.t(transaction.type.toLowerCase())}</Text>
                     </View>
                     
                     <Text>{transaction.value} {coin.symbol}</Text>

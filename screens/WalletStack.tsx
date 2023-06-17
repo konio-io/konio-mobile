@@ -10,6 +10,7 @@ import Withdraw from './Withdraw';
 import SwitchWallet from './SwitchWallet';
 import SelectCoin from './SelectCoin';
 import SelectWallet from './SelectWallet';
+import i18n from '../locales';
 
 const Stack = createStackNavigator<WalletStackParamList>();
 
@@ -36,14 +37,15 @@ export default () => {
         name="Wallet"
         component={Wallet}
         options={{
-          header: () => (<View />)
+          header: () => (<View />),
+          title: i18n.t('wallet')
         }}
       />
       <Stack.Screen
         name="AddCoin"
         component={AddCoin}
         options={{
-          title: 'Add coin'
+          title: i18n.t('add_coin')
         }}
       />
       <Stack.Screen
@@ -53,7 +55,7 @@ export default () => {
           //ToDo check for another elegant way
           //const coin = stateCoins()[route.params.contractId];
           return {
-            title: ''
+            title: i18n.t('coin')
           }
         }}
       />
@@ -61,21 +63,21 @@ export default () => {
         name="Deposit"
         component={Deposit}
         options={{
-          title: 'Receive'
+          title: i18n.t('receive')
         }}
       />
       <Stack.Screen
         name="Withdraw"
         component={Withdraw}
         options={{
-          title: 'Send'
+          title: i18n.t('send')
         }}
       />
       <Stack.Screen
         name="SwitchWallet"
         component={SwitchWallet}
         options={{
-          title: 'Switch Wallet',
+          title: i18n.t('switch_wallet'),
           presentation: 'modal'
         }}
       />
@@ -83,7 +85,7 @@ export default () => {
         name="SelectCoin"
         component={SelectCoin}
         options={{
-          title: 'Select Coin',
+          title: i18n.t('select_coin'),
           presentation: 'modal'
         }}
       />
@@ -91,7 +93,7 @@ export default () => {
         name="SelectWallet"
         component={SelectWallet}
         options={{
-          title: 'Select Wallet',
+          title: i18n.t('select_wallet'),
           presentation: 'modal'
         }}
       />

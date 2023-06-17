@@ -6,6 +6,7 @@ import { Feather } from '@expo/vector-icons';
 import { useTheme } from '../hooks';
 import { useRoute } from '@react-navigation/native';
 import { NewWalletSeedConfirmRouteProp } from '../types/navigation';
+import i18n from '../locales';
 
 export default () => {
     const route = useRoute<NewWalletSeedConfirmRouteProp>();
@@ -18,7 +19,7 @@ export default () => {
         if (seed !== confirmSeed.get().trim()) {
             showToast({
                 type: 'error',
-                text1: 'Invalid seed'
+                text1: i18n.t('invalid_seed')
             });
             return;
         }
@@ -31,15 +32,15 @@ export default () => {
                 setCurrentWallet(address);
                 showToast({
                     type: 'success',
-                    text1: `Account "${name}" added`
+                    text1: i18n.t('account_added', {name: name})
                 });
             })
             .catch(e => {
                 console.log(e);
                 showToast({
                     type: 'error',
-                    text1: 'Unable to add wallet seed',
-                    text2: 'Try to generate a new one.'
+                    text1: i18n.t('unable_to_add_wallet'),
+                    text2: i18n.t('generate_new_one')
                 });
             });
 
@@ -48,7 +49,7 @@ export default () => {
     return (
         <Wrapper>
 
-            <Text>Confirm your wallet seed:</Text>
+            <Text>{i18n.t('confirm_wallet_seed')}</Text>
 
             <TextInput
                 multiline={true}
@@ -59,7 +60,7 @@ export default () => {
 
             <View>
                 <ButtonPrimary
-                    title="Add"
+                    title={i18n.t('add')}
                     icon={<Feather name="plus" size={18} color={Color.primaryContrast} />}
                     onPress={() => addWallet()}
                 />

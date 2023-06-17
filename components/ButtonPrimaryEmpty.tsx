@@ -55,6 +55,7 @@ const createStyles = (theme: Theme) => {
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: Border.radius,
+            minHeight: 48
         },
         buttonText: {
             fontFamily: FontFamily.sans,

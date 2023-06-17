@@ -8,6 +8,7 @@ import { Text, ButtonPrimary, ButtonPrimaryEmpty, CoinList, WalletAvatar, ManaBa
 import type { Theme } from '../types/store';
 import type { WalletNavigationProp } from '../types/navigation';
 import Loading from './Loading';
+import i18n from '../locales';
 
 export default () => {
 
@@ -43,13 +44,13 @@ export default () => {
           <View style={styles.buttonsContainer}>
             <ButtonPrimary
               style={{ flex: 1 }}
-              title="Send"
+              title={i18n.t('send')}
               onPress={() => navigation.push('Withdraw', {})}
               icon={<Feather name="arrow-up-right" size={18} color={Color.primaryContrast} />}
             />
             <ButtonPrimaryEmpty
               style={{ flex: 1 }}
-              title="Receive"
+              title={i18n.t('receive')}
               onPress={() => navigation.push('Deposit')}
               icon={<Feather name="arrow-down-right" size={18} color={Color.primary} />}
             />
@@ -82,7 +83,7 @@ const Footer = (props: {
   return (
     <View style={styles.addMoreContainer}>
       <Pressable onPress={() => navigation.push('AddCoin')}>
-        <Text style={styles.link}>Add more coins...</Text>
+        <Text style={styles.link}>{i18n.t('add_more_coins')}</Text>
       </Pressable>
     </View>
   );

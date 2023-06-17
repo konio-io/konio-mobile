@@ -2,14 +2,14 @@
   "expo": {
     "name": "Konio",
     "slug": "konio",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "assetBundlePatterns": [
       "**/*"
     ],
-    "primaryColor":"#6f00f6",
+    "primaryColor": "#6f00f6",
     "ios": {
       "config": {
         "usesNonExemptEncryption": false
@@ -51,6 +51,9 @@
       "eas": {
         "projectId": "ec18a997-137d-4eac-8c24-53c14f4375f7"
       }
-    }
+    },
+    "plugins": [
+      "expo-localization"
+    ]
   }
 }

@@ -3,6 +3,7 @@ import { useNetworks, useCurrentNetworkId, useNetwork, useTheme } from '../hooks
 import { UserStore } from '../stores';
 import { setCurrentNetwork, showToast } from '../actions';
 import { ListItemSelected, Text, Wrapper } from '../components';
+import i18n from '../locales';
 
 export default () => {
   const networks = useNetworks();
@@ -45,7 +46,7 @@ export const ListItem = (props: {
     setCurrentNetwork(props.networkId);
     showToast({
       type: 'info',
-      text1: `Network changed to "${UserStore.networks[props.networkId].name.get()}"`
+      text1: i18n.t('network_changed', {network: UserStore.networks[props.networkId].name.get()})
     });
   }
 

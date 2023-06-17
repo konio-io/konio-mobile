@@ -5,6 +5,7 @@ import Setting from './Setting';
 import Network from './Network';
 import About from './About';
 import NewWalletAccount from './NewWalletAccount';
+import i18n from '../locales';
 
 const Stack = createStackNavigator<SettingStackParamList>();
 
@@ -31,28 +32,28 @@ export default () => {
         name="Setting"
         component={Setting}
         options={{
-          title: "Settings",
+          title: i18n.t('settings'),
         }}
       />
       <Stack.Screen
         name="NewWalletAccount"
         component={NewWalletAccount}
         options={{
-          title: "Add account"
+          title: i18n.t('add_account')
         }}
       />
       <Stack.Screen
         name="Network"
         component={Network}
         options={{
-          title: "Networks",
+          title: i18n.t('networks'),
         }}
       />
       <Stack.Screen
         name="About"
         component={About}
         options={{
-          title: "About",
+          title: i18n.t('about'),
         }}
       />
     </Stack.Navigator>

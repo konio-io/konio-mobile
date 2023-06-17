@@ -5,6 +5,7 @@ import { setCurrentWallet, addAccount, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useTheme } from '../hooks';
 import { ButtonPrimary, TextInput, Wrapper } from '../components';
+import i18n from '../locales';
 
 export default () => {
     const navigation = useNavigation<NewWalletSeedNavigationProp>();
@@ -17,7 +18,7 @@ export default () => {
         if (!name.get()) {
             showToast({
                 type: 'error',
-                text1: 'Missing account name'
+                text1: i18n.t('missing_account_name')
             });
             return;
         }
@@ -26,7 +27,7 @@ export default () => {
             .then(address => {
                 showToast({
                     type: 'success',
-                    text1: `Account "${name.get()}" added`
+                    text1: i18n.t('account_added', {name: name.get()})
                 });
 
                 setCurrentWallet(address);
@@ -42,7 +43,7 @@ export default () => {
                 console.log(e);
                 showToast({
                     type: 'error',
-                    text1: 'Unable to add account'
+                    text1: i18n.t('unable_to_add_account')
                 });
             });
 
@@ -52,12 +53,12 @@ export default () => {
         <Wrapper>
             <TextInput
                 value={name.get()}
-                placeholder='Account name'
+                placeholder={i18n.t('account_name')}
                 onChangeText={(text: string) => name.set(text)}
             />
 
             <ButtonPrimary
-                title="Add account"
+                title={i18n.t('add_account')}
                 onPress={() => addWallet()}
                 icon={<Feather name="plus" size={18} color={Color.primaryContrast} />}
             />

@@ -5,6 +5,7 @@ import { AntDesign } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
 import Loading from './Loading';
 import { State } from '@hookstate/core';
+import i18n from '../locales';
 
 export default () => {
     const currentAddress = useCurrentAddress();
@@ -28,7 +29,7 @@ export default () => {
         <Wrapper>
 
             <View style={{ alignItems: 'center', rowGap: Spacing.base }}>
-                <Text>Scan qrcode with your device:</Text>
+                <Text>{i18n.t('scan_qr_code')}</Text>
 
                 <View style={{borderWidth: Border.width, borderColor: Border.color, borderRadius: Border.radius, padding: Spacing.small}}>
                     <QRCode

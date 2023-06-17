@@ -9,6 +9,7 @@ import Modal from './Modal';
 import type { Theme } from '../types/store';
 import Text from './Text';
 import ActivityIndicator from './ActivityIndicator';
+import i18n from '../locales';
 
 export default () => {
     const FIVE_DAYS = 432e6; // 5 * 24 * 60 * 60 * 1000
@@ -31,7 +32,7 @@ export default () => {
         const lastUpdateMana = ManaStore.lastUpdateMana.get();
         const initialMana = ManaStore.mana.get();
         const koinBalance = ManaStore.koin.get();
-        const delta = Math.min(Date.now() - lastUpdateMana, FIVE_DAYS); //To do fix this
+        const delta = Math.min(Date.now() - lastUpdateMana, FIVE_DAYS);
         let m = initialMana + (delta * koinBalance) / FIVE_DAYS;
         m = Math.min(m, koinBalance);
         timeRecharge.set( ((koinBalance - m) * FIVE_DAYS) / koinBalance );
@@ -41,7 +42,7 @@ export default () => {
 
     useEffect(() => {
         update(  manaState.mana.get(), manaState.koin.get() );
-        intervalId.current = setInterval(() => { //To do fix this
+        intervalId.current = setInterval(() => {
             updateInterval();
         }, 3000);
 
@@ -66,7 +67,7 @@ export default () => {
 
     return (
         <View>
-            <Modal title="MANA Recharge" openState={modalState}>
+            <Modal title={i18n.t('mana_recharge')} openState={modalState}>
                 <ManaStat
                     balance={currentMana.get()}
                     percent={currentPercent.get()}
@@ -76,7 +77,7 @@ export default () => {
 
             <TouchableHighlight onPress={() => modalState.set(true)}>
                 <View style={styles.coinListItemContainer}>
-                    <Text style={styles.symbol}>MANA</Text>
+                    <Text style={styles.symbol}>{i18n.t('MANA')}</Text>
                     {currentMana.get() > -1 &&
                         <Text style={styles.balance}>{currentMana.get()}</Text>
                     }

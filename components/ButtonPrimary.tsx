@@ -55,7 +55,8 @@ const createStyles = (theme : Theme) => {
             borderRadius: Border.radius,
             paddingHorizontal: Spacing.small,
             borderColor: Color.primary,
-            borderWidth: 2
+            borderWidth: 2,
+            minHeight: 48
         },
         buttonText: {
             fontFamily: FontFamily.sans,

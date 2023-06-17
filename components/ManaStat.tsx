@@ -3,6 +3,7 @@ import { useTheme } from '../hooks';
 import CircularProgress from './CircularProgress';
 import Text from './Text';
 import type { Theme } from '../types/store';
+import i18n from '../locales';
 
 export default (props: {
     percent: number,
@@ -34,12 +35,12 @@ export default (props: {
             />
 
             <View>
-                <Text style={styles.title}>Balance</Text>
+                <Text style={styles.title}>{i18n.t('balance')}</Text>
                 <Text style={{ ...styles.textCenter, ...styles.text }}>{props.balance.toString()}</Text>
             </View>
 
             <View>
-                <Text style={styles.title}>Time recharge</Text>
+                <Text style={styles.title}>{i18n.t('time_recharge')}</Text>
                 <Text style={{ ...styles.textCenter, ...styles.text }}>{millisecondsToString(props.timeRecharge)}</Text>
             </View>
         </View>

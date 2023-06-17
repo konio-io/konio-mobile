@@ -4,6 +4,7 @@ import { ButtonPrimary, Logo, Text, Wrapper } from '../components';
 import type { IntroNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
 import { useTheme } from '../hooks';
+import i18n from '../locales';
 
 export default () => {
     const navigation = useNavigation<IntroNavigationProp>();
@@ -20,15 +21,15 @@ export default () => {
 
             <View>
                 <Text>
-                    Welcome to KONIO! The first cross platform wallet for the Koinos blockchain.
+                    {i18n.t('welcome')}
                 </Text>
                 <Text>
-                    Take the first steps to set up your application.
+                    {i18n.t('welcome_2')}
                 </Text>
             </View>
 
             <ButtonPrimary
-                title="Let's begin"
+                title={i18n.t('lets_begin')}
                 icon={<Feather name="arrow-right" size={18} color={Color.primaryContrast} />}
                 onPress={() => {
                     navigation.push('SetPassword');

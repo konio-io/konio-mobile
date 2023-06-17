@@ -8,6 +8,7 @@ import NewWallet from './NewWallet';
 import NewWalletSeed from './NewWalletSeed';
 import NewWalletSeedConfirm from './NewWalletSeedConfirm';
 import ImportWalletSeed from './ImportWalletSeed';
+import i18n from '../locales';
 
 const Stack = createStackNavigator<IntroStackParamList>();
 
@@ -33,6 +34,7 @@ export default () => {
         name="Intro"
         component={Intro}
         options={{
+          title: i18n.t('intro'),
           header: () => (<View />)
         }}
       />
@@ -40,7 +42,7 @@ export default () => {
         name="SetPassword"
         component={SetPassword}
         options={{
-          title: 'Set Password',
+          title: i18n.t('set_password'),
           header: () => (<View />)
         }}
       />
@@ -48,28 +50,28 @@ export default () => {
         name="NewWallet"
         component={NewWallet}
         options={{
-          title: "New wallet"
+          title: i18n.t('new_wallet')
         }}
       />
       <Stack.Screen
         name="NewWalletSeed"
         component={NewWalletSeed}
         options={{
-          title: "New wallet seed"
+          title: i18n.t('new_wallet_seed')
         }}
       />
       <Stack.Screen
         name="NewWalletSeedConfirm"
         component={NewWalletSeedConfirm}
         options={{
-          title: "Confirm seed"
+          title: i18n.t('confirm_seed')
         }}
       />
       <Stack.Screen
         name="ImportWalletSeed"
         component={ImportWalletSeed}
         options={{
-          title: "Import wallet seed"
+          title: i18n.t('import_wallet_seed')
         }}
       />
     </Stack.Navigator>

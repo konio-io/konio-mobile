@@ -6,9 +6,9 @@ import { Feather } from '@expo/vector-icons';
 import { useTheme } from '../hooks';
 import type { Theme } from '../types/store';
 import { showToast } from '../actions';
+import i18n from '../locales';
 
 export default () => {
-  //impulse stadium turtle bird uncle call six accident file exclude include like
   const seed = useHookstate('');
   const name = useHookstate('');
 
@@ -20,7 +20,7 @@ export default () => {
     if (!name.get()) {
       showToast({
         type: 'error',
-        text1: 'Missing account name'
+        text1: i18n.t('missing_account_name')
       });
       return;
     }
@@ -34,7 +34,7 @@ export default () => {
         setCurrentWallet(address);
         showToast({
           type: 'success',
-          text1: `Account "${name.get()}" imported`
+          text1: i18n.t('account_imported', {name: name.get()})
         });
 
       })
@@ -42,8 +42,8 @@ export default () => {
         console.log(e);
         showToast({
           type: 'error',
-          text1: 'Unable to import via seed phrase',
-          text2: 'Check it and try again',
+          text1: i18n.t('unable_to_import_seed'),
+          text2: i18n.t('check_seed'),
         });
       })
   };
@@ -53,7 +53,7 @@ export default () => {
 
       <TextInput
         value={name.get()}
-        placeholder='Account name'
+        placeholder={i18n.t('account_name')}
         onChangeText={(text: string) => name.set(text)} />
 
       <TextInput
@@ -61,14 +61,14 @@ export default () => {
         multiline={true}
         numberOfLines={4}
         value={seed.get()}
-        placeholder='Seed phrase'
+        placeholder={i18n.t('seed_phrase')}
         onChangeText={(text: string) => seed.set(text.toLowerCase())}
       />
 
       <View style={styles.buttonContainer}>
         <View style={{ flex: 1 }}>
           <ButtonPrimaryEmpty
-            title="Reset"
+            title={i18n.t('reset')}
             icon={<Feather name="x" size={16} color={Color.primary} />}
             onPress={() => { seed.set('') }}
           />
@@ -76,7 +76,7 @@ export default () => {
 
         <View style={{ flex: 1 }}>
           <ButtonPrimary
-            title="Import"
+            title={i18n.t('import')}
             icon={<Feather name="arrow-right" size={18} color={Color.primaryContrast} />}
             onPress={() => importWallet()
             } />

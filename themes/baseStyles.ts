@@ -48,7 +48,7 @@ export const getStyles = (themeVars : ThemeVars) => {
             padding: Spacing.small,
             backgroundColor: Color.base,
             color: Color.baseContrast,
-            minHeight: 45
+            minHeight: 48
         },
         textInputMultiline: {
             borderWidth: Border.width,

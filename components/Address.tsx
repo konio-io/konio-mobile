@@ -5,6 +5,7 @@ import { Feather } from '@expo/vector-icons';
 import { useTheme } from '../hooks';
 import type { Theme } from '../types/store';
 import { showToast } from '../actions';
+import i18n from '../locales';
 
 export default (props: {
     address: string,
@@ -14,7 +15,7 @@ export default (props: {
         await Clipboard.setStringAsync(props.address);
         showToast({
             type: 'info',
-            text1: 'Address copied to clipboard'
+            text1: i18n.t('address_copied')
         });
     };
 
@@ -69,7 +70,9 @@ const createStyles = (theme: Theme) => {
             flexDirection: 'row',
             columnGap: Spacing.small,
             justifyContent: 'space-between',
-            padding: Spacing.small
+            padding: Spacing.small,
+            height: 48,
+            alignItems: 'center'
         }
     });
 }

@@ -5,6 +5,7 @@ import { Feather } from '@expo/vector-icons';
 import { useHookstate } from '@hookstate/core';
 import { setPassword, showToast } from '../actions';
 import { useTheme } from '../hooks';
+import i18n from '../locales';
 
 export default () => {
     const navigation = useNavigation<IntroNavigationProp>();
@@ -18,14 +19,14 @@ export default () => {
         if ((password.get() !== passwordConfirm.get())) {
             showToast({
                 type: 'error',
-                text1: 'The two passwords do not match',
+                text1: i18n.t('password_not_match'),
             });
         } else {
             setPassword(password.get());
             if (password.get()) {
                 showToast({
                     type: 'success',
-                    text1: 'Password set.',
+                    text1: i18n.t('password_set'),
                 });
             }
             navigation.push("NewWallet");
@@ -35,24 +36,24 @@ export default () => {
     return (
         <Wrapper>
 
-            <Text>Choose a password if you want to protect the use of the app. Leave it blank if you don't want a password.</Text>
+            <Text>{i18n.t('choose_password_desc')}</Text>
 
             <TextInput
                 value={password.get()}
                 onChangeText={(v: string) => password.set(v.trim())}
-                placeholder='Password'
+                placeholder={i18n.t('password')}
                 secureTextEntry={true}
             />
 
             <TextInput
                 value={passwordConfirm.get()}
                 onChangeText={(v: string) => passwordConfirm.set(v.trim())}
-                placeholder='Confirm password'
+                placeholder={i18n.t('confirm_password')}
                 secureTextEntry={true}
             />
 
             <ButtonPrimary
-                title="Set password"
+                title={i18n.t('set_password')}
                 icon={<Feather name="arrow-right" size={18} color={Color.primaryContrast} />}
                 onPress={savePassword}
             />
