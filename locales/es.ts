@@ -84,7 +84,7 @@ export default {
     MANA: 'MANA',
     balance: 'Saldo',
     time_recharge: 'Recarga de tiempo',
-    deposit: 'Depositar',
-    withdraw: 'Retirar',
+    deposit: 'Recibir',
+    withdraw: 'Enviar',
     destination_address: 'Dirección de destino'
 }

@@ -84,7 +84,7 @@ export default {
     MANA: 'MANA',
     balance: '余额',
     time_recharge: '时间充值',
-    deposit: '存款',
-    withdraw: '取款',
+    deposit: '接收',
+    withdraw: '发送',
     destination_address: '目标地址'
 }
