@@ -19,9 +19,9 @@ export default () => {
       onPress: (name: string) => { navigation.push('Network') }
     },
     {
-      title: i18n.t('add_wallet_account'),
+      title: i18n.t('add_account'),
       name: 'NewWalletAccount',
-      description: i18n.t('add_wallet_account_desc'),
+      description: i18n.t('add_account_desc'),
       onPress: (name: string) => { navigation.push('NewWalletAccount') }
     },
     {
