@@ -50,7 +50,8 @@ export type Transaction = {
     timestamp: string,
     type: "WITHDRAW"|"DEPOSIT"|"SWAP",
     blockNumber? : number
-    status: "PENDING"|"SUCCESS"|"ERROR"
+    status: "PENDING"|"SUCCESS"|"ERROR",
+    note?: string
 }
 
 export type ThemeVars = {

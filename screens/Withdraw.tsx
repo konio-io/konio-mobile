@@ -1,4 +1,4 @@
-import { ButtonPrimary, WalletInputSelect, AmountInput, CoinInputSelect, Wrapper } from '../components';
+import { ButtonPrimary, WalletInputSelect, AmountInput, CoinInputSelect, Wrapper, TextInput } from '../components';
 import { useHookstate } from '@hookstate/core';
 import { useNavigation, useRoute, CommonActions } from '@react-navigation/native';
 import type { WithdrawNavigationProp, WithdrawRouteProp } from '../types/navigation';
@@ -15,6 +15,7 @@ export default () => {
     const navigation = useNavigation<WithdrawNavigationProp>();
     const amount = useHookstate('');
     const to = useHookstate('');
+    const note = useHookstate('');
 
     useEffect(() => {
         if (route.params && route.params.contractId) {
@@ -23,10 +24,11 @@ export default () => {
         if (route.params && route.params.to) {
             to.set(route.params.to);
         }
-    },[route.params]);
+    }, [route.params]);
 
     const theme = useTheme().get();
     const { Color } = theme.vars;
+    const styles = theme.styles;
 
     const send = () => {
 
@@ -55,7 +57,8 @@ export default () => {
         withdrawCoin({
             to: to.get(),
             contractId: contractId.get(),
-            value: amount.get()
+            value: amount.get(),
+            note: note.get()
         })
             .then(transaction => {
                 navigation.dispatch(
@@ -104,9 +107,17 @@ export default () => {
 
             <CoinInputSelect value={contractId.get()} />
 
-            <WalletInputSelect value={to.get()} onChangeText={(v: string) => to.set(v)}/>
+            <WalletInputSelect value={to.get()} onChangeText={(v: string) => to.set(v)} />
 
             <AmountInput contractId={contractId.get()} onChange={(v: string) => amount.set(v)} />
+
+            <TextInput
+                style={{ ...styles.textInputMultiline }}
+                multiline={true}
+                value={note.get()}
+                placeholder={i18n.t('note')}
+                onChangeText={(v: string) => note.set(v)}
+            />
 
             <ButtonPrimary
                 title={i18n.t('send')}

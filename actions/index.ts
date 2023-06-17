@@ -81,13 +81,13 @@ export const refreshCoinBalance = (contractId: string) => {
     }).then(value => CoinBalanceStore[contractId].set(value));
 }
 
-export const withdrawCoin = async (args: { contractId: string, to: string, value: string }) => {
+export const withdrawCoin = async (args: { contractId: string, to: string, value: string, note: string}) => {
     const address = UserStore.currentAddress.get();
     if (!address) {
         throw new Error('Current address not set');
     }
 
-    const { contractId, to, value } = args;
+    const { contractId, to, value, note } = args;
     const networkId = UserStore.currentNetworkId.get();
     const coin = UserStore.coins[contractId];
     const transactions = UserStore.transactions;
@@ -134,7 +134,8 @@ export const withdrawCoin = async (args: { contractId: string, to: string, value
         value,
         timestamp: new Date().toISOString(),
         type: TRANSACTION_TYPE_WITHDRAW,
-        status: TRANSACTION_STATUS_PENDING
+        status: TRANSACTION_STATUS_PENDING,
+        note
     };
 
     transactions.merge({ [tsx.transactionId]: tsx });

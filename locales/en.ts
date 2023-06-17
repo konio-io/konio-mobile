@@ -85,5 +85,6 @@ export default {
     time_recharge: 'Time recharge',
     deposit: 'Receive',
     withdraw: 'Send',
-    destination_address: 'Destination address'
+    destination_address: 'Destination address',
+    note: 'Note'
 }

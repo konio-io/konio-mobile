@@ -62,7 +62,12 @@ export const TransactionListItem = (props: {
                         { transaction.status === TRANSACTION_STATUS_ERROR && 
                             <AntDesign name="warning" size={24} color={Color.warning}/>
                         }
+
+                        <View>
                         <Text>{i18n.t(transaction.type.toLowerCase())}</Text>
+                        <Text style={{...styles.textSmall}}>{transaction.note}</Text>
+                        </View>
+                        
                     </View>
                     
                     <Text>{transaction.value} {coin.symbol}</Text>
