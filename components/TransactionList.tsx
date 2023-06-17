@@ -82,9 +82,9 @@ const TypeIcon = (props: {
     switch (props.type) {
         case 'SWAP':
             return <AntDesign name="swap" size={24} color={Color.baseContrast} />
-        case 'RECEIVE':
+        case 'DEPOSIT':
             return <Feather name="arrow-down-right" size={24} color={Color.baseContrast} />
-        case 'SEND':
+        case 'WITHDRAW':
             return <Feather name="arrow-up-right" size={24} color={Color.baseContrast} />
         default:
             return <AntDesign name="question" size={24} color={Color.baseContrast} />
