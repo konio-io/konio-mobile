@@ -103,5 +103,8 @@ export default {
     password_removed: 'Password rimossa',
     show_seed: 'Mostra seed',
     show_seed_desc: 'Recupare la tua frase di seed',
-    forgot_password: 'Password dimenticata?'
+    forgot_password: 'Password dimenticata?',
+    status: 'Stato',
+    type: 'Tipo',
+    open_explorer: 'Apri block explorer'
 }

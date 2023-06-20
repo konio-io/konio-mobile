@@ -13,7 +13,7 @@ export default (props: {
     const { Spacing, Border } = theme.vars;
 
     return (
-        <Pressable onPress={() => props.onPress()}>
+      <Pressable onPress={() => props.onPress()}>
         <View style={{ ...styles.textInput, rowGap: Spacing.base }}>
     
           <View style={{ position: 'absolute', right: Spacing.small, top: Spacing.small }}>
