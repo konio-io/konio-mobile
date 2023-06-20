@@ -78,7 +78,8 @@ export type ThemeVars = {
         primaryContrast: string
         error: string
         warning: string
-        success: string
+        success: string,
+        secondary: string
     },
     Border: {
         color: string,
@@ -92,3 +93,9 @@ export type Theme = {
     vars: ThemeVars,
     styles: any
 }
+
+export type Withdraw = {
+    contractId: string,
+    amount: number,
+    address?: string
+};

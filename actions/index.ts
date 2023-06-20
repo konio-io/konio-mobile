@@ -1,6 +1,6 @@
 import { Contract, Provider, Signer, utils } from "koilib";
 import { TransactionJsonWait } from "koilib/lib/interface";
-import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore } from "../stores";
+import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, WithdrawStore, LockStore } from "../stores";
 import { Coin, Transaction, Wallet } from "../types/store";
 import { TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_WITHDRAW } from "../lib/Constants";
 import HDKoinos from "../lib/HDKoinos";
@@ -370,4 +370,24 @@ export const showToast = (args: {
 
 export const generateSeed = () => {
     return HDKoinos.randomMnemonic();
+}
+
+export const setWithdrawAddress = (address : string) => {
+    WithdrawStore.address.set(address);
+}
+
+export const setWithdrawContractId = (contractId : string) => {
+    WithdrawStore.contractId.set(contractId);
+}
+
+export const setWithdrawAmount = (amount : number) => {
+    WithdrawStore.amount.set(amount);
+}
+
+export const lock = () => {
+    LockStore.set(true);
+}
+
+export const unlock = () => {
+    LockStore.set(false);
 }

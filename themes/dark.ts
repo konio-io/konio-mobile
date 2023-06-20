@@ -29,11 +29,12 @@ export const getTheme = () : Theme => {
         primaryContrast: 'rgba(15,15,15,1)',
         error: 'rgba(204,63,63,1)',
         warning: 'rgba(255,142,36,1)',
-        success: 'rgba(94,184,59,1)'
+        success: 'rgba(94,184,59,1)',
+        secondary: 'rgba(247,217,99,1)'
     };
 
     const Border = {
-        color: 'rgba(255,255,255,0.1)',
+        color: 'rgba(70,70,70,1)',
         width: 1,
         radius: 4
     };
@@ -44,7 +45,6 @@ export const getTheme = () : Theme => {
     return {
         name: 'dark',
         vars,
-        styles,
-        statusBarStyle: 'light-content'
+        styles
     };
 }

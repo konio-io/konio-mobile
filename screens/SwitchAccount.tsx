@@ -3,7 +3,7 @@ import { WalletList, ListItemSelected, Wrapper, Text, WalletAvatar } from "../co
 import { useCurrentAddress, useTheme, useWallet } from "../hooks";
 import { setCurrentWallet } from "../actions";
 import { useNavigation } from "@react-navigation/native";
-import type { SwitchWalletNavigationProp } from "../types/navigation";
+import type { SwitchAccountNavigationProp } from "../types/navigation";
 
 export default () => {
     const currentAddress = useCurrentAddress();
@@ -22,7 +22,7 @@ const ListItem = (props: {
     selected: boolean
 }) => {
 
-    const navigation = useNavigation<SwitchWalletNavigationProp>();
+    const navigation = useNavigation<SwitchAccountNavigationProp>();
     const wallet = useWallet(props.address).get();
     const theme = useTheme().get();
     const { Spacing } = theme.vars;

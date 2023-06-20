@@ -1,21 +1,23 @@
 import { ListItemSelected, WalletAvatar, WalletList, Wrapper, Text } from "../components"
-import { useNavigation, useRoute } from "@react-navigation/native"
-import { SelectWalletNavigationProp, SelectWalletRouteProp } from "../types/navigation";
-import { useCurrentAddress, useTheme, useWallet } from "../hooks";
+import { useNavigation } from "@react-navigation/native"
+import { SelectAccountNavigationProp } from "../types/navigation";
+import { useCurrentAddress, useTheme, useWallet, useWithdraw } from "../hooks";
 import { View } from "react-native";
+import { setWithdrawAddress } from "../actions";
 
 export default () => {
-    const navigation = useNavigation<SelectWalletNavigationProp>();
-    const route = useRoute<SelectWalletRouteProp>();
-    const selected = route.params ? route.params.selected : undefined;
+    const navigation = useNavigation<SelectAccountNavigationProp>();
+    const withdraw = useWithdraw();
+    const selected = withdraw.address.get();
 
     return (
         <Wrapper type="full">
             <List selected={selected} onSelect={(address: string) => {
-                navigation.navigate('Withdraw', { to: address });
+                setWithdrawAddress(address);
+                navigation.goBack();
             }}/>
         </Wrapper>
-    )
+    );
 }
 
 const List = (props: {

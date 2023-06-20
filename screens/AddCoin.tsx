@@ -3,17 +3,12 @@ import { useNavigation } from '@react-navigation/native';
 import type { AddCoinNavigationProp } from '../types/navigation';
 import { addCoin, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
-import { useTheme } from '../hooks';
-import { Text, TextInput, ButtonPrimary, Wrapper } from '../components';
+import { TextInput, Button, Wrapper } from '../components';
 import i18n from '../locales';
 
 export default () => {
   const navigation = useNavigation<AddCoinNavigationProp>();
   const contractId = useHookstate('');
-  const error = useHookstate('');
-  const theme = useTheme().get();
-  const { Color } = theme.vars;
-  const styles = theme.styles;
 
   const add = () => {
     if (!contractId.get()) {
@@ -51,13 +46,11 @@ export default () => {
         placeholder={i18n.t('contract_address')}
       />
 
-      <ButtonPrimary
+      <Button
         title="Add coin"
         onPress={() => add()}
-        icon={<Feather name="plus" size={18} color={Color.primaryContrast} />}
+        icon={<Feather name="plus"/>}
       />
-
-      <Text style={styles.textError}>{error.get()}</Text>
     </Wrapper>
   );
 }

@@ -1,19 +1,15 @@
-import { Text, TextInput, ButtonPrimary, Wrapper } from '../components';
+import { Text, TextInput, Button, Wrapper } from '../components';
 import { useNavigation } from '@react-navigation/native';
 import type { IntroNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
 import { useHookstate } from '@hookstate/core';
 import { setPassword, showToast } from '../actions';
-import { useTheme } from '../hooks';
 import i18n from '../locales';
 
 export default () => {
     const navigation = useNavigation<IntroNavigationProp>();
     const password = useHookstate('');
     const passwordConfirm = useHookstate('');
-
-    const theme = useTheme().get();
-    const { Color } = theme.vars;
 
     const savePassword = () => {
         if ((password.get() !== passwordConfirm.get())) {
@@ -52,9 +48,9 @@ export default () => {
                 secureTextEntry={true}
             />
 
-            <ButtonPrimary
+            <Button
                 title={i18n.t('set_password')}
-                icon={<Feather name="arrow-right" size={18} color={Color.primaryContrast} />}
+                icon={<Feather name="arrow-right"/>}
                 onPress={savePassword}
             />
 

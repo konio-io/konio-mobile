@@ -1,5 +1,5 @@
 import { State, useHookstate } from "@hookstate/core";
-import { CoinBalanceStore, UserStore, EncryptedStore } from "../stores";
+import { CoinBalanceStore, UserStore, EncryptedStore, WithdrawStore, LockStore } from "../stores";
 import { getTheme } from "../themes";
 import { Theme } from "../types/store";
 import { useColorScheme} from 'react-native';
@@ -84,4 +84,16 @@ export const useTheme = () => {
     return {
         get: () : Theme => getTheme(color)
     }
+}
+
+export const useWithdraw = () => {
+    return useHookstate(WithdrawStore);
+}
+
+export const useLock = () => {
+    return useHookstate(LockStore);
+}
+
+export const useCurrentSeed = () => {
+    return Object.values(EncryptedStore.accounts).filter(w => w.seed.get() !== undefined)[0].seed;
 }

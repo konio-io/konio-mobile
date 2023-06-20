@@ -1,29 +1,30 @@
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { State, useHookstate } from '@hookstate/core';
-import { checkPassword, showToast } from '../actions';
+import { useHookstate } from '@hookstate/core';
+import { checkPassword, showToast, lock, unlock } from '../actions';
 import { useTheme } from '../hooks';
-import { ButtonPrimary, TextInput, Logo, Wrapper } from '../components';
+import { Button, TextInput, Logo, Wrapper, Text } from '../components';
 import i18n from '../locales';
+import { useNavigation } from '@react-navigation/native';
+import { UnlockNavigationProp } from '../types/navigation';
 
-export default (props: {
-    unlockState: State<boolean>
-}) => {
+export default () => {
+    const navigation = useNavigation<UnlockNavigationProp>();
     const password = useHookstate('');
-    const unlock = () => {
+    const unlockWallet = () => {
         if (!checkPassword(password.get())) {
             showToast({
                 type: 'error',
                 text1: i18n.t('wrong_password')
             });
-            props.unlockState.set(false);
+            lock();
         } else {
-            props.unlockState.set(true);
+            unlock();
         }
     }
 
     const theme = useTheme().get();
-    const { Color, Spacing } = theme.vars;
+    const { Spacing } = theme.vars;
 
     return (
         <Wrapper>
@@ -39,11 +40,18 @@ export default (props: {
                 secureTextEntry={true}
             />
 
-            <ButtonPrimary
+            <Button
                 title={i18n.t('unlock')}
-                icon={<Feather name="unlock" size={18} color={Color.primaryContrast} />}
-                onPress={unlock} />
+                icon={<Feather name="unlock" />}
+                onPress={unlockWallet}
+            />
 
-        </Wrapper>
-    )
+            <View style={{ marginBottom: Spacing.medium, alignItems: 'center' }}>
+            <Pressable onPress={() => navigation.navigate('ResetPassword')}>
+                <Text>{i18n.t('forgot_password')}</Text>
+            </Pressable>
+        </View>
+
+        </Wrapper >
+    );
 }

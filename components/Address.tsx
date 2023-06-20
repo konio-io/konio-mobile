@@ -39,14 +39,14 @@ export default (props: {
                     </Text>
                 }
 
-                <Feather name="copy" size={12} color={rgba(Color.baseContrast, 0.7)} />
+                <Feather name="copy" size={12} color={Color.secondary} />
             </View>
         </TouchableHighlight>
     );
 }
 
 const createStyles = (theme: Theme) => {
-    const { Color, Border, Spacing, FontFamily, FontSize } = theme.vars;
+    const { Color, Spacing, FontFamily, FontSize } = theme.vars;
     const styles = theme.styles;
 
     return StyleSheet.create({
@@ -54,25 +54,20 @@ const createStyles = (theme: Theme) => {
         addressText: {
             ...styles.text,
             ...styles.textCenter,
-            flex: 1,
-            fontSize:
-                FontSize.small,
-            paddingHorizontal: Spacing.small
+            fontSize: FontSize.small,
+            paddingHorizontal: Spacing.small,
+            color: Color.secondary
         },
         addressButton: {
-            backgroundColor: Color.base,
-            borderWidth: Border.width,
-            borderColor: rgba(Color.baseContrast, 0.3),
-            borderRadius: 5,
-            borderStyle: 'dotted',
+            backgroundColor: rgba(Color.secondary, 0.1),
+            borderRadius: 10,
             fontFamily: FontFamily.sans,
             fontSize: FontSize.small,
             flexDirection: 'row',
             columnGap: Spacing.small,
             justifyContent: 'space-between',
-            padding: Spacing.small,
-            height: 48,
-            alignItems: 'center'
+            alignItems: 'center',
+            paddingHorizontal: Spacing.small
         }
     });
 }

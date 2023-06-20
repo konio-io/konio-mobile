@@ -1,5 +1,5 @@
 import { View, Share } from 'react-native';
-import { Text, ButtonPrimary, Address, Wrapper } from '../components';
+import { Text, Button, Address, Wrapper } from '../components';
 import { useCurrentAddress, useTheme } from '../hooks';
 import { AntDesign } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
@@ -23,13 +23,13 @@ export default () => {
     };
 
     const theme = useTheme().get();
-    const { Color, Spacing, Border } = theme.vars;
+    const { Spacing, Border } = theme.vars;
 
     return (
         <Wrapper>
 
             <View style={{ alignItems: 'center', rowGap: Spacing.base }}>
-                <Text>{i18n.t('scan_qr_code')}</Text>
+                <Text>{i18n.t('scan_qrcode')}</Text>
 
                 <View style={{borderWidth: Border.width, borderColor: Border.color, borderRadius: Border.radius, padding: Spacing.small}}>
                     <QRCode
@@ -39,14 +39,13 @@ export default () => {
                     />
                 </View>
                 
+                <Address address={address} />
             </View>
 
-            <Address address={address} />
-
-            <ButtonPrimary
+            <Button
                 title="Share"
                 onPress={shareAddress}
-                icon={<AntDesign name="sharealt" size={18} color={Color.primaryContrast} />}
+                icon={<AntDesign name="sharealt"/>}
             />
 
         </Wrapper>

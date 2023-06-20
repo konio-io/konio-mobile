@@ -5,7 +5,9 @@ import Setting from './Setting';
 import Network from './Network';
 import About from './About';
 import NewWalletAccount from './NewWalletAccount';
+import ResetPassword from './ResetPassword';
 import i18n from '../locales';
+import ShowSeed from './ShowSeed';
 
 const Stack = createStackNavigator<SettingStackParamList>();
 
@@ -47,6 +49,20 @@ export default () => {
         component={Network}
         options={{
           title: i18n.t('networks'),
+        }}
+      />
+      <Stack.Screen
+        name="ResetPassword"
+        component={ResetPassword}
+        options={{
+          title: i18n.t('reset_password'),
+        }}
+      />
+      <Stack.Screen
+        name="ShowSeed"
+        component={ShowSeed}
+        options={{
+          title: i18n.t('show_seed'),
         }}
       />
       <Stack.Screen

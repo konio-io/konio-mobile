@@ -4,7 +4,7 @@ import { State } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import { useCurrentAddress, useTheme, useWallet } from '../hooks';
 import { Feather } from '@expo/vector-icons';
-import { Text, ButtonPrimary, ButtonPrimaryEmpty, CoinList, WalletAvatar, ManaBar, CoinListItem, Wrapper } from '../components';
+import { Text, Button, CoinList, WalletAvatar, ManaBar, CoinListItem, Wrapper, Address, Selector } from '../components';
 import type { Theme } from '../types/store';
 import type { WalletNavigationProp } from '../types/navigation';
 import Loading from './Loading';
@@ -20,7 +20,7 @@ export default () => {
 
   const wallet = useWallet(currentAddressOrNull.get()).get();
   const theme = useTheme().get();
-  const { Color } = theme.vars;
+  const { Spacing, Border } = theme.vars;
   const styles = createStyles(theme);
   const navigation = useNavigation<WalletNavigationProp>();
 
@@ -31,28 +31,29 @@ export default () => {
 
         <View style={styles.headerContent}>
 
-          <View style={styles.walletContainer}>
-            <Pressable onPress={() => navigation.push('SwitchWallet')}>
-                <WalletAvatar size={64} address={wallet.address} name={wallet.name} />
-            </Pressable>
-
-            <View style={styles.walletNameContainer}>
-              <Text style={styles.textTitle}>{wallet.name}</Text>
+          <Selector onPress={() => navigation.push('SwitchAccount')}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', columnGap: Spacing.base }}>
+              <WalletAvatar size={48} address={wallet.address} name={wallet.name} />
+              <View>
+                <Text style={styles.textTitle}>{wallet.name}</Text>
+                <Address address={wallet.address} compress={true} />
+              </View>
             </View>
-          </View>
+          </Selector>
 
           <View style={styles.buttonsContainer}>
-            <ButtonPrimary
+            <Button
               style={{ flex: 1 }}
               title={i18n.t('send')}
-              onPress={() => navigation.push('Withdraw', {})}
-              icon={<Feather name="arrow-up-right" size={18} color={Color.primaryContrast} />}
+              onPress={() => navigation.navigate('Withdraw', { screen: 'SelectRecipient' })}
+              icon={<Feather name="arrow-up-right" />}
             />
-            <ButtonPrimaryEmpty
+            <Button
               style={{ flex: 1 }}
               title={i18n.t('receive')}
-              onPress={() => navigation.push('Deposit')}
-              icon={<Feather name="arrow-down-right" size={18} color={Color.primary} />}
+              onPress={() => navigation.navigate('Deposit')}
+              icon={<Feather name="arrow-down-right" />}
+              type='secondary'
             />
           </View>
 
@@ -118,7 +119,7 @@ const createStyles = (theme: Theme) => {
     buttonsContainer: {
       height: 40,
       flexDirection: 'row',
-      columnGap: Spacing.base
+      columnGap: Spacing.small
     },
     addMoreContainer: {
       alignItems: 'center',

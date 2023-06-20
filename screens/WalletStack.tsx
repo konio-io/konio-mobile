@@ -6,11 +6,9 @@ import Wallet from './Wallet';
 import AddCoin from './AddCoin';
 import Coin from './Coin';
 import Deposit from './Deposit';
-import Withdraw from './Withdraw';
-import SwitchWallet from './SwitchWallet';
-import SelectCoin from './SelectCoin';
-import SelectWallet from './SelectWallet';
+import SwitchAccount from './SwitchAccount';
 import i18n from '../locales';
+import WithdrawStack from './WithdrawStack';
 
 const Stack = createStackNavigator<WalletStackParamList>();
 
@@ -68,32 +66,17 @@ export default () => {
       />
       <Stack.Screen
         name="Withdraw"
-        component={Withdraw}
+        component={WithdrawStack}
         options={{
+          header: () => (<View />),
           title: i18n.t('send')
         }}
       />
       <Stack.Screen
-        name="SwitchWallet"
-        component={SwitchWallet}
+        name="SwitchAccount"
+        component={SwitchAccount}
         options={{
-          title: i18n.t('switch_wallet'),
-          presentation: 'modal'
-        }}
-      />
-      <Stack.Screen
-        name="SelectCoin"
-        component={SelectCoin}
-        options={{
-          title: i18n.t('select_coin'),
-          presentation: 'modal'
-        }}
-      />
-      <Stack.Screen
-        name="SelectWallet"
-        component={SelectWallet}
-        options={{
-          title: i18n.t('select_wallet'),
+          title: i18n.t('switch_account'),
           presentation: 'modal'
         }}
       />

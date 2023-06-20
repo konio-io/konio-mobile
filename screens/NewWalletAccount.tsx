@@ -3,16 +3,12 @@ import { useNavigation, CommonActions } from '@react-navigation/native';
 import type { NewWalletSeedNavigationProp } from '../types/navigation';
 import { setCurrentWallet, addAccount, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
-import { useTheme } from '../hooks';
-import { ButtonPrimary, TextInput, Wrapper } from '../components';
+import { Button, TextInput, Wrapper } from '../components';
 import i18n from '../locales';
 
 export default () => {
     const navigation = useNavigation<NewWalletSeedNavigationProp>();
     const name = useHookstate('');
-
-    const theme = useTheme().get();
-    const { Color } = theme.vars;
 
     const addWallet = () => {
         if (!name.get()) {
@@ -57,10 +53,10 @@ export default () => {
                 onChangeText={(text: string) => name.set(text)}
             />
 
-            <ButtonPrimary
+            <Button
                 title={i18n.t('add_account')}
                 onPress={() => addWallet()}
-                icon={<Feather name="plus" size={18} color={Color.primaryContrast} />}
+                icon={<Feather name="plus"/>}
             />
         </Wrapper>
     );

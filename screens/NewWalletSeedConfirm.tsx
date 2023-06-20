@@ -1,9 +1,8 @@
 import { View } from 'react-native';
 import { useHookstate } from '@hookstate/core';
-import { Text, ButtonPrimary, TextInput, Wrapper } from '../components';
+import { Text, Button, TextInput, Wrapper } from '../components';
 import { addSeed, setCurrentWallet, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
-import { useTheme } from '../hooks';
 import { useRoute } from '@react-navigation/native';
 import { NewWalletSeedConfirmRouteProp } from '../types/navigation';
 import i18n from '../locales';
@@ -12,8 +11,6 @@ export default () => {
     const route = useRoute<NewWalletSeedConfirmRouteProp>();
     const { name, seed } = route.params;
     const confirmSeed = useHookstate('');
-    const theme = useTheme().get();
-    const { Color } = theme.vars;
 
     const addWallet = () => {
         if (seed !== confirmSeed.get().trim()) {
@@ -59,9 +56,9 @@ export default () => {
             />
 
             <View>
-                <ButtonPrimary
+                <Button
                     title={i18n.t('add')}
-                    icon={<Feather name="plus" size={18} color={Color.primaryContrast} />}
+                    icon={<Feather name="plus"/>}
                     onPress={() => addWallet()}
                 />
             </View>

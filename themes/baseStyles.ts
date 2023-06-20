@@ -92,6 +92,11 @@ export const getStyles = (themeVars : ThemeVars) => {
             fontSize: FontSize.large,
             fontFamily: FontFamily.sans,
             color: Color.baseContrast,
+        },
+        listItemTitle: {
+            color: Color.baseContrast,
+            fontFamily: FontFamily.sans,
+            fontSize: FontSize.medium
         }
     }
 

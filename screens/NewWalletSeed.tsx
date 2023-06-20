@@ -1,6 +1,6 @@
 import { View, StyleSheet } from 'react-native';
 import { useHookstate } from '@hookstate/core';
-import { Text, ButtonPrimary, ButtonPrimaryEmpty, TextInput, Wrapper } from '../components';
+import { Text, Button, TextInput, Wrapper } from '../components';
 import { generateSeed, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useTheme } from '../hooks';
@@ -15,7 +15,6 @@ export default () => {
     const name = useHookstate('');
 
     const theme = useTheme().get();
-    const { Color } = theme.vars;
     const styles = createStyles(theme);
 
     const next = () => {
@@ -51,16 +50,17 @@ export default () => {
 
             <View style={styles.buttonContainer}>
                 <View style={{ flex: 1 }}>
-                    <ButtonPrimaryEmpty
+                    <Button
+                        type="secondary"
                         title={i18n.t('generate')}
-                        icon={<Feather name="refresh-cw" size={18} color={Color.primary} />}
+                        icon={<Feather name="refresh-cw" />}
                         onPress={() => seed.set(generateSeed())} />
                 </View>
 
                 <View style={{ flex: 1 }}>
-                    <ButtonPrimary
+                    <Button
                         title={i18n.t('next')}
-                        icon={<Feather name="arrow-right" size={18} color={Color.primaryContrast} />}
+                        icon={<Feather name="arrow-right" />}
                         onPress={next}
                     />
                 </View>

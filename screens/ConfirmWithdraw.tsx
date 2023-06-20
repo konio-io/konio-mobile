@@ -1,63 +1,32 @@
-import { ButtonPrimary, WalletInputSelect, AmountInput, CoinInputSelect, Wrapper, TextInput } from '../components';
+import { Button, Wrapper, TextInput, Text } from '../components';
 import { useHookstate } from '@hookstate/core';
-import { useNavigation, useRoute, CommonActions } from '@react-navigation/native';
-import type { WithdrawNavigationProp, WithdrawRouteProp } from '../types/navigation';
+import { useNavigation, CommonActions } from '@react-navigation/native';
+import type { ConfirmWithdrawNavigationProp } from '../types/navigation';
 import { withdrawCoin, confirmTransaction, showToast } from '../actions'
 import { Feather } from '@expo/vector-icons';
-import { useTheme } from '../hooks';
-import { useEffect } from 'react';
+import { useCoin, useTheme, useWithdraw } from '../hooks';
 import i18n from '../locales';
+import { View } from 'react-native';
 
 export default () => {
-    const route = useRoute<WithdrawRouteProp>();
-
-    const contractId = useHookstate('');
-    const navigation = useNavigation<WithdrawNavigationProp>();
-    const amount = useHookstate('');
-    const to = useHookstate('');
+    const navigation = useNavigation<ConfirmWithdrawNavigationProp>();
     const note = useHookstate('');
-
-    useEffect(() => {
-        if (route.params && route.params.contractId) {
-            contractId.set(route.params.contractId);
-        }
-        if (route.params && route.params.to) {
-            to.set(route.params.to);
-        }
-    }, [route.params]);
-
     const theme = useTheme().get();
-    const { Color } = theme.vars;
     const styles = theme.styles;
 
-    const send = () => {
+    const withdraw = useWithdraw();
+    const { address, contractId, amount } = withdraw.get();
+    const coin = useCoin(contractId);
 
-        if (!contractId.get()) {
-            showToast({
-                type: 'error',
-                text1: i18n.t('missing_coin')
-            });
-            return;
-        }
-        if (!to.get()) {
-            showToast({
-                type: 'error',
-                text1: i18n.t('missing_destination')
-            });
-            return;
-        }
-        if (!amount.get()) {
-            showToast({
-                type: 'error',
-                text1: i18n.t('missing_amount')
-            });
+    const send = () => {
+        if (!address) {
             return;
         }
 
         withdrawCoin({
-            to: to.get(),
-            contractId: contractId.get(),
-            value: amount.get(),
+            to: address,
+            contractId: contractId,
+            value: amount.toString(),
             note: note.get()
         })
             .then(transaction => {
@@ -68,7 +37,7 @@ export default () => {
                             { name: 'Wallet' },
                             {
                                 name: 'Coin',
-                                params: { contractId: contractId.get() },
+                                params: { contractId },
                             },
                         ],
                     })
@@ -105,11 +74,16 @@ export default () => {
     return (
         <Wrapper>
 
-            <CoinInputSelect value={contractId.get()} />
+            <View>
+                <Text style={styles.textSmall}>{i18n.t('recipient')}</Text>
+                <Text>{address}</Text>
+            </View>
 
-            <WalletInputSelect value={to.get()} onChangeText={(v: string) => to.set(v)} />
+            <View>
+                <Text style={styles.textSmall}>{i18n.t('amount')}</Text>
+                <Text>{amount} {coin.symbol.get()}</Text>
+            </View>
 
-            <AmountInput contractId={contractId.get()} onChange={(v: string) => amount.set(v)} />
 
             <TextInput
                 style={{ ...styles.textInputMultiline }}
@@ -119,10 +93,10 @@ export default () => {
                 onChangeText={(v: string) => note.set(v)}
             />
 
-            <ButtonPrimary
+            <Button
                 title={i18n.t('send')}
                 onPress={send}
-                icon={<Feather name="arrow-up-right" size={18} color={Color.primaryContrast} />}
+                icon={<Feather name="arrow-up-right" />}
             />
 
         </Wrapper>

@@ -1,4 +1,4 @@
-import type { RouteProp } from '@react-navigation/native';
+import type { RouteProp, NavigatorScreenParams } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
 
 /** WalletStack */
@@ -9,17 +9,8 @@ export type WalletStackParamList = {
         contractId: string
     },
     Deposit: undefined,
-    Withdraw: {
-        contractId?: string,
-        to?: string
-    },
-    SwitchWallet: undefined,
-    SelectWallet: {
-        selected?: string
-    },
-    SelectCoin: {
-        selected?: string
-    },
+    Withdraw: NavigatorScreenParams<WithdrawStackParamList>,
+    SwitchAccount: undefined
 }
 export type WalletNavigationProp = StackNavigationProp<WalletStackParamList, 'Wallet'>;
 export type WalletRouteProp = RouteProp<WalletStackParamList, 'Wallet'>;
@@ -31,19 +22,17 @@ export type DepositNavigationProp = StackNavigationProp<WalletStackParamList, 'D
 export type DepositRouteProp = RouteProp<WalletStackParamList, 'Deposit'>;
 export type WithdrawNavigationProp = StackNavigationProp<WalletStackParamList, 'Withdraw'>;
 export type WithdrawRouteProp = RouteProp<WalletStackParamList, 'Withdraw'>;
-export type SwitchWalletNavigationProp = StackNavigationProp<WalletStackParamList, 'SwitchWallet'>;
-export type SwitchWalletRouteProp = RouteProp<WalletStackParamList, 'SwitchWallet'>;
-export type SelectWalletNavigationProp = StackNavigationProp<WalletStackParamList, 'SelectWallet'>;
-export type SelectWalletRouteProp = RouteProp<WalletStackParamList, 'SelectWallet'>;
-export type SelectCoinNavigationProp = StackNavigationProp<WalletStackParamList, 'SelectCoin'>;
-export type SelectCoinRouteProp = RouteProp<WalletStackParamList, 'SelectCoin'>;
+export type SwitchAccountNavigationProp = StackNavigationProp<WalletStackParamList, 'SwitchAccount'>;
+export type SwitchAccountRouteProp = RouteProp<WalletStackParamList, 'SwitchAccount'>;
 
 /** SettingStack */
 export type SettingStackParamList = {
     Setting: undefined,
     NewWalletAccount: undefined,
     Network: undefined,
-    About: undefined
+    About: undefined,
+    ResetPassword: undefined,
+    ShowSeed: undefined
 };
 export type SettingNavigationProp = StackNavigationProp<SettingStackParamList, 'Setting'>;
 export type SettingRouteProp = RouteProp<SettingStackParamList, 'Setting'>;
@@ -53,6 +42,10 @@ export type NetworkNavigationProp = StackNavigationProp<SettingStackParamList, '
 export type NetworkRouteProp = RouteProp<SettingStackParamList, 'Network'>;
 export type AboutNavigationProp = StackNavigationProp<SettingStackParamList, 'About'>;
 export type AboutRouteProp = RouteProp<SettingStackParamList, 'About'>;
+export type ResetPasswordNavigationProp = StackNavigationProp<SettingStackParamList, 'ResetPassword'>;
+export type ResetPasswordRouteProp = RouteProp<SettingStackParamList, 'ResetPassword'>;
+export type ShowSeedNavigationProp = StackNavigationProp<SettingStackParamList, 'ShowSeed'>;
+export type ShowSeedRouteProp = RouteProp<SettingStackParamList, 'ShowSeed'>;
 
 /** IntroStack */
 export type IntroStackParamList = {
@@ -74,3 +67,32 @@ export type NewWalletSeedConfirmNavigationProp = StackNavigationProp<IntroStackP
 export type NewWalletSeedConfirmRouteProp = RouteProp<IntroStackParamList, 'NewWalletSeedConfirm'>;
 export type ImportWalletSeedNavigationProp = StackNavigationProp<IntroStackParamList, 'ImportWalletSeed'>;
 export type ImportWalletSeedRouteProp = RouteProp<IntroStackParamList, 'ImportWalletSeed'>;
+
+/** WithdrawStack */
+export type WithdrawStackParamList = {
+    SelectRecipient: undefined
+    SelectAmount: undefined
+    ConfirmWithdraw: undefined
+    SelectCoin: undefined,
+    SelectAccount: undefined
+}
+export type SelectRecipientNavigationProp = StackNavigationProp<WithdrawStackParamList, 'SelectRecipient'>;
+export type SelectRecipientRouteProp = RouteProp<WithdrawStackParamList, 'SelectRecipient'>;
+export type SelectAmountNavigationProp = StackNavigationProp<WithdrawStackParamList, 'SelectAmount'>;
+export type SelectAmountRouteProp = RouteProp<WithdrawStackParamList, 'SelectAmount'>;
+export type ConfirmWithdrawNavigationProp = StackNavigationProp<WithdrawStackParamList, 'ConfirmWithdraw'>;
+export type ConfirmWithdrawRouteProp = RouteProp<WithdrawStackParamList, 'ConfirmWithdraw'>;
+export type SelectCoinNavigationProp = StackNavigationProp<WithdrawStackParamList, 'SelectCoin'>;
+export type SelectCoinRouteProp = RouteProp<WithdrawStackParamList, 'SelectCoin'>;
+export type SelectAccountNavigationProp = StackNavigationProp<WithdrawStackParamList, 'SelectAccount'>;
+export type SelectAccountRouteProp = RouteProp<WithdrawStackParamList, 'SelectAccount'>;
+
+/** UnlockStack */
+export type UnlockStackParamList = {
+    Unlock: undefined,
+    ResetPassword: undefined
+}
+export type UnlockNavigationProp = StackNavigationProp<UnlockStackParamList, 'Unlock'>;
+export type UnlockRouteProp = RouteProp<UnlockStackParamList, 'Unlock'>;
+export type ResetPasswordNavigationProp = StackNavigationProp<UnlockStackParamList, 'ResetPassword'>;
+export type ResetPasswordRouteProp = RouteProp<UnlockStackParamList, 'ResetPassword'>;

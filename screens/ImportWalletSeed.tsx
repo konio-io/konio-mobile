@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { useHookstate } from '@hookstate/core';
-import { ButtonPrimary, ButtonPrimaryEmpty, TextInput, Wrapper } from '../components';
+import { Button, TextInput, Wrapper } from '../components';
 import { addSeed, setCurrentWallet } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useTheme } from '../hooks';
@@ -13,7 +13,6 @@ export default () => {
   const name = useHookstate('');
 
   const theme = useTheme().get();
-  const { Color } = theme.vars;
   const styles = createStyles(theme)
 
   const importWallet = () => {
@@ -67,19 +66,19 @@ export default () => {
 
       <View style={styles.buttonContainer}>
         <View style={{ flex: 1 }}>
-          <ButtonPrimaryEmpty
+          <Button
+            type="secondary"
             title={i18n.t('reset')}
-            icon={<Feather name="x" size={16} color={Color.primary} />}
+            icon={<Feather name="x"/>}
             onPress={() => { seed.set('') }}
           />
         </View>
 
         <View style={{ flex: 1 }}>
-          <ButtonPrimary
+          <Button
             title={i18n.t('import')}
-            icon={<Feather name="arrow-right" size={18} color={Color.primaryContrast} />}
-            onPress={() => importWallet()
-            } />
+            icon={<Feather name="arrow-right" />}
+            onPress={() => importWallet()} />
         </View>
       </View>
 

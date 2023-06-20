@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { ButtonPrimary, Logo, Text, Wrapper } from '../components';
+import { Button, Logo, Text, Wrapper } from '../components';
 import type { IntroNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
 import { useTheme } from '../hooks';
@@ -10,7 +10,7 @@ export default () => {
     const navigation = useNavigation<IntroNavigationProp>();
 
     const theme = useTheme().get();
-    const { Color, Spacing } = theme.vars;
+    const { Spacing } = theme.vars;
 
     return (
         <Wrapper>
@@ -28,9 +28,9 @@ export default () => {
                 </Text>
             </View>
 
-            <ButtonPrimary
+            <Button
                 title={i18n.t('lets_begin')}
-                icon={<Feather name="arrow-right" size={18} color={Color.primaryContrast} />}
+                icon={<Feather name="arrow-right"/>}
                 onPress={() => {
                     navigation.push('SetPassword');
                 }} />

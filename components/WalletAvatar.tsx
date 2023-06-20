@@ -27,7 +27,7 @@ export default (props: {
             <View style={{
                 width: props.size, 
                 height: props.size, 
-                borderRadius: props.size, 
+                borderRadius: Border.radius, 
                 backgroundColor: stringToColor(props.address), 
                 justifyContent: 'center', 
                 alignItems: 'center'

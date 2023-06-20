@@ -4,6 +4,7 @@ import Unlock from "./Unlock";
 import WalletStack from "./WalletStack";
 import Unavailable from "./Unavailable";
 import Loading from "./Loading";
+import UnlockStack from "./UnlockStack";
 
 export {
     IntroStack,
@@ -11,5 +12,6 @@ export {
     Unlock,
     WalletStack,
     Unavailable,
-    Loading
+    Loading,
+    UnlockStack
 }

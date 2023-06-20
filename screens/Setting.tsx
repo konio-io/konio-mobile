@@ -1,17 +1,16 @@
-import { View, FlatList, TouchableHighlight, Alert, StyleSheet } from 'react-native';
+import { View, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { SettingNavigationProp } from '../types/navigation';
-import type { Theme } from '../types/store';
-import type { FlatMenuItem } from '../types/ui';
+import type { FlatListItem } from '../types/ui';
 import { useTheme } from '../hooks';
-import { Text } from '../components';
-import { Feather } from '@expo/vector-icons';
 import i18n from '../locales';
+import { Wrapper } from '../components';
+import ListItem from '../components/ListItem';
 
 export default () => {
   const navigation = useNavigation<SettingNavigationProp>();
 
-  const items: Array<FlatMenuItem> = [
+  const items: Array<FlatListItem> = [
     {
       title: i18n.t('network'),
       name: i18n.t('network'),
@@ -25,6 +24,18 @@ export default () => {
       onPress: (name: string) => { navigation.push('NewWalletAccount') }
     },
     {
+      title: i18n.t('reset_password'),
+      name: 'ResetPassword',
+      description: i18n.t('reset_password_desc'),
+      onPress: (name: string) => { navigation.push('ResetPassword') }
+    },
+    {
+      title: i18n.t('show_seed'),
+      name: 'ShowSeed',
+      description: i18n.t('show_seed_desc'),
+      onPress: (name: string) => { navigation.push('ShowSeed') }
+    },
+    {
       title: i18n.t('about'),
       name: i18n.t('about'),
       description: i18n.t('show_app_info'),
@@ -33,14 +44,14 @@ export default () => {
   ];
 
   const theme = useTheme().get();
-  const styles = createStyles(theme);
+  const styles = theme.styles;
 
   return (
-    <View style={styles.wrapper}>
+    <Wrapper type='full'>
       <FlatList
         data={items}
         renderItem={({ item }) =>
-          <MenuItem
+          <ListItem
             title={item.title}
             name={item.name}
             description={item.description}
@@ -49,52 +60,6 @@ export default () => {
         }
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
-    </View>
+    </Wrapper>
   );
-}
-
-const MenuItem = (props: {
-  title: string,
-  name: string,
-  description: string,
-  onPress: Function
-}) => {
-
-  const theme = useTheme().get();
-  const { Color } = theme.vars;
-  const styles = createStyles(theme);
-
-  return (
-    
-    <TouchableHighlight onPress={() => props.onPress(props.name)}>
-      <View style={styles.listItemContainer}>
-
-        <View>
-          <Text style={styles.menuItemTitle}>{props.title}</Text>
-          <Text style={styles.textSmall}>{props.description}</Text>
-        </View>
-
-        <Feather name="arrow-right" size={24} color={Color.primary} />
-        
-      </View>
-    </TouchableHighlight>
-  )
-};
-
-
-const createStyles = (theme: Theme) => {
-  const { Color, FontFamily, FontSize } = theme.vars;
-
-  return StyleSheet.create({
-    ...theme.styles,
-    wrapper: {
-      flex: 1,
-      backgroundColor: Color.base
-    },
-    menuItemTitle: {
-      color: Color.baseContrast,
-      fontFamily: FontFamily.sans,
-      fontSize: FontSize.medium
-    }
-  })
 }

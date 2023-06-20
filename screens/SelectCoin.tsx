@@ -1,19 +1,22 @@
 import { CoinList, CoinSymbol, ListItemSelected, Wrapper } from "../components"
-import { useNavigation, useRoute } from "@react-navigation/native"
-import type { SelectCoinNavigationProp, SelectCoinRouteProp } from "../types/navigation";
+import { useNavigation } from "@react-navigation/native"
+import type { SelectCoinNavigationProp } from "../types/navigation";
+import { useWithdraw } from "../hooks";
+import { setWithdrawContractId } from "../actions";
 
 export default () => {
     const navigation = useNavigation<SelectCoinNavigationProp>();
-    const route = useRoute<SelectCoinRouteProp>();
-    const selected = route.params ? route.params.selected : undefined;
+    const withdraw = useWithdraw();
+    const withdrawContractId = withdraw.contractId.get();
 
     return (
         <Wrapper type="full">
-            <List selected={selected} onSelect={(contractId: string) => {
-                navigation.navigate('Withdraw', { contractId });
+            <List selected={withdrawContractId} onSelect={(contractId: string) => {
+                setWithdrawContractId(contractId);
+                navigation.navigate('SelectAmount');
             }}/>
         </Wrapper>
-    )
+    );
 }
 
 const List = (props: {

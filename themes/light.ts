@@ -29,11 +29,12 @@ export const getTheme = () : Theme => {
         primaryContrast: 'rgba(244,255,255,1)',
         error: 'rgba(204,63,63,1)',
         warning: 'rgba(255,142,36,1)',
-        success: 'rgba(94,184,59,1)'
+        success: 'rgba(94,184,59,1)',
+        secondary: 'rgba(217,169,65,1)'
     };
 
     const Border = {
-        color: 'rgba(10,10,10,0.1)',
+        color: 'rgba(220,220,220,1)',
         width: 1,
         radius: 4
     };

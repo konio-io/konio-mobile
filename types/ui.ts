@@ -1,4 +1,4 @@
-export type FlatMenuItem = {
+export type FlatListItem = {
     title: string,
     name: string,
     description: string,
