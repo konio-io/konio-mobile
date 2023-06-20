@@ -25,7 +25,8 @@
           "resizeMode": "cover",
           "backgroundColor": "#000000"
         }
-      }
+      },
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
@@ -42,7 +43,8 @@
           "resizeMode": "cover",
           "backgroundColor": "#000000"
         }
-      }
+      },
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
