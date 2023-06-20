@@ -11,7 +11,7 @@ export default () => {
     const navigation = useNavigation<IntroNavigationProp>();
     const password = useHookstate('');
     const passwordConfirm = useHookstate('');
-    const seed = useHookstate('impulse stadium turtle bird uncle call six accident file exclude include like');
+    const seed = useHookstate('');
     const currentSeed = useCurrentSeed();
 
     const theme = useTheme().get();
