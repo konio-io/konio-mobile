@@ -8,8 +8,8 @@ import { View } from 'react-native';
 import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Toast } from './components';
-import { WalletStack, SettingStack, IntroStack, UnlockStack, Unavailable, Loading } from './screens';
-import { useCurrentAddress, usePassword, useTheme, useLock } from './hooks';
+import { WalletStack, SettingStack, IntroStack, Unavailable, Loading, Unlock } from './screens';
+import { useCurrentAddress, useLocker, usePassword, useTheme } from './hooks';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import i18n from './locales';
@@ -31,15 +31,14 @@ export default function App() {
 
 const LoadedApp = () => {
   const currentAddress = useCurrentAddress();
-  const lock = useLock();
-  const password = usePassword();
+  const locker = useLocker(1);
   const theme = useTheme().get();
   const PolyfillCrypto = global.PolyfillCrypto;
   const navigationTheme = theme.name === 'dark' ? DarkTheme : DefaultTheme;
 
   let component = <IntroStack />;
-  if (lock.get() === true && password.get() !== '') {
-    component = <UnlockStack />
+  if (locker.isLocked()) {
+    component = <Unlock state={locker.get()}/>
   }
   else if (currentAddress.get()) {
     component = <Tabs />

@@ -1,21 +1,26 @@
-import { useHookstate } from "@hookstate/core";
+import { useFocusEffect } from "@react-navigation/native";
 import { Wrapper, Text, Button } from "../components"
-import { useCurrentSeed } from "../hooks"
+import { useCurrentSeed, useLocker } from "../hooks"
+import Unlock from "./Unlock";
+import React from "react";
 
 export default () => {
-
-    const currentLock = useHookstate(true);
+    const locker = useLocker(1);
     const currentSeed = useCurrentSeed().get();
+
+    if (locker.isRunning()) {
+        return <Unlock state={locker.get()}/>
+    }
 
     return (
         <Wrapper>
-            {currentLock.get() === false &&
+            {!locker.isLocked() &&
                 <Text>{currentSeed}</Text>
             }
 
-            {currentLock.get() === true &&
-                <Button title="show" onPress={() => currentLock.set(false)}/>
+            {locker.isLocked() &&
+                <Button title="show" onPress={() => locker.run()}/>
             }
         </Wrapper>
-    )
+    );
 }

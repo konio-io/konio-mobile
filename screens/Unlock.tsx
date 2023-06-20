@@ -1,6 +1,6 @@
 import { Pressable, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { useHookstate } from '@hookstate/core';
+import { State, useHookstate } from '@hookstate/core';
 import { checkPassword, showToast, lock, unlock } from '../actions';
 import { useTheme } from '../hooks';
 import { Button, TextInput, Logo, Wrapper, Text } from '../components';
@@ -8,7 +8,9 @@ import i18n from '../locales';
 import { useNavigation } from '@react-navigation/native';
 import { UnlockNavigationProp } from '../types/navigation';
 
-export default () => {
+export default (props: {
+    state: State<number>
+}) => {
     const navigation = useNavigation<UnlockNavigationProp>();
     const password = useHookstate('');
     const unlockWallet = () => {
@@ -17,9 +19,12 @@ export default () => {
                 type: 'error',
                 text1: i18n.t('wrong_password')
             });
-            lock();
+            
+            //lock
+            props.state.set(1);
         } else {
-            unlock();
+            //unlock
+            props.state.set(0);
         }
     }
 
@@ -47,10 +52,10 @@ export default () => {
             />
 
             <View style={{ marginBottom: Spacing.medium, alignItems: 'center' }}>
-            <Pressable onPress={() => navigation.navigate('ResetPassword')}>
-                <Text>{i18n.t('forgot_password')}</Text>
-            </Pressable>
-        </View>
+                <Pressable onPress={() => navigation.navigate('ResetPassword')}>
+                    <Text>{i18n.t('forgot_password')}</Text>
+                </Pressable>
+            </View>
 
         </Wrapper >
     );

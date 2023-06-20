@@ -90,8 +90,29 @@ export const useWithdraw = () => {
     return useHookstate(WithdrawStore);
 }
 
-export const useLock = () => {
-    return useHookstate(LockStore);
+export const useLocker = (initialState: number) => {
+    const state = useHookstate(initialState);
+    const hasPassword = EncryptedStore.password.get() !== '';
+
+    return {
+        get: () => {
+            return state;
+        },
+        run: () => {
+            if (hasPassword) {
+                state.set(-1);
+            }
+        },
+        isLocked: () => {
+            if (hasPassword) {
+                return state.get() === 1;
+            }
+            return false;
+        },
+        isRunning: () => {
+            return hasPassword && state.get() === -1;
+        }
+    }
 }
 
 export const useCurrentSeed = () => {
