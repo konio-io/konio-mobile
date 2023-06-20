@@ -20,6 +20,8 @@ import WalletList from './WalletList';
 import Modal from './Modal';
 import ListItem from './ListItem';
 import Selector from './Selector';
+import Copiable from './Copiable';
+import Seed from './Seed';
 
 export {
     ActivityIndicator,
@@ -43,5 +45,7 @@ export {
     WalletList,
     Modal,
     ListItem,
-    Selector
+    Selector,
+    Copiable,
+    Seed
 }

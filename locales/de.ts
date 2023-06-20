@@ -100,5 +100,14 @@ export default {
     reset_password_desc: 'Setze dein Passwort zurück',
     write_current_seed: 'Schreibe den Wiederherstellungssatz, um das Passwort zurückzusetzen',
     seed_not_match: 'Der eingegebene Wiederherstellungssatz stimmt nicht überein',
-    password_removed: 'Passwort entfernt'
+    password_removed: 'Passwort entfernt',
+    show_seed: 'Seed anzeigen',
+    show_seed_desc: 'Deine Seed-Phrase wiederherstellen',
+    forgot_password: 'Passwort vergessen?',
+    status: 'Status',
+    type: 'Typ',
+    open_explorer: 'Blockexplorer öffnen',
+    copied_to_clipboard: 'In die Zwischenablage kopiert',
+    show: 'Anzeigen',
+    missing_password: 'Passwort fehlt. Es ist obligatorisch.'
 }

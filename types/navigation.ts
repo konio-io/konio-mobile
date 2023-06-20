@@ -31,7 +31,6 @@ export type SettingStackParamList = {
     NewWalletAccount: undefined,
     Network: undefined,
     About: undefined,
-    ResetPassword: undefined,
     ShowSeed: undefined
 };
 export type SettingNavigationProp = StackNavigationProp<SettingStackParamList, 'Setting'>;
@@ -42,8 +41,6 @@ export type NetworkNavigationProp = StackNavigationProp<SettingStackParamList, '
 export type NetworkRouteProp = RouteProp<SettingStackParamList, 'Network'>;
 export type AboutNavigationProp = StackNavigationProp<SettingStackParamList, 'About'>;
 export type AboutRouteProp = RouteProp<SettingStackParamList, 'About'>;
-export type ResetPasswordNavigationProp = StackNavigationProp<SettingStackParamList, 'ResetPassword'>;
-export type ResetPasswordRouteProp = RouteProp<SettingStackParamList, 'ResetPassword'>;
 export type ShowSeedNavigationProp = StackNavigationProp<SettingStackParamList, 'ShowSeed'>;
 export type ShowSeedRouteProp = RouteProp<SettingStackParamList, 'ShowSeed'>;
 
@@ -87,12 +84,14 @@ export type SelectCoinRouteProp = RouteProp<WithdrawStackParamList, 'SelectCoin'
 export type SelectAccountNavigationProp = StackNavigationProp<WithdrawStackParamList, 'SelectAccount'>;
 export type SelectAccountRouteProp = RouteProp<WithdrawStackParamList, 'SelectAccount'>;
 
-/** UnlockStack */
-export type UnlockStackParamList = {
-    Unlock: undefined,
+/** RootStack */
+export type RootStackParamList = {
+    Unlock: {
+        key: string
+    },
     ResetPassword: undefined
 }
-export type UnlockNavigationProp = StackNavigationProp<UnlockStackParamList, 'Unlock'>;
-export type UnlockRouteProp = RouteProp<UnlockStackParamList, 'Unlock'>;
-export type ResetPasswordNavigationProp = StackNavigationProp<UnlockStackParamList, 'ResetPassword'>;
-export type ResetPasswordRouteProp = RouteProp<UnlockStackParamList, 'ResetPassword'>;
+export type UnlockNavigationProp = StackNavigationProp<RootStackParamList, 'Unlock'>;
+export type UnlockRouteProp = RouteProp<RootStackParamList, 'Unlock'>;
+export type ResetPasswordNavigationProp = StackNavigationProp<RootStackParamList, 'ResetPassword'>;
+export type ResetPasswordRouteProp = RouteProp<RootStackParamList, 'ResetPassword'>;

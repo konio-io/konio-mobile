@@ -1,6 +1,6 @@
 import { View, StyleSheet } from 'react-native';
 import { useHookstate } from '@hookstate/core';
-import { Text, Button, TextInput, Wrapper } from '../components';
+import { Text, Button, TextInput, Wrapper, Copiable, Seed } from '../components';
 import { generateSeed, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useTheme } from '../hooks';
@@ -16,6 +16,7 @@ export default () => {
 
     const theme = useTheme().get();
     const styles = createStyles(theme);
+    const { Border, Spacing } = theme.vars;
 
     const next = () => {
         if (!name.get()) {
@@ -40,13 +41,14 @@ export default () => {
 
             <Text>{i18n.t('save_seed')}</Text>
 
-            <TextInput
-                style={{...styles.textInputMultiline}}
-                multiline={true}
-                numberOfLines={4}
-                editable={false}
-                value={seed.get()}
-            />
+            <Copiable copy={seed.get()}>
+                <View style={styles.textInputMultiline}>
+                    <View style={{position: 'absolute', right: Spacing.small, bottom: Spacing.small}}>
+                        <Feather name="copy" color={Border.color} />
+                    </View>
+                    <Seed phrase={seed.get()} />
+                </View>
+            </Copiable>
 
             <View style={styles.buttonContainer}>
                 <View style={{ flex: 1 }}>
@@ -79,6 +81,13 @@ const createStyles = (theme: Theme) => {
             height: 40,
             flexDirection: 'row',
             columnGap: Spacing.base,
-        }
+        },
+        wordsContainer: {
+            flexDirection: 'row',
+            columnGap: Spacing.small,
+            rowGap: Spacing.small,
+            flexWrap: 'wrap',
+            height: 150
+        },
     });
 }

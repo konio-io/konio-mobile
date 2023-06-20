@@ -1,6 +1,6 @@
 import { View, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import type { SettingNavigationProp } from '../types/navigation';
+import { ResetPasswordNavigationProp, SettingNavigationProp } from '../types/navigation';
 import type { FlatListItem } from '../types/ui';
 import { useTheme } from '../hooks';
 import i18n from '../locales';
@@ -9,6 +9,7 @@ import ListItem from '../components/ListItem';
 
 export default () => {
   const navigation = useNavigation<SettingNavigationProp>();
+  const resetNavigation = useNavigation<ResetPasswordNavigationProp>();
 
   const items: Array<FlatListItem> = [
     {
@@ -27,7 +28,7 @@ export default () => {
       title: i18n.t('reset_password'),
       name: 'ResetPassword',
       description: i18n.t('reset_password_desc'),
-      onPress: (name: string) => { navigation.push('ResetPassword') }
+      onPress: (name: string) => { resetNavigation.push('ResetPassword') }
     },
     {
       title: i18n.t('show_seed'),

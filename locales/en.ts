@@ -45,7 +45,7 @@ export default {
     add: 'Add',
     password_not_match: 'The two passwords do not match',
     password_set: 'Password set.',
-    choose_password_desc: 'Choose a password if you want to protect the use of the app. Leave it blank if you don\'t want a password.',
+    choose_password_desc: 'Choose a password if you want to protect the use of the app.',
     password: 'Password',
     confirm_password: 'Confirm password',
     network: 'Network',
@@ -100,5 +100,14 @@ export default {
     reset_password_desc: 'Resetta la tua password',
     write_current_seed: 'Scrivi la frase di seed per resettare la password',
     seed_not_match: 'La frase di seed inserita non corrisponde',
-    password_removed: 'Password rimossa'
+    password_removed: 'Password rimossa',
+    show_seed: 'Show seed',
+    show_seed_desc: 'Recovery your seed phrase',
+    forgot_password: 'Forgot password?',
+    status: 'Status',
+    type: 'Type',
+    open_explorer: 'Open block explorer',
+    copied_to_clipboard: 'Copied to clipboard',
+    show: 'Show',
+    missing_password: 'Missing password. It is mandatory.'
 }

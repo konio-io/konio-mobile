@@ -9,10 +9,12 @@ import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Toast } from './components';
 import { WalletStack, SettingStack, IntroStack, Unavailable, Loading, Unlock } from './screens';
-import { useCurrentAddress, useLocker, useTheme } from './hooks';
+import { useCurrentAddress, useTheme } from './hooks';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import i18n from './locales';
+import { createStackNavigator } from '@react-navigation/stack';
+import ResetPassword from './screens/ResetPassword';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -20,7 +22,6 @@ export default function App() {
   });
 
   const loaded = fontsLoaded;
-  //const insets = useSafeAreaInsets();
 
   return (
     <SafeAreaProvider>
@@ -29,26 +30,53 @@ export default function App() {
   );
 }
 
+const RootStack = createStackNavigator();
+
 const LoadedApp = () => {
-  const currentAddress = useCurrentAddress();
-  const locker = useLocker(1);
+
   const theme = useTheme().get();
   const PolyfillCrypto = global.PolyfillCrypto;
   const navigationTheme = theme.name === 'dark' ? DarkTheme : DefaultTheme;
-
-  let component = <IntroStack />;
-  if (locker.isLocked()) {
-    component = <Unlock state={locker.get()}/>
-  }
-  else if (currentAddress.get()) {
-    component = <Tabs />
-  }
+  const currentAddress = useCurrentAddress();
 
   return (
     <NavigationContainer theme={navigationTheme}>
       <PolyfillCrypto />
 
-      {component}
+      {!currentAddress.get() &&
+        <IntroStack />
+      }
+
+      {currentAddress.get() &&
+        <RootStack.Navigator>
+
+          <RootStack.Screen
+            name="Unlock"
+            component={Unlock}
+            options={{
+              presentation: 'modal',
+              header: () => (<View />)
+            }}
+            initialParams={{
+              key: 'app'
+            }}
+          />
+          <RootStack.Screen
+            name="ResetPassword"
+            component={ResetPassword}
+            options={{
+              title: i18n.t('reset_password')
+            }}
+          />
+          <RootStack.Screen
+            name="Main"
+            component={Tabs}
+            options={{
+              header: () => (<View />)
+            }}
+          />
+        </RootStack.Navigator>
+      }
 
       <StatusBar style="auto" />
       <Toast />

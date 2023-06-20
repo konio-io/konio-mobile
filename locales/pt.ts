@@ -100,5 +100,14 @@ export default {
     reset_password_desc: 'Redefina sua senha',
     write_current_seed: 'Escreva a frase de recuperação para redefinir a senha',
     seed_not_match: 'A frase de recuperação digitada não corresponde',
-    password_removed: 'Senha removida'
+    password_removed: 'Senha removida',
+    show_seed: 'Mostrar semente',
+    show_seed_desc: 'Recuperar sua frase-semente',
+    forgot_password: 'Esqueceu a senha?',
+    status: 'Status',
+    type: 'Tipo',
+    open_explorer: 'Abrir explorador de blocos',
+    copied_to_clipboard: 'Copiado para a área de transferência',
+    show: 'Mostrar',
+    missing_password: 'Senha faltando. É obrigatória.'
 }

@@ -100,5 +100,14 @@ export default {
     reset_password_desc: '重置您的密码',
     write_current_seed: '输入恢复短语以重置密码',
     seed_not_match: '输入的恢复短语不匹配',
-    password_removed: '密码已删除'
+    password_removed: '密码已删除',
+    show_seed: '显示种子',
+    show_seed_desc: '恢复您的种子短语',
+    forgot_password: '忘记密码？',
+    status: '状态',
+    type: '类型',
+    open_explorer: '打开区块浏览器',
+    copied_to_clipboard: '已复制到剪贴板',
+    show: '显示',
+    missing_password: '缺少密码。这是必需的。'
 }

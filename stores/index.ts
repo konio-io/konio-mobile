@@ -93,4 +93,5 @@ export const WithdrawStore = hookstate(WithdrawStoreDefault);
 /**
  * Lock by password
  */
-export const LockStore = hookstate({});
+export const LockStoreDefault : Record<string,boolean> = {};
+export const LockStore = hookstate(LockStoreDefault);

@@ -100,5 +100,14 @@ export default {
     reset_password_desc: 'Réinitialisez votre mot de passe',
     write_current_seed: 'Entrez la phrase de récupération pour réinitialiser le mot de passe',
     seed_not_match: "La phrase de récupération saisie ne correspond pas",
-    password_removed: 'Mot de passe supprimé'
+    password_removed: 'Mot de passe supprimé',
+    show_seed: 'Afficher la graine',
+    show_seed_desc: 'Récupérer votre phrase de récupération',
+    forgot_password: 'Mot de passe oublié?',
+    status: 'Statut',
+    type: 'Type',
+    open_explorer: 'Ouvrir l\'explorateur de blocs',
+    copied_to_clipboard: 'Copié dans le presse-papiers',
+    show: 'Afficher',
+    missing_password: 'Mot de passe manquant. Il est obligatoire.'
 }

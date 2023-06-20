@@ -12,21 +12,30 @@ export default () => {
     const passwordConfirm = useHookstate('');
 
     const savePassword = () => {
+        if (!password.get()) {
+            showToast({
+                type: 'error',
+                text1: i18n.t('missing_password'),
+            });
+            return;
+        }
+
         if ((password.get() !== passwordConfirm.get())) {
             showToast({
                 type: 'error',
                 text1: i18n.t('password_not_match'),
             });
-        } else {
-            setPassword(password.get());
-            if (password.get()) {
-                showToast({
-                    type: 'success',
-                    text1: i18n.t('password_set'),
-                });
-            }
-            navigation.push("NewWallet");
+            return;
         }
+
+        setPassword(password.get());
+        if (password.get()) {
+            showToast({
+                type: 'success',
+                text1: i18n.t('password_set'),
+            });
+        }
+        navigation.push("NewWallet");
     }
 
     return (

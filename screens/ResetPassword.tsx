@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { IntroNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
 import { useHookstate } from '@hookstate/core';
-import { setPassword, lock, unlock, showToast } from '../actions';
+import { setPassword, showToast } from '../actions';
 import { useCurrentSeed, useTheme } from '../hooks';
 import i18n from '../locales';
 
@@ -41,7 +41,6 @@ export default () => {
                 text1: i18n.t('password_set'),
             });
             navigation.goBack();
-            lock();
             return;
         }
 
@@ -50,7 +49,6 @@ export default () => {
             text1: i18n.t('password_removed'),
         });
         navigation.goBack();
-        unlock();
     }
 
     return (

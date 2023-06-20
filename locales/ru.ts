@@ -100,5 +100,14 @@ export default {
     reset_password_desc: 'Сбросьте свой пароль',
     write_current_seed: 'Введите фразу для сброса пароля',
     seed_not_match: 'Введенная фраза не совпадает',
-    password_removed: 'Пароль удален'
+    password_removed: 'Пароль удален',
+    show_seed: 'Показать seed',
+    show_seed_desc: 'Восстановить свою seed-фразу',
+    forgot_password: 'Забыли пароль?',
+    status: 'Статус',
+    type: 'Тип',
+    open_explorer: 'Открыть блок-эксплорер',
+    copied_to_clipboard: 'Скопировано в буфер обмена',
+    show: 'Показать',
+    missing_password: 'Отсутствует пароль. Это обязательно.'
 }

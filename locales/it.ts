@@ -50,7 +50,7 @@ export default {
     confirm_password: 'Conferma password',
     network: 'Rete',
     choose_network: 'Scegli il provider di rete',
-    add_account_desc: 'Aggiungi un nuovo account del portafoglio basato sul seed del portafoglio',
+    add_account_desc: 'Aggiungi un nuovo account basato sul seed del portafoglio',
     about: 'Informazioni',
     show_app_info: 'Mostra informazioni sull\'app',
     networks: 'Reti',
@@ -102,9 +102,12 @@ export default {
     seed_not_match: 'La frase di seed inserita non corrisponde',
     password_removed: 'Password rimossa',
     show_seed: 'Mostra seed',
-    show_seed_desc: 'Recupare la tua frase di seed',
+    show_seed_desc: 'Recupera la tua frase di seed',
     forgot_password: 'Password dimenticata?',
     status: 'Stato',
     type: 'Tipo',
-    open_explorer: 'Apri block explorer'
+    open_explorer: 'Apri block explorer',
+    copied_to_clipboard: 'Copiato negli appunti',
+    show: 'Mostra',
+    missing_password: 'La password è obbligatoria'
 }

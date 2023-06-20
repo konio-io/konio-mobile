@@ -384,10 +384,10 @@ export const setWithdrawAmount = (amount : number) => {
     WithdrawStore.amount.set(amount);
 }
 
-export const lock = () => {
-    LockStore.set(true);
+export const lock = (key: string) => {
+    LockStore.set({[key]: true});
 }
 
-export const unlock = () => {
-    LockStore.set(false);
+export const unlock = (key: string) => {
+    LockStore.set({[key]: false});
 }

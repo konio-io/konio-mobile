@@ -100,5 +100,14 @@ export default {
     reset_password_desc: 'Restablece tu contraseña',
     write_current_seed: 'Escribe la frase de recuperación para restablecer la contraseña',
     seed_not_match: 'La frase de recuperación ingresada no coincide',
-    password_removed: 'Contraseña eliminada'
+    password_removed: 'Contraseña eliminada',
+    show_seed: 'Mostrar semilla',
+    show_seed_desc: 'Recupera tu frase de recuperación',
+    forgot_password: '¿Olvidaste tu contraseña?',
+    status: 'Estado',
+    type: 'Tipo',
+    open_explorer: 'Abrir explorador de bloques',
+    copied_to_clipboard: 'Copiado al portapapeles',
+    show: 'Mostrar',
+    missing_password: 'Contraseña faltante. Es obligatoria.'
 }

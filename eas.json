@@ -1,6 +1,7 @@
 {
   "cli": {
-    "version": ">= 3.13.3"
+    "version": ">= 3.13.3",
+    "appVersionSource": "local"
   },
   "build": {
     "development": {
@@ -19,15 +20,11 @@
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "autoIncrement": true
+    }
   },
   "submit": {
-    "production": {
-      "android": {
-        "track": "beta"
-      },
-      "ios": {
-      }
-    }
+    "production": {}
   }
 }

@@ -1,4 +1,4 @@
-import { FlatList, TouchableHighlight, Linking, View, StyleSheet, Pressable } from 'react-native';
+import { FlatList, TouchableHighlight, Linking, View, StyleSheet } from 'react-native';
 import { AntDesign, Feather } from '@expo/vector-icons';;
 import { TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS } from '../lib/Constants';
 import { useCoinTransactions, useCurrentNetworkId, useTransaction, useTheme, useNetwork } from '../hooks';
@@ -9,8 +9,7 @@ import type { Theme } from '../types/store';
 import i18n from '../locales';
 import { useHookstate } from '@hookstate/core';
 import Button from './Button';
-import * as Clipboard from 'expo-clipboard';
-import { showToast } from '../actions';
+import Copiable from './Copiable';
 
 export default (props: {
     contractId: string
@@ -45,14 +44,6 @@ export const TransactionListItem = (props: {
     const theme = useTheme().get();
     const { Color, Spacing, Border } = theme.vars;
     const styles = createStyles(theme);
-
-    const copyToClipboard = async () => {
-        await Clipboard.setStringAsync(transaction.transactionId);
-        showToast({
-            type: 'info',
-            text1: i18n.t('address_copied')
-        });
-    };
 
     const openTransactionLink = () => {
         Linking.openURL(`${network.explorer}/tx/${props.transactionId}`);
@@ -94,13 +85,12 @@ export const TransactionListItem = (props: {
 
                 {showDetail.get() &&
                     <View style={{rowGap: Spacing.base}}>
-                        <Pressable onPress={copyToClipboard}>
+                        <Copiable copy={transaction.transactionId}>
                             <View>
                                 <Text style={styles.textSmall}>TXid <Feather name="copy" size={12} /></Text>
                                 <Text>{transaction.transactionId}</Text>
-                                
                             </View>
-                        </Pressable>
+                        </Copiable>
                         <View>
                             <Text style={styles.textSmall}>{i18n.t('type')}</Text>
                             <Text>{transaction.type}</Text>
