@@ -9,7 +9,7 @@ import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Toast } from './components';
 import { WalletStack, SettingStack, IntroStack, Unavailable, Loading, Unlock } from './screens';
-import { useCurrentAddress, useLocker, usePassword, useTheme } from './hooks';
+import { useCurrentAddress, useLocker, useTheme } from './hooks';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import i18n from './locales';

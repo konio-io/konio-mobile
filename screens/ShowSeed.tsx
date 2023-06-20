@@ -1,4 +1,3 @@
-import { useFocusEffect } from "@react-navigation/native";
 import { Wrapper, Text, Button } from "../components"
 import { useCurrentSeed, useLocker } from "../hooks"
 import Unlock from "./Unlock";
