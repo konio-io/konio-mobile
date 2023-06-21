@@ -42,3 +42,7 @@ export const TRANSACTION_TYPE_SWAP = 'SWAP';
 export const TRANSACTION_STATUS_PENDING = 'PENDING';
 export const TRANSACTION_STATUS_SUCCESS = 'SUCCESS';
 export const TRANSACTION_STATUS_ERROR = 'ERROR';
+export const FALLBACK_LOCALE = 'en';
+export const FALLBACK_THEME = 'light';
+export const OS_LOCALE = 'auto';
+export const OS_THEME = 'auto';

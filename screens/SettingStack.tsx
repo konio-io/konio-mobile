@@ -1,18 +1,19 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import { useTheme } from '../hooks';
+import { useTheme, useI18n } from '../hooks';
 import type { SettingStackParamList } from '../types/navigation';
 import Setting from './Setting';
-import Network from './Network';
+import ChangeNetwork from './ChangeNetwork';
 import About from './About';
-import NewWalletAccount from './NewWalletAccount';
-import i18n from '../locales';
 import ShowSeed from './ShowSeed';
+import ChangeTheme from './ChangeTheme';
+import ChangeLocale from './ChangeLocale';
+import Security from './Security';
 
 const Stack = createStackNavigator<SettingStackParamList>();
 
 export default () => {
-
-  const theme = useTheme().get();
+  const i18n = useI18n();
+  const theme = useTheme();
   const { FontFamily, Color, Border } = theme.vars;
 
   return (
@@ -37,15 +38,8 @@ export default () => {
         }}
       />
       <Stack.Screen
-        name="NewWalletAccount"
-        component={NewWalletAccount}
-        options={{
-          title: i18n.t('add_account')
-        }}
-      />
-      <Stack.Screen
-        name="Network"
-        component={Network}
+        name="ChangeNetwork"
+        component={ChangeNetwork}
         options={{
           title: i18n.t('networks'),
         }}
@@ -55,6 +49,27 @@ export default () => {
         component={ShowSeed}
         options={{
           title: i18n.t('show_seed'),
+        }}
+      />
+      <Stack.Screen
+        name="ChangeTheme"
+        component={ChangeTheme}
+        options={{
+          title: i18n.t('theme'),
+        }}
+      />
+      <Stack.Screen
+        name="ChangeLocale"
+        component={ChangeLocale}
+        options={{
+          title: i18n.t('locale'),
+        }}
+      />
+      <Stack.Screen
+        name="Security"
+        component={Security}
+        options={{
+          title: i18n.t('security'),
         }}
       />
       <Stack.Screen

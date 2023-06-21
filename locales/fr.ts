@@ -109,5 +109,18 @@ export default {
     open_explorer: 'Ouvrir l\'explorateur de blocs',
     copied_to_clipboard: 'Copié dans le presse-papiers',
     show: 'Afficher',
-    missing_password: 'Mot de passe manquant. Il est obligatoire.'
+    missing_password: 'Mot de passe manquant. Il est obligatoire.',
+    theme: 'Thème',
+    change_theme_desc: 'Changer le thème de l\'application',
+    dark: 'Sombre',
+    light: 'Clair',
+    auto: 'Automatique',
+    theme_changed: 'Thème changé en {{name}}',
+    locale: 'Langue',
+    change_locale_desc: 'Changer la langue',
+    locale_changed: 'Langue changée en {{name}}',
+    biometric_unlock: 'Déverrouillage biométrique',
+    enable_biometric_unlock: 'Activer le déverrouillage biométrique',
+    security: 'Sécurité',
+    security_desc: 'Sécurité et accès'
 }

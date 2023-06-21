@@ -1,14 +1,12 @@
 import { FlatList, View } from 'react-native';
-import { useNetworks, useCurrentNetworkId, useNetwork, useTheme } from '../hooks';
+import { useNetworks, useCurrentNetworkId, useNetwork, useTheme, useI18n } from '../hooks';
 import { UserStore } from '../stores';
 import { setCurrentNetwork, showToast } from '../actions';
 import { ListItemSelected, Text, Wrapper } from '../components';
-import i18n from '../locales';
 
 export default () => {
   const networks = useNetworks();
-
-  const theme = useTheme().get();
+  const theme = useTheme();
   const styles = theme.styles;
 
   return (
@@ -28,9 +26,10 @@ export const ListItem = (props: {
   networkId: string
 }) => {
 
+  const i18n = useI18n();
   const currentNetworkId = useCurrentNetworkId();
   const network = useNetwork(props.networkId);
-  const theme = useTheme().get();
+  const theme = useTheme();
   const styles = theme.styles;
 
   const ItemComponent = () => (

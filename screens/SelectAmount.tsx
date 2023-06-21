@@ -1,8 +1,7 @@
 import { Button, TextInput, Wrapper, Text, Selector } from "../components"
 import { useNavigation } from "@react-navigation/native"
 import type { SelectAmountNavigationProp } from "../types/navigation";
-import i18n from "../locales";
-import { useCoin, useCoinBalance, useTheme, useWithdraw } from "../hooks";
+import { useCoin, useCoinBalance, useTheme, useWithdraw, useI18n } from "../hooks";
 import { useHookstate } from "@hookstate/core";
 import { View, StyleSheet } from "react-native";
 import { Feather } from '@expo/vector-icons';
@@ -11,14 +10,14 @@ import { setWithdrawAmount, setWithdrawContractId, showToast } from "../actions"
 
 export default () => {
     const navigation = useNavigation<SelectAmountNavigationProp>();
-
+    const i18n = useI18n();
     const withdraw = useWithdraw();
     const contractId = withdraw.contractId;
 
     const balance = useCoinBalance(contractId.get());
     const coin = useCoin(contractId.get());
     const amount = useHookstate(0);
-    const theme = useTheme().get();
+    const theme = useTheme();
     const styles = createStyles(theme);
     const { FontSize, Spacing } = theme.vars;
 

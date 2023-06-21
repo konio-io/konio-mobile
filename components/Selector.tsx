@@ -8,7 +8,7 @@ export default (props: {
     children: ReactNode
 }) => {
 
-    const theme = useTheme().get();
+    const theme = useTheme();
     const styles = theme.styles;
     const { Spacing, Border } = theme.vars;
 

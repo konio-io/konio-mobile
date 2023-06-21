@@ -109,5 +109,22 @@ export default {
     open_explorer: 'Open block explorer',
     copied_to_clipboard: 'Copied to clipboard',
     show: 'Show',
-    missing_password: 'Missing password. It is mandatory.'
+    missing_password: 'Missing password. It is mandatory.',
+    theme: 'Theme',
+    change_theme_desc: 'Change app theme',
+    dark: 'Dark',
+    light: 'Light',
+    auto: 'Auto',
+    theme_changed: 'Theme changed in {{name}}',
+    locale: 'Language',
+    change_locale_desc: 'Change the language',
+    locale_changed: 'Language changed in {{name}}',
+    biometric_unlock: 'Biometric unlock',
+    enable_biometric_unlock: 'Enable biometric sensor unlocker',
+    security: 'Security',
+    security_desc: 'Security and access',
+    cancel: 'Cancel',
+    coin_deletion_confirm: 'Are you sure you want to delete {{name}}?',
+    coin_deleted: '{{name}} deleted',
+    yes: 'Yes'
 }

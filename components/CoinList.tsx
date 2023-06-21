@@ -17,7 +17,10 @@ export default (props: {
     const coins = walletCoins.get()
         .filter((contractId: string) => {
             const coin = UserStore.coins[contractId];
-            return coin.networkId.get() === currentNetworkId.get();
+            if (coin) {
+                return coin.networkId.get() === currentNetworkId.get();
+            }
+            return false;
         });
 
     const loadCoinList = () => {

@@ -4,7 +4,7 @@ import Svg, { Defs, ClipPath, Use, G, Path } from "react-native-svg";
 import { useTheme } from "../hooks";
 
 export default () => {
-  const theme = useTheme().get();
+  const theme = useTheme();
   const { Color } = theme.vars;
 
   return (

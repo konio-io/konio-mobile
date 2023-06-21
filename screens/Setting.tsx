@@ -1,66 +1,62 @@
-import { View, FlatList } from 'react-native';
+import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { ResetPasswordNavigationProp, SettingNavigationProp } from '../types/navigation';
-import type { FlatListItem } from '../types/ui';
-import { useTheme } from '../hooks';
-import i18n from '../locales';
+import { SettingNavigationProp } from '../types/navigation';
+import { useTheme, useI18n } from '../hooks';
 import { Wrapper } from '../components';
 import ListItem from '../components/ListItem';
 
 export default () => {
   const navigation = useNavigation<SettingNavigationProp>();
-  const resetNavigation = useNavigation<ResetPasswordNavigationProp>();
-
-  const items: Array<FlatListItem> = [
-    {
-      title: i18n.t('network'),
-      name: i18n.t('network'),
-      description: i18n.t('choose_network'),
-      onPress: (name: string) => { navigation.push('Network') }
-    },
-    {
-      title: i18n.t('add_account'),
-      name: 'NewWalletAccount',
-      description: i18n.t('add_account_desc'),
-      onPress: (name: string) => { navigation.push('NewWalletAccount') }
-    },
-    {
-      title: i18n.t('reset_password'),
-      name: 'ResetPassword',
-      description: i18n.t('reset_password_desc'),
-      onPress: (name: string) => { resetNavigation.push('ResetPassword') }
-    },
-    {
-      title: i18n.t('show_seed'),
-      name: 'ShowSeed',
-      description: i18n.t('show_seed_desc'),
-      onPress: (name: string) => { navigation.push('ShowSeed') }
-    },
-    {
-      title: i18n.t('about'),
-      name: i18n.t('about'),
-      description: i18n.t('show_app_info'),
-      onPress: (name: string) => { navigation.push('About') }
-    },
-  ];
-
-  const theme = useTheme().get();
+  const i18n = useI18n();
+  const theme = useTheme();
   const styles = theme.styles;
 
   return (
     <Wrapper type='full'>
-      <FlatList
-        data={items}
-        renderItem={({ item }) =>
-          <ListItem
-            title={item.title}
-            name={item.name}
-            description={item.description}
-            onPress={item.onPress}
-          />
-        }
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
+
+      <ListItem
+        title={i18n.t('network')}
+        name={i18n.t('network')}
+        description={i18n.t('choose_network')}
+        onPress={() => navigation.push('ChangeNetwork')}
       />
+
+      <View style={styles.separator}/>
+
+      <ListItem
+        title={i18n.t('theme')}
+        name={i18n.t('theme')}
+        description={i18n.t('change_theme_desc')}
+        onPress={() => navigation.push('ChangeTheme')}
+      />
+
+      <View style={styles.separator}/>
+
+      <ListItem
+        title={i18n.t('locale')}
+        name={i18n.t('locale')}
+        description={i18n.t('change_locale_desc')}
+        onPress={() => navigation.push('ChangeLocale')}
+      />
+
+      <View style={styles.separator}/>
+
+      <ListItem
+        title={i18n.t('security')}
+        name={i18n.t('security')}
+        description={i18n.t('security_desc')}
+        onPress={() => navigation.push('Security')}
+      />
+
+      <View style={styles.separator}/>
+
+      <ListItem
+        title={i18n.t('about')}
+        name={i18n.t('about')}
+        description={i18n.t('show_app_info')}
+        onPress={() => navigation.push('About')}
+      />
+
     </Wrapper>
   );
 }

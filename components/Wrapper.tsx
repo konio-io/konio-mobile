@@ -5,7 +5,7 @@ export default (props: {
     type?: string,
     children: any
 }) => {
-    const theme = useTheme().get();
+    const theme = useTheme();
     const styles = theme.styles;
     const type = props.type ?? 'default';
 

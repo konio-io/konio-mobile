@@ -2,15 +2,15 @@ import * as Clipboard from 'expo-clipboard';
 import { TouchableHighlight, Text, View, StyleSheet } from 'react-native';
 import { rgba } from '../lib/utils';
 import { Feather } from '@expo/vector-icons';
-import { useTheme } from '../hooks';
+import { useTheme, useI18n } from '../hooks';
 import type { Theme } from '../types/store';
 import { showToast } from '../actions';
-import i18n from '../locales';
 
 export default (props: {
     address: string,
     compress?: boolean
 }) => {
+    const i18n = useI18n();
     const copyToClipboard = async () => {
         await Clipboard.setStringAsync(props.address);
         showToast({
@@ -19,7 +19,7 @@ export default (props: {
         });
     };
 
-    const theme = useTheme().get();
+    const theme = useTheme();
     const { Color } = theme.vars;
     const styles = createStyles(theme);
 

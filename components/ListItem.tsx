@@ -10,7 +10,7 @@ export default (props: {
     onPress: Function
 }) => {
 
-    const theme = useTheme().get();
+    const theme = useTheme();
     const { Color } = theme.vars;
     const styles = theme.styles;
 

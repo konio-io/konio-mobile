@@ -3,17 +3,19 @@ import { useTheme } from '../hooks';
 import CircularProgress from './CircularProgress';
 import Text from './Text';
 import type { Theme } from '../types/store';
-import i18n from '../locales';
+import { useI18n } from '../hooks';
 
 export default (props: {
     percent: number,
     balance: number,
     timeRecharge: number
 }) => {
+    
     const size = 150;
-    const theme = useTheme().get();
+    const theme = useTheme();
     const { Color } = theme.vars;
     const styles = createStyles(theme);
+    const i18n = useI18n();
 
     let color = Color.success;
     if (props.percent < 20) {

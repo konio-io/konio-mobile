@@ -2,16 +2,15 @@ import { StyleSheet, View } from 'react-native';
 import { Pressable } from 'react-native';
 import { State } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
-import { useCurrentAddress, useTheme, useWallet } from '../hooks';
+import { useCurrentAddress, useTheme, useWallet, useI18n } from '../hooks';
 import { Feather } from '@expo/vector-icons';
 import { Text, Button, CoinList, WalletAvatar, ManaBar, CoinListItem, Wrapper, Address, Selector } from '../components';
 import type { Theme } from '../types/store';
 import type { WalletNavigationProp } from '../types/navigation';
 import Loading from './Loading';
-import i18n from '../locales';
 
 export default () => {
-
+  const i18n = useI18n();
   const currentAddress = useCurrentAddress();
   const currentAddressOrNull: State<string> | null = currentAddress.ornull;
   if (!currentAddressOrNull) {
@@ -19,7 +18,7 @@ export default () => {
   }
 
   const wallet = useWallet(currentAddressOrNull.get()).get();
-  const theme = useTheme().get();
+  const theme = useTheme();
   const { Spacing, Border } = theme.vars;
   const styles = createStyles(theme);
   const navigation = useNavigation<WalletNavigationProp>();
@@ -78,8 +77,9 @@ const Footer = (props: {
   onPress: Function
 }) => {
   const navigation = useNavigation<WalletNavigationProp>();
-  const theme = useTheme().get();
+  const theme = useTheme();
   const styles = createStyles(theme);
+  const i18n = useI18n();
 
   return (
     <View style={styles.addMoreContainer}>

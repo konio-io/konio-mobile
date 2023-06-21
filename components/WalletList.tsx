@@ -9,7 +9,7 @@ export default (props: {
 }) => {
 
     const wallets = useWallets();
-    const theme = useTheme().get();
+    const theme = useTheme();
     const styles = theme.styles;
     let data = wallets.get().map(w => w.address);
 

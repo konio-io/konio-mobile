@@ -2,11 +2,12 @@ import { useNavigation } from '@react-navigation/native';
 import { Button, Text, Wrapper } from '../components';
 import type { IntroNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
-import i18n from '../locales';
+import { useI18n } from '../hooks';
 
 export default () => {
     const navigation = useNavigation<IntroNavigationProp>();
-
+    const i18n = useI18n();
+    
     return (
         <Wrapper>
 

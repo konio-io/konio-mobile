@@ -13,7 +13,7 @@ export default (props: {
 }) => {
 
     const openState = useHookstate(props.openState);
-    const theme = useTheme().get();
+    const theme = useTheme();
     const styles = createStyles(theme);
     const { Color } = theme.vars;
 

@@ -8,7 +8,7 @@ export default (props: {
     phrase: string,
     onWordClick?: Function
 }) => {
-    const theme = useTheme().get();
+    const theme = useTheme();
     const styles = createStyles(theme);
     const childrenList: Array<ReactElement> = [];
     const words = props.phrase.split(' ');
@@ -39,7 +39,7 @@ const WordTag = (props: {
     word: string
     onClick: Function
 }) => {
-    const theme = useTheme().get();
+    const theme = useTheme();
     const styles = createStyles(theme);
 
     return (

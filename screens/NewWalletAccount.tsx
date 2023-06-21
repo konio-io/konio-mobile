@@ -4,11 +4,12 @@ import type { NewWalletSeedNavigationProp } from '../types/navigation';
 import { setCurrentWallet, addAccount, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { Button, TextInput, Wrapper } from '../components';
-import i18n from '../locales';
+import { useI18n } from '../hooks';
 
 export default () => {
     const navigation = useNavigation<NewWalletSeedNavigationProp>();
     const name = useHookstate('');
+    const i18n = useI18n();
 
     const addWallet = () => {
         if (!name.get()) {

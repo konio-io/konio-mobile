@@ -1,7 +1,6 @@
 import { View } from 'react-native';
 import { Wrapper, TextInput, Button } from '../components';
-import i18n from '../locales';
-import { useTheme, useWithdraw } from '../hooks';
+import { useTheme, useWithdraw, useI18n } from '../hooks';
 import { useNavigation } from '@react-navigation/native';
 import { SelectRecipientNavigationProp } from '../types/navigation';
 import { setWithdrawAddress, showToast } from '../actions';
@@ -10,8 +9,9 @@ import { Feather, AntDesign } from '@expo/vector-icons';
 export default () => {
     const navigation = useNavigation<SelectRecipientNavigationProp>();
     const withdraw = useWithdraw();
-    const theme = useTheme().get();
+    const theme = useTheme();
     const { Spacing } = theme.vars;
+    const i18n = useI18n();
 
     const next = () => {
         const withdrawAddressOrNull = withdraw.address.ornull;

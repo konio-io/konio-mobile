@@ -6,18 +6,26 @@ import { AntDesign } from '@expo/vector-icons';
 export default (props: {
     ItemComponent: JSXElementConstructor<any>
     onPress: Function,
+    onLongPress?: Function,
     selected: boolean
   }) => {
     
     const ItemComponent = props.ItemComponent;
-    const theme = useTheme().get();
+    const theme = useTheme();
     const { Color } = theme.vars;
     const styles = theme.styles;
 
     return (
-      <TouchableHighlight onPress={() => {
-        props.onPress();
-      }}>
+      <TouchableHighlight 
+        onPress={() => {
+          props.onPress();
+        }}
+        onLongPress={() => {
+          if (props.onLongPress) {
+            props.onLongPress();
+          }
+        }}
+      >
         <View style={styles.listItemContainer}>
           <ItemComponent/>
   

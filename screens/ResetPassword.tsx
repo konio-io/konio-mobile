@@ -4,8 +4,7 @@ import type { IntroNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
 import { useHookstate } from '@hookstate/core';
 import { setPassword, showToast } from '../actions';
-import { useCurrentSeed, useTheme } from '../hooks';
-import i18n from '../locales';
+import { useCurrentSeed, useTheme, useI18n } from '../hooks';
 
 export default () => {
     const navigation = useNavigation<IntroNavigationProp>();
@@ -13,8 +12,8 @@ export default () => {
     const passwordConfirm = useHookstate('');
     const seed = useHookstate('');
     const currentSeed = useCurrentSeed();
-
-    const theme = useTheme().get();
+    const i18n = useI18n();
+    const theme = useTheme();
     const styles = theme.styles;
 
     const savePassword = () => {

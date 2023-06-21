@@ -17,7 +17,7 @@ const CircularProgress = (props: {
   const circum = radius * 2 * Math.PI;
   const svgProgress = 100 - props.progressPercent;
 
-  const theme = useTheme().get();
+  const theme = useTheme();
   const { FontFamily } = theme.vars;
 
   return (

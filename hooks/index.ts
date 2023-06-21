@@ -1,8 +1,11 @@
 import { State, useHookstate } from "@hookstate/core";
 import { CoinBalanceStore, UserStore, EncryptedStore, WithdrawStore, LockStore } from "../stores";
 import { getTheme } from "../themes";
-import { Theme } from "../types/store";
 import { useColorScheme} from 'react-native';
+import locales from "../locales";
+import { I18n } from 'i18n-js';
+import { getLocales } from 'expo-localization';
+import { FALLBACK_LOCALE, FALLBACK_THEME, OS_LOCALE, OS_THEME } from "../lib/Constants";
 
 export const useNetworks = () => {
     const networks = useHookstate(UserStore.networks);
@@ -78,12 +81,16 @@ export const usePassword = () => {
     return useHookstate(EncryptedStore.password);
 }
 
-export const useTheme = () => {
-    const color = useColorScheme() ?? "light";
 
-    return {
-        get: () : Theme => getTheme(color)
+export const useTheme = () => {
+    const storeTheme = useHookstate(UserStore.theme).get();
+    const systemTheme = useColorScheme() ?? FALLBACK_THEME;
+
+    if (storeTheme === OS_THEME) {
+        return getTheme(systemTheme);
     }
+
+    return getTheme(storeTheme);
 }
 
 export const useWithdraw = () => {
@@ -100,4 +107,30 @@ export const useLocker = (key: string, defaultValue?: boolean) => {
 
 export const useCurrentSeed = () => {
     return Object.values(EncryptedStore.accounts).filter(w => w.seed.get() !== undefined)[0].seed;
+}
+
+const i18n = new I18n(locales);
+export const useI18n = () => {
+    let currentLocale = useHookstate(UserStore.locale).get();
+    if (currentLocale === OS_LOCALE) {
+        const systemLocale = getLocales()[0].languageCode;
+        currentLocale = Object.keys(locales).includes(systemLocale) ?
+            systemLocale :
+            FALLBACK_LOCALE;
+    }
+
+    if (i18n.locale !== currentLocale) {
+        i18n.locale = currentLocale;
+    }
+
+    return i18n;
+}
+
+export const useBiometric = () => {
+    return useHookstate(UserStore.biometric);
+}
+
+export const useCurrentKoin = () => {
+    const currentNetwork = useHookstate(UserStore.currentNetworkId);
+    return UserStore.networks[currentNetwork.get()].koinContractId;
 }

@@ -1,20 +1,20 @@
 import { View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import type { WalletStackParamList } from '../types/navigation';
-import { useTheme } from '../hooks';
+import { useTheme, useI18n } from '../hooks';
 import Wallet from './Wallet';
 import AddCoin from './AddCoin';
 import Coin from './Coin';
 import Deposit from './Deposit';
 import SwitchAccount from './SwitchAccount';
-import i18n from '../locales';
 import WithdrawStack from './WithdrawStack';
+import NewWalletAccount from './NewWalletAccount';
 
 const Stack = createStackNavigator<WalletStackParamList>();
 
 export default () => {
-
-  const theme = useTheme().get();
+  const i18n = useI18n();
+  const theme = useTheme();
   const { FontFamily, Color, Border } = theme.vars;
 
   return (
@@ -78,6 +78,13 @@ export default () => {
         options={{
           title: i18n.t('switch_account'),
           presentation: 'modal'
+        }}
+      />
+      <Stack.Screen
+        name="NewWalletAccount"
+        component={NewWalletAccount}
+        options={{
+          title: i18n.t('add_account')
         }}
       />
     </Stack.Navigator>

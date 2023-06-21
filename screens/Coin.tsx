@@ -12,7 +12,7 @@ export default () => {
     const route = useRoute<CoinRouteProp>();
     const walletCoin = useCoin(route.params.contractId);
     const coin = walletCoin.get();
-    const theme = useTheme().get();
+    const theme = useTheme();
     const styles = createStyles(theme);
 
     return (

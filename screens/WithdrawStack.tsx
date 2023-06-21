@@ -1,7 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import type { WithdrawStackParamList } from '../types/navigation'
-import { useTheme } from '../hooks';
-import i18n from '../locales';
+import { useTheme, useI18n } from '../hooks';
 import SelectRecipient from './SelectRecipient';
 import SelectAmount from './SelectAmount';
 import ConfirmWithdraw from './ConfirmWithdraw';
@@ -11,8 +10,8 @@ import SelectAccount from './SelectAccount';
 const Stack = createStackNavigator<WithdrawStackParamList>();
 
 export default () => {
-
-  const theme = useTheme().get();
+  const i18n = useI18n();
+  const theme = useTheme();
   const { FontFamily, Color, Border } = theme.vars;
 
   return (

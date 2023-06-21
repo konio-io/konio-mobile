@@ -3,13 +3,12 @@ import { useNavigation } from '@react-navigation/native';
 import { Button, Logo, Text, Wrapper } from '../components';
 import type { IntroNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
-import { useTheme } from '../hooks';
-import i18n from '../locales';
+import { useTheme, useI18n } from '../hooks';
 
 export default () => {
     const navigation = useNavigation<IntroNavigationProp>();
-
-    const theme = useTheme().get();
+    const i18n = useI18n();
+    const theme = useTheme();
     const { Spacing } = theme.vars;
 
     return (

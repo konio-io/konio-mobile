@@ -22,6 +22,7 @@ import ListItem from './ListItem';
 import Selector from './Selector';
 import Copiable from './Copiable';
 import Seed from './Seed';
+import Switch from './Switch';
 
 export {
     ActivityIndicator,
@@ -47,5 +48,6 @@ export {
     ListItem,
     Selector,
     Copiable,
-    Seed
+    Seed,
+    Switch
 }

@@ -6,7 +6,7 @@ import { StyleSheet } from "react-native";
 
 export default () => {
 
-    const theme = useTheme().get();
+    const theme = useTheme();
     const styles = createStyles(theme);
 
     const toastConfig = {

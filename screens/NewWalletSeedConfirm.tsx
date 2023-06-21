@@ -5,14 +5,14 @@ import { addSeed, setCurrentWallet, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
 import { NewWalletSeedConfirmRouteProp } from '../types/navigation';
-import i18n from '../locales';
-import { useTheme } from '../hooks';
+import { useTheme, useI18n } from '../hooks';
 
 export default () => {
     const route = useRoute<NewWalletSeedConfirmRouteProp>();
     const { name, seed } = route.params;
-    const theme = useTheme().get();
+    const theme = useTheme();
     const styles = theme.styles;
+    const i18n = useI18n();
 
     const addWord = (list: State<Array<string>>, word: string) => {
         list.merge([word]);

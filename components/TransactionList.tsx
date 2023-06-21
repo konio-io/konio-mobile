@@ -1,12 +1,11 @@
 import { FlatList, TouchableHighlight, Linking, View, StyleSheet } from 'react-native';
 import { AntDesign, Feather } from '@expo/vector-icons';;
 import { TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS } from '../lib/Constants';
-import { useCoinTransactions, useCurrentNetworkId, useTransaction, useTheme, useNetwork } from '../hooks';
+import { useCoinTransactions, useCurrentNetworkId, useTransaction, useTheme, useNetwork, useI18n } from '../hooks';
 import { UserStore } from '../stores';
 import ActivityIndicator from './ActivityIndicator';
 import Text from './Text';
 import type { Theme } from '../types/store';
-import i18n from '../locales';
 import { useHookstate } from '@hookstate/core';
 import Button from './Button';
 import Copiable from './Copiable';
@@ -16,7 +15,7 @@ export default (props: {
 }) => {
 
     const transactions = useCoinTransactions(props.contractId);
-    const theme = useTheme().get();
+    const theme = useTheme();
     const styles = theme.styles;
 
     return (
@@ -41,9 +40,10 @@ export const TransactionListItem = (props: {
     const network = useNetwork(currentNetworkId).get();
     const date = new Date(transaction.timestamp).toLocaleDateString();
     const time = new Date(transaction.timestamp).toLocaleTimeString();
-    const theme = useTheme().get();
+    const theme = useTheme();
     const { Color, Spacing, Border } = theme.vars;
     const styles = createStyles(theme);
+    const i18n = useI18n();
 
     const openTransactionLink = () => {
         Linking.openURL(`${network.explorer}/tx/${props.transactionId}`);
@@ -116,7 +116,7 @@ const TypeIcon = (props: {
     type: string
 }) => {
 
-    const theme = useTheme().get();
+    const theme = useTheme();
     const { Color } = theme.vars;
 
     switch (props.type) {

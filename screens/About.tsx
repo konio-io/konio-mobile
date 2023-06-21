@@ -1,13 +1,13 @@
 import { Linking, Pressable, StyleSheet, View } from 'react-native';
 import { Text, Logo, Wrapper, Address } from '../components';
-import { useTheme } from '../hooks';
+import { useTheme, useI18n } from '../hooks';
 import type { Theme } from '../types/store';
 import Constants from 'expo-constants';
-import i18n from '../locales';
 
 export default () => {
 
-    const theme = useTheme().get();
+    const i18n = useI18n();
+    const theme = useTheme();
     const styles = createStyles(theme);
     const { Color, Spacing } = theme.vars;
 

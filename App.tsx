@@ -9,10 +9,9 @@ import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Toast } from './components';
 import { WalletStack, SettingStack, IntroStack, Unavailable, Loading, Unlock } from './screens';
-import { useCurrentAddress, useTheme } from './hooks';
+import { useCurrentAddress, useTheme, useI18n } from './hooks';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import i18n from './locales';
 import { createStackNavigator } from '@react-navigation/stack';
 import ResetPassword from './screens/ResetPassword';
 
@@ -34,7 +33,8 @@ const RootStack = createStackNavigator();
 
 const LoadedApp = () => {
 
-  const theme = useTheme().get();
+  const theme = useTheme();
+  const i18n = useI18n();
   const PolyfillCrypto = global.PolyfillCrypto;
   const navigationTheme = theme.name === 'dark' ? DarkTheme : DefaultTheme;
   const currentAddress = useCurrentAddress();
@@ -78,7 +78,7 @@ const LoadedApp = () => {
         </RootStack.Navigator>
       }
 
-      <StatusBar style="auto" />
+      <StatusBar style={theme.statusBarStyle} />
       <Toast />
     </NavigationContainer>
   );
@@ -86,11 +86,12 @@ const LoadedApp = () => {
 
 const Tab = createBottomTabNavigator();
 const Tabs = () => {
-  const theme = useTheme().get();
+  const theme = useTheme();
   const { Color, FontFamily, Border } = theme.vars;
   const styles = theme.styles;
   const insets = useSafeAreaInsets();
-
+  const i18n = useI18n();
+  
   return (
     <View
       style={{
@@ -137,7 +138,7 @@ const Tabs = () => {
         <Tab.Screen name="Swap"
           component={Unavailable}
           options={{
-            title: i18n.t('Swap'),
+            title: i18n.t('swap'),
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="swap" size={size} color={color} />
             )
@@ -147,7 +148,7 @@ const Tabs = () => {
           name="Dapps"
           component={Unavailable}
           options={{
-            title: i18n.t('Dapps'),
+            title: i18n.t('dapps'),
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="appstore-o" size={size} color={color} />
             )

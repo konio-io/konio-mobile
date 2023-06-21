@@ -3,18 +3,17 @@ import { useHookstate } from '@hookstate/core';
 import { Text, Button, TextInput, Wrapper, Copiable, Seed } from '../components';
 import { generateSeed, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
-import { useTheme } from '../hooks';
+import { useTheme, useI18n } from '../hooks';
 import type { Theme } from '../types/store';
 import { useNavigation } from '@react-navigation/native';
 import type { NewWalletSeedNavigationProp } from '../types/navigation';
-import i18n from '../locales';
 
 export default () => {
     const navigation = useNavigation<NewWalletSeedNavigationProp>();
     const seed = useHookstate('');
     const name = useHookstate('');
-
-    const theme = useTheme().get();
+    const i18n = useI18n();
+    const theme = useTheme();
     const styles = createStyles(theme);
     const { Border, Spacing } = theme.vars;
 

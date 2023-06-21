@@ -12,7 +12,7 @@ export default (props: {
     type?: string
 }) => {
 
-    const theme = useTheme().get();
+    const theme = useTheme();
     const styles = createStyles(theme);;
     const style = props.style ?? {};
     const textStyle = props.type ? styles[`${props.type}Text`] : styles.primaryText;

@@ -4,10 +4,8 @@ import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, WithdrawStore, 
 import { Coin, Transaction, Wallet } from "../types/store";
 import { TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_WITHDRAW } from "../lib/Constants";
 import HDKoinos from "../lib/HDKoinos";
-
 import Toast from 'react-native-toast-message';
-import { State } from "@hookstate/core";
-
+import { State, none } from "@hookstate/core";
 
 export const setCurrentWallet = (address: string) => {
     UserStore.currentAddress.set(address);
@@ -390,4 +388,32 @@ export const lock = (key: string) => {
 
 export const unlock = (key: string) => {
     LockStore.set({[key]: false});
+}
+
+export const setLocale = (locale: string) => {
+    UserStore.locale.set(locale);
+}
+
+export const setTheme = (theme: string) => {
+    UserStore.theme.set(theme);
+}
+
+export const setBiometric = (value: boolean) => {
+    UserStore.biometric.set(value);
+}
+
+export const deleteCoin = (contractId: string) => {
+    const address = UserStore.currentAddress.get();
+    if (!address) {
+        throw new Error('Current address not set');
+    }
+    const coins = UserStore.wallets[address].coins;
+    const index = coins.get().indexOf(contractId);
+    if (index > -1 ) {
+        coins[index].set(none);
+    }
+}
+
+export const deleteWallet = (address: string) => {
+    UserStore.wallets[address].set(none);
 }

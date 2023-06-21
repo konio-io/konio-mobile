@@ -109,5 +109,18 @@ export default {
     open_explorer: 'Открыть блок-эксплорер',
     copied_to_clipboard: 'Скопировано в буфер обмена',
     show: 'Показать',
-    missing_password: 'Отсутствует пароль. Это обязательно.'
+    missing_password: 'Отсутствует пароль. Это обязательно.',
+    theme: 'Тема',
+    change_theme_desc: 'Изменить тему приложения',
+    dark: 'Тёмная',
+    light: 'Светлая',
+    auto: 'Авто',
+    theme_changed: 'Тема изменена на {{name}}',
+    locale: 'Язык',
+    change_locale_desc: 'Изменить язык',
+    locale_changed: 'Язык изменён на {{name}}',
+    biometric_unlock: 'Биометрическая разблокировка',
+    enable_biometric_unlock: 'Включить биометрическую разблокировку',
+    security: 'Безопасность',
+    security_desc: 'Безопасность и доступ'
 }

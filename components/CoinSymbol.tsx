@@ -7,7 +7,7 @@ export default (props: {
     contractId: string
 }) => {
     const coin = useCoin(props.contractId);
-    const theme = useTheme().get();
+    const theme = useTheme();
     const styles = createStyles(theme);
     return (<Text style={styles.symbol}>{coin.get().symbol}</Text>);
 }

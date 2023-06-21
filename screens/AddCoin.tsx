@@ -4,11 +4,12 @@ import type { AddCoinNavigationProp } from '../types/navigation';
 import { addCoin, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Wrapper } from '../components';
-import i18n from '../locales';
+import { useI18n } from '../hooks';
 
 export default () => {
   const navigation = useNavigation<AddCoinNavigationProp>();
   const contractId = useHookstate('');
+  const i18n = useI18n();
 
   const add = () => {
     if (!contractId.get()) {

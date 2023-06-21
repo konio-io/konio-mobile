@@ -49,7 +49,7 @@ const ListItem = (props: {
 }) => {
 
     const wallet = useWallet(props.address).get();
-    const theme = useTheme().get();
+    const theme = useTheme();
     const { Spacing } = theme.vars;
     
     const ItemComponent = () => (

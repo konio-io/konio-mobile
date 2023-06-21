@@ -1,3 +1,5 @@
+import { StatusBarStyle } from "expo-status-bar"
+
 export type EncryptedStoreState = {
     accounts: Record<string, Account>,
     password: string
@@ -9,7 +11,10 @@ export type UserStoreState = {
     wallets: Record<string, Wallet>,
     coins: Record<string, Coin>,
     transactions: Record<string, Transaction>,
-    networks: Record<string, Network>
+    networks: Record<string, Network>,
+    locale: string,
+    theme: string,
+    biometric: boolean
 }
 
 export type Account = {
@@ -91,7 +96,8 @@ export type ThemeVars = {
 export type Theme = {
     name: string,
     vars: ThemeVars,
-    styles: any
+    styles: any,
+    statusBarStyle: StatusBarStyle
 }
 
 export type Withdraw = {

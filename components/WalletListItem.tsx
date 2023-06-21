@@ -11,7 +11,7 @@ export default (props: {
 }) => {
 
     const wallet = useWallet(props.address).get();
-    const theme = useTheme().get();
+    const theme = useTheme();
     const styles = createStyles(theme);
 
     return (

@@ -2,7 +2,7 @@ import { ActivityIndicator } from 'react-native';
 import { useTheme } from '../hooks';
 
 export default (props: any) => {
-    const theme = useTheme().get();
+    const theme = useTheme();
     const { Color } = theme.vars;
 
     const defaultProps = {

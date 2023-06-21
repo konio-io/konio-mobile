@@ -4,7 +4,7 @@ import { rgba } from '../lib/utils';
 
 export default (props: any) => {
 
-    const theme = useTheme().get();
+    const theme = useTheme();
     const { Color } = theme.vars;
     const styles = theme.styles;
 

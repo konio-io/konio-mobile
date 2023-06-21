@@ -1,5 +1,5 @@
 import { View, TouchableHighlight, StyleSheet } from 'react-native';
-import { useTheme } from '../hooks';
+import { useTheme, useI18n } from '../hooks';
 import { useHookstate } from '@hookstate/core';
 import { ManaStore } from '../stores';
 import { useEffect, useRef } from 'react';
@@ -9,11 +9,11 @@ import Modal from './Modal';
 import type { Theme } from '../types/store';
 import Text from './Text';
 import ActivityIndicator from './ActivityIndicator';
-import i18n from '../locales';
 
 export default () => {
     const FIVE_DAYS = 432e6; // 5 * 24 * 60 * 60 * 1000
 
+    const i18n = useI18n();
     const manaState = useHookstate(ManaStore);
     const modalState = useHookstate(false);
     const currentPercent = useHookstate(0);
@@ -53,7 +53,7 @@ export default () => {
         }
     }, [manaState]);
 
-    const theme = useTheme().get();
+    const theme = useTheme();
     const {Color, Spacing } = theme.vars;
     const styles = createStyles(theme);
     const width = currentPercent.get().toString() + '%';

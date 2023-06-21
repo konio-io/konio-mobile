@@ -109,5 +109,18 @@ export default {
     open_explorer: 'Blockexplorer öffnen',
     copied_to_clipboard: 'In die Zwischenablage kopiert',
     show: 'Anzeigen',
-    missing_password: 'Passwort fehlt. Es ist obligatorisch.'
+    missing_password: 'Passwort fehlt. Es ist obligatorisch.',
+    theme: 'Thema',
+    change_theme_desc: 'App-Thema ändern',
+    dark: 'Dunkel',
+    light: 'Hell',
+    auto: 'Automatisch',
+    theme_changed: 'Thema geändert in {{name}}',
+    locale: 'Sprache',
+    change_locale_desc: 'Sprache ändern',
+    locale_changed: 'Sprache geändert in {{name}}',
+    biometric_unlock: 'Biometrische Entsperrung',
+    enable_biometric_unlock: 'Biometrische Entsperrung aktivieren',
+    security: 'Sicherheit',
+    security_desc: 'Sicherheit und Zugang'
 }

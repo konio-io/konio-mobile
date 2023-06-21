@@ -1,13 +1,13 @@
 import { View, Share } from 'react-native';
 import { Text, Button, Address, Wrapper } from '../components';
-import { useCurrentAddress, useTheme } from '../hooks';
+import { useCurrentAddress, useTheme, useI18n } from '../hooks';
 import { AntDesign } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
 import Loading from './Loading';
 import { State } from '@hookstate/core';
-import i18n from '../locales';
 
 export default () => {
+    const i18n = useI18n();
     const currentAddress = useCurrentAddress();
     const currentAddressOrNull : State<string> | null = currentAddress.ornull;
     if (!currentAddressOrNull) {
@@ -22,7 +22,7 @@ export default () => {
         });
     };
 
-    const theme = useTheme().get();
+    const theme = useTheme();
     const { Spacing, Border } = theme.vars;
 
     return (

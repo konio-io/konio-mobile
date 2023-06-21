@@ -109,5 +109,18 @@ export default {
     open_explorer: '打开区块浏览器',
     copied_to_clipboard: '已复制到剪贴板',
     show: '显示',
-    missing_password: '缺少密码。这是必需的。'
+    missing_password: '缺少密码。这是必需的。',
+    theme: '主题',
+    change_theme_desc: '更改应用程序主题',
+    dark: '暗',
+    light: '亮',
+    auto: '自动',
+    theme_changed: '主题更改为{{name}}',
+    locale: '语言',
+    change_locale_desc: '更改语言',
+    locale_changed: '语言更改为{{name}}',
+    biometric_unlock: '生物识别解锁',
+    enable_biometric_unlock: '启用生物识别解锁',
+    security: '安全',
+    security_desc: '安全和访问'
 }

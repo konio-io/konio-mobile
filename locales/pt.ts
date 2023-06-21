@@ -109,5 +109,18 @@ export default {
     open_explorer: 'Abrir explorador de blocos',
     copied_to_clipboard: 'Copiado para a área de transferência',
     show: 'Mostrar',
-    missing_password: 'Senha faltando. É obrigatória.'
+    missing_password: 'Senha faltando. É obrigatória.',
+    theme: 'Tema',
+    change_theme_desc: 'Alterar tema do aplicativo',
+    dark: 'Escuro',
+    light: 'Claro',
+    auto: 'Automático',
+    theme_changed: 'Tema alterado para {{name}}',
+    locale: 'Idioma',
+    change_locale_desc: 'Alterar idioma',
+    locale_changed: 'Idioma alterado para {{name}}',
+    biometric_unlock: 'Desbloqueio biométrico',
+    enable_biometric_unlock: 'Ativar desbloqueio biométrico',
+    security: 'Segurança',
+    security_desc: 'Segurança e acesso'
 }

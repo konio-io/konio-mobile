@@ -4,19 +4,19 @@ import { useNavigation, CommonActions } from '@react-navigation/native';
 import type { ConfirmWithdrawNavigationProp } from '../types/navigation';
 import { withdrawCoin, confirmTransaction, showToast } from '../actions'
 import { Feather } from '@expo/vector-icons';
-import { useCoin, useTheme, useWithdraw } from '../hooks';
-import i18n from '../locales';
+import { useCoin, useTheme, useWithdraw, useI18n } from '../hooks';
 import { View } from 'react-native';
 
 export default () => {
     const navigation = useNavigation<ConfirmWithdrawNavigationProp>();
     const note = useHookstate('');
-    const theme = useTheme().get();
+    const theme = useTheme();
     const styles = theme.styles;
 
     const withdraw = useWithdraw();
     const { address, contractId, amount } = withdraw.get();
     const coin = useCoin(contractId);
+    const i18n = useI18n();
 
     const send = () => {
         if (!address) {

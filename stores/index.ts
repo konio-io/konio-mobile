@@ -1,9 +1,10 @@
 import { State, hookstate } from "@hookstate/core";
-import { DEFAULT_COINS, DEFAULT_NETWORK, DEFAULT_NETWORKS } from "../lib/Constants";
+import { DEFAULT_COINS, DEFAULT_NETWORK, DEFAULT_NETWORKS, OS_LOCALE, OS_THEME } from "../lib/Constants";
 import { UserStoreState, EncryptedStoreState, Withdraw } from "../types/store";
 import { localstored } from "@hookstate/localstored";
 import * as ExpoSecureStore from 'expo-secure-store';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 /**
  * User "clear" store
@@ -15,7 +16,10 @@ const UserStoreDefault: UserStoreState = {
     wallets: {},
     coins: DEFAULT_COINS,
     transactions: {},
-    networks: DEFAULT_NETWORKS
+    networks: DEFAULT_NETWORKS,
+    locale: OS_LOCALE,
+    theme: OS_THEME,
+    biometric: false
 };
 export const UserStore = hookstate(
     {... UserStoreDefault}, localstored({

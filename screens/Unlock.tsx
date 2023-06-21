@@ -1,51 +1,74 @@
-import { Pressable, View } from 'react-native';
+import { Pressable, TouchableOpacity, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useHookstate } from '@hookstate/core';
 import { checkPassword, showToast, unlock } from '../actions';
-import { useTheme } from '../hooks';
+import { useTheme, useI18n, useBiometric } from '../hooks';
 import { Button, TextInput, Logo, Wrapper, Text } from '../components';
-import i18n from '../locales';
-import ResetPassword from './ResetPassword';
 import { useNavigation, useRoute, CommonActions } from '@react-navigation/native';
 import { UnlockNavigationProp, UnlockRouteProp } from '../types/navigation';
+import * as LocalAuthentication from 'expo-local-authentication';
+import { useEffect } from 'react';
 
 export default () => {
     const route = useRoute<UnlockRouteProp>();
     const navigation = useNavigation<UnlockNavigationProp>();
+    const i18n = useI18n();
     const password = useHookstate('');
-    const showResetPassword = useHookstate(false);
     const key = route.params.key;
+    const biometric = useBiometric();
+    const theme = useTheme();
+    const { Spacing } = theme.vars;
 
-    const unlockWallet = () => {
+    const unlockPassword = () => {
         if (!checkPassword(password.get())) {
             showToast({
                 type: 'error',
                 text1: i18n.t('wrong_password')
             });
-            //lock(key);
-        } else {
-            unlock(key);
+            return;
+        }
 
-            if (key === 'app') {
-                const action = CommonActions.reset({
-                    index: 0,
-                    routes: [
-                        { name: 'Main' },
-                    ]
-                });
-                navigation.dispatch(action);
-            } else {
-                navigation.goBack();
+        unlockWallet();
+    };
+
+    const unlockBiometric = async () => {
+        try {
+            const biometricAuth = await LocalAuthentication.authenticateAsync({
+                promptMessage: i18n.t('biometric_unlock'),
+                disableDeviceFallback: true,
+                cancelLabel: i18n.t('cancel'),
+            });
+            if (biometricAuth.success) {
+                unlockWallet();
             }
+        } catch (error) {
+            showToast({
+                type: 'error',
+                text1: i18n.t('wrong_biometric')
+            });
+        }
+    };
+
+    const unlockWallet = () => {
+        unlock(key);
+        if (key === 'app') {
+            const action = CommonActions.reset({
+                index: 0,
+                routes: [
+                    { name: 'Main' },
+                ]
+            });
+            navigation.dispatch(action);
+        } else {
+            navigation.goBack();
         }
     }
 
-    const theme = useTheme().get();
-    const { Spacing } = theme.vars;
-
-    if (showResetPassword.get() === true) {
-        return <ResetPassword/>;
-    }
+    useEffect(() => {
+        if (biometric.get()) {
+            unlockBiometric();
+        }
+    },[biometric]);
 
     return (
         <Wrapper>
@@ -64,7 +87,7 @@ export default () => {
             <Button
                 title={i18n.t('unlock')}
                 icon={<Feather name="unlock" />}
-                onPress={unlockWallet}
+                onPress={unlockPassword}
             />
 
             <View style={{ marginBottom: Spacing.medium, alignItems: 'center' }}>
