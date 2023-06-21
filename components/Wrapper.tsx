@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { Keyboard, TouchableWithoutFeedback, View } from 'react-native';
 import { useTheme } from '../hooks';
 
 export default (props: {
@@ -13,11 +13,13 @@ export default (props: {
         return <View style={styles.wrapperFull}>{props.children}</View>;
     }
     return (
-        <View style={styles.wrapper}>
-            <View style={styles.main}>
-                {props.children}
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <View style={styles.wrapper}>
+                <View style={styles.main}>
+                    {props.children}
+                </View>
             </View>
-        </View>
+        </TouchableWithoutFeedback>
     );
-    
+
 }
