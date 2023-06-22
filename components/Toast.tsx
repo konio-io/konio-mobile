@@ -36,7 +36,7 @@ export default () => {
         ),
     };
 
-    return (<Toast config={toastConfig} />);
+    return (<Toast config={toastConfig} onPress={() => Toast.hide()} position='bottom'/>);
 }
 
 const createStyles = (theme : Theme) => {
