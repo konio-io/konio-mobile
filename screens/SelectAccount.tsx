@@ -1,8 +1,8 @@
 import { ListItemSelected, WalletAvatar, WalletList, Wrapper, Text } from "../components"
 import { useNavigation } from "@react-navigation/native"
-import { SelectAccountNavigationProp } from "../types/navigation";
-import { useCurrentAddress, useTheme, useWallet, useWithdraw } from "../hooks";
-import { View } from "react-native";
+import { SelectAccountNavigationProp, WalletNavigationProp } from "../types/navigation";
+import { useCurrentAddress, useI18n, useTheme, useWallet, useWithdraw } from "../hooks";
+import { Pressable, View } from "react-native";
 import { setWithdrawAddress } from "../actions";
 
 export default () => {
@@ -16,9 +16,27 @@ export default () => {
                 setWithdrawAddress(address);
                 navigation.goBack();
             }}/>
+
+            <Footer/>
         </Wrapper>
     );
 }
+
+const Footer = () => {
+    const navigation = useNavigation<WalletNavigationProp>();
+    const theme = useTheme();
+    const styles = theme.styles;
+    const { Spacing } = theme.vars;
+    const i18n = useI18n();
+  
+    return (
+      <View style={{alignItems: 'center', padding: Spacing.base}}>
+        <Pressable onPress={() => navigation.navigate('NewWalletAccount')}>
+          <Text style={styles.link}>{i18n.t('add_account')}</Text>
+        </Pressable>
+      </View>
+    );
+};
 
 const List = (props: {
     selected?: string,

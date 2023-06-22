@@ -16,7 +16,7 @@ export default () => {
 
     const balance = useCoinBalance(contractId.get());
     const coin = useCoin(contractId.get());
-    const amount = useHookstate(0);
+    const amount = useHookstate('');
     const theme = useTheme();
     const styles = createStyles(theme);
     const { FontSize, Spacing } = theme.vars;
@@ -24,12 +24,12 @@ export default () => {
     const setAmauntPerc = (percent: number) => {
         if (balance.get()) {
             const percAmount = (parseFloat(balance.get()) * percent) / 100;
-            amount.set(percAmount);
+            amount.set(percAmount.toString());
         }
     };
 
     const next = () => {
-        if (amount.get() <= 0) {
+        if (parseFloat(amount.get()) <= 0) {
             showToast({
                 type: 'error',
                 text1: i18n.t('missing_amount')
@@ -38,7 +38,7 @@ export default () => {
         }
 
         setWithdrawContractId(contractId.get());
-        setWithdrawAmount(amount.get());
+        setWithdrawAmount(parseFloat(amount.get()));
         navigation.push('ConfirmWithdraw');
     };
 
@@ -60,7 +60,7 @@ export default () => {
                         keyboardType='numeric'
                         value={amount.get().toString()}
                         placeholder={i18n.t('amount')}
-                        onChangeText={(v: string) => amount.set(parseFloat(v))}
+                        onChangeText={(v: string) => amount.set(v)}
                         textAlign={'center'}
                         style={styles.amount}
                     />
