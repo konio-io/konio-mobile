@@ -122,5 +122,22 @@ export default {
     biometric_unlock: '生物识别解锁',
     enable_biometric_unlock: '启用生物识别解锁',
     security: '安全',
-    security_desc: '安全和访问'
+    security_desc: '安全和访问',
+    cancel: '取消',
+    coin_deletion_confirm: '确定要删除{{name}}吗？',
+    coin_deleted: '{{name}}已删除',
+    yes: '是',
+    latest_coins_added: '最新添加的硬币',
+    change_password: '更改密码',
+    change_password_desc: '更改钱包密码',
+    change_autolock: '自动锁定',
+    change_autolock_desc: '设置钱包不活动时的自动锁定',
+    second: '秒',
+    seconds: '秒',
+    minute: '分钟',
+    minutes: '分钟',
+    immediatly: '立即',
+    after: '之后',
+    never: '从不',
+    autolock_changed: '自动锁定已更改为{{autolock}}'
 }

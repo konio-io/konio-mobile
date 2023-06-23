@@ -122,5 +122,22 @@ export default {
     biometric_unlock: 'Desbloqueio biométrico',
     enable_biometric_unlock: 'Ativar desbloqueio biométrico',
     security: 'Segurança',
-    security_desc: 'Segurança e acesso'
+    security_desc: 'Segurança e acesso',
+    cancel: 'Cancelar',
+    coin_deletion_confirm: 'Tem certeza de que deseja excluir {{name}}?',
+    coin_deleted: '{{name}} excluído',
+    yes: 'Sim',
+    latest_coins_added: 'Últimas moedas adicionadas',
+    change_password: 'Alterar senha',
+    change_password_desc: 'Alterar a senha da sua carteira',
+    change_autolock: 'Bloqueio automático',
+    change_autolock_desc: 'Definir bloqueio automático da carteira quando inativa',
+    second: 'segundo',
+    seconds: 'segundos',
+    minute: 'minuto',
+    minutes: 'minutos',
+    immediatly: 'Imediatamente',
+    after: 'Depois',
+    never: 'Nunca',
+    autolock_changed: 'Bloqueio automático alterado para {{autolock}}'
 }

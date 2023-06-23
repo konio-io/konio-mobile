@@ -7,6 +7,7 @@ export default () => {
   const theme = useTheme();
   const styles = theme.styles;
   const data = [
+    -1,
     0,
     5000,
     15000,
@@ -37,17 +38,20 @@ export const ListItem = (props: {
   const autolock = useAutolock().get();
 
   const convertMils = (ms: number) : string => {
-    if (ms === 0) {
-      return 'never';
+    if (ms === -1) {
+      return i18n.t('never');
+    }
+    else if (ms === 0) {
+      return i18n.t('immediatly');
     }
 
-    var seconds = Math.floor(ms / 1000);
-    var minutes = Math.floor(seconds / 60);
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
   
     if (minutes > 0) {
-      return minutes + (minutes === 1 ? ' ' + i18n.t('minute') : ' ' + i18n.t('minutes'));
+      return i18n.t('after') + ' ' + minutes + (minutes === 1 ? ' ' + i18n.t('minute') : ' ' + i18n.t('minutes'));
     } else {
-      return seconds + (seconds === 1 ? ' ' + i18n.t('second') : ' ' + i18n.t('seconds'));
+      return i18n.t('after') + ' ' + seconds + (seconds === 1 ? ' ' + i18n.t('second') : ' ' + i18n.t('seconds'));
     } 
   }
 

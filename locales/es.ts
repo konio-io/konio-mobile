@@ -122,5 +122,22 @@ export default {
     biometric_unlock: 'Desbloqueo biométrico',
     enable_biometric_unlock: 'Activar desbloqueo biométrico',
     security: 'Seguridad',
-    security_desc: 'Seguridad y acceso'
+    security_desc: 'Seguridad y acceso',
+    cancel: 'Cancelar',
+    coin_deletion_confirm: '¿Estás seguro/a de que deseas eliminar {{name}}?',
+    coin_deleted: '{{name}} eliminada',
+    yes: 'Sí',
+    latest_coins_added: 'Últimas monedas agregadas',
+    change_password: 'Cambiar contraseña',
+    change_password_desc: 'Cambiar la contraseña de tu billetera',
+    change_autolock: 'Bloqueo automático',
+    change_autolock_desc: 'Establecer el bloqueo automático de la billetera cuando esté inactiva',
+    second: 'segundo',
+    seconds: 'segundos',
+    minute: 'minuto',
+    minutes: 'minutos',
+    immediatly: 'Inmediatamente',
+    after: 'Después',
+    never: 'Nunca',
+    autolock_changed: 'Bloqueo automático cambiado a {{autolock}}'
 }

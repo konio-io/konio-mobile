@@ -122,5 +122,22 @@ export default {
     biometric_unlock: 'Biometrische Entsperrung',
     enable_biometric_unlock: 'Biometrische Entsperrung aktivieren',
     security: 'Sicherheit',
-    security_desc: 'Sicherheit und Zugang'
+    security_desc: 'Sicherheit und Zugang',
+    cancel: 'Abbrechen',
+    coin_deletion_confirm: 'Möchten Sie {{name}} wirklich löschen?',
+    coin_deleted: '{{name}} gelöscht',
+    yes: 'Ja',
+    latest_coins_added: 'Neueste hinzugefügte Münzen',
+    change_password: 'Passwort ändern',
+    change_password_desc: 'Ändern Sie Ihr Wallet-Passwort',
+    change_autolock: 'Automatische Sperre ändern',
+    change_autolock_desc: 'Automatische Sperrung des Wallets festlegen, wenn es inaktiv ist',
+    second: 'Sekunde',
+    seconds: 'Sekunden',
+    minute: 'Minute',
+    minutes: 'Minuten',
+    immediatly: 'Unmittelbar',
+    after: 'Nach',
+    never: 'Nie',
+    autolock_changed: 'Automatische Sperre geändert zu {{autolock}}'
 }

@@ -129,5 +129,15 @@ export default {
     yes: 'Yes',
     latest_coins_added: 'Latest coins added',
     change_password: 'Change password',
-    change_password_desc: 'Change your wallet password'
+    change_password_desc: 'Change your wallet password',
+    change_autolock: 'Autolock',
+    change_autolock_desc: 'Set autolock wallet when it is inactive',
+    second: 'second',
+    seconds: 'seconds',
+    minute: 'minute',
+    minutes: 'minutes',
+    immediatly: 'Immediatly',
+    after: 'After',
+    never: 'Never',
+    autolock_changed: 'Autolock changed to {{autolock}}'
 }

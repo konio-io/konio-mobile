@@ -3,17 +3,19 @@ import 'text-encoding-polyfill'; //needs for koilib compatibility
 import "@ethersproject/shims"; //needs for etherjs compatibility
 import { AntDesign } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
-import { View } from 'react-native';
+import { AppState, View } from 'react-native';
 import { NavigationContainer, DarkTheme, DefaultTheme, useNavigation, useRoute, CommonActions } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Toast } from './components';
 import { WalletStack, SettingStack, IntroStack, Unavailable, Loading, Unlock } from './screens';
-import { useCurrentAddress, useTheme, useI18n, useAutolock } from './hooks';
+import { useCurrentAddress, useTheme, useI18n, useAutolock, useAppState } from './hooks';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { createStackNavigator } from '@react-navigation/stack';
 import ResetPassword from './screens/ResetPassword';
 import { UnlockNavigationProp } from './types/navigation';
+import { useEffect } from 'react';
+import { useHookstate } from '@hookstate/core';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -93,23 +95,25 @@ const Tabs = () => {
   const i18n = useI18n();
   
   
-  //autounlock
+  //autolock
   const navigation = useNavigation<UnlockNavigationProp>();
-  /*
-  const autolock = useAutolock().get();
-  if (autolock > 0) {
-    setTimeout(() => {
-      console.log('autounlock');
-      const action = CommonActions.reset({
-        index: 0,
-        routes: [
-            { name: 'Unlock', params: { key: 'app'} },
-        ]
-      });
-      navigation.dispatch(action);
-    }, autolock);
-  }*/
-  
+  const dateLock = useHookstate(0);
+  const nextAppState = useAppState();
+  const autoLock = useAutolock();
+  useEffect(() => {
+    if (autoLock.get() > -1) {
+      if (nextAppState.get() === 'background') {
+        dateLock.set(Date.now() + autoLock.get());
+      }
+      else if (nextAppState.get() === 'active') {
+        if (dateLock.get() > 0 && Date.now() > dateLock.get()) {
+          navigation.navigate('Unlock', {key: 'app'});
+        }
+      }
+    }
+  }, [nextAppState]);
+
+
   return (
     <View
       style={{

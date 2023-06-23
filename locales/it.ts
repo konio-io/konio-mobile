@@ -123,5 +123,21 @@ export default {
     enable_biometric_unlock: 'Abilita sblocco con sensore biometrico',
     security: 'Sicurezza',
     security_desc: 'Sicurezza e accesso',
-    cancel: 'Annulla'
+    cancel: 'Annulla',
+    coin_deletion_confirm: 'Sei sicuro di voler cancellare {{name}}?',
+    coin_deleted: '{{name}} cancellato',
+    yes: 'Si',
+    latest_coins_added: 'Ultime monete aggiunte',
+    change_password: 'Cambia password',
+    change_password_desc: 'Cambia la password del tuo wallet',
+    change_autolock: 'Autoblocco',
+    change_autolock_desc: 'Blocca automaticamente il tuo wallet',
+    second: 'secondo',
+    seconds: 'secondi',
+    minute: 'minuto',
+    minutes: 'minuti',
+    immediatly: 'Immeditamente',
+    after: 'Dopo',
+    never: 'Mai',
+    autolock_changed: 'Autolock impostato a: {{autolock}}'
 }

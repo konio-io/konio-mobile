@@ -1,11 +1,12 @@
 import { State, useHookstate } from "@hookstate/core";
 import { CoinBalanceStore, UserStore, EncryptedStore, WithdrawStore, LockStore } from "../stores";
 import { getTheme } from "../themes";
-import { useColorScheme} from 'react-native';
+import { AppState, useColorScheme} from 'react-native';
 import locales from "../locales";
 import { I18n } from 'i18n-js';
 import { getLocales } from 'expo-localization';
 import { FALLBACK_LOCALE, FALLBACK_THEME, OS_LOCALE, OS_THEME } from "../lib/Constants";
+import { useEffect } from "react";
 
 export const useNetworks = () => {
     const networks = useHookstate(UserStore.networks);
@@ -137,4 +138,28 @@ export const useCurrentKoin = () => {
 
 export const useAutolock = () => {
     return useHookstate(UserStore.autolock);
+}
+
+export const useAppState = () => {
+    const appState = useHookstate('active');
+
+    useEffect(() => {
+        const appStateListener = AppState.addEventListener(
+          'change',
+          nextAppState => {
+            /*
+            if (nextAppState === 'background') {
+              console.log('appstate', nextAppState)
+            }*/
+            appState.set(nextAppState);
+            
+          },
+        );
+    
+        return () => {
+          appStateListener?.remove();
+        };
+      }, []);
+
+    return appState;
 }

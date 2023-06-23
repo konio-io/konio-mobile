@@ -122,5 +122,22 @@ export default {
     biometric_unlock: 'Биометрическая разблокировка',
     enable_biometric_unlock: 'Включить биометрическую разблокировку',
     security: 'Безопасность',
-    security_desc: 'Безопасность и доступ'
+    security_desc: 'Безопасность и доступ',
+    cancel: 'Отмена',
+    coin_deletion_confirm: 'Вы уверены, что хотите удалить {{name}}?',
+    coin_deleted: '{{name}} удалено',
+    yes: 'Да',
+    latest_coins_added: 'Последние добавленные монеты',
+    change_password: 'Изменить пароль',
+    change_password_desc: 'Изменить пароль кошелька',
+    change_autolock: 'Автоблокировка',
+    change_autolock_desc: 'Установить автоблокировку кошелька при неактивности',
+    second: 'секунда',
+    seconds: 'секунд',
+    minute: 'минута',
+    minutes: 'минут',
+    immediatly: 'Немедленно',
+    after: 'После',
+    never: 'Никогда',
+    autolock_changed: 'Автоблокировка изменена на {{autolock}}'
 }

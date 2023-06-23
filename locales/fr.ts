@@ -122,5 +122,22 @@ export default {
     biometric_unlock: 'Déverrouillage biométrique',
     enable_biometric_unlock: 'Activer le déverrouillage biométrique',
     security: 'Sécurité',
-    security_desc: 'Sécurité et accès'
+    security_desc: 'Sécurité et accès',
+    cancel: 'Annuler',
+    coin_deletion_confirm: 'Êtes-vous sûr de vouloir supprimer {{name}} ?',
+    coin_deleted: '{{name}} supprimé',
+    yes: 'Oui',
+    latest_coins_added: 'Dernières pièces ajoutées',
+    change_password: 'Changer le mot de passe',
+    change_password_desc: 'Changer le mot de passe de votre portefeuille',
+    change_autolock: 'Verrouillage automatique',
+    change_autolock_desc: 'Définir le verrouillage automatique du portefeuille lorsqu\'il est inactif',
+    second: 'seconde',
+    seconds: 'secondes',
+    minute: 'minute',
+    minutes: 'minutes',
+    immediatly: 'Immédiatement',
+    after: 'Après',
+    never: 'Jamais',
+    autolock_changed: 'Verrouillage automatique changé en {{autolock}}'
 }
