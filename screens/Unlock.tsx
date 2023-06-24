@@ -4,7 +4,7 @@ import { useHookstate } from '@hookstate/core';
 import { checkPassword, showToast, unlock } from '../actions';
 import { useTheme, useI18n, useBiometric } from '../hooks';
 import { Button, TextInput, Logo, Wrapper, Text } from '../components';
-import { useNavigation, useRoute, CommonActions } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { UnlockNavigationProp, UnlockRouteProp } from '../types/navigation';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useEffect } from 'react';
