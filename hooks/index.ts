@@ -159,6 +159,7 @@ export const useLocker = (props: {
     //do redirect to "unlock" on locker true value
     useEffect(() => {
         if (locker.get() === true) {
+            dateLock.set(0); //ios
             navigation.navigate('Unlock', { key });
         }
     }, [locker]);
