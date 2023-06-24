@@ -1,4 +1,4 @@
-import { Pressable, TouchableOpacity, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useHookstate } from '@hookstate/core';
 import { checkPassword, showToast, unlock } from '../actions';
@@ -51,17 +51,7 @@ export default () => {
 
     const unlockWallet = () => {
         unlock(key);
-        if (key === 'app') {
-            const action = CommonActions.reset({
-                index: 0,
-                routes: [
-                    { name: 'Main' },
-                ]
-            });
-            navigation.dispatch(action);
-        } else {
-            navigation.goBack();
-        }
+        navigation.popToTop();
     }
 
     useEffect(() => {
@@ -71,15 +61,16 @@ export default () => {
     },[biometric]);
 
     /**
-     * prevent go back if action type is "GO_BACK" and key of locker is "app"
+     * prevent go back if action type is "GO_BACK"
+     */
     useEffect(() => {
         navigation.addListener('beforeRemove', (e) => {
-            if (e.data.action.type === 'GO_BACK' && key === 'app') {
+            if (e.data.action.type === 'GO_BACK') {
                 e.preventDefault();
             }
         });
     },[navigation]);
-    */
+    
 
     return (
         <Wrapper>

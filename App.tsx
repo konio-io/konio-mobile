@@ -3,19 +3,16 @@ import 'text-encoding-polyfill'; //needs for koilib compatibility
 import "@ethersproject/shims"; //needs for etherjs compatibility
 import { AntDesign } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
-import { AppState, View } from 'react-native';
-import { NavigationContainer, DarkTheme, DefaultTheme, useNavigation, useRoute, CommonActions } from '@react-navigation/native';
+import { View } from 'react-native';
+import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Toast } from './components';
 import { WalletStack, SettingStack, IntroStack, Unavailable, Loading, Unlock } from './screens';
-import { useCurrentAddress, useTheme, useI18n, useAutolock, useAppState } from './hooks';
+import { useCurrentAddress, useTheme, useI18n, useLocker } from './hooks';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { createStackNavigator } from '@react-navigation/stack';
 import ResetPassword from './screens/ResetPassword';
-import { UnlockNavigationProp } from './types/navigation';
-import { useEffect } from 'react';
-import { useHookstate } from '@hookstate/core';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -41,7 +38,6 @@ const LoadedApp = () => {
   const navigationTheme = theme.name === 'dark' ? DarkTheme : DefaultTheme;
   const currentAddress = useCurrentAddress();
 
-
   return (
     <NavigationContainer theme={navigationTheme}>
       <PolyfillCrypto />
@@ -53,14 +49,18 @@ const LoadedApp = () => {
       {currentAddress.get() &&
         <RootStack.Navigator>
           <RootStack.Screen
+            name="Main"
+            component={Tabs}
+            options={{
+              header: () => (<View />)
+            }}
+          />
+          <RootStack.Screen
             name="Unlock"
             component={Unlock}
             options={{
               presentation: 'modal',
               header: () => (<View />)
-            }}
-            initialParams={{
-              key: 'app'
             }}
           />
           <RootStack.Screen
@@ -68,13 +68,6 @@ const LoadedApp = () => {
             component={ResetPassword}
             options={{
               title: i18n.t('reset_password')
-            }}
-          />
-          <RootStack.Screen
-            name="Main"
-            component={Tabs}
-            options={{
-              header: () => (<View />)
             }}
           />
         </RootStack.Navigator>
@@ -94,25 +87,7 @@ const Tabs = () => {
   const insets = useSafeAreaInsets();
   const i18n = useI18n();
   
-  
-  //autolock
-  const navigation = useNavigation<UnlockNavigationProp>();
-  const dateLock = useHookstate(0);
-  const nextAppState = useAppState();
-  const autoLock = useAutolock();
-  useEffect(() => {
-    if (autoLock.get() > -1) {
-      if (nextAppState.get() === 'background') {
-        dateLock.set(Date.now() + autoLock.get());
-      }
-      else if (nextAppState.get() === 'active') {
-        if (dateLock.get() > 0 && Date.now() > dateLock.get()) {
-          navigation.navigate('Unlock', {key: 'app'});
-        }
-      }
-    }
-  }, [nextAppState]);
-
+  useLocker({key: 'app', initialValue: true});
 
   return (
     <View

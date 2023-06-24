@@ -1,6 +1,6 @@
 import { Network } from "../types/store";
 
-export const DEFAULT_NETWORK = "EiAAKqFi-puoXnuJTdn7qBGGJa8yd-dcS2P0ciODe4wupQ==";
+export const DEFAULT_NETWORK = "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==";
 export const DEFAULT_NETWORKS: Record<string, Network> = {
     "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==": {
         name: "Koinos Mainnet",

@@ -1,6 +1,6 @@
 import { Wrapper, Button, TextInput } from "../components"
 import { useLocker, useI18n } from "../hooks"
-import React, { useEffect } from "react";
+import React from "react";
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 import { UnlockNavigationProp } from "../types/navigation";
@@ -9,24 +9,11 @@ import { setPassword, showToast } from "../actions";
 
 export default () => {
     const navigation = useNavigation<UnlockNavigationProp>();
-    const key = 'change_password';
-    const locker = useLocker(key);
     const i18n = useI18n();
-
     const password = useHookstate('');
     const passwordConfirm = useHookstate('');
 
-    useEffect(() => {
-        if (locker.get() === false) {
-            setPassword(password.get());
-            showToast({
-                type: 'success',
-                text1: i18n.t('password_set'),
-            });
-            locker.set(true);
-            navigation.goBack();
-        }
-    }, [locker]);
+    useLocker({key: 'change_password', initialValue: true});
 
     const savePassword = () => {
         if ((!password.get())) {
@@ -45,7 +32,12 @@ export default () => {
             return;
         }
 
-        navigation.navigate('Unlock', { key });
+        setPassword(password.get());
+        showToast({
+            type: 'success',
+            text1: i18n.t('password_set'),
+        });
+        navigation.goBack();
     }
 
     return (

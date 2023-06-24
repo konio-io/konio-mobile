@@ -1,12 +1,14 @@
 import { State, useHookstate } from "@hookstate/core";
 import { CoinBalanceStore, UserStore, EncryptedStore, WithdrawStore, LockStore } from "../stores";
 import { getTheme } from "../themes";
-import { AppState, useColorScheme} from 'react-native';
+import { AppState, useColorScheme } from 'react-native';
 import locales from "../locales";
 import { I18n } from 'i18n-js';
 import { getLocales } from 'expo-localization';
 import { FALLBACK_LOCALE, FALLBACK_THEME, OS_LOCALE, OS_THEME } from "../lib/Constants";
 import { useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { UnlockNavigationProp } from "../types/navigation";
 
 export const useNetworks = () => {
     const networks = useHookstate(UserStore.networks);
@@ -26,7 +28,7 @@ export const useCurrentNetworkId = () => {
     return useHookstate(UserStore.currentNetworkId);
 }
 
-export const useCurrentAddress = () : State<string|null> => {
+export const useCurrentAddress = (): State<string | null> => {
     return useHookstate(UserStore.currentAddress);
 }
 
@@ -48,7 +50,7 @@ export const useCoinBalance = (contractId: string) => {
  */
 export const useCoins = () => {
     const currentAddress = useHookstate(UserStore.currentAddress);
-    const currentAddressOrNull : State<string> | null = currentAddress.ornull;
+    const currentAddressOrNull: State<string> | null = currentAddress.ornull;
     if (currentAddressOrNull) {
         return useHookstate(UserStore.wallets[currentAddressOrNull.get()].coins);
     }
@@ -98,14 +100,6 @@ export const useWithdraw = () => {
     return useHookstate(WithdrawStore);
 }
 
-export const useLocker = (key: string, defaultValue?: boolean) => {
-    if (LockStore[key].get() === undefined) {
-        LockStore[key].set(defaultValue ?? true);
-    }
-    
-    return useHookstate(LockStore[key]);
-}
-
 export const useCurrentSeed = () => {
     return Object.values(EncryptedStore.accounts).filter(w => w.seed.get() !== undefined)[0].seed;
 }
@@ -140,26 +134,77 @@ export const useAutolock = () => {
     return useHookstate(UserStore.autolock);
 }
 
+export const useLocker = (props: {
+    key: string,
+    initialValue: boolean
+}) => {
+    const { key, initialValue } = props;
+
+    const navigation = useNavigation<UnlockNavigationProp>();
+    const locker = useHookstate(LockStore[key]);
+    const nextAppState = useAppState();
+    const dateLock = useHookstate(0);
+    const autoLock = useAutolock();
+
+    //set locker initial value on mount
+    //reset locker initial value on mount
+    useEffect(() => {
+        LockStore[key].set(initialValue);
+
+        return () => {
+            LockStore[key].set(initialValue);
+        }
+    }, []);
+
+    //do redirect to "unlock" on locker true value
+    useEffect(() => {
+        if (locker.get() === true) {
+            navigation.navigate('Unlock', { key });
+        }
+    }, [locker]);
+
+    //autolock
+    useEffect(() => {
+        if (autoLock.get() > -1) {
+            if (nextAppState.get() === 'background') {
+                dateLock.set(Date.now() + autoLock.get());
+            }
+            else if (nextAppState.get() === 'active') {
+                if (dateLock.get() > 0 && Date.now() > dateLock.get()) {
+                    locker.set(true);
+                }
+            }
+        }
+    }, [nextAppState]);
+
+    return {
+        lock: () => {
+            locker.set(true);
+        },
+        get: () => {
+            return locker.get();
+        },
+        set: (val: boolean) => {
+            locker.set(val);
+        }
+    };
+}
+
 export const useAppState = () => {
     const appState = useHookstate('active');
 
     useEffect(() => {
         const appStateListener = AppState.addEventListener(
-          'change',
-          nextAppState => {
-            /*
-            if (nextAppState === 'background') {
-              console.log('appstate', nextAppState)
-            }*/
-            appState.set(nextAppState);
-            
-          },
+            'change',
+            nextAppState => {
+                appState.set(nextAppState);
+            },
         );
-    
+
         return () => {
-          appStateListener?.remove();
+            appStateListener?.remove();
         };
-      }, []);
+    }, []);
 
     return appState;
 }
