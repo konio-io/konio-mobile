@@ -18,6 +18,7 @@ export default () => {
     const biometric = useBiometric();
     const theme = useTheme();
     const { Spacing } = theme.vars;
+    const preventBack = useHookstate(true);
 
     const unlockPassword = () => {
         if (!checkPassword(password.get())) {
@@ -51,7 +52,8 @@ export default () => {
 
     const unlockWallet = () => {
         unlock(key);
-        navigation.popToTop();
+        preventBack.set(false);
+        navigation.goBack();
     }
 
     useEffect(() => {
@@ -60,17 +62,19 @@ export default () => {
         }
     },[biometric]);
 
+
     /**
      * prevent go back if action type is "GO_BACK"
      */
     useEffect(() => {
         navigation.addListener('beforeRemove', (e) => {
-            if (e.data.action.type === 'GO_BACK') {
-                e.preventDefault();
+            if (preventBack.get() === true) {
+                if (e.data.action.type === 'GO_BACK') {
+                    e.preventDefault();
+                }
             }
         });
     },[navigation]);
-    
 
     return (
         <Wrapper>
