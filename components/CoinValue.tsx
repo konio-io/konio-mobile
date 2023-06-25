@@ -7,7 +7,7 @@ export default (props: {
     contractId: string
 }) => {
     const coinValue = useCoinValue(props.contractId);
-    const formattedPrice = coinValue.get().toFixed(2).toString();
+    const formattedPrice = coinValue.get() ? coinValue.get().toFixed(2).toString() : '';
 
     return (
         <View>

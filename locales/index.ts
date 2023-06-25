@@ -5,6 +5,7 @@ import de from './de';
 import es from './es';
 import pt from './pt';
 import zh from './zh';
+import fa from './fa';
 
 const locales = {
   en,
@@ -13,7 +14,8 @@ const locales = {
   de,
   es,
   pt,
-  zh
+  zh,
+  fa
 };
 
 export default locales;
