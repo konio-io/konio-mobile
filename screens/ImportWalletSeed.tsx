@@ -25,7 +25,7 @@ export default () => {
 
     addSeed({
       name: name.get().trim(),
-      seed: seed.get().trim()
+      seed: seed.get().toLowerCase().trim()
     })
       .then(address => {
 
@@ -60,7 +60,7 @@ export default () => {
         numberOfLines={4}
         value={seed.get()}
         placeholder={i18n.t('seed_phrase')}
-        onChangeText={(text: string) => seed.set(text.toLowerCase())}
+        onChangeText={(text: string) => seed.set(text)}
       />
 
       <View style={styles.buttonContainer}>
