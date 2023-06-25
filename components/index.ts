@@ -23,6 +23,7 @@ import Selector from './Selector';
 import Copiable from './Copiable';
 import Seed from './Seed';
 import Switch from './Switch';
+import CoinValue from './CoinValue';
 
 export {
     ActivityIndicator,
@@ -49,5 +50,6 @@ export {
     Selector,
     Copiable,
     Seed,
-    Switch
+    Switch,
+    CoinValue
 }

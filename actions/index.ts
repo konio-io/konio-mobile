@@ -1,6 +1,6 @@
 import { Contract, Provider, Signer, utils } from "koilib";
 import { TransactionJsonWait } from "koilib/lib/interface";
-import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, WithdrawStore, LockStore } from "../stores";
+import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, WithdrawStore, LockStore, CoinValueStore } from "../stores";
 import { Coin, Transaction, Wallet } from "../types/store";
 import { TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_WITHDRAW } from "../lib/Constants";
 import HDKoinos from "../lib/HDKoinos";
@@ -59,6 +59,7 @@ export const refreshCoinListBalance = () => {
 
     for (const contractId of coins) {
         refreshCoinBalance(contractId);
+        refreshCoinValue(contractId);
     }
 }
 
@@ -78,6 +79,25 @@ export const refreshCoinBalance = (contractId: string) => {
         decimal: coin.decimal.get()
     }).then(value => CoinBalanceStore[contractId].set(value));
 }
+
+export const refreshCoinValue = (contractId: string) => {
+    const address = UserStore.currentAddress.get();
+    if (!address) {
+        throw new Error('Current address not set');
+    }
+        fetch("https://www.mexc.com/open/api/v2/market/ticker?symbol=koin_usdt")
+        .then(response => response.json())
+        .then(json => {
+            const price = Number(json.data[0].last);
+            const balanceKoin = parseFloat(CoinBalanceStore[contractId].get());
+            const value = Number(balanceKoin * price);
+            CoinValueStore[contractId].set(value);
+        })
+        .catch(error => {
+            CoinValueStore[contractId].set(0);
+        });
+}
+
 
 export const withdrawCoin = async (args: { contractId: string, to: string, value: string, note: string}) => {
     const address = UserStore.currentAddress.get();

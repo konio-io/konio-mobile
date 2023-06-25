@@ -1,5 +1,5 @@
 import { State, useHookstate } from "@hookstate/core";
-import { CoinBalanceStore, UserStore, EncryptedStore, WithdrawStore, LockStore } from "../stores";
+import { CoinBalanceStore, UserStore, EncryptedStore, WithdrawStore, LockStore, CoinValueStore } from "../stores";
 import { getTheme } from "../themes";
 import { AppState, useColorScheme } from 'react-native';
 import locales from "../locales";
@@ -42,6 +42,10 @@ export const useCoin = (contractId: string) => {
 
 export const useCoinBalance = (contractId: string) => {
     return useHookstate(CoinBalanceStore[contractId]);
+}
+
+export const useCoinValue = (contractId: string) => {
+    return useHookstate(CoinValueStore[contractId]);
 }
 
 /**

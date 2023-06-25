@@ -4,6 +4,8 @@ import CoinBalance from './CoinBalance';
 import { Alert, StyleSheet, TouchableHighlight, View } from 'react-native';
 import CoinSymbol from './CoinSymbol';
 import { deleteCoin, showToast } from '../actions';
+import Text from './Text';
+import CoinValue from './CoinValue';
 
 export default (props: {
     contractId: string,
@@ -56,8 +58,13 @@ export default (props: {
             }}
         >
             <View style={styles.coinListItemContainer}>
-                <CoinSymbol contractId={props.contractId} />
-                <CoinBalance contractId={props.contractId} />
+                <View>
+                    <CoinSymbol contractId={props.contractId} />
+                    <CoinBalance contractId={props.contractId} />
+                </View>
+                
+                <CoinValue contractId={props.contractId}/>
+                
             </View>
         </TouchableHighlight>
     );
@@ -71,6 +78,7 @@ const createStyles = (theme: Theme) => {
         coinListItemContainer: {
             flexDirection: 'row',
             justifyContent: 'space-between',
+            alignItems: 'center',
             padding: Spacing.base,
             backgroundColor: Color.base
         }

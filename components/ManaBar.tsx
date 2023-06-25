@@ -35,13 +35,13 @@ export default () => {
         const delta = Math.min(Date.now() - lastUpdateMana, FIVE_DAYS);
         let m = initialMana + (delta * koinBalance) / FIVE_DAYS;
         m = Math.min(m, koinBalance);
-        timeRecharge.set( ((koinBalance - m) * FIVE_DAYS) / koinBalance );
+        timeRecharge.set(((koinBalance - m) * FIVE_DAYS) / koinBalance);
         const manaBalance = Number(m.toFixed(8));
         update(manaBalance, koinBalance);
     }
 
     useEffect(() => {
-        update(  manaState.mana.get(), manaState.koin.get() );
+        update(manaState.mana.get(), manaState.koin.get());
         intervalId.current = setInterval(() => {
             updateInterval();
         }, 3000);
@@ -54,16 +54,9 @@ export default () => {
     }, [manaState]);
 
     const theme = useTheme();
-    const {Color, Spacing } = theme.vars;
+    const { Color, Spacing } = theme.vars;
     const styles = createStyles(theme);
     const width = currentPercent.get().toString() + '%';
-
-    let backgroundColor = Color.success;
-    if (currentPercent.get() < 20) {
-        backgroundColor = Color.error;
-    } else if (currentPercent.get() < 50) {
-        backgroundColor = Color.warning;
-    }
 
     return (
         <View>
@@ -77,27 +70,30 @@ export default () => {
 
             <TouchableHighlight onPress={() => modalState.set(true)}>
                 <View style={styles.coinListItemContainer}>
-                    <Text style={styles.symbol}>{i18n.t('MANA')}</Text>
-                    {currentMana.get() > -1 &&
-                        <Text style={styles.balance}>{currentMana.get()}</Text>
-                    }
-                    {currentMana.get() < 0 &&
-                        <ActivityIndicator/>
-                    }
+                    <View>
+                        <Text style={styles.symbol}>{i18n.t('MANA')}</Text>
+                        {currentMana.get() > -1 &&
+                            <Text style={styles.balance}>{currentMana.get()}</Text>
+                        }
+                        {currentMana.get() < 0 &&
+                            <ActivityIndicator />
+                        }
+                    </View>
+                    <Text>{currentPercent.get()}%</Text>
                 </View>
             </TouchableHighlight>
 
-            <View style={{margin: Spacing.small}}>
-                <View style={{ ...styles.progressBar, width: '100%' }}>
-                    <View style={{ ...styles.progressBarPerc, width, backgroundColor }}></View>
+            <View style={{ margin: Spacing.small }}>
+                <View style={{ ...styles.progressBar, width: '100%', backgroundColor: Color.error }}>
+                    <View style={{ ...styles.progressBarPerc, width, backgroundColor: Color.success }}></View>
                 </View>
-                
+
             </View>
         </View>
     );
 }
 
-const createStyles = (theme : Theme) => {
+const createStyles = (theme: Theme) => {
     const { Spacing, FontFamily, FontSize, Color, Border } = theme.vars;
 
 
@@ -106,6 +102,7 @@ const createStyles = (theme : Theme) => {
         coinListItemContainer: {
             flexDirection: 'row',
             justifyContent: 'space-between',
+            alignItems: 'center',
             padding: Spacing.base,
             backgroundColor: Color.base
         },
@@ -121,20 +118,15 @@ const createStyles = (theme : Theme) => {
             color: Color.primary
         },
         progressBar: {
-            backgroundColor: rgba(Color.baseContrast, 0.1), 
-            height: 15, 
-            position: 'absolute', 
+            backgroundColor: rgba(Color.baseContrast, 0.1),
+            height: 15,
+            position: 'absolute',
             bottom: 0,
-            borderRadius: 5,
-            borderColor: Border.color,
-            borderWidth: Border.width,
-            padding: 1
+            borderRadius: 5
         },
         progressBarPerc: {
-            height: '100%', 
-            borderRadius: 5,
-            borderColor: Color.base,
-            borderWidth: 1,
+            height: '100%',
+            borderRadius: 5
         }
     });
 }

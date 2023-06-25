@@ -75,12 +75,22 @@ export const ManaStore = hookstate({...ManaStoreDefault});
 export const CoinBalanceStoreDefault : Record<string,string> = {};
 export const CoinBalanceStore : State<Record<string,string>> = hookstate({...CoinBalanceStoreDefault});
 
+
+/**
+ * Coin value local store
+ * It is used to provide global coin value in dollars
+ */
+export const CoinValueStoreDefault : Record<string,number> = {};
+export const CoinValueStore : State<Record<string,number>> = hookstate({...CoinValueStoreDefault});
+
+
 /**
  * Reset
  */
 export const reset = () => {
     ManaStore.set({...ManaStoreDefault});
     CoinBalanceStore.set({...CoinBalanceStoreDefault});
+    CoinValueStore.set({...CoinValueStoreDefault});
     UserStore.set({...UserStoreDefault});
     EncryptedStore.set({...EncryptedStoreDefault});
 };
