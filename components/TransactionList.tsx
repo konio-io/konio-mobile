@@ -1,5 +1,5 @@
 import { FlatList, TouchableHighlight, Linking, View, StyleSheet } from 'react-native';
-import { AntDesign, Feather } from '@expo/vector-icons';;
+import { AntDesign, Feather } from '@expo/vector-icons';
 import { TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS } from '../lib/Constants';
 import { useCoinTransactions, useCurrentNetworkId, useTransaction, useTheme, useNetwork, useI18n } from '../hooks';
 import { UserStore } from '../stores';
@@ -9,22 +9,19 @@ import type { Theme } from '../types/store';
 import { useHookstate } from '@hookstate/core';
 import Button from './Button';
 import Copiable from './Copiable';
+import Separator from './Separator';
 
 export default (props: {
     contractId: string
 }) => {
 
     const transactions = useCoinTransactions(props.contractId);
-    const theme = useTheme();
-    const styles = theme.styles;
 
     return (
         <FlatList
             data={transactions.get().map(t => t.transactionId)}
             renderItem={({ item }) => <TransactionListItem transactionId={item} />}
-            ItemSeparatorComponent={() => {
-                return <View style={styles.separator} />
-            }}
+            ItemSeparatorComponent={() => <Separator />}
         />
     );
 }
@@ -51,9 +48,9 @@ export const TransactionListItem = (props: {
 
     return (
         <TouchableHighlight onPress={() => showDetail.set(!showDetail.get())}>
-            <View style={styles.transactionItemContainer}>
+            <View style={styles.container}>
 
-                <View style={{ position: 'absolute', right: Spacing.small, top: Spacing.small }}>
+                <View style={styles.iconContainer}>
                     {!showDetail.get() &&
                         <AntDesign name="down" size={18} color={Border.color} />
                     }
@@ -63,9 +60,9 @@ export const TransactionListItem = (props: {
                 </View>
 
                 <Text style={styles.textSmall}>{date} {time}</Text>
-                <View style={styles.transactionItemContainerInternal}>
+                <View style={styles.descriptionContainer}>
 
-                    <View style={{ flexDirection: 'row', columnGap: Spacing.small }}>
+                    <View style={styles.statusIconContainer}>
                         {transaction.status === TRANSACTION_STATUS_PENDING &&
                             <ActivityIndicator />
                         }
@@ -84,7 +81,7 @@ export const TransactionListItem = (props: {
                 </View>
 
                 {showDetail.get() &&
-                    <View style={{rowGap: Spacing.base}}>
+                    <View style={styles.detailContainer}>
                         <Copiable copy={transaction.transactionId}>
                             <View>
                                 <Text style={styles.textSmall}>TXid <Feather name="copy" size={12} /></Text>
@@ -104,7 +101,7 @@ export const TransactionListItem = (props: {
                             <Text>{transaction.note}</Text>
                         </View>
 
-                        <Button title={i18n.t('open_explorer')} onPress={openTransactionLink} type='secondary' icon={<Feather name="external-link"/>}/>
+                        <Button title={i18n.t('open_explorer')} onPress={openTransactionLink} type='secondary' icon={<Feather name="external-link" />} />
                     </View>
                 }
             </View>
@@ -136,12 +133,12 @@ const createStyles = (theme: Theme) => {
 
     return StyleSheet.create({
         ...theme.styles,
-        transactionItemContainer: {
+        container: {
             padding: Spacing.base,
             backgroundColor: Color.base,
             rowGap: Spacing.small
         },
-        transactionItemContainerInternal: {
+        descriptionContainer: {
             flexDirection: 'row',
             justifyContent: 'space-between',
         },
@@ -149,5 +146,17 @@ const createStyles = (theme: Theme) => {
             alignItems: 'center',
             padding: Spacing.base
         },
+        iconContainer: {
+            position: 'absolute',
+            right: Spacing.small,
+            top: Spacing.small
+        },
+        statusIconContainer: {
+            flexDirection: 'row',
+            columnGap: Spacing.small
+        },
+        detailContainer: {
+            rowGap: Spacing.base
+        }
     })
 }

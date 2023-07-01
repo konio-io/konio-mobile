@@ -9,6 +9,8 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
+    "@dicebear/collection": "^6.0.4",
+    "@dicebear/core": "^6.0.4",
     "@ethersproject/shims": "^5.7.0",
     "@hookstate/core": "^4.0.1",
     "@hookstate/localstored": "^4.0.2",
@@ -19,6 +21,7 @@
     "ethers": "^5.7.2",
     "expo": "~48.0.18",
     "expo-clipboard": "~4.1.2",
+    "expo-local-authentication": "~13.3.0",
     "expo-localization": "~14.1.1",
     "expo-secure-store": "~12.1.1",
     "expo-splash-screen": "~0.18.2",
@@ -29,6 +32,7 @@
     "patch-package": "^7.0.0",
     "react": "18.2.0",
     "react-native": "0.71.8",
+    "react-native-actions-sheet": "^0.8.29",
     "react-native-gesture-handler": "~2.9.0",
     "react-native-qrcode-svg": "^6.2.0",
     "react-native-quick-base64": "^2.0.6",
@@ -39,8 +43,7 @@
     "react-native-toast-message": "^2.1.6",
     "react-native-webview": "11.26.0",
     "react-native-webview-crypto": "^0.0.25",
-    "text-encoding-polyfill": "^0.6.7",
-    "expo-local-authentication": "~13.3.0"
+    "text-encoding-polyfill": "^0.6.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

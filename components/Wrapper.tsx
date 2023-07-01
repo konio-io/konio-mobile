@@ -1,25 +1,47 @@
-import { Keyboard, TouchableWithoutFeedback, View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useTheme } from '../hooks';
+import type { Theme } from '../types/store';
 
 export default (props: {
-    type?: string,
-    children: any
+    children: any,
+    type?: string
 }) => {
     const theme = useTheme();
-    const styles = theme.styles;
-    const type = props.type ?? 'default';
+    const styles = createStyles(theme);
 
-    if (type === 'full') {
-        return <View style={styles.wrapperFull}>{props.children}</View>;
-    }
-    return (
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-            <View style={styles.wrapper}>
-                <View style={styles.main}>
-                    {props.children}
-                </View>
+    if (props.type === 'full') {
+        return (
+            <View style={styles.wrapperFull}>
+                {props.children}
             </View>
-        </TouchableWithoutFeedback>
-    );
+        );
+    }
 
+    return (
+        <View style={styles.wrapperCentered}>
+            <View style={styles.main}>
+                {props.children}
+            </View>
+        </View>
+    );
+}
+
+const createStyles = (theme: Theme) => {
+    const { Spacing, Color } = theme.vars;
+
+    return StyleSheet.create({
+        ...theme.styles,
+        wrapperFull: {
+            flex: 1, 
+            padding: Spacing.base, 
+            rowGap: Spacing.large,
+            backgroundColor: Color.base
+        },
+        wrapperCentered: {
+            flex: 1, 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            backgroundColor: Color.base
+        }
+    })
 }

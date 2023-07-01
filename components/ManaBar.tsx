@@ -3,12 +3,12 @@ import { useTheme, useI18n } from '../hooks';
 import { useHookstate } from '@hookstate/core';
 import { ManaStore } from '../stores';
 import { useEffect, useRef } from 'react';
-import { rgba } from '../lib/utils';
 import ManaStat from './ManaStat';
 import Modal from './Modal';
 import type { Theme } from '../types/store';
 import Text from './Text';
 import ActivityIndicator from './ActivityIndicator';
+import CircleLogo from './CircleLogo';
 
 export default () => {
     const FIVE_DAYS = 432e6; // 5 * 24 * 60 * 60 * 1000
@@ -54,7 +54,6 @@ export default () => {
     }, [manaState]);
 
     const theme = useTheme();
-    const { Color, Spacing } = theme.vars;
     const styles = createStyles(theme);
     const width = currentPercent.get().toString() + '%';
 
@@ -69,32 +68,36 @@ export default () => {
             </Modal>
 
             <TouchableHighlight onPress={() => modalState.set(true)}>
-                <View style={styles.coinListItemContainer}>
-                    <View>
-                        <Text style={styles.symbol}>{i18n.t('MANA')}</Text>
-                        {currentMana.get() > -1 &&
-                            <Text style={styles.balance}>{currentMana.get()}</Text>
-                        }
-                        {currentMana.get() < 0 &&
-                            <ActivityIndicator />
-                        }
+                <View style={styles.container}>
+                    <View style={styles.coinListItemContainer}>
+                        <View style={styles.leftContainer}>
+                            <CircleLogo name="mana" seed="mana" size={36} />
+                            <View>
+                                <Text style={styles.symbol}>{i18n.t('MANA')}</Text>
+                                {currentMana.get() > -1 &&
+                                    <Text style={styles.balance}>{currentMana.get()}</Text>
+                                }
+                                {currentMana.get() < 0 &&
+                                    <ActivityIndicator />
+                                }
+                            </View>
+                        </View>
+                        <Text>{currentPercent.get()}%</Text>
                     </View>
-                    <Text>{currentPercent.get()}%</Text>
+
+                    <View style={styles.progressBarContainer}>
+                        <View style={styles.progressBar}>
+                            <View style={{ ...styles.progressBarPerc, width }}></View>
+                        </View>
+                    </View>
                 </View>
             </TouchableHighlight>
-
-            <View style={{ margin: Spacing.small }}>
-                <View style={{ ...styles.progressBar, width: '100%', backgroundColor: Color.error }}>
-                    <View style={{ ...styles.progressBarPerc, width, backgroundColor: Color.success }}></View>
-                </View>
-
-            </View>
         </View>
     );
 }
 
 const createStyles = (theme: Theme) => {
-    const { Spacing, FontFamily, FontSize, Color, Border } = theme.vars;
+    const { Spacing, FontFamily, FontSize, Color } = theme.vars;
 
 
     return StyleSheet.create({
@@ -103,30 +106,43 @@ const createStyles = (theme: Theme) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-            padding: Spacing.base,
-            backgroundColor: Color.base
+            padding: Spacing.base
         },
         symbol: {
             fontFamily: FontFamily.sans,
             fontSize: FontSize.base,
             fontWeight: 'bold',
-            color: Color.primary
+            color: Color.baseContrast
         },
         balance: {
             fontFamily: FontFamily.sans,
             fontSize: FontSize.base,
-            color: Color.primary
+            color: Color.baseContrast
         },
         progressBar: {
-            backgroundColor: rgba(Color.baseContrast, 0.1),
-            height: 15,
+            backgroundColor: Color.error,
+            height: 10,
             position: 'absolute',
             bottom: 0,
-            borderRadius: 5
+            borderRadius: 5,
+            width: '100%', 
         },
         progressBarPerc: {
             height: '100%',
-            borderRadius: 5
+            borderRadius: 5,
+            backgroundColor: Color.success
+        },
+        container: {
+            backgroundColor: Color.base
+        },
+        leftContainer: {
+            flexDirection: 'row', 
+            columnGap: Spacing.base, 
+            alignItems: 'center'
+        },
+        progressBarContainer: {
+            marginHorizontal: Spacing.base,
+            marginBottom: Spacing.base
         }
     });
 }

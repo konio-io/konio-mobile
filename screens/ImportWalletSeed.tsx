@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { useHookstate } from '@hookstate/core';
-import { Button, TextInput, Wrapper } from '../components';
+import { Button, TextInput, Wrapper, Screen } from '../components';
 import { addSeed, setCurrentWallet } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n } from '../hooks';
@@ -12,7 +12,7 @@ export default () => {
   const name = useHookstate('');
   const i18n = useI18n();
   const theme = useTheme();
-  const styles = createStyles(theme)
+  const styles = theme.styles;
 
   const importWallet = () => {
     if (!name.get()) {
@@ -32,7 +32,7 @@ export default () => {
         setCurrentWallet(address);
         showToast({
           type: 'success',
-          text1: i18n.t('account_imported', {name: name.get()})
+          text1: i18n.t('added', { name: name.get() })
         });
 
       })
@@ -47,53 +47,39 @@ export default () => {
   };
 
   return (
-    <Wrapper>
+    <Screen>
+      <Wrapper>
+        <TextInput
+          autoFocus={true}
+          value={name.get()}
+          placeholder={i18n.t('account_name')}
+          onChangeText={(text: string) => name.set(text)} />
 
-      <TextInput
-        value={name.get()}
-        placeholder={i18n.t('account_name')}
-        onChangeText={(text: string) => name.set(text)} />
+        <View>
+          <TextInput
+            style={{ ...styles.textInputMultiline }}
+            multiline={true}
+            numberOfLines={4}
+            value={seed.get()}
+            placeholder={i18n.t('seed_phrase')}
+            onChangeText={(text: string) => seed.set(text)}
+          />
 
-      <TextInput
-        style={{...styles.textInputMultiline}}
-        multiline={true}
-        numberOfLines={4}
-        value={seed.get()}
-        placeholder={i18n.t('seed_phrase')}
-        onChangeText={(text: string) => seed.set(text)}
-      />
-
-      <View style={styles.buttonContainer}>
-        <View style={{ flex: 1 }}>
           <Button
             type="secondary"
             title={i18n.t('reset')}
-            icon={<Feather name="x"/>}
+            icon={<Feather name="x" />}
             onPress={() => { seed.set('') }}
           />
         </View>
+      </Wrapper>
 
-        <View style={{ flex: 1 }}>
-          <Button
-            title={i18n.t('import')}
-            icon={<Feather name="arrow-right" />}
-            onPress={() => importWallet()} />
-        </View>
+      <View style={styles.screenFooter}>
+        <Button
+          title={i18n.t('import')}
+          icon={<Feather name="arrow-right" />}
+          onPress={() => importWallet()} />
       </View>
-
-    </Wrapper>
+    </Screen>
   );
 }
-
-const createStyles = (theme: Theme) => {
-  const { Spacing } = theme.vars;
-
-  return StyleSheet.create({
-    ...theme.styles,
-    buttonContainer: {
-      flexDirection: 'row',
-      columnGap: Spacing.base
-    }
-  });
-}
-

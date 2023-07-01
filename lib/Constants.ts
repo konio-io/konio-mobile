@@ -5,8 +5,12 @@ export const DEFAULT_NETWORKS: Record<string, Network> = {
     "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==": {
         name: "Koinos Mainnet",
         chainId: "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==",
-        rpcNodes: ["https://api.koinos.io", "https://api.koinosblocks.com"],
+        rpcNodes: [
+            "https://api.koinos.io", 
+            "https://api.koinosblocks.com"
+        ],
         koinContractId: "15DJN4a8SgrbGhhGksSBASiSYjGnMU8dGL",
+        kapContractId: "13tmzDmfqCsbYT26C4CmKxq86d33senqH3",
         explorer: "https://koinosblocks.com"
     },
     "EiAAKqFi-puoXnuJTdn7qBGGJa8yd-dcS2P0ciODe4wupQ==": {
@@ -17,6 +21,7 @@ export const DEFAULT_NETWORKS: Record<string, Network> = {
             "https://testnet.koinosblocks.com",
         ],
         koinContractId: "19JntSm8pSNETT9aHTwAUHC5RMoaSmgZPJ",
+        kapContractId: "13tmzDmfqCsbYT26C4CmKxq86d33senqH3",
         explorer: "https://harbinger.koinosblocks.com"
     }
 }

@@ -2,23 +2,21 @@ import { FlatList, View } from 'react-native';
 import { useNetworks, useCurrentNetworkId, useNetwork, useTheme, useI18n } from '../hooks';
 import { UserStore } from '../stores';
 import { setCurrentNetwork, showToast } from '../actions';
-import { ListItemSelected, Text, Wrapper } from '../components';
+import { ListItemSelected, Separator, Text, Screen } from '../components';
 
 export default () => {
   const networks = useNetworks();
-  const theme = useTheme();
-  const styles = theme.styles;
 
   return (
-    <Wrapper type="full">
+    <Screen>
 
       <FlatList
         data={networks.get().map(n => n.chainId)}
         renderItem={({ item }) => <ListItem networkId={item} />}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ItemSeparatorComponent={() => <Separator/>}
       />
 
-    </Wrapper>
+    </Screen>
   );
 }
 

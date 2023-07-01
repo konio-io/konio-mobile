@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { State, useHookstate } from '@hookstate/core';
-import { Text, Button, Wrapper, Seed } from '../components';
+import { Text, Button, Wrapper, Screen, Seed } from '../components';
 import { addSeed, setCurrentWallet, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
@@ -49,7 +49,7 @@ export default () => {
                 setCurrentWallet(address);
                 showToast({
                     type: 'success',
-                    text1: i18n.t('account_added', { name: name })
+                    text1: i18n.t('created', { name: name })
                 });
             })
             .catch(e => {
@@ -70,30 +70,31 @@ export default () => {
     const sortedWords = useHookstate(sortedWordsDefault);
 
     return (
-        <Wrapper>
+        <Screen>
+            <Wrapper>
+                <Text>{i18n.t('confirm_wallet_seed')}</Text>
 
-            <Text>{i18n.t('confirm_wallet_seed')}</Text>
+                <View style={styles.textInputMultiline}>
+                    <Seed phrase={sortedWords.get().join(' ')} onWordClick={(word: string) => {
+                        removeWord(sortedWords, word);
+                        addWord(unsortedWords, word);
+                    }} />
+                </View>
 
-            <View style={styles.textInputMultiline}>
-                <Seed phrase={sortedWords.get().join(' ')} onWordClick={(word: string) => {
-                    removeWord(sortedWords, word);
-                    addWord(unsortedWords, word);
+                <Seed phrase={unsortedWords.get().join(' ')} onWordClick={(word: string) => {
+                    removeWord(unsortedWords, word);
+                    addWord(sortedWords, word);
                 }} />
-            </View>
+            </Wrapper>
 
-            <Seed phrase={unsortedWords.get().join(' ')} onWordClick={(word: string) => {
-                removeWord(unsortedWords, word);
-                addWord(sortedWords, word);
-            }} />
-
-            <View>
+            <View style={styles.screenFooter}>
                 <Button
                     title={i18n.t('confirm')}
                     icon={<Feather name="check" />}
                     onPress={() => addWallet()}
                 />
             </View>
+        </Screen>
 
-        </Wrapper>
     );
 }

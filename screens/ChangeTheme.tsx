@@ -1,27 +1,25 @@
 import { FlatList, View } from 'react-native';
-import { useTheme, useI18n } from '../hooks';
+import { useI18n } from '../hooks';
 import { UserStore } from '../stores';
 import { setTheme, showToast } from '../actions';
-import { ListItemSelected, Text, Wrapper } from '../components';
+import { ListItemSelected, Separator, Text, Screen } from '../components';
 import { Themes } from '../themes';
 import { useHookstate } from '@hookstate/core';
 import { OS_THEME } from '../lib/Constants';
 
 export default () => {
   const data = [OS_THEME, ... Object.keys(Themes)];
-  const theme = useTheme();
-  const styles = theme.styles;
 
   return (
-    <Wrapper type="full">
+    <Screen>
 
       <FlatList
         data={data}
         renderItem={({ item }) => <ListItem name={item} />}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ItemSeparatorComponent={() => <Separator/>}
       />
 
-    </Wrapper>
+    </Screen>
   );
 }
 

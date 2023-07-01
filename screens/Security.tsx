@@ -1,8 +1,8 @@
 import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { ResetPasswordNavigationProp, SettingNavigationProp } from '../types/navigation';
+import { SettingNavigationProp } from '../types/navigation';
 import { useTheme, useI18n, useBiometric } from '../hooks';
-import { Wrapper, Text, Switch } from '../components';
+import { Screen, Text, Switch, Separator } from '../components';
 import ListItem from '../components/ListItem';
 import { setBiometric } from '../actions';
 import { useEffect } from 'react';
@@ -31,36 +31,36 @@ export default () => {
     }, []);
 
     return (
-        <Wrapper type='full'>
+        <Screen>
 
             <ListItem
                 title={i18n.t('change_password')}
                 name={i18n.t('change_password')}
                 description={i18n.t('change_password_desc')}
-                onPress={() => navigation.push('ChangePassword')}
+                onPress={() => navigation.navigate('ChangePassword')}
             />
 
-            <View style={styles.separator} />
+            <Separator/>
 
             <ListItem
                 title={i18n.t('show_seed')}
                 name={i18n.t('show_seed')}
                 description={i18n.t('show_seed_desc')}
-                onPress={() => navigation.push('ShowSeed')}
+                onPress={() => navigation.navigate('ShowSeed')}
             />
 
-            <View style={styles.separator} />
+            <Separator/>
 
             <ListItem
                 title={i18n.t('change_autolock')}
                 name={i18n.t('change_autolock')}
                 description={i18n.t('change_autolock_desc')}
-                onPress={() => navigation.push('ChangeAutolock')}
+                onPress={() => navigation.navigate('ChangeAutolock')}
             />
 
             {biometricSupport.get() === true && fingerprint.get() === true &&
                 <View>
-                    <View style={styles.separator} />
+                    <Separator/>
 
                     <View style={styles.listItemContainer}>
                         <View>
@@ -76,6 +76,6 @@ export default () => {
                 </View>
             }
 
-        </Wrapper>
+        </Screen>
     );
 }

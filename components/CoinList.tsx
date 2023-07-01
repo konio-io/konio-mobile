@@ -1,5 +1,5 @@
 import { FlatList, RefreshControl } from 'react-native';
-import { JSXElementConstructor, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useHookstate } from '@hookstate/core';
 import { useCoins, useCurrentNetworkId } from '../hooks';
 import { refreshCoinListBalance, refreshMana } from '../actions';
@@ -7,11 +7,9 @@ import { UserStore } from '../stores';
 import ActivityIndicator from './ActivityIndicator';
 
 export default (props: {
-    renderItem: Function,
-    FooterComponent?: JSXElementConstructor<any>
+    renderItem: Function
 }) => {
     const refreshing = useHookstate(false);
-
     const currentNetworkId = useCurrentNetworkId();
     const walletCoins = useCoins();
     const coins = walletCoins.get()
@@ -41,7 +39,6 @@ export default (props: {
         <FlatList
             data={coins}
             renderItem={({ item }) => props.renderItem(item)}
-            ListFooterComponent={props.FooterComponent}
             refreshControl={
                 <RefreshControl refreshing={refreshing.get()} onRefresh={loadCoinList} />
             }

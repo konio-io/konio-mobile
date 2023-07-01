@@ -36,7 +36,7 @@ export default () => {
         ),
     };
 
-    return (<Toast config={toastConfig} onPress={() => Toast.hide()} position='bottom'/>);
+    return (<Toast config={toastConfig} onPress={() => Toast.hide()} position='top'/>);
 }
 
 const createStyles = (theme : Theme) => {
@@ -47,19 +47,19 @@ const createStyles = (theme : Theme) => {
             borderLeftWidth: 0,
             borderBottomColor: Color.error,
             borderBottomWidth: 3,
-            backgroundColor: rgba(Color.baseContrast, 0.7)
+            backgroundColor: rgba(Color.baseContrast, 0.8)
         },
         mainSuccess: {
             borderLeftWidth: 0,
             borderBottomColor: Color.success,
             borderBottomWidth: 3,
-            backgroundColor: rgba(Color.baseContrast, 0.7)
+            backgroundColor: rgba(Color.baseContrast, 0.8)
         },
         mainInfo: {
             borderLeftWidth: 0,
             borderBottomColor: Color.primary,
             borderBottomWidth: 3,
-            backgroundColor: rgba(Color.baseContrast, 0.7)
+            backgroundColor: rgba(Color.baseContrast, 0.8)
         },
         text1: {
             ...theme.styles.text,

@@ -1,13 +1,14 @@
-import { Pressable, View } from 'react-native';
+import { Pressable, View, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useHookstate } from '@hookstate/core';
 import { checkPassword, showToast, unlock } from '../actions';
 import { useTheme, useI18n, useBiometric } from '../hooks';
-import { Button, TextInput, Logo, Wrapper, Text } from '../components';
+import { Button, TextInput, Logo, Screen, Text, Wrapper } from '../components';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { UnlockNavigationProp, UnlockRouteProp } from '../types/navigation';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useEffect } from 'react';
+import type { Theme } from '../types/store';
 
 export default () => {
     const route = useRoute<UnlockRouteProp>();
@@ -17,7 +18,7 @@ export default () => {
     const key = route.params.key;
     const biometric = useBiometric();
     const theme = useTheme();
-    const { Spacing } = theme.vars;
+    const styles = createStyles(theme);
     const preventBack = useHookstate(true);
 
     const unlockPassword = () => {
@@ -60,7 +61,7 @@ export default () => {
         if (biometric.get()) {
             unlockBiometric();
         }
-    },[biometric]);
+    }, [biometric]);
 
 
     /**
@@ -74,34 +75,50 @@ export default () => {
                 }
             }
         });
-    },[navigation]);
+    }, [navigation]);
 
     return (
-        <Wrapper>
+        <Screen>
 
-            <View style={{ marginBottom: Spacing.medium, alignItems: 'center' }}>
-                <Logo />
+            <Wrapper>
+                <View style={styles.container}>
+                    <Logo />
+                </View>
+
+                <TextInput
+                    autoFocus={true}
+                    value={password.get()}
+                    onChangeText={(v: string) => password.set(v)}
+                    placeholder={i18n.t('password')}
+                    secureTextEntry={true}
+                />
+                <View style={styles.container}>
+                    <Pressable onPress={() => navigation.navigate('ResetPassword')}>
+                        <Text>{i18n.t('forgot_password')}</Text>
+                    </Pressable>
+                </View>
+            </Wrapper>
+
+            <View style={styles.screenFooter}>
+                <Button
+                    title={i18n.t('unlock')}
+                    icon={<Feather name="unlock" />}
+                    onPress={unlockPassword}
+                />
             </View>
 
-            <TextInput
-                value={password.get()}
-                onChangeText={(v: string) => password.set(v)}
-                placeholder={i18n.t('password')}
-                secureTextEntry={true}
-            />
-
-            <Button
-                title={i18n.t('unlock')}
-                icon={<Feather name="unlock" />}
-                onPress={unlockPassword}
-            />
-
-            <View style={{ marginBottom: Spacing.medium, alignItems: 'center' }}>
-                <Pressable onPress={() => navigation.navigate('ResetPassword')}>
-                    <Text>{i18n.t('forgot_password')}</Text>
-                </Pressable>
-            </View>
-
-        </Wrapper >
+        </Screen >
     );
+}
+
+const createStyles = (theme: Theme) => {
+    const { Spacing } = theme.vars;
+
+    return StyleSheet.create({
+        ...theme.styles,
+        container: { 
+            marginBottom: Spacing.medium, 
+            alignItems: 'center'
+        }
+    });
 }

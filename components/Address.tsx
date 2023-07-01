@@ -1,14 +1,13 @@
 import * as Clipboard from 'expo-clipboard';
-import { TouchableHighlight, Text, View, StyleSheet } from 'react-native';
-import { rgba } from '../lib/utils';
+import { TouchableHighlight, Text, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n } from '../hooks';
-import type { Theme } from '../types/store';
 import { showToast } from '../actions';
 
 export default (props: {
     address: string,
-    compress?: boolean
+    compress?: boolean,
+    copiable?: boolean
 }) => {
     const i18n = useI18n();
     const copyToClipboard = async () => {
@@ -19,16 +18,30 @@ export default (props: {
         });
     };
 
+    if (props.copiable) {
+        return (
+            <TouchableHighlight onPress={copyToClipboard}>
+                <Container {...props}/>
+            </TouchableHighlight>
+        );
+    }
+
+    return <Container {...props}/>
+}
+
+const Container = (props:{
+    address: string,
+    compress?: boolean,
+    copiable?: boolean
+}) => {
     const theme = useTheme();
     const { Color } = theme.vars;
-    const styles = createStyles(theme);
+    const styles = theme.styles;
 
     return (
-        <TouchableHighlight onPress={copyToClipboard}>
-            <View style={styles.addressButton}>
+        <View style={styles.addressContainer}>
 
-
-                {props.compress === true &&
+                {props.compress === true && props.address.length > 10 &&
                     <Text style={styles.addressText}>
                         {props.address.substring(0, 10)} ... {props.address.substring(props.address.length - 10, props.address.length)}
                     </Text>
@@ -38,36 +51,9 @@ export default (props: {
                         {props.address}
                     </Text>
                 }
-
-                <Feather name="copy" size={12} color={Color.secondary} />
+                {props.copiable === true &&
+                    <Feather name="copy" size={12} color={Color.secondary} />
+                }
             </View>
-        </TouchableHighlight>
     );
-}
-
-const createStyles = (theme: Theme) => {
-    const { Color, Spacing, FontFamily, FontSize } = theme.vars;
-    const styles = theme.styles;
-
-    return StyleSheet.create({
-        ...theme.styles,
-        addressText: {
-            ...styles.text,
-            ...styles.textCenter,
-            fontSize: FontSize.small,
-            paddingHorizontal: Spacing.small,
-            color: Color.secondary
-        },
-        addressButton: {
-            backgroundColor: rgba(Color.secondary, 0.1),
-            borderRadius: 10,
-            fontFamily: FontFamily.sans,
-            fontSize: FontSize.small,
-            flexDirection: 'row',
-            columnGap: Spacing.small,
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingHorizontal: Spacing.small
-        }
-    });
 }

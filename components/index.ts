@@ -3,7 +3,7 @@ import TextInput from './TextInput';
 import Toast from './Toast';
 import Logo from './Logo';
 import Button from './Button';
-import WalletAvatar from './WalletAvatar';
+import AccountAvatar from './AccountAvatar';
 import ManaBar from './ManaBar';
 import CircularProgress from './CircularProgress';
 import CoinList from './CoinList';
@@ -16,7 +16,6 @@ import CoinBalance from './CoinBalance';
 import CoinListItem from './CoinListItem';
 import CoinSymbol from './CoinSymbol';
 import ListItemSelected from './ListItemSelected';
-import WalletList from './WalletList';
 import Modal from './Modal';
 import ListItem from './ListItem';
 import Selector from './Selector';
@@ -24,6 +23,14 @@ import Copiable from './Copiable';
 import Seed from './Seed';
 import Switch from './Switch';
 import CoinValue from './CoinValue';
+import Separator from './Separator';
+import AccountListItem from './AccountListItem';
+import CoinLogo from './CoinLogo';
+import Screen from './Screen';
+import Link from './Link';
+import AddressbookListItem from './AddressbookListItem';
+import ActionSheet from './ActionSheet';
+import CircleLogo from './CircleLogo';
 
 export {
     ActivityIndicator,
@@ -32,7 +39,7 @@ export {
     Logo,
     Toast,
     Button,
-    WalletAvatar,
+    AccountAvatar,
     ManaBar,
     ManaStat,
     CircularProgress,
@@ -44,12 +51,19 @@ export {
     CoinListItem,
     CoinSymbol,
     ListItemSelected,
-    WalletList,
     Modal,
     ListItem,
     Selector,
     Copiable,
     Seed,
     Switch,
-    CoinValue
+    CoinValue,
+    Separator,
+    AccountListItem,
+    CoinLogo,
+    Screen,
+    Link,
+    AddressbookListItem,
+    ActionSheet,
+    CircleLogo
 }

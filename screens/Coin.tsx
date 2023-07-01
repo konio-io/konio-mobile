@@ -1,14 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import type { CoinNavigationProp, CoinRouteProp } from '../types/navigation';
+import type { CoinRouteProp, OperationsStackNavigationProp } from '../types/navigation';
 import type { Theme } from '../types/store';
-import { Button, TransactionList, Address } from '../components';
+import { Button, TransactionList, Address, Screen } from '../components';
 import { useCoin, useTheme } from '../hooks';
 import { Feather } from '@expo/vector-icons';
-import { setWithdrawContractId } from '../actions';
 
 export default () => {
-    const navigation = useNavigation<CoinNavigationProp>();
+    const navigation = useNavigation<OperationsStackNavigationProp>();
     const route = useRoute<CoinRouteProp>();
     const walletCoin = useCoin(route.params.contractId);
     const coin = walletCoin.get();
@@ -16,13 +15,13 @@ export default () => {
     const styles = createStyles(theme);
 
     return (
-        <View style={styles.wrapper}>
+        <Screen>
             <View style={styles.header}>
 
                 <View style={styles.headerContent}>
-                    <View>
+                    <View style={styles.titleContent}>
                         <Text style={{ ...styles.textTitle, ...styles.textCenter }}>{coin.symbol}</Text>
-                        <Address address={coin.contractId} />
+                        <Address address={coin.contractId} copiable={true} compress={true}/>
                     </View>
 
                     <View style={styles.buttonsContainer}>
@@ -30,9 +29,14 @@ export default () => {
                             style={{ flex: 1 }}
                             title="Send"
                             onPress={() => {
-                                setWithdrawContractId(route.params.contractId);
-                                navigation.navigate('Withdraw', {
-                                    screen: 'SelectRecipient'
+                                navigation.navigate('OperationsStack', {
+                                    screen: 'WithdrawStack',
+                                    params: {
+                                        screen: 'WithdrawTo',
+                                        params: {
+                                            contractId: route.params.contractId
+                                        }
+                                    }
                                 });
                             }}
                             icon={<Feather name="arrow-up-right" />}
@@ -40,7 +44,9 @@ export default () => {
                         <Button
                             style={{ flex: 1 }}
                             title="Receive"
-                            onPress={() => navigation.push('Deposit')}
+                            onPress={() => navigation.navigate('OperationsStack', {
+                                screen: 'Deposit'
+                            })}
                             icon={<Feather name="arrow-down-right" />}
                             type='secondary'
                         />
@@ -51,7 +57,7 @@ export default () => {
 
             <TransactionList contractId={route.params.contractId} />
 
-        </View>
+        </Screen>
     );
 }
 
@@ -76,6 +82,9 @@ const createStyles = (theme: Theme) => {
         headerContent: {
             width: 300,
             rowGap: Spacing.base
+        },
+        titleContent: {
+            alignItems: 'center'
         },
         buttonsContainer: {
             height: 40,

@@ -60,8 +60,8 @@ const createStyles = (theme: Theme) => {
         ...theme.styles,
         wordsContainer: {
             flexDirection: 'row',
-            columnGap: Spacing.base,
-            rowGap: Spacing.base,
+            columnGap: Spacing.small,
+            rowGap: Spacing.small,
             flexWrap: 'wrap',
             height: 180
         },

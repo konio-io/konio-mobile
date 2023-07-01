@@ -1,11 +1,10 @@
 import { FlatList, View } from 'react-native';
-import { useTheme, useI18n, useAutolock } from '../hooks';
+import { useI18n, useAutolock } from '../hooks';
 import { setAutolock, showToast } from '../actions';
-import { ListItemSelected, Text, Wrapper } from '../components';
+import { ListItemSelected, Separator, Text, Screen } from '../components';
 
 export default () => {
-  const theme = useTheme();
-  const styles = theme.styles;
+
   const data = [
     -1,
     0,
@@ -18,15 +17,15 @@ export default () => {
   ];
 
   return (
-    <Wrapper type="full">
+    <Screen>
 
       <FlatList
         data={data}
         renderItem={({ item }) => <ListItem item={item} />}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ItemSeparatorComponent={() => <Separator/>}
       />
 
-    </Wrapper>
+    </Screen>
   );
 }
 

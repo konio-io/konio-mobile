@@ -1,32 +1,35 @@
 import { FlatList, View } from 'react-native';
-import { useTheme, useI18n } from '../hooks';
+import { useI18n } from '../hooks';
 import { UserStore } from '../stores';
 import { setLocale, showToast } from '../actions';
-import { ListItemSelected, Text, Wrapper } from '../components';
+import { ListItemSelected, Separator, Text, Screen } from '../components';
 import { useHookstate } from '@hookstate/core';
 import { OS_LOCALE } from '../lib/Constants';
-import locales from '../locales';
+import {LocaleIndex} from '../lib/Locales';
 
 export default () => {
-  const data = [OS_LOCALE, ... Object.keys(locales)];
-  const theme = useTheme();
-  const styles = theme.styles;
+  const data: Array<{code: string, label: string}> = [
+    {code: OS_LOCALE, label: 'auto'},
+  ];
+
+  for (const code in LocaleIndex) {
+    data.push({code, label: LocaleIndex[code]});
+  }
 
   return (
-    <Wrapper type="full">
-
+    <Screen>
       <FlatList
         data={data}
-        renderItem={({ item }) => <ListItem name={item} />}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        renderItem={({ item }) => <ListItem code={item.code} label={item.label}/>}
+        ItemSeparatorComponent={() => <Separator/>}
       />
-
-    </Wrapper>
+    </Screen>
   );
 }
 
 export const ListItem = (props: {
-  name: string
+    code: string,
+    label: string
 }) => {
 
   const i18n = useI18n();
@@ -34,17 +37,17 @@ export const ListItem = (props: {
 
   const ItemComponent = () => (
     <View>
-      <Text>{props.name}</Text>
+      <Text>{props.label}</Text>
     </View>
   );
 
-  const selected = (locale === props.name);
+  const selected = (locale === props.code);
 
   const changeLocale = () => {
-    setLocale(props.name);
+    setLocale(props.code);
     showToast({
       type: 'info',
-      text1: i18n.t('locale_changed', {name: props.name})
+      text1: i18n.t('locale_changed', {name: props.label})
     });
   }
 

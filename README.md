@@ -13,7 +13,7 @@ The first Koinos blockchain native mobile wallet.
 ```
 npm install
 npx expo prebuild -p android
-expo start --dev-client --clear
+npx expo start --dev-client --clear
 ```
 ### Internal preview
 ```

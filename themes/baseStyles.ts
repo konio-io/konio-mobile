@@ -34,7 +34,8 @@ export const getStyles = (themeVars : ThemeVars) => {
         },
         text: {
             color: Color.baseContrast,
-            fontFamily: FontFamily.sans
+            fontFamily: FontFamily.sans,
+            fontSize: FontSize.base
         },
         textError: {
             color: Color.error,
@@ -87,6 +88,7 @@ export const getStyles = (themeVars : ThemeVars) => {
             padding: Spacing.base,
             backgroundColor: Color.base,
             justifyContent: 'space-between',
+            alignItems: 'center',
         },
         textTitle: {
             fontSize: FontSize.large,
@@ -102,6 +104,26 @@ export const getStyles = (themeVars : ThemeVars) => {
             color: Color.baseContrast,
             fontFamily: FontFamily.sans,
             fontSize: FontSize.medium
+        },
+        addressText: {
+            fontFamily: FontFamily.sans,
+            fontSize: FontSize.small,
+            color: Color.secondary
+        },
+        addressContainer: {
+            backgroundColor: rgba(Color.secondary, 0.1),
+            borderRadius: 10,
+            fontFamily: FontFamily.sans,
+            fontSize: FontSize.small,
+            flexDirection: 'row',
+            columnGap: Spacing.small,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingHorizontal: Spacing.small,
+            height: 20
+        },
+        screenFooter: {
+            padding: Spacing.base
         }
     }
 

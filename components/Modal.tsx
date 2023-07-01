@@ -19,7 +19,7 @@ export default (props: {
 
     return (
         <Modal
-            animationType="slide"
+            animationType="fade"
             transparent={true}
             visible={openState.get()}
             onRequestClose={() => {

@@ -15,7 +15,8 @@ export type UserStoreState = {
     locale: string,
     theme: string,
     biometric: boolean,
-    autolock: number
+    autolock: number,
+    addressbook: Record<string,AddressbookItem>
 }
 
 export type Account = {
@@ -44,6 +45,7 @@ export type Network = {
     chainId: string,
     rpcNodes: Array<string>,
     koinContractId: string,
+    kapContractId: string,
     explorer: string
 }
 
@@ -101,8 +103,7 @@ export type Theme = {
     statusBarStyle: StatusBarStyle
 }
 
-export type Withdraw = {
-    contractId: string,
-    amount: number,
-    address?: string
-};
+export type AddressbookItem = {
+    name: string,
+    address: string
+}

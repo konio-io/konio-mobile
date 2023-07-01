@@ -1,86 +1,53 @@
-import { useCoin, useCurrentKoin, useI18n, useTheme } from '../hooks';
-import type { Theme } from '../types/store';
+import { useTheme } from '../hooks';
 import CoinBalance from './CoinBalance';
-import { Alert, StyleSheet, TouchableHighlight, View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import CoinSymbol from './CoinSymbol';
-import { deleteCoin, showToast } from '../actions';
-import Text from './Text';
 import CoinValue from './CoinValue';
+import CoinLogo from './CoinLogo';
+import type { Theme } from '../types/store';
 
 export default (props: {
-    contractId: string,
-    onPress?: Function
+    contractId: string
 }) => {
 
-    const i18n = useI18n();
     const theme = useTheme();
     const styles = createStyles(theme);
-    const currentKoin = useCurrentKoin();
-    const coin = useCoin(props.contractId);
-
-    const deleteCoinInternal = () => {
-        deleteCoin(props.contractId);
-        showToast({
-            type: 'success',
-            text1: i18n.t('coin_deleted', {name: coin.symbol.get()})
-        })
-    };
-
-    const showAlert = () => {
-        Alert.alert(
-            '',
-            i18n.t('coin_deletion_confirm', {name: coin.symbol.get()}),
-            [
-                {
-                    text: i18n.t('yes'),
-                    onPress: () => deleteCoinInternal(),
-                },
-                {
-                    text: i18n.t('cancel'),
-                    onPress: () => {},
-                    style: 'cancel',
-                }
-            ]
-        );
-    };
 
     return (
-        <TouchableHighlight
-            onPress={() => {
-                if (props.onPress) {
-                    props.onPress();
-                }
-            }}
-            onLongPress={() => {
-                if (props.contractId !== currentKoin.get()) {
-                    showAlert();
-                }
-            }}
-        >
-            <View style={styles.coinListItemContainer}>
+        <View style={styles.container}>
+            <View style={styles.leftContainer}>
+                <CoinLogo contractId={props.contractId} size={36} />
+
                 <View>
                     <CoinSymbol contractId={props.contractId} />
                     <CoinBalance contractId={props.contractId} />
                 </View>
-                
-                <CoinValue contractId={props.contractId}/>
-                
             </View>
-        </TouchableHighlight>
+
+            <CoinValue contractId={props.contractId} />
+        </View>
     );
 }
 
 const createStyles = (theme: Theme) => {
-    const { Spacing, Color } = theme.vars;
+    const { Color, FontFamily, Spacing } = theme.vars;
 
     return StyleSheet.create({
         ...theme.styles,
-        coinListItemContainer: {
+        letter: {
+            fontFamily: FontFamily.sans,
+            color: Color.base
+        },
+        container: {
+            flex: 1, 
+            flexDirection: 'row', 
+            justifyContent: 'space-between', 
+            alignItems: 'center'
+        },
+        leftContainer: {
             flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: Spacing.base,
-            backgroundColor: Color.base
+             columnGap: Spacing.base, 
+             alignItems: 'center'
         }
     });
 }

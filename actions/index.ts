@@ -1,11 +1,12 @@
-import { Contract, Provider, Signer, utils } from "koilib";
+import { utils } from "koilib";
 import { TransactionJsonWait } from "koilib/lib/interface";
-import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, WithdrawStore, LockStore, CoinValueStore } from "../stores";
-import { Coin, Transaction, Wallet } from "../types/store";
+import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore } from "../stores";
+import { AddressbookItem, Coin, Transaction, Wallet } from "../types/store";
 import { TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_WITHDRAW } from "../lib/Constants";
 import HDKoinos from "../lib/HDKoinos";
 import Toast from 'react-native-toast-message';
 import { State, none } from "@hookstate/core";
+import { getCoinBalance, getContract, getProvider } from "../lib/utils";
 
 export const setCurrentWallet = (address: string) => {
     UserStore.currentAddress.set(address);
@@ -29,7 +30,7 @@ export const refreshMana = async () => {
     const networks = UserStore.networks;
     const provider = getProvider(networkId);
     const manaBalance = await provider.getAccountRc(address)
-    
+
     const contractId = networks[networkId].koinContractId.get();
     const koinBalance = await getCoinBalance({
         address,
@@ -46,7 +47,7 @@ export const refreshMana = async () => {
 
 export const refreshCoinListBalance = () => {
     const currentAddress = UserStore.currentAddress;
-    const currentAddressOrNull : State<string> | null = currentAddress.ornull;
+    const currentAddressOrNull: State<string> | null = currentAddress.ornull;
     if (!currentAddressOrNull) {
         return;
     }
@@ -59,7 +60,6 @@ export const refreshCoinListBalance = () => {
 
     for (const contractId of coins) {
         refreshCoinBalance(contractId);
-        refreshCoinValue(contractId);
     }
 }
 
@@ -77,15 +77,14 @@ export const refreshCoinBalance = (contractId: string) => {
         networkId,
         contractId,
         decimal: coin.decimal.get()
-    }).then(value => CoinBalanceStore[contractId].set(value));
+    }).then(value => {
+        CoinBalanceStore[contractId].set(value);
+        refreshCoinValue(contractId);
+    });
 }
 
 export const refreshCoinValue = (contractId: string) => {
-    const address = UserStore.currentAddress.get();
-    if (!address) {
-        throw new Error('Current address not set');
-    }
-        fetch("https://www.mexc.com/open/api/v2/market/ticker?symbol=koin_usdt")
+    fetch("https://www.mexc.com/open/api/v2/market/ticker?symbol=koin_usdt")
         .then(response => response.json())
         .then(json => {
             const price = Number(json.data[0].last);
@@ -221,8 +220,8 @@ export const addSeed = async (args: {
     name: string
 }) => {
     const accounts = EncryptedStore.accounts;
-    const {seed, name} = args;
-    const {address, privateKey} = await HDKoinos.createWallet(seed, 0);
+    const { seed, name } = args;
+    const { address, privateKey } = await HDKoinos.createWallet(seed, 0);
 
     addAddress(address, name);
 
@@ -254,7 +253,7 @@ export const addAccount = async (name: string) => {
         throw new Error("Provided wallet address does not have an accountIndex");
     }
 
-    const {address, privateKey} = await HDKoinos.createWallet(wallet.seed, wallet.accountIndex + 1);
+    const { address, privateKey } = await HDKoinos.createWallet(wallet.seed, wallet.accountIndex + 1);
 
     addAddress(address, name);
 
@@ -299,77 +298,6 @@ export const confirmTransaction = async (transaction: TransactionJsonWait): Prom
     return transactionState.get();
 }
 
-export const getProvider = (networkId: string): Provider => {
-    const network = UserStore.networks[networkId];
-    return new Provider([...network.rpcNodes.get()]);
-}
-
-export const getSigner = (args: {
-    address: string,
-    networkId: string
-}): Signer => {
-    const { address, networkId } = args;
-    const account = EncryptedStore.accounts[address];
-    const provider = getProvider(networkId);
-    const signer = Signer.fromWif(account.privateKey.get());
-    signer.provider = provider;
-    return signer;
-}
-
-export const getContract = async (args: {
-    address: string,
-    networkId: string,
-    contractId: string
-}): Promise<Contract> => {
-    const { address, networkId, contractId } = args;
-    const signer = getSigner({ address, networkId });
-    const provider = signer.provider;
-    const contract = new Contract({
-        id: contractId,
-        provider,
-        signer
-    });
-
-    await contract.fetchAbi();
-    if (!contract.abi) {
-        throw new Error("unable to fetch contract abi");
-    }
-
-    //Hack
-    Object.keys(contract.abi.methods).forEach(m => {
-        if (contract.abi) {
-            if (contract.abi.methods[m].entry_point === undefined) {
-                contract.abi.methods[m].entry_point = Number(contract.abi.methods[m]["entry-point"]);
-            }
-            if (contract.abi.methods[m].read_only === undefined) {
-                contract.abi.methods[m].read_only = contract.abi.methods[m]["read-only"];
-            }
-        }
-    });
-
-    return contract;
-}
-
-export const getCoinBalance = async (args: {
-    address: string,
-    networkId: string,
-    contractId: string,
-    decimal: number
-}) => {
-    const { address, networkId, contractId, decimal } = args;
-    const contract = await getContract({
-        address,
-        networkId,
-        contractId
-    });
-    const response = await contract.functions.balance_of({ owner: address });
-    if (response.result) {
-        return utils.formatUnits(response.result.value, decimal);
-    }
-
-    return '0';
-}
-
 export const setPassword = (password: string) => {
     EncryptedStore.merge({ password });
 }
@@ -390,24 +318,12 @@ export const generateSeed = () => {
     return HDKoinos.randomMnemonic();
 }
 
-export const setWithdrawAddress = (address : string) => {
-    WithdrawStore.address.set(address);
-}
-
-export const setWithdrawContractId = (contractId : string) => {
-    WithdrawStore.contractId.set(contractId);
-}
-
-export const setWithdrawAmount = (amount : number) => {
-    WithdrawStore.amount.set(amount);
-}
-
 export const lock = (key: string) => {
-    LockStore.set({[key]: true});
+    LockStore.set({ [key]: true });
 }
 
 export const unlock = (key: string) => {
-    LockStore.set({[key]: false});
+    LockStore.set({ [key]: false });
 }
 
 export const setLocale = (locale: string) => {
@@ -429,8 +345,10 @@ export const deleteCoin = (contractId: string) => {
     }
     const coins = UserStore.wallets[address].coins;
     const index = coins.get().indexOf(contractId);
-    if (index > -1 ) {
+    if (index > -1) {
         coins[index].set(none);
+        CoinBalanceStore[contractId].set(none);
+        CoinValueStore[contractId].set(none);
     }
 }
 
@@ -440,4 +358,16 @@ export const deleteWallet = (address: string) => {
 
 export const setAutolock = (autolock: number) => {
     UserStore.autolock.set(autolock);
+}
+
+export const setAccountName = (address: string, name: string) => {
+    UserStore.wallets[address].name.set(name);
+}
+
+export const addAddressBookItem = (item: AddressbookItem) => {
+    UserStore.addressbook.merge({[item.address]: item});
+}
+
+export const deleteAddressBookItem = (address: string) => {
+    UserStore.addressbook[address].set(none);
 }

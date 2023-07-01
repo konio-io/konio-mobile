@@ -20,7 +20,8 @@ const UserStoreDefault: UserStoreState = {
     locale: OS_LOCALE,
     theme: OS_THEME,
     biometric: false,
-    autolock: -1
+    autolock: -1,
+    addressbook: {}
 };
 export const UserStore = hookstate(
     {... UserStoreDefault}, localstored({
@@ -94,16 +95,6 @@ export const reset = () => {
     UserStore.set({...UserStoreDefault});
     EncryptedStore.set({...EncryptedStoreDefault});
 };
-
-/**
- * Withdraw wizard store
- */
-export const WithdrawStoreDefault : Withdraw = {
-    contractId: UserStore.networks[UserStore.currentNetworkId.get()].koinContractId.get(),
-    amount: 0,
-    address: undefined,
-};
-export const WithdrawStore = hookstate(WithdrawStoreDefault);
 
 /**
  * Lock by password

@@ -1,42 +1,55 @@
-import { Linking, Pressable, StyleSheet, View } from 'react-native';
-import { Text, Logo, Wrapper, Address } from '../components';
+import { Linking, StyleSheet, View } from 'react-native';
+import { Text, Logo, Wrapper, Address, Screen, Link } from '../components';
 import { useTheme, useI18n } from '../hooks';
 import type { Theme } from '../types/store';
 import Constants from 'expo-constants';
 
 export default () => {
-
     const i18n = useI18n();
     const theme = useTheme();
     const styles = createStyles(theme);
-    const { Color, Spacing } = theme.vars;
 
     return (
-        <Wrapper>
-            <Logo />
+        <Screen>
+            <Wrapper>
+                <Logo />
 
-            <View style={{ rowGap: Spacing.small }}>
-                <Text style={{ ...styles.textCenter, ...styles.text, fontWeight: 'bold' }}>v{Constants.manifest?.version}</Text>
-                <Text style={{ ...styles.textCenter, ...styles.textSmall }}>by adrihoke</Text>
-                <Pressable onPress={() => Linking.openURL('https://konio.io')}>
-                    <Text style={{ ...styles.textCenter, color: Color.primary }}>https://konio.io</Text>
-                </Pressable>
-            </View>
+                <View style={styles.container}>
+                    <Text style={styles.textVersion}>v{Constants.manifest?.version}</Text>
+                    <Text style={styles.textAuthor}>by adrihoke</Text>
+                    <Link text="https://konio.io" onPress={() => Linking.openURL('https://konio.io')}/>
+                </View>
 
-            <View style={{ rowGap: Spacing.small, alignItems: 'center' }}>
-                <Text style={{ ...styles.textCenter, ...styles.text }}>{i18n.t('donations')}</Text>
-                <Address address="1Pbh4S8iSXRJrsa4rm4DKSBr9QhbPA4Sxj" />
-            </View>
+                <View style={styles.donationsContainer}>
+                    <Text>{i18n.t('donations')}</Text>
+                    <Address address="1Pbh4S8iSXRJrsa4rm4DKSBr9QhbPA4Sxj" copiable={true}/>
+                </View>
 
-        </Wrapper>
+            </Wrapper>
+        </Screen>
     );
 }
 
 const createStyles = (theme: Theme) => {
+    const { Spacing } = theme.vars;
+
     return StyleSheet.create({
         ...theme.styles,
         container: {
-            justifyContent: 'center',
+            rowGap: Spacing.small,
+            alignItems: 'center'
+        },
+        textVersion: { 
+            ...theme.styles.textCenter, 
+            ...theme.styles.text, 
+            fontWeight: 'bold'
+        },
+        textAuthor: {
+            ...theme.styles.textCenter, 
+            ...theme.styles.textSmall
+        },
+        donationsContainer: {
+            rowGap: Spacing.small, 
             alignItems: 'center'
         }
     });

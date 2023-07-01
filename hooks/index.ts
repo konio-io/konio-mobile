@@ -1,8 +1,8 @@
 import { State, useHookstate } from "@hookstate/core";
-import { CoinBalanceStore, UserStore, EncryptedStore, WithdrawStore, LockStore, CoinValueStore } from "../stores";
+import { CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore } from "../stores";
 import { getTheme } from "../themes";
 import { AppState, useColorScheme } from 'react-native';
-import locales from "../locales";
+import Locales from "../lib/Locales";
 import { I18n } from 'i18n-js';
 import { getLocales } from 'expo-localization';
 import { FALLBACK_LOCALE, FALLBACK_THEME, OS_LOCALE, OS_THEME } from "../lib/Constants";
@@ -88,6 +88,17 @@ export const usePassword = () => {
     return useHookstate(EncryptedStore.password);
 }
 
+export const useTransactions = () => {
+    return useHookstate(UserStore.transactions);
+}
+
+export const useAddressbook = () => {
+    return useHookstate(UserStore.addressbook);
+}
+
+export const useAddressbookItem = (address: string) => {
+    return useHookstate(UserStore.addressbook[address]);
+}
 
 export const useTheme = () => {
     const storeTheme = useHookstate(UserStore.theme).get();
@@ -100,20 +111,16 @@ export const useTheme = () => {
     return getTheme(storeTheme);
 }
 
-export const useWithdraw = () => {
-    return useHookstate(WithdrawStore);
-}
-
 export const useCurrentSeed = () => {
     return Object.values(EncryptedStore.accounts).filter(w => w.seed.get() !== undefined)[0].seed;
 }
 
-const i18n = new I18n(locales);
+const i18n = new I18n(Locales);
 export const useI18n = () => {
     let currentLocale = useHookstate(UserStore.locale).get();
     if (currentLocale === OS_LOCALE) {
         const systemLocale = getLocales()[0].languageCode;
-        currentLocale = Object.keys(locales).includes(systemLocale) ?
+        currentLocale = Object.keys(Locales).includes(systemLocale) ?
             systemLocale :
             FALLBACK_LOCALE;
     }
