@@ -1,6 +1,6 @@
 import { State, hookstate } from "@hookstate/core";
 import { DEFAULT_COINS, DEFAULT_NETWORK, DEFAULT_NETWORKS, OS_LOCALE, OS_THEME } from "../lib/Constants";
-import { UserStoreState, EncryptedStoreState, Withdraw } from "../types/store";
+import { UserStoreState, EncryptedStoreState } from "../types/store";
 import { localstored } from "@hookstate/localstored";
 import * as ExpoSecureStore from 'expo-secure-store';
 import AsyncStorage from "@react-native-async-storage/async-storage";
