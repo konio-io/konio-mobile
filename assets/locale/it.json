@@ -119,6 +119,7 @@
   "security_desc": "Sicurezza e accesso",
   "cancel": "Annulla",
   "yes": "Si",
+  "no": "No",
   "change_password": "Cambia password",
   "change_password_desc": "Cambia la password del tuo wallet",
   "change_autolock": "Autoblocco",
