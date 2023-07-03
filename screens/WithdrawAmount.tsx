@@ -1,9 +1,9 @@
-import { Button, Screen, Selector, Wrapper, CoinListItem, Text } from "../components"
+import { Button, Screen, Selector, Wrapper, CoinListItem, Text, TextInput } from "../components"
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { WithdrawAmountNavigationProp, WithdrawAmountRouteProp } from "../types/navigation";
 import { useCoinBalance, useTheme, useI18n, useCurrentKoin, useCoinValue } from "../hooks";
 import { useHookstate } from "@hookstate/core";
-import { View, StyleSheet, TextInput } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Feather } from '@expo/vector-icons';
 import type { Theme } from "../types/store";
 import { showToast } from "../actions";
@@ -147,6 +147,8 @@ const createStyles = (theme: Theme) => {
             fontSize: FontSize.medium
         },
         amount: {
+            ...styles.textInput,
+            borderWidth: 0,
             width: '100%',
             fontSize: FontSize.large
         },

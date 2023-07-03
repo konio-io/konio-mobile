@@ -21,15 +21,15 @@ export default (props: {
     if (props.copiable) {
         return (
             <TouchableHighlight onPress={copyToClipboard}>
-                <Container {...props}/>
+                <Container {...props} />
             </TouchableHighlight>
         );
     }
 
-    return <Container {...props}/>
+    return <Container {...props} />
 }
 
-const Container = (props:{
+const Container = (props: {
     address: string,
     compress?: boolean,
     copiable?: boolean
@@ -40,20 +40,19 @@ const Container = (props:{
 
     return (
         <View style={styles.addressContainer}>
-
-                {props.compress === true && props.address.length > 10 &&
-                    <Text style={styles.addressText}>
-                        {props.address.substring(0, 10)} ... {props.address.substring(props.address.length - 10, props.address.length)}
-                    </Text>
-                }
-                {props.compress !== true &&
-                    <Text style={styles.addressText}>
-                        {props.address}
-                    </Text>
-                }
-                {props.copiable === true &&
-                    <Feather name="copy" size={12} color={Color.secondary} />
-                }
-            </View>
+            {props.compress === true && props.address.length > 10 &&
+                <Text style={styles.addressText}>
+                    {props.address.substring(0, 10)} ... {props.address.substring(props.address.length - 10, props.address.length)}
+                </Text>
+            }
+            {props.compress !== true &&
+                <Text style={styles.addressText}>
+                    {props.address}
+                </Text>
+            }
+            {props.copiable === true &&
+                <Feather name="copy" size={12} color={Color.secondary} />
+            }
+        </View>
     );
 }

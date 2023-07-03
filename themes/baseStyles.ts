@@ -112,14 +112,15 @@ export const getStyles = (themeVars : ThemeVars) => {
         },
         addressContainer: {
             backgroundColor: rgba(Color.secondary, 0.1),
-            borderRadius: 10,
+            borderRadius: Border.radius,
             fontFamily: FontFamily.sans,
             fontSize: FontSize.small,
             flexDirection: 'row',
             columnGap: Spacing.small,
             justifyContent: 'space-between',
             alignItems: 'center',
-            padding: Spacing.small
+            paddingHorizontal: 4,
+            paddingVertical: 2
         },
         screenFooter: {
             padding: Spacing.base

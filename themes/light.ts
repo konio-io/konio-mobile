@@ -30,7 +30,7 @@ export const getTheme = () : Theme => {
         error: 'rgba(204,63,63,1)',
         warning: 'rgba(255,142,36,1)',
         success: 'rgba(94,184,59,1)',
-        secondary: 'rgba(217,169,65,1)'
+        secondary: 'rgba(0,73,200,1)'
     };
 
     const Border = {

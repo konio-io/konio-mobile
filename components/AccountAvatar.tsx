@@ -44,7 +44,8 @@ const createStyles = (theme: Theme) => {
             borderRadius: Border.radius,
             justifyContent: 'center',
             alignItems: 'center',
-            padding: 1
+            padding: 1,
+            backgroundColor: 'white'
         }
     });
 }

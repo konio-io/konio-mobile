@@ -113,7 +113,7 @@ const To = (props: {
             <View style={styles.toInputAddressContainer}>
                 {
                     address.get() &&
-                    <AccountAvatar size={32} address={address.get()} />
+                    <AccountAvatar size={36} address={address.get()} />
                 }
 
                 <View style={{ flex: 1 }}>
@@ -210,7 +210,8 @@ const createStyles = (theme: Theme) => {
         },
         toInputAddressContainer: {
             flexDirection: 'row',
-            columnGap: Spacing.small
+            columnGap: Spacing.small,
+            alignItems: 'center'
         },
         toInputIconsContainer: {
             flexDirection: 'row',
