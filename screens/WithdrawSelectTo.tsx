@@ -6,7 +6,7 @@ import { FlatList } from "react-native";
 
 export default () => {
     const currentAddress = useCurrentAddress();
-    const data = useWallets().get().filter(w => w.address !== currentAddress.get());
+    const data = Object.values(useWallets().get()).filter(w => w.address !== currentAddress.get());
 
     return (
         <Screen>

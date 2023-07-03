@@ -45,20 +45,20 @@ export default () => {
             return;
         }
 
-        navigation.navigate('WithdrawAmount', {contractId: route.params.contractId, to: address.get()});
+        navigation.navigate('WithdrawAmount', { contractId: route.params.contractId, to: address.get() });
     };
 
     return (
         <Screen>
             <View style={styles.toContainer}>
-                <To value={address.get()} onChange={(v: string) => address.set(v)}/>
+                <To value={address.get()} onChange={(v: string) => address.set(v)} />
             </View>
 
             <View style={styles.screenFooter}>
                 <Text style={styles.textSmall}>{i18n.t('recents')}</Text>
             </View>
 
-            <RecentList onPressItem={(addr: string) => address.set(addr)} selected={address.get()}/>
+            <RecentList onPressItem={(addr: string) => address.set(addr)} selected={address.get()} />
 
             <View style={styles.screenFooter}>
                 <Button
@@ -110,40 +110,43 @@ const To = (props: {
     return (
         <View style={styles.toInputContainer}>
 
-            <View style={{ flex: 1 }}>
-                <View style={styles.toInputInternalContainer}>
-                    {
-                        address.get() &&
-                        <AccountAvatar size={32} address={address.get()} />
-                    }
+            <View style={styles.toInputAddressContainer}>
+                {
+                    address.get() &&
+                    <AccountAvatar size={32} address={address.get()} />
+                }
 
-                    <View>
-                        {name.get() &&
-                            <Text>{name.get()}</Text>
-                        }
-                        <TextInput
-                            autoFocus={true}
-                            style={{...styles.addressText, ...styles.addressContainer}}
-                            value={address.get()}
-                            onChangeText={(v: string) => { address.set(v) }}
-                        />
-                    </View>
+                <View style={{ flex: 1 }}>
+                    {name.get() &&
+                        <Text>{name.get()}</Text>
+                    }
+                    <TextInput
+                        multiline={true}
+                        autoFocus={true}
+                        style={{ ...styles.addressText, ...styles.addressContainer }}
+                        value={address.get()}
+                        onChangeText={(v: string) => { address.set(v) }}
+                    />
                 </View>
             </View>
 
-            <View style={styles.toInputIconsContainer}>
-                <Pressable onPress={() => navigation.navigate('WithdrawSelectTo', {selected: address.get()})}>
-                    <AntDesign name="wallet" size={22} color={Color.baseContrast} />
-                </Pressable>
+            <View style={{alignItems: 'flex-end'}}>
+                <View style={styles.toInputIconsContainer}>
+                    <Pressable onPress={() => navigation.navigate('WithdrawSelectTo', { selected: address.get() })}>
+                        <AntDesign name="wallet" size={22} color={Color.baseContrast} />
+                    </Pressable>
 
-                <Pressable onPress={() => navigation.navigate('WithdrawAddressbook', {selected: address.get()})}>
-                    <Feather name="book-open" size={22} color={Color.baseContrast} />
-                </Pressable>
+                    <Pressable onPress={() => navigation.navigate('WithdrawAddressbook', { selected: address.get() })}>
+                        <Feather name="book-open" size={22} color={Color.baseContrast} />
+                    </Pressable>
 
-                <Pressable onPress={() => showToast({ type: 'info', text1: i18n.t('available_soon') })}>
-                    <AntDesign name="qrcode" size={22} color={Color.baseContrast} />
-                </Pressable>
+                    <Pressable onPress={() => showToast({ type: 'info', text1: i18n.t('available_soon') })}>
+                        <AntDesign name="qrcode" size={22} color={Color.baseContrast} />
+                    </Pressable>
+                </View>
             </View>
+
+
         </View>
     )
 }
@@ -160,7 +163,7 @@ const RecentList = (props: {
         .slice(0, 5)
         .map(t => t.to);
 
-    const wallets = useWallets().get();
+    const wallets = Object.values(useWallets().get());
     const filteredWallets = wallets.filter(w => latestTransactionTo.includes(w.address) && w.address !== currentAddress.get());
 
     const addressBook = Object.values(useAddressbook().get());
@@ -171,7 +174,7 @@ const RecentList = (props: {
     return (
         <FlatList
             data={data}
-            renderItem={({ item }) => <RecentListItem address={item.address} selected={props.selected === item.address} onPress={(address : string) => props.onPressItem(address)}/>}
+            renderItem={({ item }) => <RecentListItem address={item.address} selected={props.selected === item.address} onPress={(address: string) => props.onPressItem(address)} />}
             ItemSeparatorComponent={() => <Separator />}
         />
     );
@@ -198,24 +201,19 @@ const createStyles = (theme: Theme) => {
     return StyleSheet.create({
         ...theme.styles,
         toContainer: {
-            padding: Spacing.base, 
+            padding: Spacing.base,
             rowGap: Spacing.small
         },
         toInputContainer: {
-            ...theme.styles.textInput, 
-            flexDirection: 'row', 
-            alignItems: 'center', 
-            columnGap: Spacing.small, 
-            height: 60
+            ...theme.styles.textInput,
+            rowGap: Spacing.small
         },
-        toInputInternalContainer: {
-            flexDirection: 'row', 
-            columnGap: Spacing.small, 
-            alignItems: 'center'
+        toInputAddressContainer: {
+            flexDirection: 'row',
+            columnGap: Spacing.small
         },
         toInputIconsContainer: {
-            width: 'auto', 
-            flexDirection: 'row', 
+            flexDirection: 'row',
             columnGap: Spacing.small
         }
     });

@@ -119,6 +119,7 @@
   "security_desc": "Seguridad y acceso",
   "cancel": "Cancelar",
   "yes": "Sí",
+  "no": "No",
   "change_password": "Cambiar contraseña",
   "change_password_desc": "Cambiar la contraseña de tu billetera",
   "change_autolock": "Bloqueo automático",
@@ -147,5 +148,14 @@
   "added": "{{name}} añadido",
   "created": "{{name}} creado",
   "deleted": "{{name}} eliminado",
-  "invalid_address": "Dirección inválida"
+  "invalid_address": "Dirección inválida",
+  "advanced": "Avanzado",
+  "advanced_desc": "Configuraciones avanzadas. Advertencia.",
+  "rc_limit": "Límite de recarga",
+  "rc_limit_desc": "Rango 0-100",
+  "add_network": "Agregar red",
+  "missing_data": "Faltan algunos valores",
+  "are_you_sure": "¿Estás seguro?",
+  "are_you_sure_replace_network": "Ya existe una red con el mismo ID de cadena. ¿Estás seguro de que deseas reemplazarla?",
+  "edit_account": "Editar cuenta"
 }

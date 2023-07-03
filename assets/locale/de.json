@@ -119,6 +119,7 @@
   "security_desc": "Sicherheit und Zugang",
   "cancel": "Abbrechen",
   "yes": "Ja",
+  "no": "Nein",
   "change_password": "Passwort ändern",
   "change_password_desc": "Ändern Sie Ihr Wallet-Passwort",
   "change_autolock": "Automatische Sperre ändern",
@@ -147,5 +148,14 @@
   "added": "{{name}} hinzugefügt",
   "created": "{{name}} erstellt",
   "deleted": "{{name}} gelöscht",
-  "invalid_address": "Ungültige Adresse"
+  "invalid_address": "Ungültige Adresse",
+  "advanced": "Erweitert",
+  "advanced_desc": "Erweiterte Einstellungen. Warnung.",
+  "rc_limit": "Aufladelimit",
+  "rc_limit_desc": "Bereich 0-100",
+  "add_network": "Netzwerk hinzufügen",
+  "missing_data": "Einige Werte fehlen",
+  "are_you_sure": "Bist du sicher?",
+  "are_you_sure_replace_network": "Ein Netzwerk mit derselben Ketten-ID existiert bereits. Bist du sicher, dass du es ersetzen möchtest?",
+  "edit_account": "Konto bearbeiten"
 }

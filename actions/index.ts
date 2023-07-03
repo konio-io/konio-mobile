@@ -1,7 +1,7 @@
 import { utils } from "koilib";
 import { TransactionJsonWait } from "koilib/lib/interface";
 import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore } from "../stores";
-import { AddressbookItem, Coin, Transaction, Wallet } from "../types/store";
+import { AddressbookItem, Coin, Network, Transaction, Wallet } from "../types/store";
 import { TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_WITHDRAW } from "../lib/Constants";
 import HDKoinos from "../lib/HDKoinos";
 import Toast from 'react-native-toast-message';
@@ -108,6 +108,7 @@ export const withdrawCoin = async (args: { contractId: string, to: string, value
     const networkId = UserStore.currentNetworkId.get();
     const coin = UserStore.coins[contractId];
     const transactions = UserStore.transactions;
+    const rcLimit = UserStore.rcLimit.get();
 
     const contract = await getContract({
         address,
@@ -133,6 +134,8 @@ export const withdrawCoin = async (args: { contractId: string, to: string, value
     const { transaction, receipt } = await contract.functions.transfer({
         to,
         value,
+    }, {
+        rcLimit: (parseInt(UserStore.rcLimit.get()) * Math.pow(10, 6)).toString()
     });
 
     if (!transaction || !transaction.id) {
@@ -370,4 +373,14 @@ export const addAddressBookItem = (item: AddressbookItem) => {
 
 export const deleteAddressBookItem = (address: string) => {
     UserStore.addressbook[address].set(none);
+}
+
+export const addNetwork = (network: Network) => {
+    UserStore.networks.merge({
+        [network.chainId]: network
+    });
+}
+
+export const deleteNetwork = (networkId: string) => {
+    UserStore.networks.merge({[networkId] : none});
 }

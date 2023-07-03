@@ -48,6 +48,15 @@ export default () => {
       <Separator/>
 
       <ListItem
+        title={i18n.t('advanced')}
+        name={i18n.t('advanced')}
+        description={i18n.t('advanced_desc')}
+        onPress={() => navigation.navigate('Advanced')}
+      />
+
+      <Separator/>
+
+      <ListItem
         title={i18n.t('about')}
         name={i18n.t('about')}
         description={i18n.t('show_app_info')}

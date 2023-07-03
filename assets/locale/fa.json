@@ -119,6 +119,7 @@
   "security_desc": "امنیت و دسترسی",
   "cancel": "لغو",
   "yes": "بله",
+  "no": "نه",
   "change_password": "تغییر رمزعبور",
   "change_password_desc": "تغییر رمزعبور کیف پول شما",
   "change_autolock": "بستن خودکار",
@@ -147,5 +148,14 @@
   "added": "{{name}} اضافه شد",
   "created": "{{name}} ساخته شد",
   "deleted": "{{name}} حذف شد",
-  "invalid_address": "آدرس نامعتبر"
+  "invalid_address": "آدرس نامعتبر",
+  "advanced": "پیشرفته",
+  "advanced_desc": "تنظیمات پیشرفته. هشدار.",
+  "rc_limit": "محدودیت شارژ",
+  "rc_limit_desc": "محدوده 0-100",
+  "add_network": "افزودن شبکه",
+  "missing_data": "برخی از مقادیر گم شده است",
+  "are_you_sure": "آیا مطمئن هستید؟",
+  "are_you_sure_replace_network": "یک شبکه با همان شناسه زنجیره در حال حاضر وجود دارد. آیا مطمئن هستید که میخواهید آن را جایگزین کنید؟",
+  "edit_account": "ویرایش حساب"
 }

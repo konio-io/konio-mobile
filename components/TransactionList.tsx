@@ -142,10 +142,6 @@ const createStyles = (theme: Theme) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
         },
-        addMoreContainer: {
-            alignItems: 'center',
-            padding: Spacing.base
-        },
         iconContainer: {
             position: 'absolute',
             right: Spacing.small,

@@ -64,7 +64,7 @@ export default () => {
 
       <View style={{ padding: Spacing.base }}>
         <Button
-          title="Add coin"
+          title={i18n.t('add_coin')}
           onPress={() => add()}
           icon={<Feather name="plus" />}
         />

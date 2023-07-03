@@ -11,13 +11,11 @@ import { useNavigation } from "@react-navigation/native";
 import { UnlockNavigationProp } from "../types/navigation";
 
 export const useNetworks = () => {
-    const networks = useHookstate(UserStore.networks);
-    return useHookstate(Object.values(networks.get()));
+    return useHookstate(UserStore.networks);
 }
 
 export const useWallets = () => {
-    const wallets = useHookstate(UserStore.wallets);
-    return useHookstate(Object.values(wallets.get()));
+    return useHookstate(UserStore.wallets);
 }
 
 export const useNetwork = (networkId: string) => {
@@ -143,6 +141,10 @@ export const useCurrentKoin = () => {
 
 export const useAutolock = () => {
     return useHookstate(UserStore.autolock);
+}
+
+export const useRcLimit = () => {
+    return useHookstate(UserStore.rcLimit);
 }
 
 export const useLocker = (props: {

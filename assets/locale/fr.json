@@ -119,6 +119,7 @@
   "security_desc": "Sécurité et accès",
   "cancel": "Annuler",
   "yes": "Oui",
+  "no": "Non",
   "change_password": "Changer le mot de passe",
   "change_password_desc": "Changer le mot de passe de votre portefeuille",
   "change_autolock": "Verrouillage automatique",
@@ -147,5 +148,14 @@
   "added": "{{name}} ajouté",
   "created": "{{name}} créé",
   "deleted": "{{name}} supprimé",
-  "invalid_address": "Adresse invalide"
+  "invalid_address": "Adresse invalide",
+  "advanced": "Avancé",
+  "advanced_desc": "Paramètres avancés. Avertissement.",
+  "rc_limit": "Limite de recharge",
+  "rc_limit_desc": "Plage 0-100",
+  "add_network": "Ajouter un réseau",
+  "missing_data": "Certaines valeurs sont manquantes",
+  "are_you_sure": "Êtes-vous sûr(e) ?",
+  "are_you_sure_replace_network": "Un réseau avec le même identifiant de chaîne existe déjà. Êtes-vous sûr(e) de vouloir le remplacer ?",
+  "edit_account": "Modifier le compte"
 }

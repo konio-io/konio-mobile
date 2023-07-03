@@ -82,7 +82,9 @@ export type SettingStackParamList = {
     ChangeLocale: undefined,
     ChangePassword: undefined,
     ChangeAutolock: undefined,
-    Security: undefined
+    Security: undefined,
+    Advanced: undefined
+    NewNetwork: undefined
 };
 export type SettingNavigationProp = StackNavigationProp<SettingStackParamList, 'Setting'>;
 export type SettingRouteProp = RouteProp<SettingStackParamList, 'Setting'>;
@@ -102,6 +104,10 @@ export type ChangePasswordNavigationProp = StackNavigationProp<SettingStackParam
 export type ChangePasswordRouteProp = RouteProp<SettingStackParamList, 'ChangePassword'>;
 export type ChangeAutolockNavigationProp = StackNavigationProp<SettingStackParamList, 'ChangeAutolock'>;
 export type ChangeAutolockRouteProp = RouteProp<SettingStackParamList, 'ChangeAutolock'>;
+export type AdvancedNavigationProp = StackNavigationProp<SettingStackParamList, 'Advanced'>;
+export type AdvancedRouteProp = RouteProp<SettingStackParamList, 'Advanced'>;
+export type NewNetworkNavigationProp = StackNavigationProp<SettingStackParamList, 'NewNetwork'>;
+export type NewNetworkRouteProp = RouteProp<SettingStackParamList, 'NewNetwork'>;
 
 /** IntroStack */
 export type IntroStackParamList = {

@@ -119,6 +119,7 @@
     "security_desc": "Güvenlik ve erişim",
     "cancel": "İptal",
     "yes": "Evet",
+    "no": "Hayır",
     "change_password": "Parolayı Değiştir",
     "change_password_desc": "Cüzdan parolanızı değiştirin",
     "change_autolock": "Otomatik Kilit",
@@ -147,5 +148,14 @@
     "added": "{{name}} eklendi",
     "created": "{{name}} oluşturuldu",
     "deleted": "{{name}} silindi",
-    "invalid_address": "Geçersiz adres"
+    "invalid_address": "Geçersiz adres",
+    "advanced": "Gelişmiş",
+    "advanced_desc": "Gelişmiş ayarlar. Uyarı.",
+    "rc_limit": "Şarj limiti",
+    "rc_limit_desc": "0-100 aralığı",
+    "add_network": "Ağ ekle",
+    "missing_data": "Bazı değerler eksik",
+    "are_you_sure": "Emin misiniz?",
+    "are_you_sure_replace_network": "Aynı zincir kimliğiyle bir ağ zaten mevcut. Onu değiştirmek istediğinizden emin misiniz?",
+    "edit_account": "Hesabı düzenle"
 }

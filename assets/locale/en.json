@@ -118,6 +118,7 @@
     "security_desc": "Security and access",
     "cancel": "Cancel",
     "yes": "Yes",
+    "no": "No",
     "change_password": "Change password",
     "change_password_desc": "Change your wallet password",
     "change_autolock": "Autolock",
@@ -146,5 +147,14 @@
     "added":"{{name}} added",
     "created":"{{name}} created",
     "deleted":"{{name}} deleted",
-    "invalid_address":"Invalid address"
+    "invalid_address":"Invalid address",
+    "advanced":"Advanced",
+    "advanced_desc":"Advanced settings. Warning.",
+    "rc_limit":"Recharge limit",
+    "rc_limit_desc":"Range 0-100",
+    "add_network":"Add network",
+    "missing_data":"Missing some values",
+    "are_you_sure":"Are you sure?",
+    "are_you_sure_replace_network":"A network with the same chain ID already exists. Are you sure do you want replace it?",
+    "edit_account":"Edit account"
   }

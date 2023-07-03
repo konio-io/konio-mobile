@@ -119,6 +119,7 @@
   "security_desc": "安全和访问",
   "cancel": "取消",
   "yes": "是",
+  "no": "不",
   "change_password": "更改密码",
   "change_password_desc": "更改钱包密码",
   "change_autolock": "自动锁定",
@@ -147,5 +148,14 @@
   "added": "已添加{{name}}",
   "created": "已创建{{name}}",
   "deleted": "已删除{{name}}",
-  "invalid_address": "无效地址"
+  "invalid_address": "无效地址",
+  "advanced": "高级",
+  "advanced_desc": "高级设置。警告。",
+  "rc_limit": "充电限制",
+  "rc_limit_desc": "范围0-100",
+  "add_network": "添加网络",
+  "missing_data": "缺少一些值",
+  "are_you_sure": "您确定吗？",
+  "are_you_sure_replace_network": "已经存在具有相同链ID的网络。您确定要替换它吗？",
+  "edit_account": "编辑帐户"
 }

@@ -119,11 +119,14 @@ export const getStyles = (themeVars : ThemeVars) => {
             columnGap: Spacing.small,
             justifyContent: 'space-between',
             alignItems: 'center',
-            paddingHorizontal: Spacing.small,
-            height: 20
+            padding: Spacing.small
         },
         screenFooter: {
             padding: Spacing.base
+        },
+        addMoreContainer: {
+            padding: Spacing.base,
+            alignItems: 'center'
         }
     }
 

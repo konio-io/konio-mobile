@@ -95,10 +95,6 @@ const createStyles = (theme: Theme) => {
     walletNameContainer: {
       alignItems: 'center'
     },
-    addMoreContainer: {
-      alignItems: 'center',
-      padding: Spacing.base
-    },
     switchContainer: { 
       flexDirection: 'row', 
       alignItems: 'center', 

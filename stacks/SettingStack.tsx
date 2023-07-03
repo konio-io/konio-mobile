@@ -10,6 +10,8 @@ import ChangeLocale from '../screens/ChangeLocale';
 import Security from '../screens/Security';
 import ChangePassword from '../screens/ChangePassword';
 import ChangeAutolock from '../screens/ChangeAutolock';
+import Advanced from '../screens/Advanced';
+import NewNetwork from '../screens/NewNetwork';
 
 const Stack = createStackNavigator<SettingStackParamList>();
 
@@ -44,6 +46,13 @@ export default () => {
         component={ChangeNetwork}
         options={{
           title: i18n.t('networks'),
+        }}
+      />
+      <Stack.Screen
+        name="NewNetwork"
+        component={NewNetwork}
+        options={{
+          title: i18n.t('add_network'),
         }}
       />
       <Stack.Screen
@@ -86,6 +95,13 @@ export default () => {
         component={Security}
         options={{
           title: i18n.t('security'),
+        }}
+      />
+      <Stack.Screen
+        name="Advanced"
+        component={Advanced}
+        options={{
+          title: i18n.t('advanced'),
         }}
       />
       <Stack.Screen

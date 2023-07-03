@@ -7,7 +7,7 @@ import type { SwitchAccountNavigationProp, AccountNavigationProp } from "../type
 import { SheetManager } from "react-native-actions-sheet";
 
 export default () => {
-    const data = useWallets().get();
+    const data = Object.values(useWallets().get());
 
     return (
         <Screen>

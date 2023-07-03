@@ -119,6 +119,7 @@
   "security_desc": "Segurança e acesso",
   "cancel": "Cancelar",
   "yes": "Sim",
+  "no": "Não",
   "change_password": "Alterar senha",
   "change_password_desc": "Alterar a senha da sua carteira",
   "change_autolock": "Bloqueio automático",
@@ -147,5 +148,14 @@
   "added": "{{name}} adicionado",
   "created": "{{name}} criado",
   "deleted": "{{name}} excluído",
-  "invalid_address": "Endereço inválido"
+  "invalid_address": "Endereço inválido",
+  "advanced": "Avançado",
+  "advanced_desc": "Configurações avançadas. Aviso.",
+  "rc_limit": "Limite de recarga",
+  "rc_limit_desc": "Faixa 0-100",
+  "add_network": "Adicionar rede",
+  "missing_data": "Faltam alguns valores",
+  "are_you_sure": "Tem certeza?",
+  "are_you_sure_replace_network": "Já existe uma rede com o mesmo ID de cadeia. Tem certeza de que deseja substituí-la?",
+  "edit_account": "Editar conta"
 }

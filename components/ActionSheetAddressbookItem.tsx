@@ -11,10 +11,11 @@ export default (props: SheetProps) => {
     const i18n = useI18n();
 
     const _delete = () => {
+        const name = addressBookItem.name;
         deleteAddressBookItem(address);
         showToast({
             type: 'success',
-            text1: i18n.t('deleted', { name: addressBookItem.name })
+            text1: i18n.t('deleted', { name })
         });
     };
 

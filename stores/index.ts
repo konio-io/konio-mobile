@@ -1,10 +1,15 @@
 import { State, hookstate } from "@hookstate/core";
 import { DEFAULT_COINS, DEFAULT_NETWORK, DEFAULT_NETWORKS, OS_LOCALE, OS_THEME } from "../lib/Constants";
 import { UserStoreState, EncryptedStoreState } from "../types/store";
-import { localstored } from "@hookstate/localstored";
 import * as ExpoSecureStore from 'expo-secure-store';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { localstored } from "./localstored";
 
+/**
+ * Global states to track if async-storage is loading stored data
+ */
+export const userStoreIsLoading = hookstate(true);
+export const encryptedStoreIsLoading = hookstate(true);
 
 /**
  * User "clear" store
@@ -14,19 +19,26 @@ const UserStoreDefault: UserStoreState = {
     currentNetworkId: DEFAULT_NETWORK,
     currentAddress: null,
     wallets: {},
-    coins: DEFAULT_COINS,
+    coins: { ...DEFAULT_COINS },
     transactions: {},
-    networks: DEFAULT_NETWORKS,
+    networks: { ...DEFAULT_NETWORKS },
     locale: OS_LOCALE,
     theme: OS_THEME,
     biometric: false,
     autolock: -1,
-    addressbook: {}
+    addressbook: {},
+    rcLimit: '100'
 };
 export const UserStore = hookstate(
     {... UserStoreDefault}, localstored({
         key: 'store',
-        engine: AsyncStorage
+        engine: AsyncStorage,
+        isLoadingState: userStoreIsLoading,
+        migrate: (state: State<UserStoreState>) => {
+            if (!state.rcLimit.get()) {
+                state.rcLimit.set(UserStoreDefault.rcLimit);
+            }
+        }
     })
 );
 
@@ -51,7 +63,8 @@ export const EncryptedStore = hookstate(
             removeItem: (key: string) => {
                 return ExpoSecureStore.deleteItemAsync(key);
             }
-        }
+        },
+        isLoadingState: encryptedStoreIsLoading
     })
 );
 
@@ -76,14 +89,12 @@ export const ManaStore = hookstate({...ManaStoreDefault});
 export const CoinBalanceStoreDefault : Record<string,string> = {};
 export const CoinBalanceStore : State<Record<string,string>> = hookstate({...CoinBalanceStoreDefault});
 
-
 /**
  * Coin value local store
  * It is used to provide global coin value in dollars
  */
 export const CoinValueStoreDefault : Record<string,number> = {};
 export const CoinValueStore : State<Record<string,number>> = hookstate({...CoinValueStoreDefault});
-
 
 /**
  * Reset

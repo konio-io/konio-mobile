@@ -34,7 +34,7 @@ const createStyles = (theme: Theme) => {
         wrapperFull: {
             flex: 1, 
             padding: Spacing.base, 
-            rowGap: Spacing.large,
+            rowGap: Spacing.base,
             backgroundColor: Color.base
         },
         wrapperCentered: {

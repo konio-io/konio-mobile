@@ -32,7 +32,6 @@ export default () => {
 
     return (
         <Screen>
-
             <ListItem
                 title={i18n.t('change_password')}
                 name={i18n.t('change_password')}
@@ -75,7 +74,6 @@ export default () => {
                     </View>
                 </View>
             }
-
         </Screen>
     );
 }

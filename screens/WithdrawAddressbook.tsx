@@ -103,10 +103,6 @@ const createStyles = (theme: Theme) => {
         sectionTitle: {
             ...theme.styles.text, 
             fontWeight: 'bold'
-        },
-        addMoreContainer: {
-            padding: Spacing.base,
-            alignItems: 'center'
         }
     });
 }

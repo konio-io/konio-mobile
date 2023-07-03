@@ -73,8 +73,7 @@ export default () => {
         name="EditAccount"
         component={EditAccount}
         options={{
-          title: i18n.t('edit_account'),
-          presentation: 'modal'
+          title: i18n.t('edit_account')
         }}
       />
     </Stack.Navigator>
