@@ -156,5 +156,6 @@
     "missing_data":"Missing some values",
     "are_you_sure":"Are you sure?",
     "are_you_sure_replace_network":"A network with the same chain ID already exists. Are you sure do you want replace it?",
-    "edit_account":"Edit account"
+    "edit_account":"Edit account",
+    "default":"Default"
   }

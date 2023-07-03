@@ -12,7 +12,7 @@ export default () => {
     const name = useHookstate('');
     const i18n = useI18n();
     const theme = useTheme();
-    const { Spacing } = theme.vars;
+    const styles = theme.styles;
 
     const addWallet = () => {
         if (!name.get()) {
@@ -60,7 +60,7 @@ export default () => {
                 />
             </Wrapper>
 
-            <View style={{ padding: Spacing.base }}>
+            <View style={styles.screenFooter}>
                 <Button
                     title={i18n.t('add_account')}
                     onPress={() => addWallet()}

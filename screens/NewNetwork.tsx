@@ -9,6 +9,7 @@ import { View, StyleSheet, Alert } from 'react-native';
 import { UserStore } from '../stores';
 import { useTheme } from '../hooks';
 import type { Network, Theme } from '../types/store';
+import { DEFAULT_NETWORKS } from '../lib/Constants';
 
 export default () => {
   const navigation = useNavigation<NewNetworkNavigationProp>();
@@ -67,6 +68,15 @@ export default () => {
     navigation.navigate('ChangeNetwork')
   };
 
+  const reset = () => {
+    const network = Object.values(DEFAULT_NETWORKS)[0];
+    name.set(network.name);
+    chainId.set(network.chainId);
+    rpcNode.set(network.rpcNodes[0]);
+    koinContractId.set(network.koinContractId);
+    explorer.set(network.explorer);
+  };
+
   return (
     <Screen>
       <Wrapper type="full">
@@ -117,13 +127,21 @@ export default () => {
         </View>
 
 
-      <View style={styles.screenFooter}>
-        <Button
-          title={i18n.t('add_network')}
-          onPress={() => add()}
-          icon={<Feather name="plus" />}
-        />
-      </View>
+        <View style={styles.screenFooter}>
+          <Button
+            type='secondary'
+            style={{flex: 1}}
+            title={i18n.t('default')}
+            onPress={() => reset()}
+            icon={<Feather name="refresh-cw" />}
+          />
+          <Button
+            style={{flex: 1}}
+            title={i18n.t('add_network')}
+            onPress={() => add()}
+            icon={<Feather name="plus" />}
+          />
+        </View>
       </Wrapper>
     </Screen>
   );
@@ -136,6 +154,10 @@ const createStyles = (theme: Theme) => {
     ...theme.styles,
     inputGroup: {
       rowGap: Spacing.small
+    },
+    screenFooter: {
+      flexDirection: 'row',
+      columnGap: Spacing.base
     }
   });
 }
