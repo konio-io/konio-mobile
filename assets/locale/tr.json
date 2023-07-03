@@ -157,5 +157,6 @@
     "missing_data": "Bazı değerler eksik",
     "are_you_sure": "Emin misiniz?",
     "are_you_sure_replace_network": "Aynı zincir kimliğiyle bir ağ zaten mevcut. Onu değiştirmek istediğinizden emin misiniz?",
-    "edit_account": "Hesabı düzenle"
+    "edit_account": "Hesabı düzenle",
+    "default": "Varsayılan"
 }

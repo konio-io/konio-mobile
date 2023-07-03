@@ -157,5 +157,6 @@
   "missing_data": "Certaines valeurs sont manquantes",
   "are_you_sure": "Êtes-vous sûr(e) ?",
   "are_you_sure_replace_network": "Un réseau avec le même identifiant de chaîne existe déjà. Êtes-vous sûr(e) de vouloir le remplacer ?",
-  "edit_account": "Modifier le compte"
+  "edit_account": "Modifier le compte",
+  "default": "Par défaut"
 }

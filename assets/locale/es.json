@@ -157,5 +157,6 @@
   "missing_data": "Faltan algunos valores",
   "are_you_sure": "¿Estás seguro?",
   "are_you_sure_replace_network": "Ya existe una red con el mismo ID de cadena. ¿Estás seguro de que deseas reemplazarla?",
-  "edit_account": "Editar cuenta"
+  "edit_account": "Editar cuenta",
+  "default": "Predeterminado"
 }

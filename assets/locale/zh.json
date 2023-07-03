@@ -157,5 +157,6 @@
   "missing_data": "缺少一些值",
   "are_you_sure": "您确定吗？",
   "are_you_sure_replace_network": "已经存在具有相同链ID的网络。您确定要替换它吗？",
-  "edit_account": "编辑帐户"
+  "edit_account": "编辑帐户",
+  "default":"默认"
 }

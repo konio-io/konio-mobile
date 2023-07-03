@@ -156,5 +156,6 @@
   "missing_data": "Mancano alcuni valori",
   "are_you_sure": "Sei sicuro?",
   "are_you_sure_replace_network": "Esiste già una rete con lo stesso ID. Sei sicuro di volerla sovrascrivere?",
-  "edit_account": "Modifica account"
+  "edit_account": "Modifica account",
+  "default": "Predefinito"
 }
