@@ -1,5 +1,5 @@
 import { State, hookstate } from "@hookstate/core";
-import { DEFAULT_COINS, DEFAULT_NETWORK, DEFAULT_NETWORKS, OS_LOCALE, OS_THEME } from "../lib/Constants";
+import { DEFAULT_NETWORK, DEFAULT_NETWORKS, OS_LOCALE, OS_THEME } from "../lib/Constants";
 import { UserStoreState, EncryptedStoreState } from "../types/store";
 import * as ExpoSecureStore from 'expo-secure-store';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -15,11 +15,16 @@ export const encryptedStoreIsLoading = hookstate(true);
  * User "clear" store
  * It is used to store persistently the user settings and preferences
  */
-const UserStoreDefault: UserStoreState = {
+export const UserStoreDefault: UserStoreState = {
     currentNetworkId: DEFAULT_NETWORK,
     currentAddress: null,
     wallets: {},
-    coins: { ...DEFAULT_COINS },
+    coins: {
+        [Object.values(DEFAULT_NETWORKS)[0].coins.KOIN.contractId] : Object.values(DEFAULT_NETWORKS)[0].coins.KOIN,
+        [Object.values(DEFAULT_NETWORKS)[0].coins.VHP.contractId] : Object.values(DEFAULT_NETWORKS)[0].coins.VHP,
+        [Object.values(DEFAULT_NETWORKS)[1].coins.KOIN.contractId] : Object.values(DEFAULT_NETWORKS)[1].coins.KOIN,
+        [Object.values(DEFAULT_NETWORKS)[1].coins.VHP.contractId] : Object.values(DEFAULT_NETWORKS)[1].coins.VHP,
+    },
     transactions: {},
     networks: { ...DEFAULT_NETWORKS },
     locale: OS_LOCALE,
@@ -27,7 +32,8 @@ const UserStoreDefault: UserStoreState = {
     biometric: false,
     autolock: -1,
     addressbook: {},
-    rcLimit: '100'
+    rcLimit: '100',
+    version: '20230705'
 };
 export const UserStore = hookstate(
     {... UserStoreDefault}, localstored({
@@ -35,8 +41,8 @@ export const UserStore = hookstate(
         engine: AsyncStorage,
         isLoadingState: userStoreIsLoading,
         migrate: (state: State<UserStoreState>) => {
-            if (!state.rcLimit.get()) {
-                state.rcLimit.set(UserStoreDefault.rcLimit);
+            if (!state.version.get()) {
+                state.version.set('20230701');
             }
         }
     })

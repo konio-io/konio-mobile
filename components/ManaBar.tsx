@@ -1,5 +1,5 @@
 import { View, TouchableHighlight, StyleSheet } from 'react-native';
-import { useTheme, useI18n } from '../hooks';
+import { useTheme, useI18n, useNetwork, useCurrentNetworkId } from '../hooks';
 import { useHookstate } from '@hookstate/core';
 import { ManaStore } from '../stores';
 import { useEffect, useRef } from 'react';
@@ -8,7 +8,7 @@ import Modal from './Modal';
 import type { Theme } from '../types/store';
 import Text from './Text';
 import ActivityIndicator from './ActivityIndicator';
-import CircleLogo from './CircleLogo';
+import CoinLogo from './CoinLogo';
 
 export default () => {
     const FIVE_DAYS = 432e6; // 5 * 24 * 60 * 60 * 1000
@@ -56,6 +56,8 @@ export default () => {
     const theme = useTheme();
     const styles = createStyles(theme);
     const width = currentPercent.get().toString() + '%';
+    const currentNetworkId = useCurrentNetworkId();
+    const network = useNetwork(currentNetworkId.get());
 
     return (
         <View>
@@ -71,7 +73,7 @@ export default () => {
                 <View style={styles.container}>
                     <View style={styles.coinListItemContainer}>
                         <View style={styles.leftContainer}>
-                            <CircleLogo name="mana" seed="mana" size={36} />
+                            <CoinLogo contractId={network.coins.MANA.contractId.get()} size={36}/>
                             <View>
                                 <Text style={styles.symbol}>{i18n.t('MANA')}</Text>
                                 {currentMana.get() > -1 &&

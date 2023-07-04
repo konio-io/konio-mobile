@@ -3,11 +3,12 @@ import { useNavigation } from '@react-navigation/native';
 import type { NewCoinNavigationProp } from '../types/navigation';
 import { addCoin, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
-import { TextInput, Button, Screen, Text, CoinSymbol, Separator } from '../components';
+import { TextInput, Button, Screen, Text, CoinSymbol, Separator, CoinLogo } from '../components';
 import { useCurrentNetworkId, useI18n } from '../hooks';
-import { FlatList, TouchableHighlight, View } from 'react-native';
+import { FlatList, StyleSheet, TouchableHighlight, View } from 'react-native';
 import { UserStore } from '../stores';
 import { useCurrentKoin, useTheme } from '../hooks';
+import { Theme } from '../types/store';
 
 export default () => {
   const navigation = useNavigation<NewCoinNavigationProp>();
@@ -99,15 +100,30 @@ const RecentListItem = (props: {
 }) => {
 
   const theme = useTheme();
-  const styles = theme.styles;
+  const styles = createStyles(theme);
 
   return (
     <TouchableHighlight onPress={() => props.onPress(props.contractId)}>
       <View style={styles.listItemContainer}>
 
-        <CoinSymbol contractId={props.contractId} />
+        <View style={styles.listItemContainerInternal}>
+          <CoinLogo contractId={props.contractId} size={36} />
+          <CoinSymbol contractId={props.contractId} />
+        </View>
 
       </View>
     </TouchableHighlight>
   );
+}
+
+const createStyles = (theme: Theme) => {
+  const { Spacing } = theme.vars;
+  return StyleSheet.create({
+    ...theme.styles,
+    listItemContainerInternal: {
+      flexDirection: 'row', 
+      columnGap: Spacing.base, 
+      alignItems: 'center'
+    }
+  })
 }

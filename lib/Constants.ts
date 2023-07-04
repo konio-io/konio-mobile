@@ -6,12 +6,40 @@ export const DEFAULT_NETWORKS: Record<string, Network> = {
         name: "Koinos Mainnet",
         chainId: "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==",
         rpcNodes: [
-            "https://api.koinos.io", 
+            "https://api.koinos.io",
             "https://api.koinosblocks.com"
         ],
-        koinContractId: "15DJN4a8SgrbGhhGksSBASiSYjGnMU8dGL",
-        kapContractId: "13tmzDmfqCsbYT26C4CmKxq86d33senqH3",
-        explorer: "https://koinosblocks.com"
+        explorer: "https://koinosblocks.com",
+        coins: {
+            KOIN: {
+                contractId: "15DJN4a8SgrbGhhGksSBASiSYjGnMU8dGL",
+                symbol: "KOIN",
+                decimal: 8,
+                networkId: "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==",
+                transactions: []
+            },
+            VHP: {
+                contractId: "18tWNU7E4yuQzz7hMVpceb9ixmaWLVyQsr",
+                symbol: "VHP",
+                decimal: 8,
+                networkId: "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==",
+                transactions: []
+            },
+            MANA: {
+                contractId: "1HGN9h47CzoFwU2bQZwe6BYoX4TM6pXc4b",
+                symbol: "MANA",
+                decimal: 8,
+                networkId: "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==",
+                transactions: []
+            },
+            KAP: {
+                contractId: "13tmzDmfqCsbYT26C4CmKxq86d33senqH3",
+                symbol: "MANA",
+                decimal: 8,
+                networkId: "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==",
+                transactions: []
+            }
+        }
     },
     "EiAAKqFi-puoXnuJTdn7qBGGJa8yd-dcS2P0ciODe4wupQ==": {
         name: "Koinos Harbinger (testnet)",
@@ -20,27 +48,40 @@ export const DEFAULT_NETWORKS: Record<string, Network> = {
             "https://harbinger-api.koinos.io",
             "https://testnet.koinosblocks.com",
         ],
-        koinContractId: "19JntSm8pSNETT9aHTwAUHC5RMoaSmgZPJ",
-        kapContractId: "13tmzDmfqCsbYT26C4CmKxq86d33senqH3",
-        explorer: "https://harbinger.koinosblocks.com"
+        explorer: "https://harbinger.koinosblocks.com",
+        coins: {
+            KOIN: {
+                contractId: "19JntSm8pSNETT9aHTwAUHC5RMoaSmgZPJ",
+                symbol: "KOIN",
+                decimal: 8,
+                networkId: "EiAAKqFi-puoXnuJTdn7qBGGJa8yd-dcS2P0ciODe4wupQ==",
+                transactions: []
+            },
+            VHP: {
+                contractId: "1JZqj7dDrK5LzvdJgufYBJNUFo88xBoWC8",
+                symbol: "VHP",
+                decimal: 8,
+                networkId: "EiAAKqFi-puoXnuJTdn7qBGGJa8yd-dcS2P0ciODe4wupQ==",
+                transactions: []
+            },
+            MANA: {
+                contractId: "1BXi4SX4jjbaLzcRbmRKtpMQbQmFYnmX9Z",
+                symbol: "MANA",
+                decimal: 8,
+                networkId: "EiAAKqFi-puoXnuJTdn7qBGGJa8yd-dcS2P0ciODe4wupQ==",
+                transactions: []
+            },
+            KAP: {
+                contractId: "13tmzDmfqCsbYT26C4CmKxq86d33senqH3",
+                symbol: "KAP",
+                decimal: 8,
+                networkId: "EiAAKqFi-puoXnuJTdn7qBGGJa8yd-dcS2P0ciODe4wupQ==",
+                transactions: []
+            }
+        }
     }
 }
-export const DEFAULT_COINS = {
-    "15DJN4a8SgrbGhhGksSBASiSYjGnMU8dGL": {
-        contractId: "15DJN4a8SgrbGhhGksSBASiSYjGnMU8dGL",
-        symbol: "KOIN",
-        decimal: 8,
-        networkId: "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==",
-        transactions: []
-    },
-    "19JntSm8pSNETT9aHTwAUHC5RMoaSmgZPJ": {
-        contractId: "19JntSm8pSNETT9aHTwAUHC5RMoaSmgZPJ",
-        symbol: "KOIN",
-        decimal: 8,
-        networkId: "EiAAKqFi-puoXnuJTdn7qBGGJa8yd-dcS2P0ciODe4wupQ==",
-        transactions: []
-    }
-}
+
 export const TRANSACTION_TYPE_WITHDRAW = 'WITHDRAW';
 export const TRANSACTION_TYPE_DEPOSIT = 'DEPOSIT';
 export const TRANSACTION_TYPE_SWAP = 'SWAP';

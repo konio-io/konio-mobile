@@ -17,7 +17,8 @@ export type UserStoreState = {
     biometric: boolean,
     autolock: number,
     addressbook: Record<string,AddressbookItem>,
-    rcLimit: string
+    rcLimit: string,
+    version: string
 }
 
 export type Account = {
@@ -45,9 +46,13 @@ export type Network = {
     name: string,
     chainId: string,
     rpcNodes: Array<string>,
-    koinContractId: string,
-    kapContractId?: string,
-    explorer: string
+    explorer: string,
+    coins: {
+        KOIN: Coin,
+        VHP: Coin,
+        MANA: Coin,
+        KAP: Coin
+    }
 }
 
 export type Transaction = {

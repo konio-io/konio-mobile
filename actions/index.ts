@@ -7,6 +7,7 @@ import HDKoinos from "../lib/HDKoinos";
 import Toast from 'react-native-toast-message';
 import { State, none } from "@hookstate/core";
 import { getCoinBalance, getContract, getProvider } from "../lib/utils";
+import migrations from "../stores/migrations";
 
 export const setCurrentWallet = (address: string) => {
     UserStore.currentAddress.set(address);
@@ -31,7 +32,7 @@ export const refreshMana = async () => {
     const provider = getProvider(networkId);
     const manaBalance = await provider.getAccountRc(address)
 
-    const contractId = networks[networkId].koinContractId.get();
+    const contractId = networks[networkId].coins.KOIN.contractId.get();
     const koinBalance = await getCoinBalance({
         address,
         networkId,
@@ -135,7 +136,7 @@ export const withdrawCoin = async (args: { contractId: string, to: string, value
         to,
         value,
     }, {
-        rcLimit: (parseInt(UserStore.rcLimit.get()) * Math.pow(10, 6)).toString()
+        rcLimit: (parseInt(rcLimit) * Math.pow(10, 6)).toString()
     });
 
     if (!transaction || !transaction.id) {
@@ -207,16 +208,18 @@ export const addCoin = async (contractId: string) => {
 }
 
 const addAddress = (address: string, name: string) => {
-    const networks = UserStore.networks;
+    const currentNetworkId = UserStore.currentNetworkId.get();
+    const coins = Object.values(UserStore.networks[currentNetworkId].coins)
+        .map(coin => coin.contractId);
+
     const wallets = UserStore.wallets;
     const wallet: Wallet = {
         name,
         address: address,
-        coins: Object.values(networks.get()).map(n => n.koinContractId)
+        coins
     };
     wallets.merge({ [wallet.address]: wallet });
 }
-
 
 export const addSeed = async (args: {
     seed: string,
@@ -383,4 +386,30 @@ export const addNetwork = (network: Network) => {
 
 export const deleteNetwork = (networkId: string) => {
     UserStore.networks.merge({[networkId] : none});
+}
+
+export const executeMigrations = () => {
+    const sortedMigrations = Object.keys(migrations).sort();
+    const latestVersion = sortedMigrations.reverse()[0];
+    const currentVersion = UserStore.version.get();
+    const migrationsToExecute = [];
+
+    if (currentVersion < latestVersion) {
+        for (const date of sortedMigrations) {
+            if (currentVersion < date) {
+                migrationsToExecute.push(date);
+            }
+        }
+    }
+
+    if (migrationsToExecute.length > 0) {
+        for (const date of migrationsToExecute.reverse()) {
+            try {
+                migrations[date]();
+                UserStore.version.set(date);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    }
 }

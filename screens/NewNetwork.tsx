@@ -19,7 +19,6 @@ export default () => {
   const name = useHookstate('');
   const chainId = useHookstate('');
   const rpcNode = useHookstate('');
-  const koinContractId = useHookstate('');
   const explorer = useHookstate('');
 
   const showAlert = () => {
@@ -39,7 +38,7 @@ export default () => {
   };
 
   const add = (replace = false) => {
-    if (!name.get() || !chainId.get() || !rpcNode.get() || !koinContractId.get() || !explorer.get()) {
+    if (!name.get() || !chainId.get() || !rpcNode.get() || !explorer.get()) {
       showToast({
         type: 'error',
         text1: i18n.t('missing_data')
@@ -56,7 +55,7 @@ export default () => {
       name: name.get(),
       chainId: chainId.get(),
       rpcNodes: [rpcNode.get()],
-      koinContractId: koinContractId.get(),
+      coins: { ...Object.values(DEFAULT_NETWORKS)[0].coins }, //ToDo fetch from blockchain
       explorer: explorer.get()
     };
 
@@ -73,7 +72,6 @@ export default () => {
     name.set(network.name);
     chainId.set(network.chainId);
     rpcNode.set(network.rpcNodes[0]);
-    koinContractId.set(network.koinContractId);
     explorer.set(network.explorer);
   };
 
@@ -106,15 +104,6 @@ export default () => {
             placeholder={'rpc node'}
           />
           <Text style={styles.textSmall}>Ex: https://api.koinosblocks.com</Text>
-        </View>
-        <View style={styles.inputGroup}>
-          <TextInput
-            autoFocus={true}
-            value={koinContractId.get()}
-            onChangeText={(v: string) => koinContractId.set(v)}
-            placeholder={'koin contract id'}
-          />
-          <Text style={styles.textSmall}>Ex: 15DJN4a8SgrbGhhGksSBASiSYjGnMU8dGL</Text>
         </View>
         <View style={styles.inputGroup}>
           <TextInput

@@ -6,8 +6,9 @@ import ResetPassword from "../screens/ResetPassword";
 import Unlock from "../screens/Unlock";
 import IntroStack from "./IntroStack";
 import MainTabsStack from "./MainTabsStack";
-import { userStoreIsLoading, encryptedStoreIsLoading } from "../stores";
+import { userStoreIsLoading, encryptedStoreIsLoading, UserStore } from "../stores";
 import Loading from "../screens/Loading";
+import { executeMigrations } from "../actions";
 
 const Stack = createStackNavigator();
 export default () => {
@@ -19,6 +20,8 @@ export default () => {
   if (userStoreIsLoading.get() || encryptedStoreIsLoading.get()) {
     return <Loading/>;
   }
+
+  executeMigrations();
 
   if (!currentAddress.get()) {
     return <IntroStack />;

@@ -136,7 +136,7 @@ export const useBiometric = () => {
 
 export const useCurrentKoin = () => {
     const currentNetwork = useHookstate(UserStore.currentNetworkId);
-    return UserStore.networks[currentNetwork.get()].koinContractId;
+    return UserStore.networks[currentNetwork.get()].coins.KOIN.contractId;
 }
 
 export const useAutolock = () => {
