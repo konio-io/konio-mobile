@@ -72,7 +72,8 @@ const createStyles = (theme: Theme) => {
     return StyleSheet.create({
         ...styles,
         container: {
-            backgroundColor: Color.base
+            backgroundColor: Color.base,
+            paddingBottom: 20
         },
         listItemContainer: {
             padding: Spacing.base,
