@@ -4,11 +4,12 @@ import type { NewCoinNavigationProp } from '../types/navigation';
 import { addCoin, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen, Text, CoinSymbol, Separator, CoinLogo } from '../components';
-import { useCurrentNetworkId, useI18n } from '../hooks';
+import { useCurrentNetworkId, useI18n, useNetwork } from '../hooks';
 import { FlatList, StyleSheet, TouchableHighlight, View } from 'react-native';
 import { UserStore } from '../stores';
-import { useCurrentKoin, useTheme } from '../hooks';
+import { useTheme } from '../hooks';
 import { Theme } from '../types/store';
+import { DEFAULT_COINS } from '../lib/Constants';
 
 export default () => {
   const navigation = useNavigation<NewCoinNavigationProp>();
@@ -79,10 +80,10 @@ const RecentList = (props: {
 }) => {
   const currentNetworkId = useCurrentNetworkId()
   const coins = useHookstate(UserStore.coins);
-  const currentKoin = useCurrentKoin();
+ 
 
   const data = Object.values(coins.get())
-    .filter(coin => coin.networkId === currentNetworkId.get() && coin.contractId !== currentKoin.get())
+    .filter(coin => coin.networkId === currentNetworkId.get() && !DEFAULT_COINS.includes(coin.symbol))
     .slice(0, 5);
 
   return (

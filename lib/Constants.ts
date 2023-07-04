@@ -82,6 +82,8 @@ export const DEFAULT_NETWORKS: Record<string, Network> = {
     }
 }
 
+export const DEFAULT_COINS = ['KOIN','VHP'];
+
 export const TRANSACTION_TYPE_WITHDRAW = 'WITHDRAW';
 export const TRANSACTION_TYPE_DEPOSIT = 'DEPOSIT';
 export const TRANSACTION_TYPE_SWAP = 'SWAP';
