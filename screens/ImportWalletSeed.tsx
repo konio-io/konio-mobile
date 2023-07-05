@@ -1,10 +1,9 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { useHookstate } from '@hookstate/core';
 import { Button, TextInput, Wrapper, Screen } from '../components';
 import { addSeed, setCurrentWallet } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n } from '../hooks';
-import type { Theme } from '../types/store';
 import { showToast } from '../actions';
 
 export default () => {
@@ -28,13 +27,7 @@ export default () => {
       seed: seed.get().toLowerCase().trim()
     })
       .then(address => {
-
         setCurrentWallet(address);
-        showToast({
-          type: 'success',
-          text1: i18n.t('added', { name: name.get() })
-        });
-
       })
       .catch(e => {
         console.log(e);

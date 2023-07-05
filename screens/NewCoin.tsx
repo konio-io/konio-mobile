@@ -30,13 +30,7 @@ export default () => {
 
     addCoin(contractId.get())
       .then(coin => {
-
-        showToast({
-          type: 'success',
-          text1: i18n.t('added', { name: coin.symbol }),
-        });
         navigation.navigate('Account');
-
       })
       .catch(e => {
         showToast({

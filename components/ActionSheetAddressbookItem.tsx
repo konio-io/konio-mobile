@@ -1,5 +1,5 @@
 import { SheetProps } from "react-native-actions-sheet";
-import { deleteAddressBookItem, showToast } from "../actions";
+import { deleteAddressBookItem } from "../actions";
 import { useAddressbookItem, useI18n } from "../hooks";
 import ActionSheet from "./ActionSheet";
 import { AntDesign } from '@expo/vector-icons';
@@ -13,10 +13,6 @@ export default (props: SheetProps) => {
     const _delete = () => {
         const name = addressBookItem.name;
         deleteAddressBookItem(address);
-        showToast({
-            type: 'success',
-            text1: i18n.t('deleted', { name })
-        });
     };
 
     const data = [

@@ -1,6 +1,6 @@
 import { FlatList, View } from 'react-native';
 import { useI18n, useAutolock } from '../hooks';
-import { setAutolock, showToast } from '../actions';
+import { setAutolock } from '../actions';
 import { ListItemSelected, Separator, Text, Screen } from '../components';
 
 export default () => {
@@ -64,10 +64,6 @@ export const ListItem = (props: {
 
   const changeAutolock = () => {
     setAutolock(props.item);
-    showToast({
-      type: 'info',
-      text1: i18n.t('autolock_changed', {autolock: convertMils(props.item)})
-    });
   }
 
   return <ListItemSelected ItemComponent={ItemComponent} selected={selected} onPress={changeAutolock}/>

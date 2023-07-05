@@ -1,5 +1,5 @@
 import { SheetProps } from "react-native-actions-sheet";
-import { deleteNetwork, showToast } from "../actions";
+import { deleteNetwork } from "../actions";
 import { useNetwork, useI18n } from "../hooks";
 import ActionSheet from "./ActionSheet";
 import { AntDesign } from '@expo/vector-icons';
@@ -13,10 +13,6 @@ export default (props: SheetProps) => {
     const _delete = () => {
         const name = network.name;
         deleteNetwork(networkId);
-        showToast({
-            type: 'success',
-            text1: i18n.t('deleted', { name })
-        });
     };
 
     const data = [

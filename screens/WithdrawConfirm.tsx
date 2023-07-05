@@ -62,7 +62,7 @@ export default () => {
                 );
 
                 showToast({
-                    type: 'success',
+                    type: 'info',
                     text1: i18n.t('transaction_committed'),
                 });
 

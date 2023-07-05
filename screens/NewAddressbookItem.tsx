@@ -53,10 +53,6 @@ export default () => {
             name: name.get()
         });
    
-        showToast({
-            type: 'success',
-            text1: i18n.t('created', { name: name.get() }),
-        });
         navigation.goBack();
     };
 

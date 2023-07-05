@@ -60,10 +60,6 @@ export default () => {
     };
 
     addNetwork(network);
-    showToast({
-      type: 'success',
-      text1: i18n.t('added', { name: name.get() }),
-    });
     navigation.navigate('ChangeNetwork')
   };
 

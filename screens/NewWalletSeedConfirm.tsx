@@ -47,10 +47,6 @@ export default () => {
         })
             .then(address => {
                 setCurrentWallet(address);
-                showToast({
-                    type: 'success',
-                    text1: i18n.t('created', { name: name })
-                });
             })
             .catch(e => {
                 console.log(e);

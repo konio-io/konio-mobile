@@ -44,10 +44,6 @@ export const ListItem = (props: {
 
   const changeNetwork = () => {
     setCurrentNetwork(network.chainId);
-    showToast({
-      type: 'info',
-      text1: i18n.t('network_changed', { network: network.name })
-    });
   }
 
   return <ListItemSelected

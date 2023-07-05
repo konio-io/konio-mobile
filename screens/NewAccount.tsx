@@ -25,11 +25,6 @@ export default () => {
 
         addAccount(name.get().trim())
             .then(address => {
-                showToast({
-                    type: 'success',
-                    text1: i18n.t('created', { name: name.get() })
-                });
-
                 setCurrentWallet(address);
                 const action = CommonActions.reset({
                     index: 1,

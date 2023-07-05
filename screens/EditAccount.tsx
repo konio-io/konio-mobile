@@ -3,7 +3,7 @@ import { useI18n, useTheme, useWallet } from "../hooks"
 import { useHookstate } from "@hookstate/core";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { EditAccountNavigationProps, EditAccountRouteProp } from "../types/navigation";
-import { setAccountName, showToast } from "../actions";
+import { setAccountName } from "../actions";
 import { Feather } from '@expo/vector-icons';import { View } from "react-native";
 
 export default () => {
@@ -18,10 +18,6 @@ export default () => {
 
     const save = () => {
         setAccountName(route.params.address, name.get());
-        showToast({
-            type: 'success',
-            text1: i18n.t('edited', {name: name.get()})
-        })
         navigation.goBack();
     }
 

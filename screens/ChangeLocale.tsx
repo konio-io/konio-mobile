@@ -45,10 +45,6 @@ export const ListItem = (props: {
 
   const changeLocale = () => {
     setLocale(props.code);
-    showToast({
-      type: 'info',
-      text1: i18n.t('locale_changed', {name: props.label})
-    });
   }
 
   return <ListItemSelected ItemComponent={ItemComponent} selected={selected} onPress={changeLocale}/>
