@@ -22,6 +22,7 @@ export type TabParamList = {
     OperationsStack: NavigatorScreenParams<OperationsStackParamList>,
     Dapps: undefined,
     SettingStack: NavigatorScreenParams<SettingStackParamList>
+    AccountsManageStack: NavigatorScreenParams<AccountsManageStackParamList>
 }
 export type AccountStackNavigationProp = StackNavigationProp<TabParamList, 'AccountStack'>;
 export type AccountStackRouteProp = RouteProp<TabParamList, 'AccountStack'>;
@@ -31,6 +32,23 @@ export type DappsNavigationProp = StackNavigationProp<TabParamList, 'Dapps'>;
 export type DappsRouteProp = RouteProp<TabParamList, 'Dapps'>;
 export type SettingStackNavigationProp = StackNavigationProp<TabParamList, 'SettingStack'>;
 export type SettingStackRouteProp = RouteProp<TabParamList, 'SettingStack'>;
+export type AccountsManageStackNavigationProp = StackNavigationProp<TabParamList, 'AccountsManageStack'>;
+export type AccountsManageStackRouteProp = RouteProp<TabParamList, 'AccountsManageStack'>;
+
+/** AccountsManageStack */
+export type AccountsManageStackParamList = {
+    SwitchAccount: undefined,
+    NewAccount: undefined,
+    EditAccount: {
+        address: string
+    }
+}
+export type SwitchAccountNavigationProp = StackNavigationProp<AccountsManageStackParamList, 'SwitchAccount'>;
+export type SwitchAccountRouteProp = RouteProp<AccountsManageStackParamList, 'SwitchAccount'>;
+export type NewAccountNavigationProps = StackNavigationProp<AccountsManageStackParamList, 'NewAccount'>;
+export type NewAccountRouteProp = RouteProp<AccountsManageStackParamList, 'NewAccount'>;
+export type EditAccountNavigationProps = StackNavigationProp<AccountsManageStackParamList, 'EditAccount'>;
+export type EditAccountRouteProp = RouteProp<AccountsManageStackParamList, 'EditAccount'>;
 
 /** AccountStack */
 export type AccountStackParamList = {
@@ -38,11 +56,6 @@ export type AccountStackParamList = {
     NewCoin: undefined,
     Coin: {
         contractId: string
-    },
-    SwitchAccount: undefined,
-    NewAccount: undefined,
-    EditAccount: {
-        address: string
     }
 }
 export type AccountNavigationProp = StackNavigationProp<AccountStackParamList, 'Account'>;
@@ -51,12 +64,6 @@ export type NewCoinNavigationProp = StackNavigationProp<AccountStackParamList, '
 export type NewCoinRouteProp = RouteProp<AccountStackParamList, 'NewCoin'>;
 export type CoinNavigationProp = StackNavigationProp<AccountStackParamList, 'Coin'>;
 export type CoinRouteProp = RouteProp<AccountStackParamList, 'Coin'>;
-export type SwitchAccountNavigationProp = StackNavigationProp<AccountStackParamList, 'SwitchAccount'>;
-export type SwitchAccountRouteProp = RouteProp<AccountStackParamList, 'SwitchAccount'>;
-export type NewAccountNavigationProps = StackNavigationProp<AccountStackParamList, 'NewAccount'>;
-export type NewAccountRouteProp = RouteProp<AccountStackParamList, 'NewAccount'>;
-export type EditAccountNavigationProps = StackNavigationProp<AccountStackParamList, 'EditAccount'>;
-export type EditAccountRouteProp = RouteProp<AccountStackParamList, 'EditAccount'>;
 
 /** OperationsStack */
 export type OperationsStackParamList = {

@@ -18,7 +18,7 @@ export default (props: {
             <AccountAvatar size={36} address={props.address} />
             <View>
                 <Text>{wallet.name}</Text>
-                <Address address={props.address} compress={true} />
+                <Address address={props.address} compress={true} copiable={true}/>
             </View>
         </View>
     );

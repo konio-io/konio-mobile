@@ -2,13 +2,17 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { View, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useI18n, useLocker, useTheme } from "../hooks";
+import { useCurrentAddress, useI18n, useLocker, useTheme } from "../hooks";
 import Unavailable from "../screens/Unavailable";
 import AccountStack from "./AccountStack";
 import OperationsStack from "./OperationsStack";
 import SettingStack from "./SettingStack";
 import { SheetManager } from "react-native-actions-sheet";
 import { AntDesign } from '@expo/vector-icons';
+import { AccountAvatar } from "../components";
+import AccountsManageStack from "./AccountsManageStack";
+import Loading from "../screens/Loading";
+import { State } from "@hookstate/core";
 
 const Tab = createBottomTabNavigator();
 export default () => {
@@ -17,6 +21,12 @@ export default () => {
   const styles = theme.styles;
   const insets = useSafeAreaInsets();
   const i18n = useI18n();
+  const currentAddress = useCurrentAddress();
+  const currentAddressOrNull: State<string> | null = currentAddress.ornull;
+
+  if (!currentAddressOrNull) {
+    return <Loading/>
+  }
 
   useLocker({ key: 'app', initialValue: true });
 
@@ -96,6 +106,19 @@ export default () => {
             header: () => (<View />),
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="setting" size={size} color={color} />
+            )
+          }}
+        />
+        <Tab.Screen
+          name="AccountsManageStack"
+          component={AccountsManageStack}
+          options={{
+            title: i18n.t('accounts'),
+            header: () => (<View />),
+            tabBarIcon: ({ color, size }) => (
+              <View style={{ borderWidth: 2, borderColor: color, borderRadius: Border.radius }}>
+                <AccountAvatar size={32} address={currentAddressOrNull.get()} />
+              </View>
             )
           }}
         />

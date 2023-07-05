@@ -1,12 +1,11 @@
-import { View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import type { AccountStackParamList } from '../types/navigation';
+import type { AccountsManageStackParamList } from '../types/navigation';
 import { useTheme, useI18n } from '../hooks';
-import Account from '../screens/Account';
-import NewCoin from '../screens/NewCoin';
-import Coin from '../screens/Coin';
+import SwitchAccount from '../screens/SwitchAccount';
+import NewAccount from '../screens/NewAccount';
+import EditAccount from '../screens/EditAccount';
 
-const Stack = createStackNavigator<AccountStackParamList>();
+const Stack = createStackNavigator<AccountsManageStackParamList>();
 
 export default () => {
   const i18n = useI18n();
@@ -28,27 +27,25 @@ export default () => {
         headerTintColor: Color.primary
       }}>
       <Stack.Screen
-        name="Account"
-        component={Account}
+        name="SwitchAccount"
+        component={SwitchAccount}
         options={{
-          header: () => (<View />),
-          title: i18n.t('wallet')
+          title: i18n.t('accounts'),
+          presentation: 'modal'
         }}
       />
       <Stack.Screen
-        name="NewCoin"
-        component={NewCoin}
+        name="NewAccount"
+        component={NewAccount}
         options={{
-          title: i18n.t('add_coin')
+          title: i18n.t('add_account')
         }}
       />
       <Stack.Screen
-        name="Coin"
-        component={Coin}
-        options={() => {
-          return {
-            title: i18n.t('coin')
-          }
+        name="EditAccount"
+        component={EditAccount}
+        options={{
+          title: i18n.t('edit_account')
         }}
       />
     </Stack.Navigator>

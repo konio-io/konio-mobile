@@ -1,5 +1,5 @@
 import * as Clipboard from 'expo-clipboard';
-import { TouchableHighlight, Text, View } from 'react-native';
+import { TouchableOpacity, Text, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n } from '../hooks';
 import { showToast } from '../actions';
@@ -20,9 +20,9 @@ export default (props: {
 
     if (props.copiable) {
         return (
-            <TouchableHighlight onPress={copyToClipboard}>
+            <TouchableOpacity onPress={copyToClipboard}>
                 <Container {...props} />
-            </TouchableHighlight>
+            </TouchableOpacity>
         );
     }
 

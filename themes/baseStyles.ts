@@ -108,7 +108,7 @@ export const getStyles = (themeVars : ThemeVars) => {
         addressText: {
             fontFamily: FontFamily.sans,
             fontSize: FontSize.small,
-            color: Color.secondary
+            color: Color.secondary,
         },
         addressContainer: {
             backgroundColor: rgba(Color.secondary, 0.1),

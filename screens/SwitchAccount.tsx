@@ -3,7 +3,7 @@ import { ListItemSelected, Screen, AccountListItem, Separator, Link } from "../c
 import { useCurrentAddress, useI18n, useTheme, useWallets } from "../hooks";
 import { setCurrentWallet } from "../actions";
 import { useNavigation } from "@react-navigation/native";
-import type { SwitchAccountNavigationProp, AccountNavigationProp } from "../types/navigation";
+import type { SwitchAccountNavigationProp } from "../types/navigation";
 import { SheetManager } from "react-native-actions-sheet";
 
 export default () => {
@@ -16,7 +16,6 @@ export default () => {
                 renderItem={({ item }) => <ListItem address={item.address}/>}
                 ItemSeparatorComponent={() => <Separator />}
             />
-
             <Footer />
         </Screen>
     );
@@ -43,7 +42,7 @@ const ListItem = (props: {
 };
 
 const Footer = () => {
-    const navigation = useNavigation<AccountNavigationProp>();
+    const navigation = useNavigation<SwitchAccountNavigationProp>();
     const theme = useTheme();
     const { Spacing } = theme.vars;
     const i18n = useI18n();

@@ -4,7 +4,7 @@ import type { NewCoinNavigationProp } from '../types/navigation';
 import { addCoin, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen, Text, CoinSymbol, Separator, CoinLogo } from '../components';
-import { useCurrentNetworkId, useI18n, useNetwork } from '../hooks';
+import { useCurrentNetworkId, useI18n } from '../hooks';
 import { FlatList, StyleSheet, TouchableHighlight, View } from 'react-native';
 import { UserStore } from '../stores';
 import { useTheme } from '../hooks';

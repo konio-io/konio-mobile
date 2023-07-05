@@ -1,8 +1,8 @@
 import { StyleSheet, TouchableHighlight, View } from 'react-native';
 import { State } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
-import { useCurrentAddress, useTheme, useWallet, useI18n, useCurrentKoin } from '../hooks';
-import { Text, CoinList, AccountAvatar, ManaBar, CoinListItem, Screen, Address, Selector, Link } from '../components';
+import { useCurrentAddress, useTheme, useI18n, useCurrentKoin } from '../hooks';
+import { CoinList, ManaBar, CoinListItem, Screen, Link } from '../components';
 import type { Theme } from '../types/store';
 import { AccountNavigationProp, } from '../types/navigation';
 import Loading from './Loading';
@@ -15,26 +15,8 @@ export default () => {
     return <Loading />
   }
 
-  const wallet = useWallet(currentAddressOrNull.get()).get();
-  const theme = useTheme();
-  const { Spacing } = theme.vars;
-  const styles = createStyles(theme);
-  const navigation = useNavigation<AccountNavigationProp>();
-
   return (
     <Screen>
-      <View style={{ padding: Spacing.base }}>
-        <Selector onPress={() => navigation.navigate('SwitchAccount')}>
-          <View style={styles.switchContainer}>
-            <AccountAvatar size={48} address={wallet.address} />
-            <View>
-              <Text style={styles.textTitle}>{wallet.name}</Text>
-              <Address address={wallet.address} compress={true} copiable={true}/>
-            </View>
-          </View>
-        </Selector>
-      </View>
-
       <ManaBar />
 
       <CoinList renderItem={(contractId: string) => <TouchableCoinListItem contractId={contractId} />} />
