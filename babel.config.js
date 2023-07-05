@@ -12,7 +12,8 @@ module.exports = function (api) {
             //'buffer': '@craftzdog/react-native-buffer',
           }
         }
-      ]
+      ],
+      'react-native-reanimated/plugin',
     ],
   };
 };

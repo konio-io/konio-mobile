@@ -33,7 +33,9 @@ export default () => {
     useEffect(() => {
         if (amount.get()) {
             const v = (value.get() * parseFloat(amount.get()))/parseFloat(balance.get());
-            amountUsd.set(v.toString());
+            if (!isNaN(v)) {
+                amountUsd.set(v.toString());
+            }
         } else {
             amountUsd.set('');
         }
@@ -104,8 +106,6 @@ export default () => {
                             <Text style={amountUsdStyle}>{amountUsd.get()} USD</Text>
                         }
                     </View>
-
-
 
                     <View style={styles.percContainer}>
                         <View style={{ flex: 1 }}>

@@ -2,14 +2,26 @@ import { StyleSheet, TouchableHighlight, View } from 'react-native';
 import { State } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import { useCurrentAddress, useTheme, useI18n, useCurrentKoin } from '../hooks';
-import { CoinList, ManaBar, CoinListItem, Screen, Link } from '../components';
+import { CoinList, ManaBar, CoinListItem, Screen, Link, DrawerToggler, MoreVertical } from '../components';
 import type { Theme } from '../types/store';
-import { AccountNavigationProp, } from '../types/navigation';
+import { AssetsCoinsNavigationProp, } from '../types/navigation';
 import Loading from './Loading';
 import { SheetManager } from "react-native-actions-sheet";
+import { useEffect } from 'react';
 
 export default () => {
   const currentAddress = useCurrentAddress();
+  const navigation = useNavigation<AssetsCoinsNavigationProp>();
+
+  useEffect(() => {
+    navigation.setOptions({
+        headerTitleAlign: 'center',
+        headerLeft: () => (<DrawerToggler/>),
+        headerRight: () => (<MoreVertical onPress={() => SheetManager.show('account', { payload: { address: currentAddress.get() } })}/>),
+        title: ''
+    });
+}, [navigation]);
+
   const currentAddressOrNull: State<string> | null = currentAddress.ornull;
   if (!currentAddressOrNull) {
     return <Loading />
@@ -18,11 +30,8 @@ export default () => {
   return (
     <Screen>
       <ManaBar />
-
       <CoinList renderItem={(contractId: string) => <TouchableCoinListItem contractId={contractId} />} />
-
       <Footer />
-
     </Screen>
   );
 }
@@ -30,7 +39,7 @@ export default () => {
 const TouchableCoinListItem = (props: {
   contractId: string,
 }) => {
-  const navigation = useNavigation<AccountNavigationProp>();
+  const navigation = useNavigation<AssetsCoinsNavigationProp>();
   const theme = useTheme();
   const styles = theme.styles;
   const currentKoin = useCurrentKoin();
@@ -52,7 +61,7 @@ const TouchableCoinListItem = (props: {
 }
 
 const Footer = () => {
-  const navigation = useNavigation<AccountNavigationProp>();
+  const navigation = useNavigation<AssetsCoinsNavigationProp>();
   const theme = useTheme();
   const styles = createStyles(theme);
   const i18n = useI18n();

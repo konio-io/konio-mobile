@@ -54,6 +54,7 @@ export default () => {
     const unlockWallet = () => {
         unlock(key);
         preventBack.set(false);
+        password.set('');
         navigation.goBack();
     }
 

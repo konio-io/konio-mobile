@@ -3,14 +3,17 @@ import { View } from "react-native";
 import Svg, { Defs, ClipPath, Use, G, Path } from "react-native-svg";
 import { useTheme } from "../hooks";
 
-export default () => {
+export default (props: {
+  width?: number,
+  height?: number
+}) => {
   const theme = useTheme();
   const { Color } = theme.vars;
 
   return (
     <View style={{
-      width: 300,
-      height: 70,
+      width: props.width ?? 300,
+      height: props.height ?? 70,
       justifyContent: 'center',
     }}
     >

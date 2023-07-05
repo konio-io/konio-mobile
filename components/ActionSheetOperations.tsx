@@ -15,14 +15,7 @@ export default (props: SheetProps) => {
                 index: 0,
                 routes: [
                     {
-                        name: 'OperationsStack',
-                        state: {
-                            routes: [
-                                {
-                                    name: screen
-                                }
-                            ]
-                        }
+                        name: screen
                     }
                 ],
             })
@@ -33,7 +26,7 @@ export default (props: SheetProps) => {
         {
             title: i18n.t('withdraw'),
             icon: <Feather name="arrow-up-right"/>,
-            onPress: () => _navigate('Withdrawstack')
+            onPress: () => _navigate('Withdraw')
         },
         {
             title: i18n.t('deposit'),

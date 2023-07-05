@@ -1,5 +1,5 @@
 import { FlatList, Pressable, View, StyleSheet } from 'react-native';
-import { Screen, TextInput, Button, Text, AccountAvatar, ListItemSelected, Separator, AccountListItem } from '../components';
+import { Screen, TextInput, Button, Text, AccountAvatar, ListItemSelected, Separator, AccountListItem, DrawerToggler } from '../components';
 import { useTheme, useI18n, useWallets, useWallet, useTransactions, useAddressbook, useAddressbookItem, useCurrentAddress } from '../hooks';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { WithdrawToNavigationProp, WithdrawToRouteProp } from '../types/navigation';
@@ -18,10 +18,22 @@ export default () => {
     const styles = createStyles(theme);
     const i18n = useI18n();
     const address = useHookstate('');
+    const currentAddress = useCurrentAddress();
 
     useEffect(() => {
         address.set(route.params.to ?? '');
-    }, [route.params.to]);
+    }, [route.params]);
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerTitleAlign: 'center',
+            headerLeft: () => (<DrawerToggler/>)
+        });
+    }, [navigation]);
+
+    useEffect(() => {
+        address.set('');
+    }, [currentAddress]);
 
     const next = () => {
         if (!address.get()) {
@@ -126,6 +138,7 @@ const To = (props: {
                         style={{ ...styles.addressText, ...styles.addressContainer }}
                         value={address.get()}
                         onChangeText={(v: string) => { address.set(v) }}
+                        placeholder={i18n.t('select_recipient')}
                     />
                 </View>
             </View>

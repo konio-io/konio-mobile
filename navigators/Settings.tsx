@@ -1,9 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { useTheme, useI18n } from '../hooks';
-import type { SettingStackParamList } from '../types/navigation';
-import Setting from '../screens/Setting';
+import type { SettingsParamList } from '../types/navigation';
+import SettingMenu from '../screens/SettingMenu';
 import ChangeNetwork from '../screens/ChangeNetwork';
-import About from '../screens/About';
 import ShowSeed from '../screens/ShowSeed';
 import ChangeTheme from '../screens/ChangeTheme';
 import ChangeLocale from '../screens/ChangeLocale';
@@ -13,7 +12,7 @@ import ChangeAutolock from '../screens/ChangeAutolock';
 import Advanced from '../screens/Advanced';
 import NewNetwork from '../screens/NewNetwork';
 
-const Stack = createStackNavigator<SettingStackParamList>();
+const Stack = createStackNavigator<SettingsParamList>();
 
 export default () => {
   const i18n = useI18n();
@@ -35,8 +34,8 @@ export default () => {
         headerTintColor: Color.primary
       }}>
       <Stack.Screen
-        name="Setting"
-        component={Setting}
+        name="SettingMenu"
+        component={SettingMenu}
         options={{
           title: i18n.t('settings'),
         }}
@@ -102,13 +101,6 @@ export default () => {
         component={Advanced}
         options={{
           title: i18n.t('advanced'),
-        }}
-      />
-      <Stack.Screen
-        name="About"
-        component={About}
-        options={{
-          title: i18n.t('about'),
         }}
       />
     </Stack.Navigator>

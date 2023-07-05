@@ -1,18 +1,38 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import type { CoinRouteProp, OperationsStackNavigationProp } from '../types/navigation';
+import type { CoinRouteProp, AssetsNavigationProp } from '../types/navigation';
 import type { Theme } from '../types/store';
-import { Button, TransactionList, Address, Screen } from '../components';
+import { Button, TransactionList, Address, Screen, MoreVertical } from '../components';
 import { useCoin, useTheme } from '../hooks';
 import { Feather } from '@expo/vector-icons';
+import { useEffect } from 'react';
+import { SheetManager } from "react-native-actions-sheet";
+import { DEFAULT_COINS } from '../lib/Constants';
 
 export default () => {
-    const navigation = useNavigation<OperationsStackNavigationProp>();
+    const navigation = useNavigation<AssetsNavigationProp>();
     const route = useRoute<CoinRouteProp>();
     const walletCoin = useCoin(route.params.contractId);
     const coin = walletCoin.get();
     const theme = useTheme();
     const styles = createStyles(theme);
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerTitleAlign: 'center',
+            title: walletCoin.symbol.get(),
+            headerRight: () => {
+                //if (!DEFAULT_COINS.includes(coin.symbol)) {
+                    return (
+                        <MoreVertical onPress={() => {
+                            SheetManager.show('coin', { payload: { contractId: route.params.contractId } });
+                        }} />
+                    )
+                //}
+                return <></>;
+            }
+        });
+    }, [walletCoin, navigation]);
 
     return (
         <Screen>
@@ -20,37 +40,33 @@ export default () => {
 
                 <View style={styles.headerContent}>
                     <View style={styles.titleContent}>
-                        <Text style={{ ...styles.textTitle, ...styles.textCenter }}>{coin.symbol}</Text>
-                        <Address address={coin.contractId} copiable={true} compress={true}/>
+                        <Address address={coin.contractId} copiable={true} compress={true} />
                     </View>
 
-                    <View style={styles.buttonsContainer}>
-                        <Button
-                            style={{ flex: 1 }}
-                            title="Send"
-                            onPress={() => {
-                                navigation.navigate('OperationsStack', {
-                                    screen: 'WithdrawStack',
-                                    params: {
+                    {walletCoin.symbol.get() !== 'VHP' &&
+                        <View style={styles.buttonsContainer}>
+                            <Button
+                                style={{ flex: 1 }}
+                                title="Send"
+                                onPress={() => {
+                                    navigation.navigate('Withdraw', {
                                         screen: 'WithdrawTo',
                                         params: {
                                             contractId: route.params.contractId
                                         }
-                                    }
-                                });
-                            }}
-                            icon={<Feather name="arrow-up-right" />}
-                        />
-                        <Button
-                            style={{ flex: 1 }}
-                            title="Receive"
-                            onPress={() => navigation.navigate('OperationsStack', {
-                                screen: 'Deposit'
-                            })}
-                            icon={<Feather name="arrow-down-right" />}
-                            type='secondary'
-                        />
-                    </View>
+                                    });
+                                }}
+                                icon={<Feather name="arrow-up-right" />}
+                            />
+                            <Button
+                                style={{ flex: 1 }}
+                                title="Receive"
+                                onPress={() => navigation.navigate('Deposit')}
+                                icon={<Feather name="arrow-down-right" />}
+                                type='secondary'
+                            />
+                        </View>
+                    }
                 </View>
 
             </View>

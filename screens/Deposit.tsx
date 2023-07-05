@@ -1,14 +1,18 @@
 import { View, Share, StyleSheet } from 'react-native';
-import { Text, Button, Address, Wrapper, Screen } from '../components';
+import { Text, Button, Address, Wrapper, Screen, DrawerToggler } from '../components';
 import { useCurrentAddress, useTheme, useI18n } from '../hooks';
 import { AntDesign } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
 import Loading from './Loading';
 import { State } from '@hookstate/core';
 import type { Theme } from '../types/store';
+import { useNavigation } from '@react-navigation/native';
+import { DepositNavigationProp } from '../types/navigation';
+import { useEffect } from 'react';
 
 export default () => {
     const i18n = useI18n();
+    const navigation = useNavigation<DepositNavigationProp>();
     const currentAddress = useCurrentAddress();
     const currentAddressOrNull: State<string> | null = currentAddress.ornull;
     if (!currentAddressOrNull) {
@@ -25,6 +29,13 @@ export default () => {
 
     const theme = useTheme();
     const styles = createStyles(theme);
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerTitleAlign: 'center',
+            headerLeft: () => (<DrawerToggler/>)
+        });
+    }, [navigation]);
 
     return (
         <Screen>

@@ -30,7 +30,7 @@ export default () => {
 
     addCoin(contractId.get())
       .then(coin => {
-        navigation.navigate('Account');
+        navigation.goBack();
       })
       .catch(e => {
         showToast({

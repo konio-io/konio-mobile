@@ -1,25 +1,22 @@
-import { View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import type { AccountStackParamList } from '../types/navigation';
+import type { AssetsParamList } from '../types/navigation';
 import { useTheme, useI18n } from '../hooks';
-import Account from '../screens/Account';
+import AssetsCoins from '../screens/AssetsCoins';
 import NewCoin from '../screens/NewCoin';
 import Coin from '../screens/Coin';
 
-const Stack = createStackNavigator<AccountStackParamList>();
+const Stack = createStackNavigator<AssetsParamList>();
 
 export default () => {
   const i18n = useI18n();
   const theme = useTheme();
-  const { FontFamily, Color, Border } = theme.vars;
+  const { FontFamily, Color } = theme.vars;
 
   return (
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: Color.base,
-          borderBottomColor: Border.color,
-          borderBottomWidth: Border.width
+          backgroundColor: Color.base
         },
         headerTitleStyle: {
           fontFamily: FontFamily.sans,
@@ -28,12 +25,8 @@ export default () => {
         headerTintColor: Color.primary
       }}>
       <Stack.Screen
-        name="Account"
-        component={Account}
-        options={{
-          header: () => (<View />),
-          title: i18n.t('wallet')
-        }}
+        name="AssetsCoins"
+        component={AssetsCoins}
       />
       <Stack.Screen
         name="NewCoin"
@@ -45,11 +38,6 @@ export default () => {
       <Stack.Screen
         name="Coin"
         component={Coin}
-        options={() => {
-          return {
-            title: i18n.t('coin')
-          }
-        }}
       />
     </Stack.Navigator>
   );

@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import type { IntroStackParamList } from '../types/navigation'
+import type { IntroParamList } from '../types/navigation'
 import { useTheme, useI18n } from '../hooks';
 import Intro from '../screens/Intro';
 import SetPassword from '../screens/SetPassword';
@@ -9,7 +9,7 @@ import NewWalletSeed from '../screens/NewWalletSeed';
 import NewWalletSeedConfirm from '../screens/NewWalletSeedConfirm';
 import ImportWalletSeed from '../screens/ImportWalletSeed';
 
-const Stack = createStackNavigator<IntroStackParamList>();
+const Stack = createStackNavigator<IntroParamList>();
 
 export default () => {
 

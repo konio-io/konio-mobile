@@ -2,17 +2,14 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { View, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useCurrentAddress, useI18n, useLocker, useTheme } from "../hooks";
+import { useI18n, useTheme } from "../hooks";
 import Unavailable from "../screens/Unavailable";
-import AccountStack from "./AccountStack";
-import OperationsStack from "./OperationsStack";
-import SettingStack from "./SettingStack";
+import Assets from "./Assets";
 import { SheetManager } from "react-native-actions-sheet";
 import { AntDesign } from '@expo/vector-icons';
-import { AccountAvatar } from "../components";
-import AccountsManageStack from "./AccountsManageStack";
-import Loading from "../screens/Loading";
-import { State } from "@hookstate/core";
+import Withdraw from "./Withdraw";
+import Deposit from "../screens/Deposit";
+import { showToast } from "../actions";
 
 const Tab = createBottomTabNavigator();
 export default () => {
@@ -21,14 +18,6 @@ export default () => {
   const styles = theme.styles;
   const insets = useSafeAreaInsets();
   const i18n = useI18n();
-  const currentAddress = useCurrentAddress();
-  const currentAddressOrNull: State<string> | null = currentAddress.ornull;
-
-  if (!currentAddressOrNull) {
-    return <Loading/>
-  }
-
-  useLocker({ key: 'app', initialValue: true });
 
   return (
     <View
@@ -63,22 +52,21 @@ export default () => {
         }}
       >
         <Tab.Screen
-          name="AccountStack"
-          component={AccountStack}
+          name="Assets"
+          component={Assets}
           options={{
-            title: i18n.t('account'),
-            header: () => (<View />),
+            title: i18n.t('assets'),
+            headerShown: false,
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="wallet" size={size} color={color} />
             )
           }}
         />
         <Tab.Screen
-          name="OperationsStack"
-          component={OperationsStack}
+          name="Operations"
+          component={Unavailable}
           options={{
-            title: i18n.t('operations'),
-            header: () => (<View />),
+            headerShown: false,
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="swap" size={size} color={color} />
             ),
@@ -89,37 +77,37 @@ export default () => {
           }}
         />
         <Tab.Screen
+          name="Withdraw"
+          component={Withdraw}
+          options={{
+            title: i18n.t('send'),
+            headerShown: false,
+            tabBarButton: () => null
+          }}
+        />
+        <Tab.Screen
+          name="Deposit"
+          component={Deposit}
+          options={{
+            title: i18n.t('deposit'),
+            tabBarButton: () => null
+          }}
+        />
+        <Tab.Screen
           name="Dapps"
           component={Unavailable}
           options={{
             title: i18n.t('dapps'),
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="appstore-o" size={size} color={color} />
-            )
-          }}
-        />
-        <Tab.Screen
-          name="SettingStack"
-          component={SettingStack}
-          options={{
-            title: i18n.t('Settings'),
-            header: () => (<View />),
-            tabBarIcon: ({ color, size }) => (
-              <AntDesign name="setting" size={size} color={color} />
-            )
-          }}
-        />
-        <Tab.Screen
-          name="AccountsManageStack"
-          component={AccountsManageStack}
-          options={{
-            title: i18n.t('accounts'),
-            header: () => (<View />),
-            tabBarIcon: ({ color, size }) => (
-              <View style={{ borderWidth: 2, borderColor: color, borderRadius: Border.radius }}>
-                <AccountAvatar size={32} address={currentAddressOrNull.get()} />
-              </View>
-            )
+            ),
+            tabBarButton: (props) => {
+              props.onPress = () => showToast({
+                type: 'info',
+                text1: i18n.t('available_soon')
+              });
+              return <TouchableOpacity {...props} />
+            }
           }}
         />
       </Tab.Navigator>

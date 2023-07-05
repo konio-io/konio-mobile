@@ -94,3 +94,5 @@ export const FALLBACK_LOCALE = 'en';
 export const FALLBACK_THEME = 'light';
 export const OS_LOCALE = 'auto';
 export const OS_THEME = 'auto';
+
+export const DONATION_ADDRESS = '1Pbh4S8iSXRJrsa4rm4DKSBr9QhbPA4Sxj';

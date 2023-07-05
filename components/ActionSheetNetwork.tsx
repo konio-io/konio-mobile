@@ -1,17 +1,15 @@
 import { SheetProps } from "react-native-actions-sheet";
 import { deleteNetwork } from "../actions";
-import { useNetwork, useI18n } from "../hooks";
+import { useI18n } from "../hooks";
 import ActionSheet from "./ActionSheet";
 import { AntDesign } from '@expo/vector-icons';
 
 export default (props: SheetProps) => {
 
     const { networkId } = props.payload;
-    const network = useNetwork(networkId).get();
     const i18n = useI18n();
 
     const _delete = () => {
-        const name = network.name;
         deleteNetwork(networkId);
     };
 

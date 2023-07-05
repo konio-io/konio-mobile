@@ -1,5 +1,5 @@
 import { UserStore, UserStoreDefault } from ".";
-import { DEFAULT_NETWORKS } from "../lib/Constants";
+import { DEFAULT_NETWORKS, DONATION_ADDRESS } from "../lib/Constants";
 
 const migrations : Record<string,Function> = {
     '20230701': () => {},
@@ -20,7 +20,14 @@ const migrations : Record<string,Function> = {
         }
 
         UserStore.networks.set({ ...DEFAULT_NETWORKS });
-        
+    },
+    '20230705': () => {
+        UserStore.addressbook.merge({
+            [DONATION_ADDRESS]: {
+                name: 'Adrihoke',
+                address: DONATION_ADDRESS
+            }
+        })
     }
 }
 

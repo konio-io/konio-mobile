@@ -1,89 +1,68 @@
 import type { RouteProp, NavigatorScreenParams } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
 
-/** RootStack */
-export type RootStackParamList = {
-    MainTabs: NavigatorScreenParams<TabParamList>
+/** Root */
+export type RootParamList = {
+    Account: NavigatorScreenParams<AccountParamList>
+    Settings: NavigatorScreenParams<SettingsParamList>
     Unlock: {
         key: string
     },
-    ResetPassword: undefined
-}
-export type MainTabsNavigationProp = StackNavigationProp<RootStackParamList, 'MainTabs'>;
-export type MainTabsRouteProp = RouteProp<RootStackParamList, 'MainTabs'>;
-export type UnlockNavigationProp = StackNavigationProp<RootStackParamList, 'Unlock'>;
-export type UnlockRouteProp = RouteProp<RootStackParamList, 'Unlock'>;
-export type ResetPasswordNavigationProp = StackNavigationProp<RootStackParamList, 'ResetPassword'>;
-export type ResetPasswordRouteProp = RouteProp<RootStackParamList, 'ResetPassword'>;
-
-/** MainTabs */
-export type TabParamList = {
-    AccountStack: NavigatorScreenParams<AccountStackParamList>,
-    OperationsStack: NavigatorScreenParams<OperationsStackParamList>,
-    Dapps: undefined,
-    SettingStack: NavigatorScreenParams<SettingStackParamList>
-    AccountsManageStack: NavigatorScreenParams<AccountsManageStackParamList>
-}
-export type AccountStackNavigationProp = StackNavigationProp<TabParamList, 'AccountStack'>;
-export type AccountStackRouteProp = RouteProp<TabParamList, 'AccountStack'>;
-export type OperationsStackNavigationProp = StackNavigationProp<TabParamList, 'OperationsStack'>;
-export type OperationsStackRouteProp = RouteProp<TabParamList, 'OperationsStack'>;
-export type DappsNavigationProp = StackNavigationProp<TabParamList, 'Dapps'>;
-export type DappsRouteProp = RouteProp<TabParamList, 'Dapps'>;
-export type SettingStackNavigationProp = StackNavigationProp<TabParamList, 'SettingStack'>;
-export type SettingStackRouteProp = RouteProp<TabParamList, 'SettingStack'>;
-export type AccountsManageStackNavigationProp = StackNavigationProp<TabParamList, 'AccountsManageStack'>;
-export type AccountsManageStackRouteProp = RouteProp<TabParamList, 'AccountsManageStack'>;
-
-/** AccountsManageStack */
-export type AccountsManageStackParamList = {
-    SwitchAccount: undefined,
+    ResetPassword: undefined,
     NewAccount: undefined,
     EditAccount: {
         address: string
     }
 }
-export type SwitchAccountNavigationProp = StackNavigationProp<AccountsManageStackParamList, 'SwitchAccount'>;
-export type SwitchAccountRouteProp = RouteProp<AccountsManageStackParamList, 'SwitchAccount'>;
-export type NewAccountNavigationProps = StackNavigationProp<AccountsManageStackParamList, 'NewAccount'>;
-export type NewAccountRouteProp = RouteProp<AccountsManageStackParamList, 'NewAccount'>;
-export type EditAccountNavigationProps = StackNavigationProp<AccountsManageStackParamList, 'EditAccount'>;
-export type EditAccountRouteProp = RouteProp<AccountsManageStackParamList, 'EditAccount'>;
+export type AccountNavigationProp = StackNavigationProp<RootParamList, 'Account'>;
+export type AccountRouteProp = RouteProp<RootParamList, 'Account'>;
+export type UnlockNavigationProp = StackNavigationProp<RootParamList, 'Unlock'>;
+export type UnlockRouteProp = RouteProp<RootParamList, 'Unlock'>;
+export type ResetPasswordNavigationProp = StackNavigationProp<RootParamList, 'ResetPassword'>;
+export type ResetPasswordRouteProp = RouteProp<RootParamList, 'ResetPassword'>;
+export type SettingsNavigationProp = StackNavigationProp<RootParamList, 'Settings'>;
+export type SettingsRouteProp = RouteProp<RootParamList, 'Settings'>;
+export type NewAccountNavigationProps = StackNavigationProp<RootParamList, 'NewAccount'>;
+export type NewAccountRouteProp = RouteProp<RootParamList, 'NewAccount'>;
+export type EditAccountNavigationProps = StackNavigationProp<RootParamList, 'EditAccount'>;
+export type EditAccountRouteProp = RouteProp<RootParamList, 'EditAccount'>;
 
-/** AccountStack */
-export type AccountStackParamList = {
-    Account: undefined,
+/** Account */
+export type AccountParamList = {
+    Assets: NavigatorScreenParams<AssetsParamList>,
+    Dapps: undefined,
+    Withdraw: NavigatorScreenParams<WithdrawParamList>,
+    Deposit: undefined,
+}
+export type AssetsNavigationProp = StackNavigationProp<AccountParamList, 'Assets'>;
+export type AssetsRouteProp = RouteProp<AccountParamList, 'Assets'>;
+export type DappsNavigationProp = StackNavigationProp<AccountParamList, 'Dapps'>;
+export type DappsRouteProp = RouteProp<AccountParamList, 'Dapps'>;
+export type WithdrawNavigationProp = StackNavigationProp<AccountParamList, 'Withdraw'>;
+export type WithdrawRouteProp = RouteProp<AccountParamList, 'Withdraw'>;
+export type DepositNavigationProp = StackNavigationProp<AccountParamList, 'Deposit'>;
+export type DepositRouteProp = RouteProp<AccountParamList, 'Deposit'>;
+
+/** Assets */
+export type AssetsParamList = {
+    AssetsCoins: undefined,
     NewCoin: undefined,
     Coin: {
         contractId: string
     }
 }
-export type AccountNavigationProp = StackNavigationProp<AccountStackParamList, 'Account'>;
-export type AccountRouteProp = RouteProp<AccountStackParamList, 'Account'>;
-export type NewCoinNavigationProp = StackNavigationProp<AccountStackParamList, 'NewCoin'>;
-export type NewCoinRouteProp = RouteProp<AccountStackParamList, 'NewCoin'>;
-export type CoinNavigationProp = StackNavigationProp<AccountStackParamList, 'Coin'>;
-export type CoinRouteProp = RouteProp<AccountStackParamList, 'Coin'>;
-
-/** OperationsStack */
-export type OperationsStackParamList = {
-    WithdrawStack: NavigatorScreenParams<WithdrawStackParamList>,
-    Deposit: undefined,
-    Swap: undefined
-}
-export type WithdrawStackNavigationProp = StackNavigationProp<OperationsStackParamList, 'WithdrawStack'>;
-export type WithdrawStackRouteProp = RouteProp<OperationsStackParamList, 'WithdrawStack'>;
-export type DepositNavigationProp = StackNavigationProp<OperationsStackParamList, 'Deposit'>;
-export type DepositRouteProp = RouteProp<OperationsStackParamList, 'Deposit'>;
-export type SwapNavigationProp = StackNavigationProp<OperationsStackParamList, 'Swap'>;
-export type SwapRouteProp = RouteProp<OperationsStackParamList, 'Swap'>;
+export type AssetsCoinsNavigationProp = StackNavigationProp<AssetsParamList, 'AssetsCoins'>;
+export type AssetsCoinsRouteProp = RouteProp<AssetsParamList, 'AssetsCoins'>;
+export type NewCoinNavigationProp = StackNavigationProp<AssetsParamList, 'NewCoin'>;
+export type NewCoinRouteProp = RouteProp<AssetsParamList, 'NewCoin'>;
+export type CoinNavigationProp = StackNavigationProp<AssetsParamList, 'Coin'>;
+export type CoinRouteProp = RouteProp<AssetsParamList, 'Coin'>;
 
 
-/** SettingStack */
-export type SettingStackParamList = {
-    Setting: undefined,
+/** Settings */
+export type SettingsParamList = {
+    SettingMenu: undefined,
     ChangeNetwork: undefined,
-    About: undefined,
     ShowSeed: undefined,
     ChangeTheme: undefined,
     ChangeLocale: undefined,
@@ -93,31 +72,29 @@ export type SettingStackParamList = {
     Advanced: undefined
     NewNetwork: undefined
 };
-export type SettingNavigationProp = StackNavigationProp<SettingStackParamList, 'Setting'>;
-export type SettingRouteProp = RouteProp<SettingStackParamList, 'Setting'>;
-export type ChangeNetworkNavigationProp = StackNavigationProp<SettingStackParamList, 'ChangeNetwork'>;
-export type ChangeNetworkRouteProp = RouteProp<SettingStackParamList, 'ChangeNetwork'>;
-export type AboutNavigationProp = StackNavigationProp<SettingStackParamList, 'About'>;
-export type AboutRouteProp = RouteProp<SettingStackParamList, 'About'>;
-export type ShowSeedNavigationProp = StackNavigationProp<SettingStackParamList, 'ShowSeed'>;
-export type ShowSeedRouteProp = RouteProp<SettingStackParamList, 'ShowSeed'>;
-export type ChangeThemeNavigationProp = StackNavigationProp<SettingStackParamList, 'ChangeTheme'>;
-export type ChangeThemeRouteProp = RouteProp<SettingStackParamList, 'ChangeTheme'>;
-export type ChangeLocaleNavigationProp = StackNavigationProp<SettingStackParamList, 'ChangeLocale'>;
-export type ChangeLocaleRouteProp = RouteProp<SettingStackParamList, 'ChangeLocale'>;
-export type SecurityNavigationProp = StackNavigationProp<SettingStackParamList, 'Security'>;
-export type SecurityRouteProp = RouteProp<SettingStackParamList, 'Security'>;
-export type ChangePasswordNavigationProp = StackNavigationProp<SettingStackParamList, 'ChangePassword'>;
-export type ChangePasswordRouteProp = RouteProp<SettingStackParamList, 'ChangePassword'>;
-export type ChangeAutolockNavigationProp = StackNavigationProp<SettingStackParamList, 'ChangeAutolock'>;
-export type ChangeAutolockRouteProp = RouteProp<SettingStackParamList, 'ChangeAutolock'>;
-export type AdvancedNavigationProp = StackNavigationProp<SettingStackParamList, 'Advanced'>;
-export type AdvancedRouteProp = RouteProp<SettingStackParamList, 'Advanced'>;
-export type NewNetworkNavigationProp = StackNavigationProp<SettingStackParamList, 'NewNetwork'>;
-export type NewNetworkRouteProp = RouteProp<SettingStackParamList, 'NewNetwork'>;
+export type SettingMenuNavigationProp = StackNavigationProp<SettingsParamList, 'SettingMenu'>;
+export type SettingMenuRouteProp = RouteProp<SettingsParamList, 'SettingMenu'>;
+export type ChangeNetworkNavigationProp = StackNavigationProp<SettingsParamList, 'ChangeNetwork'>;
+export type ChangeNetworkRouteProp = RouteProp<SettingsParamList, 'ChangeNetwork'>;
+export type ShowSeedNavigationProp = StackNavigationProp<SettingsParamList, 'ShowSeed'>;
+export type ShowSeedRouteProp = RouteProp<SettingsParamList, 'ShowSeed'>;
+export type ChangeThemeNavigationProp = StackNavigationProp<SettingsParamList, 'ChangeTheme'>;
+export type ChangeThemeRouteProp = RouteProp<SettingsParamList, 'ChangeTheme'>;
+export type ChangeLocaleNavigationProp = StackNavigationProp<SettingsParamList, 'ChangeLocale'>;
+export type ChangeLocaleRouteProp = RouteProp<SettingsParamList, 'ChangeLocale'>;
+export type SecurityNavigationProp = StackNavigationProp<SettingsParamList, 'Security'>;
+export type SecurityRouteProp = RouteProp<SettingsParamList, 'Security'>;
+export type ChangePasswordNavigationProp = StackNavigationProp<SettingsParamList, 'ChangePassword'>;
+export type ChangePasswordRouteProp = RouteProp<SettingsParamList, 'ChangePassword'>;
+export type ChangeAutolockNavigationProp = StackNavigationProp<SettingsParamList, 'ChangeAutolock'>;
+export type ChangeAutolockRouteProp = RouteProp<SettingsParamList, 'ChangeAutolock'>;
+export type AdvancedNavigationProp = StackNavigationProp<SettingsParamList, 'Advanced'>;
+export type AdvancedRouteProp = RouteProp<SettingsParamList, 'Advanced'>;
+export type NewNetworkNavigationProp = StackNavigationProp<SettingsParamList, 'NewNetwork'>;
+export type NewNetworkRouteProp = RouteProp<SettingsParamList, 'NewNetwork'>;
 
-/** IntroStack */
-export type IntroStackParamList = {
+/** Intro */
+export type IntroParamList = {
     Intro: undefined,
     SetPassword: undefined,
     NewWallet: undefined,
@@ -128,17 +105,17 @@ export type IntroStackParamList = {
     },
     ImportWalletSeed: undefined
 }
-export type IntroNavigationProp = StackNavigationProp<IntroStackParamList, 'Intro'>;
-export type IntroRouteProp = RouteProp<IntroStackParamList, 'Intro'>;
-export type NewWalletSeedNavigationProp = StackNavigationProp<IntroStackParamList, 'NewWalletSeed'>;
-export type NewWalletSeedRouteProp = RouteProp<IntroStackParamList, 'NewWalletSeed'>;
-export type NewWalletSeedConfirmNavigationProp = StackNavigationProp<IntroStackParamList, 'NewWalletSeedConfirm'>;
-export type NewWalletSeedConfirmRouteProp = RouteProp<IntroStackParamList, 'NewWalletSeedConfirm'>;
-export type ImportWalletSeedNavigationProp = StackNavigationProp<IntroStackParamList, 'ImportWalletSeed'>;
-export type ImportWalletSeedRouteProp = RouteProp<IntroStackParamList, 'ImportWalletSeed'>;
+export type IntroNavigationProp = StackNavigationProp<IntroParamList, 'Intro'>;
+export type IntroRouteProp = RouteProp<IntroParamList, 'Intro'>;
+export type NewWalletSeedNavigationProp = StackNavigationProp<IntroParamList, 'NewWalletSeed'>;
+export type NewWalletSeedRouteProp = RouteProp<IntroParamList, 'NewWalletSeed'>;
+export type NewWalletSeedConfirmNavigationProp = StackNavigationProp<IntroParamList, 'NewWalletSeedConfirm'>;
+export type NewWalletSeedConfirmRouteProp = RouteProp<IntroParamList, 'NewWalletSeedConfirm'>;
+export type ImportWalletSeedNavigationProp = StackNavigationProp<IntroParamList, 'ImportWalletSeed'>;
+export type ImportWalletSeedRouteProp = RouteProp<IntroParamList, 'ImportWalletSeed'>;
 
-/** WithdrawStack */
-export type WithdrawStackParamList = {
+/** Withdraw */
+export type WithdrawParamList = {
     WithdrawTo: {
         to?: string,
         contractId?: string
@@ -166,17 +143,17 @@ export type WithdrawStackParamList = {
     },
     NewAddressbookItem: undefined
 }
-export type WithdrawToNavigationProp = StackNavigationProp<WithdrawStackParamList, 'WithdrawTo'>;
-export type WithdrawToRouteProp = RouteProp<WithdrawStackParamList, 'WithdrawTo'>;
-export type WithdrawAmountNavigationProp = StackNavigationProp<WithdrawStackParamList, 'WithdrawAmount'>;
-export type WithdrawAmountRouteProp = RouteProp<WithdrawStackParamList, 'WithdrawAmount'>;
-export type WithdrawConfirmNavigationProp = StackNavigationProp<WithdrawStackParamList, 'WithdrawConfirm'>;
-export type WithdrawConfirmRouteProp = RouteProp<WithdrawStackParamList, 'WithdrawConfirm'>;
-export type WithdrawSelectCoinNavigationProp = StackNavigationProp<WithdrawStackParamList, 'WithdrawSelectCoin'>;
-export type WithdrawSelectCoinRouteProp = RouteProp<WithdrawStackParamList, 'WithdrawSelectCoin'>;
-export type WithdrawSelectToNavigationProp = StackNavigationProp<WithdrawStackParamList, 'WithdrawSelectTo'>;
-export type WithdrawSelectToRouteProp = RouteProp<WithdrawStackParamList, 'WithdrawSelectTo'>;
-export type WithdrawAddressbookNavigationProp = StackNavigationProp<WithdrawStackParamList, 'WithdrawAddressbook'>;
-export type WithdrawAddressbookRouteProp = RouteProp<WithdrawStackParamList, 'WithdrawAddressbook'>;
-export type NewAddressbookItemNavigationProp = StackNavigationProp<WithdrawStackParamList, 'NewAddressbookItem'>;
-export type NewAddressbookItemRouteProp = RouteProp<WithdrawStackParamList, 'NewAddressbookItem'>;
+export type WithdrawToNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawTo'>;
+export type WithdrawToRouteProp = RouteProp<WithdrawParamList, 'WithdrawTo'>;
+export type WithdrawAmountNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawAmount'>;
+export type WithdrawAmountRouteProp = RouteProp<WithdrawParamList, 'WithdrawAmount'>;
+export type WithdrawConfirmNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawConfirm'>;
+export type WithdrawConfirmRouteProp = RouteProp<WithdrawParamList, 'WithdrawConfirm'>;
+export type WithdrawSelectCoinNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawSelectCoin'>;
+export type WithdrawSelectCoinRouteProp = RouteProp<WithdrawParamList, 'WithdrawSelectCoin'>;
+export type WithdrawSelectToNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawSelectTo'>;
+export type WithdrawSelectToRouteProp = RouteProp<WithdrawParamList, 'WithdrawSelectTo'>;
+export type WithdrawAddressbookNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawAddressbook'>;
+export type WithdrawAddressbookRouteProp = RouteProp<WithdrawParamList, 'WithdrawAddressbook'>;
+export type NewAddressbookItemNavigationProp = StackNavigationProp<WithdrawParamList, 'NewAddressbookItem'>;
+export type NewAddressbookItemRouteProp = RouteProp<WithdrawParamList, 'NewAddressbookItem'>;

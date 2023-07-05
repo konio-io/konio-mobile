@@ -1,18 +1,20 @@
 import { SheetProps } from "react-native-actions-sheet";
 import { deleteCoin } from "../actions";
-import { useCoin, useI18n } from "../hooks";
+import { useI18n } from "../hooks";
 import ActionSheet from "./ActionSheet";
 import { AntDesign } from '@expo/vector-icons';
+import { useNavigation } from "@react-navigation/native";
+import { AssetsCoinsNavigationProp } from "../types/navigation";
 
 export default (props: SheetProps) => {
 
     const { contractId } = props.payload;
-    const coin = useCoin(contractId).get();
     const i18n = useI18n();
+    const navigation = useNavigation<AssetsCoinsNavigationProp>();
 
     const _delete = () => {
-        const name = coin.symbol;
         deleteCoin(contractId);
+        navigation.navigate('AssetsCoins');
     };
 
     const data = [

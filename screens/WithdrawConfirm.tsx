@@ -42,7 +42,7 @@ export default () => {
                         index: 1,
                         routes: [
                             {
-                                name: 'AccountStack',
+                                name: 'Assets',
                                 state: {
                                     routes: [
                                         {
@@ -91,14 +91,16 @@ export default () => {
 
     return (
         <Screen>
-
             <Wrapper type="full">
                 <View>
                     <Text style={styles.textSmall}>{i18n.t('recipient')}</Text>
                     <View style={styles.recipientContainer}>
                         <AccountAvatar size={32} address={to} />
                         <View>
-                            <Text>{toAccount ? toAccount.name : toAddressbookItem.name}</Text>
+                            <Text>
+                                {toAccount && toAccount.name}
+                                {!toAccount && toAddressbookItem && toAddressbookItem.name}
+                            </Text>
                             <Address address={to} />
                         </View>
                     </View>
@@ -126,7 +128,6 @@ export default () => {
                     icon={<Feather name="arrow-up-right" />}
                 />
             </View>
-
         </Screen>
     );
 }

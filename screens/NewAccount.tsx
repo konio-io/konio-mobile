@@ -26,13 +26,7 @@ export default () => {
         addAccount(name.get().trim())
             .then(address => {
                 setCurrentWallet(address);
-                const action = CommonActions.reset({
-                    index: 1,
-                    routes: [
-                        { name: 'AccountStack' },
-                    ]
-                });
-                navigation.dispatch(action);
+                navigation.goBack();
             })
             .catch(e => {
                 console.log(e);

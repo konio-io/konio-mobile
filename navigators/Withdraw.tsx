@@ -1,5 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import type { WithdrawStackParamList } from '../types/navigation'
+import type { WithdrawParamList } from '../types/navigation'
 import { useTheme, useI18n } from '../hooks';
 import WithdrawTo from '../screens/WithdrawTo';
 import WithdrawAmount from '../screens/WithdrawAmount';
@@ -9,7 +9,7 @@ import WithdrawSelectTo from '../screens/WithdrawSelectTo';
 import WithdrawAddressbook from '../screens/WithdrawAddressbook';
 import NewAddressbookItem from '../screens/NewAddressbookItem';
 
-const Stack = createStackNavigator<WithdrawStackParamList>();
+const Stack = createStackNavigator<WithdrawParamList>();
 
 export default () => {
   const i18n = useI18n();
@@ -33,7 +33,7 @@ export default () => {
         name="WithdrawTo"
         component={WithdrawTo}
         options={{
-          title: i18n.t('select_recipient'),
+          title: i18n.t('send'),
         }}
         initialParams={{}}
       />
