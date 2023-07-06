@@ -36,7 +36,7 @@ export const ListItem = (props: {
   const ItemComponent = () => (
     <View>
       <Text>{network.name}</Text>
-      <Text style={styles.textSmall}>{network.rpcNodes.join("\n")}</Text>
+      <Text style={styles.textSmall}>{network.rpcNodes[0]}</Text>
     </View>
   );
 
