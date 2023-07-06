@@ -13,34 +13,41 @@ import { AntDesign, Feather } from '@expo/vector-icons';
 import type { Theme } from '../types/store';
 import Constants from 'expo-constants';
 import { DONATION_ADDRESS } from '../lib/Constants';
+import { State } from '@hookstate/core';
+import Loading from '../screens/Loading';
 
 function DrawerContent(props: any) {
     const { navigation } = props;
-    const wallets = Object.values(useWallets().get());
+    const wallets = useWallets().get();
     const i18n = useI18n();
     const theme = useTheme();
     const styles = createStyles(theme);
     const currentAddress = useCurrentAddress();
-    const { Spacing, Color, Border } = theme.vars;
+    const currentAddressOrNull: State<string> | null = currentAddress.ornull;
+
+    if (!currentAddressOrNull) {
+        return <Loading/>;
+    }
+
+    const currentWallet = wallets[currentAddressOrNull.get()];
 
     return (
         <DrawerContentScrollView contentContainerStyle={styles.drawerContentContainer}>
 
             <View>
 
-                {wallets.map(wallet => wallet.address === currentAddress.get() &&
-                    <View style={styles.currentWalletContainer}>
-                        <AccountAvatar size={48} address={wallet.address} />
-                        <View>
-                            <Text style={styles.textTitle}>{wallet.name}</Text>
-                            <Address address={wallet.address} compress={true} copiable={true} />
-                        </View>
+                <View style={styles.currentWalletContainer}>
+                    <AccountAvatar size={48} address={currentWallet.address} />
+                    <View>
+                        <Text style={styles.textTitle}>{currentWallet.name}</Text>
+                        <Address address={currentWallet.address} compress={true} copiable={true} />
                     </View>
-                )}
+                </View>
+
 
                 <Separator />
 
-                {wallets.map(wallet => wallet.address !== currentAddress.get() &&
+                {Object.values(wallets).map(wallet => wallet.address !== currentAddress.get() &&
                     <DrawerItem
                         key={wallet.address}
                         label={wallet.name}
@@ -162,8 +169,8 @@ const createStyles = (theme: Theme) => {
             width: 28
         },
         currentWalletContainer: {
-            padding: Spacing.base, 
-            flexDirection: 'row', 
+            padding: Spacing.base,
+            flexDirection: 'row',
             columnGap: Spacing.base,
             alignItems: 'center'
         }
