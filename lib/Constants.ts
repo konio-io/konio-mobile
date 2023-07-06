@@ -31,13 +31,6 @@ export const DEFAULT_NETWORKS: Record<string, Network> = {
                 decimal: 8,
                 networkId: "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==",
                 transactions: []
-            },
-            KAP: {
-                contractId: "13tmzDmfqCsbYT26C4CmKxq86d33senqH3",
-                symbol: "MANA",
-                decimal: 8,
-                networkId: "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==",
-                transactions: []
             }
         }
     },
@@ -67,13 +60,6 @@ export const DEFAULT_NETWORKS: Record<string, Network> = {
             MANA: {
                 contractId: "1BXi4SX4jjbaLzcRbmRKtpMQbQmFYnmX9Z",
                 symbol: "MANA",
-                decimal: 8,
-                networkId: "EiAAKqFi-puoXnuJTdn7qBGGJa8yd-dcS2P0ciODe4wupQ==",
-                transactions: []
-            },
-            KAP: {
-                contractId: "13tmzDmfqCsbYT26C4CmKxq86d33senqH3",
-                symbol: "KAP",
                 decimal: 8,
                 networkId: "EiAAKqFi-puoXnuJTdn7qBGGJa8yd-dcS2P0ciODe4wupQ==",
                 transactions: []
