@@ -16,7 +16,7 @@ export default (props: {
     return (
         <View style={styles.container}>
             <View style={styles.leftContainer}>
-                <CoinLogo contractId={props.contractId} size={36} />
+                <CoinLogo contractId={props.contractId} size={48} />
 
                 <View>
                     <CoinSymbol contractId={props.contractId} />

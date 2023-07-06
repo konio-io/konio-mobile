@@ -1,6 +1,6 @@
-import { FlatList, Pressable, View, StyleSheet } from 'react-native';
-import { Screen, TextInput, Button, Text, AccountAvatar, ListItemSelected, Separator, AccountListItem, DrawerToggler } from '../components';
-import { useTheme, useI18n, useWallets, useWallet, useTransactions, useAddressbook, useAddressbookItem, useCurrentAddress } from '../hooks';
+import { Pressable, View, StyleSheet } from 'react-native';
+import { Screen, TextInput, Button, Text, AccountAvatar, ListItemSelected, DrawerToggler, AddressListItem, Link } from '../components';
+import { useTheme, useI18n, useWallets, useWallet, useTransactions, useAddressbook, useContact, useCurrentAddress } from '../hooks';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { WithdrawToNavigationProp, WithdrawToRouteProp } from '../types/navigation';
 import { showToast } from '../actions';
@@ -9,7 +9,8 @@ import { useEffect } from 'react';
 import { useHookstate } from '@hookstate/core';
 import { utils } from 'koilib';
 import type { Theme } from '../types/store';
-
+import { ScrollView } from 'react-native-gesture-handler';
+import { SheetManager } from "react-native-actions-sheet";
 
 export default () => {
     const route = useRoute<WithdrawToRouteProp>();
@@ -27,7 +28,7 @@ export default () => {
     useEffect(() => {
         navigation.setOptions({
             headerTitleAlign: 'center',
-            headerLeft: () => (<DrawerToggler/>)
+            headerLeft: () => (<DrawerToggler />)
         });
     }, [navigation]);
 
@@ -66,13 +67,27 @@ export default () => {
                 <To value={address.get()} onChange={(v: string) => address.set(v)} />
             </View>
 
-            <View style={styles.screenFooter}>
-                <Text style={styles.textSmall}>{i18n.t('recents')}</Text>
-            </View>
+            <ScrollView>
+                <View style={styles.paddingBase}>
+                    <Text style={styles.sectionTitle}>{i18n.t('recents')}</Text>
+                </View>
 
-            <RecentList onPressItem={(addr: string) => address.set(addr)} selected={address.get()} />
+                <RecentList onPressItem={(addr: string) => address.set(addr)} selected={address.get()} />
 
-            <View style={styles.screenFooter}>
+                <View style={styles.paddingBase}>
+                    <Text style={styles.sectionTitle}>{i18n.t('accounts')}</Text>
+                </View>
+
+                <AccountList onPressItem={(addr: string) => address.set(addr)} selected={address.get()} />
+
+                <View style={styles.paddingBase}>
+                    <Text style={styles.sectionTitle}>{i18n.t('addressbook')}</Text>
+                </View>
+
+                <Addressbook onPressItem={(addr: string) => address.set(addr)} selected={address.get()} />
+            </ScrollView>
+
+            <View style={styles.paddingBase}>
                 <Button
                     title={i18n.t('next')}
                     onPress={next}
@@ -91,10 +106,9 @@ const To = (props: {
     const name = useHookstate('');
 
     const account = useWallet(address.get());
-    const addressBookItem = useAddressbookItem(address.get());
+    const contact = useContact(address.get());
 
     const i18n = useI18n();
-    const navigation = useNavigation<WithdrawToNavigationProp>();
     const theme = useTheme();
     const styles = createStyles(theme);
     const { Color } = theme.vars;
@@ -111,26 +125,24 @@ const To = (props: {
         if (account.ornull) {
             name.set(account.ornull.name.get());
         }
-        else if (addressBookItem.ornull) {
-            name.set(addressBookItem.ornull.name.get());
+        else if (contact.ornull) {
+            name.set(contact.ornull.name.get());
         }
         else {
             name.set('');
         }
-    }, [account, addressBookItem])
+    }, [account, contact])
 
     return (
-        <View style={styles.toInputContainer}>
-
+        <View>
             <View style={styles.toInputAddressContainer}>
                 {
                     address.get() &&
-                    <AccountAvatar size={36} address={address.get()} />
+                    <AccountAvatar size={55} address={address.get()} />
                 }
-
                 <View style={{ flex: 1 }}>
                     {name.get() &&
-                        <Text>{name.get()}</Text>
+                        <Text style={styles.textMedium}>{name.get()}</Text>
                     }
                     <TextInput
                         multiline={true}
@@ -142,24 +154,6 @@ const To = (props: {
                     />
                 </View>
             </View>
-
-            <View style={{alignItems: 'flex-end'}}>
-                <View style={styles.toInputIconsContainer}>
-                    <Pressable onPress={() => navigation.navigate('WithdrawSelectTo', { selected: address.get() })}>
-                        <AntDesign name="wallet" size={22} color={Color.baseContrast} />
-                    </Pressable>
-
-                    <Pressable onPress={() => navigation.navigate('WithdrawAddressbook', { selected: address.get() })}>
-                        <Feather name="book-open" size={22} color={Color.baseContrast} />
-                    </Pressable>
-
-                    <Pressable onPress={() => showToast({ type: 'info', text1: i18n.t('available_soon') })}>
-                        <AntDesign name="qrcode" size={22} color={Color.baseContrast} />
-                    </Pressable>
-                </View>
-            </View>
-
-
         </View>
     )
 }
@@ -170,40 +164,99 @@ const RecentList = (props: {
 }) => {
     const currentAddress = useCurrentAddress();
     const transactions = useTransactions().get();
-    const latestTransactionTo = Object.values(transactions)
+    const result = Object.values(transactions)
         .filter(t => t.type === 'WITHDRAW')
         .sort((a, b) => (a.timestamp > b.timestamp) ? 1 : ((b.timestamp > a.timestamp) ? -1 : 0))
         .slice(0, 5)
-        .map(t => t.to);
+        .map(t => t.to)
+        .filter(to => to !== currentAddress.get());
 
-    const wallets = Object.values(useWallets().get());
-    const filteredWallets = wallets.filter(w => latestTransactionTo.includes(w.address) && w.address !== currentAddress.get());
-
-    const addressBook = Object.values(useAddressbook().get());
-    const filteredAddressBook = addressBook.filter(a => latestTransactionTo.includes(a.address));
-
-    const data = [...filteredWallets, ...filteredAddressBook];
+    const data = [...new Set(result)];
 
     return (
-        <FlatList
-            data={data}
-            renderItem={({ item }) => <RecentListItem address={item.address} selected={props.selected === item.address} onPress={(address: string) => props.onPressItem(address)} />}
-            ItemSeparatorComponent={() => <Separator />}
-        />
+        <View>
+            {data.map(item =>
+                <ToListItem key={item} address={item} selected={props.selected === item} onPress={(address: string) => props.onPressItem(address)} />
+            )}
+        </View>
     );
 }
 
-const RecentListItem = (props: {
+const AccountList = (props: {
+    onPressItem: Function,
+    selected: string
+}) => {
+    const currentAddress = useCurrentAddress();
+    const wallets = useWallets().get();
+    const result = Object.values(wallets)
+        .sort((a, b) => a.name > b.name ? 1 : -1)
+        .map(t => t.address)
+        .filter(address => address !== currentAddress.get());
+
+    const data = [...new Set(result)];
+
+    return (
+        <View>
+            {data.map(item =>
+                <ToListItem key={item} address={item} selected={props.selected === item} onPress={(address: string) => props.onPressItem(address)} />
+            )}
+        </View>
+    );
+}
+
+const Addressbook = (props: {
+    onPressItem: Function,
+    selected: string
+}) => {
+    const i18n = useI18n();
+    const theme = useTheme();
+    const styles = theme.styles;
+    const navigation = useNavigation<WithdrawToNavigationProp>();
+    const currentAddress = useCurrentAddress();
+    const addressBook = useAddressbook().get();
+    const result = Object.values(addressBook)
+        .sort((a, b) => a.name > b.name ? 1 : -1)
+        .map(t => t.address)
+        .filter(address => address !== currentAddress.get());
+
+    const data = [...new Set(result)];
+
+    return (
+        <View>
+            {data.map(item =>
+                <ToListItem address={item} selected={props.selected === item} onPress={(address: string) => props.onPressItem(address)} />
+            )}
+
+            <View style={{ ...styles.paddingBase, ...styles.alignCenterColumn }}>
+                <Link text={i18n.t('new_contact')} onPress={() => navigation.navigate('NewContact')} />
+            </View>
+        </View>
+    );
+}
+
+const ToListItem = (props: {
     address: string,
     onPress: Function,
     selected: boolean
 }) => {
 
+    const account = useWallet(props.address);
+    const contact = useContact(props.address);
+    let name = '';
+
+    if (account.get()) {
+        name = account.name.get();
+    }
+    else if (contact.get()) {
+        name = contact.name.get();
+    }
+
     return (
         <ListItemSelected
-            ItemComponent={() => <AccountListItem address={props.address} />}
+            ItemComponent={() => <AddressListItem address={props.address} name={name} />}
             selected={props.selected}
             onPress={() => props.onPress(props.address)}
+            onLongPress={() => SheetManager.show('addressbook_item', { payload: { address: props.address } })}
         />
     )
 }

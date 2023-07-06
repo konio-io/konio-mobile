@@ -15,7 +15,8 @@ export const getTheme = () : Theme => {
         base: 14,
         small: 12,
         medium: 16,
-        large: 20
+        large: 22,
+        xlarge: 26
     };
 
     const FontFamily = {

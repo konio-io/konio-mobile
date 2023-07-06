@@ -7,21 +7,19 @@ import WithdrawConfirm from '../screens/WithdrawConfirm';
 import WithdrawSelectCoin from '../screens/WithdrawSelectCoin';
 import WithdrawSelectTo from '../screens/WithdrawSelectTo';
 import WithdrawAddressbook from '../screens/WithdrawAddressbook';
-import NewAddressbookItem from '../screens/NewAddressbookItem';
+import NewContact from '../screens/NewContact';
 
 const Stack = createStackNavigator<WithdrawParamList>();
 
 export default () => {
   const i18n = useI18n();
   const theme = useTheme();
-  const { FontFamily, Color, Border } = theme.vars;
+  const { FontFamily, Color } = theme.vars;
 
   return (
     <Stack.Navigator screenOptions={{
       headerStyle: {
-        backgroundColor: Color.base,
-        borderBottomColor: Border.color,
-        borderBottomWidth: Border.width
+        backgroundColor: Color.base
       },
       headerTitleStyle: {
         fontFamily: FontFamily.sans,
@@ -76,10 +74,10 @@ export default () => {
         }}
       />
       <Stack.Screen
-        name="NewAddressbookItem"
-        component={NewAddressbookItem}
+        name="NewContact"
+        component={NewContact}
         options={{
-          title: i18n.t('new_addressbook_item'),
+          title: i18n.t('new_contact'),
           presentation: 'modal'
         }}
       />

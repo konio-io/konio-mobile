@@ -94,7 +94,7 @@ export const useAddressbook = () => {
     return useHookstate(UserStore.addressbook);
 }
 
-export const useAddressbookItem = (address: string) => {
+export const useContact = (address: string) => {
     return useHookstate(UserStore.addressbook[address]);
 }
 

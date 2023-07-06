@@ -1,7 +1,6 @@
 import { FlatList, View } from 'react-native';
-import { useI18n } from '../hooks';
 import { UserStore } from '../stores';
-import { setLocale, showToast } from '../actions';
+import { setLocale } from '../actions';
 import { ListItemSelected, Separator, Text, Screen } from '../components';
 import { useHookstate } from '@hookstate/core';
 import { OS_LOCALE } from '../lib/Constants';
@@ -32,9 +31,7 @@ export const ListItem = (props: {
     label: string
 }) => {
 
-  const i18n = useI18n();
   const locale = useHookstate(UserStore.locale).get();
-
   const ItemComponent = () => (
     <View>
       <Text>{props.label}</Text>

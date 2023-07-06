@@ -1,11 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
-import { SettingNavigationProp } from '../types/navigation';
+import { SettingMenuNavigationProp } from '../types/navigation';
 import { useI18n } from '../hooks';
-import { Separator, Screen } from '../components';
+import { Screen } from '../components';
 import ListItem from '../components/ListItem';
 
 export default () => {
-  const navigation = useNavigation<SettingNavigationProp>();
+  const navigation = useNavigation<SettingMenuNavigationProp>();
   const i18n = useI18n();
 
   return (
@@ -18,16 +18,12 @@ export default () => {
         onPress={() => navigation.navigate('ChangeNetwork')}
       />
 
-      <Separator/>
-
       <ListItem
         title={i18n.t('theme')}
         name={i18n.t('theme')}
         description={i18n.t('change_theme_desc')}
         onPress={() => navigation.navigate('ChangeTheme')}
       />
-
-      <Separator/>
 
       <ListItem
         title={i18n.t('locale')}
@@ -36,16 +32,12 @@ export default () => {
         onPress={() => navigation.navigate('ChangeLocale')}
       />
 
-      <Separator/>
-
       <ListItem
         title={i18n.t('security')}
         name={i18n.t('security')}
         description={i18n.t('security_desc')}
         onPress={() => navigation.navigate('Security')}
       />
-
-      <Separator/>
 
       <ListItem
         title={i18n.t('advanced')}

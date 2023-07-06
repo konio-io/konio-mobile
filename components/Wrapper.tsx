@@ -1,4 +1,4 @@
-import { View, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import { useTheme } from '../hooks';
 import type { Theme } from '../types/store';
 
@@ -9,20 +9,12 @@ export default (props: {
     const theme = useTheme();
     const styles = createStyles(theme);
 
-    if (props.type === 'full') {
-        return (
-            <View style={styles.wrapperFull}>
-                {props.children}
-            </View>
-        );
-    }
-
     return (
-        <View style={styles.wrapperCentered}>
+        <ScrollView contentContainerStyle={styles.wrapperCentered}>
             <View style={styles.main}>
                 {props.children}
             </View>
-        </View>
+        </ScrollView>
     );
 }
 
@@ -31,11 +23,9 @@ const createStyles = (theme: Theme) => {
 
     return StyleSheet.create({
         ...theme.styles,
-        wrapperFull: {
-            flex: 1, 
-            padding: Spacing.base, 
-            rowGap: Spacing.base,
-            backgroundColor: Color.base
+        main: {
+            width: 300,
+            rowGap: Spacing.medium
         },
         wrapperCentered: {
             flex: 1, 

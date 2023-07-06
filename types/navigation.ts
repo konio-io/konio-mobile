@@ -141,7 +141,7 @@ export type WithdrawParamList = {
         selected?: string,
         contractId?: string,
     },
-    NewAddressbookItem: undefined
+    NewContact: undefined
 }
 export type WithdrawToNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawTo'>;
 export type WithdrawToRouteProp = RouteProp<WithdrawParamList, 'WithdrawTo'>;
@@ -155,5 +155,5 @@ export type WithdrawSelectToNavigationProp = StackNavigationProp<WithdrawParamLi
 export type WithdrawSelectToRouteProp = RouteProp<WithdrawParamList, 'WithdrawSelectTo'>;
 export type WithdrawAddressbookNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawAddressbook'>;
 export type WithdrawAddressbookRouteProp = RouteProp<WithdrawParamList, 'WithdrawAddressbook'>;
-export type NewAddressbookItemNavigationProp = StackNavigationProp<WithdrawParamList, 'NewAddressbookItem'>;
-export type NewAddressbookItemRouteProp = RouteProp<WithdrawParamList, 'NewAddressbookItem'>;
+export type NewContactNavigationProp = StackNavigationProp<WithdrawParamList, 'NewContact'>;
+export type NewContactRouteProp = RouteProp<WithdrawParamList, 'NewContact'>;

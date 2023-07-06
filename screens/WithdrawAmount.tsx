@@ -80,7 +80,7 @@ export default () => {
     return (
         <Screen>
 
-            <Wrapper type="full">
+            <View style={{...styles.flex1, ...styles.paddingBase, ...styles.rowGapSmall}}>
                 <Selector onPress={() => navigation.navigate('WithdrawSelectCoin', {
                     selected: contractId.get(), 
                     to: route.params.to
@@ -119,9 +119,9 @@ export default () => {
                         </View>
                     </View>
                 </View>
-            </Wrapper>
+            </View>
 
-            <View style={styles.screenFooter}>
+            <View style={styles.paddingBase}>
                 <Button
                     title={i18n.t('next')}
                     onPress={next}

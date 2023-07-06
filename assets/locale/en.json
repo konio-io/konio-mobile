@@ -131,7 +131,7 @@
     "recents":"Recents",
     "select_recipient_account":"Recipient account",
     "select_recipient_addressbook":"Recipient address",
-    "new_addressbook_item":"New address",
+    "new_contact":"New contact",
     "name":"Name",
     "address":"Address",
     "missing_address":"Missing address",
@@ -152,5 +152,12 @@
     "are_you_sure":"Are you sure?",
     "are_you_sure_replace_network":"A network with the same chain ID already exists. Are you sure do you want replace it?",
     "edit_account":"Edit account",
-    "default":"Default"
+    "default":"Default",
+    "total_balance":"Total balance",
+    "transactions":"Transactions",
+    "ex_my_account_name":"Ex: My Account",
+    "add_contact":"Add contact",
+    "ex_contact_name":"Ex: Flavio",
+    "ex_address":"Ex: 1Pbh4S8iSXRJrsa4rm4DKSBr9QhbPA4Sxj",
+    "ex_contract_id":"Ex: 18tWNU7E4yuQzz7hMVpceb9ixmaWLVyQsr"
   }

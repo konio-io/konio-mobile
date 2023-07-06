@@ -39,16 +39,16 @@ function DrawerContent(props: any) {
                 <View style={styles.currentWalletContainer}>
                     <AccountAvatar size={48} address={currentWallet.address} />
                     <View>
-                        <Text style={styles.textTitle}>{currentWallet.name}</Text>
-                        <Address address={currentWallet.address} compress={true} copiable={true} />
+                        <Text style={styles.textLarge}>{currentWallet.name}</Text>
+                        <Address address={currentWallet.address} copiable={true} />
                     </View>
                 </View>
-
 
                 <Separator />
 
                 {Object.values(wallets).map(wallet => wallet.address !== currentAddress.get() &&
                     <DrawerItem
+                        labelStyle={styles.text}
                         key={wallet.address}
                         label={wallet.name}
                         icon={() => <AccountAvatar size={28} address={wallet.address} />}
@@ -62,6 +62,7 @@ function DrawerContent(props: any) {
                 )}
 
                 <DrawerItem
+                    labelStyle={styles.text}
                     label={i18n.t('add_account')}
                     icon={({ size, color }) => <View style={styles.drawerIconContainer}><AntDesign name="plus" size={size} color={color} /></View>}
                     onPress={() => {
@@ -74,6 +75,7 @@ function DrawerContent(props: any) {
                 <Separator />
 
                 <DrawerItem
+                    labelStyle={styles.text}
                     label={i18n.t('settings')}
                     icon={({ size, color }) => <View style={styles.drawerIconContainer}><AntDesign name="setting" size={size} color={color} /></View>}
                     onPress={() => {
@@ -121,7 +123,7 @@ function DrawerContent(props: any) {
 const Drawer = createDrawerNavigator();
 
 export default () => {
-    useLocker({ key: 'app', initialValue: true });
+    //useLocker({ key: 'app', initialValue: true });
 
     return (
         <Drawer.Navigator

@@ -1,4 +1,4 @@
-import { Wrapper, Screen, TextInput, Button } from "../components"
+import { Screen, TextInput, Button, Text } from "../components"
 import { useI18n, useTheme, useWallet } from "../hooks"
 import { useHookstate } from "@hookstate/core";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -23,15 +23,17 @@ export default () => {
 
     return (
         <Screen>
-            <Wrapper type="full">
+            <View style={{...styles.flex1, ...styles.paddingBase, ...styles.rowGapSmall}}>
                 <TextInput
+                    autoFocus={true}
                     value={name.get()}
                     onChangeText={(v: string) => name.set(v)}
                     placeHolder={i18n.t('name')}
                 />
-            </Wrapper>
+                <Text style={styles.textSmall}>{i18n.t('ex_my_account_name')}</Text>
+            </View>
 
-            <View style={styles.screenFooter}>
+            <View style={styles.paddingBase}>
                 <Button
                     title={i18n.t('save')}
                     onPress={() => save()}

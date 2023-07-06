@@ -16,7 +16,7 @@ export default () => {
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: Color.base
+          backgroundColor: Color.base,
         },
         headerTitleStyle: {
           fontFamily: FontFamily.sans,

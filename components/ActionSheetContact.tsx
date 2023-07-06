@@ -1,5 +1,5 @@
 import { SheetProps } from "react-native-actions-sheet";
-import { deleteAddressBookItem } from "../actions";
+import { deleteContact } from "../actions";
 import { useI18n } from "../hooks";
 import ActionSheet from "./ActionSheet";
 import { AntDesign } from '@expo/vector-icons';
@@ -10,7 +10,7 @@ export default (props: SheetProps) => {
     const i18n = useI18n();
 
     const _delete = () => {
-        deleteAddressBookItem(address);
+        deleteContact(address);
     };
 
     const data = [

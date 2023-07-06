@@ -1,9 +1,8 @@
-import { StyleSheet, TouchableHighlight, View } from 'react-native';
+import { TouchableHighlight, View } from 'react-native';
 import { State } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
-import { useCurrentAddress, useTheme, useI18n, useCurrentKoin } from '../hooks';
-import { CoinList, ManaBar, CoinListItem, Screen, Link, DrawerToggler, MoreVertical } from '../components';
-import type { Theme } from '../types/store';
+import { useCurrentAddress, useTheme, useI18n, useCurrentKoin, useCoinValue, useWallet } from '../hooks';
+import { CoinList, ManaBar, CoinListItem, Screen, Link, DrawerToggler, MoreVertical, Text, Address } from '../components';
 import { AssetsCoinsNavigationProp, } from '../types/navigation';
 import Loading from './Loading';
 import { SheetManager } from "react-native-actions-sheet";
@@ -11,26 +10,49 @@ import { useEffect } from 'react';
 
 export default () => {
   const currentAddress = useCurrentAddress();
-  const navigation = useNavigation<AssetsCoinsNavigationProp>();
-
-  useEffect(() => {
-    navigation.setOptions({
-        headerTitleAlign: 'center',
-        headerLeft: () => (<DrawerToggler/>),
-        headerRight: () => (<MoreVertical onPress={() => SheetManager.show('account', { payload: { address: currentAddress.get() } })}/>),
-        title: ''
-    });
-}, [navigation]);
-
   const currentAddressOrNull: State<string> | null = currentAddress.ornull;
   if (!currentAddressOrNull) {
     return <Loading />
   }
 
+  const navigation = useNavigation<AssetsCoinsNavigationProp>();
+  const theme = useTheme();
+  const styles = theme.styles;
+  const currentKoin = useCurrentKoin();
+  const coinValue = useCoinValue(currentKoin.get());
+  const i18n = useI18n();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitleAlign: 'center',
+      headerLeft: () => (<DrawerToggler />),
+      headerRight: () => (<MoreVertical onPress={() => SheetManager.show('account', { payload: { address: currentAddress.get() } })} />),
+      title: ''
+    });
+  }, [navigation]);
+
+  const wallet = useWallet(currentAddressOrNull.get());
+
   return (
     <Screen>
-      <ManaBar />
+      <View style={{...styles.rowGapBase}}>
+        <View style={{ ...styles.directionRow, ...styles.paddingBase, ...styles.alignSpaceBetweenRow }}>
+          <View>
+            <Text style={styles.textXlarge}>${coinValue.get() && coinValue.get().toFixed(2)}</Text>
+            <Text style={styles.textSmall}>{i18n.t('total_balance')}</Text>
+          </View>
+
+          <View>
+            <Text style={styles.textMedium}>{wallet.name.get()}</Text>
+            <Address address={currentAddressOrNull.get()} copiable={true}/>
+          </View>
+        </View>
+
+        <ManaBar />
+      </View>
+
       <CoinList renderItem={(contractId: string) => <TouchableCoinListItem contractId={contractId} />} />
+
       <Footer />
     </Screen>
   );
@@ -63,33 +85,12 @@ const TouchableCoinListItem = (props: {
 const Footer = () => {
   const navigation = useNavigation<AssetsCoinsNavigationProp>();
   const theme = useTheme();
-  const styles = createStyles(theme);
+  const styles = theme.styles;
   const i18n = useI18n();
 
   return (
-    <View style={styles.addMoreContainer}>
+    <View style={{ ...styles.paddingBase, ...styles.alignCenterColumn }}>
       <Link text={i18n.t('add_more_coins')} onPress={() => navigation.navigate('NewCoin')} />
     </View>
   );
 };
-
-
-const createStyles = (theme: Theme) => {
-  const { Spacing } = theme.vars;
-
-  return StyleSheet.create({
-    ...theme.styles,
-    walletContainer: {
-      alignItems: 'center',
-      rowGap: Spacing.small
-    },
-    walletNameContainer: {
-      alignItems: 'center'
-    },
-    switchContainer: { 
-      flexDirection: 'row', 
-      alignItems: 'center', 
-      columnGap: Spacing.base
-    }
-  });
-}

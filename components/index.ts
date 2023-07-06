@@ -33,6 +33,7 @@ import ActionSheet from './ActionSheet';
 import CircleLogo from './CircleLogo';
 import MoreVertical from './MoreVertical';
 import DrawerToggler from './DrawerToggler';
+import AddressListItem from './AddressListItem';
 
 export {
     ActivityIndicator,
@@ -69,5 +70,6 @@ export {
     ActionSheet,
     CircleLogo,
     MoreVertical,
-    DrawerToggler
+    DrawerToggler,
+    AddressListItem
 }

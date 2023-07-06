@@ -1,9 +1,9 @@
 import { useHookstate } from '@hookstate/core';
-import { useNavigation, CommonActions } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import type { NewWalletSeedNavigationProp } from '../types/navigation';
 import { setCurrentWallet, addAccount, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
-import { Button, TextInput, Wrapper, Screen } from '../components';
+import { Button, TextInput, Screen, Text } from '../components';
 import { useI18n, useTheme } from '../hooks';
 import { View } from 'react-native';
 
@@ -40,16 +40,17 @@ export default () => {
 
     return (
         <Screen>
-            <Wrapper type="full">
+            <View style={{...styles.flex1, ...styles.paddingBase, ...styles.rowGapSmall}}>
                 <TextInput
                     autoFocus={true}
                     value={name.get()}
                     placeholder={i18n.t('account_name')}
                     onChangeText={(text: string) => name.set(text)}
                 />
-            </Wrapper>
+                <Text style={styles.textSmall}>{i18n.t('ex_my_account_name')}</Text>
+            </View>
 
-            <View style={styles.screenFooter}>
+            <View style={styles.paddingBase}>
                 <Button
                     title={i18n.t('add_account')}
                     onPress={() => addWallet()}

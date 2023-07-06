@@ -1,22 +1,22 @@
-import { useHookstate } from '@hookstate/core';
+import { ImmutableObject, useHookstate } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import type { NewCoinNavigationProp } from '../types/navigation';
 import { addCoin, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
-import { TextInput, Button, Screen, Text, CoinSymbol, Separator, CoinLogo } from '../components';
+import { TextInput, Button, Screen, Text, CoinLogo } from '../components';
 import { useCurrentNetworkId, useI18n } from '../hooks';
-import { FlatList, StyleSheet, TouchableHighlight, View } from 'react-native';
+import { View } from 'react-native';
 import { UserStore } from '../stores';
 import { useTheme } from '../hooks';
-import { Theme } from '../types/store';
+import { Coin } from '../types/store';
 import { DEFAULT_COINS } from '../lib/Constants';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default () => {
   const navigation = useNavigation<NewCoinNavigationProp>();
   const contractId = useHookstate('');
   const i18n = useI18n();
   const theme = useTheme();
-  const { Spacing } = theme.vars;
   const styles = theme.styles;
 
   const add = () => {
@@ -43,22 +43,25 @@ export default () => {
 
   return (
     <Screen>
-      <View style={{ padding: Spacing.base, rowGap: Spacing.small }}>
+      <View style={{...styles.paddingBase, ...styles.rowGapSmall}}>
         <TextInput
           autoFocus={true}
           value={contractId.get()}
           onChangeText={(v: string) => contractId.set(v.trim())}
           placeholder={i18n.t('contract_address')}
         />
+        <Text style={styles.textSmall}>{i18n.t('ex_contract_id')}</Text>
       </View>
 
-      <View style={{ padding: Spacing.base }}>
-        <Text style={styles.textSmall}>{i18n.t('recents')}</Text>
+      <View style={styles.paddingBase}>
+        <Text style={styles.sectionTitle}>{i18n.t('recents')}</Text>
       </View>
 
-      <RecentList onPressCoin={(cId: string) => contractId.set(cId)} />
+      <View style={{...styles.flex1, ...styles.paddingBase}}>
+        <RecentList onPressCoin={(cId: string) => contractId.set(cId)} />
+      </View>
 
-      <View style={{ padding: Spacing.base }}>
+      <View style={styles.paddingBase}>
         <Button
           title={i18n.t('add_coin')}
           onPress={() => add()}
@@ -74,51 +77,37 @@ const RecentList = (props: {
 }) => {
   const currentNetworkId = useCurrentNetworkId()
   const coins = useHookstate(UserStore.coins);
- 
+  const theme = useTheme();
+  const styles = theme.styles;
 
   const data = Object.values(coins.get())
     .filter(coin => coin.networkId === currentNetworkId.get() && !DEFAULT_COINS.includes(coin.symbol))
     .slice(0, 5);
 
-  return (
-    <FlatList
-      data={data}
-      renderItem={({ item }) => <RecentListItem contractId={item.contractId} onPress={(cId: string) => props.onPressCoin(cId)} />}
-      ItemSeparatorComponent={() => <Separator />}
-    />
-  )
+    return (
+      <View style={{...styles.directionRow, ...styles.columnGapBase}}>
+        {data.map(coin =>
+          <RecentListItem key={coin.contractId} coin={coin} onPress={(cId: string) => props.onPressCoin(cId)} />
+        )}
+      </View>
+    )
 }
 
 const RecentListItem = (props: {
-  contractId: string,
+  coin: ImmutableObject<Coin>,
   onPress: Function
 }) => {
 
   const theme = useTheme();
-  const styles = createStyles(theme);
+  const styles = theme.styles;
+  const{ Color } = theme.vars;
 
   return (
-    <TouchableHighlight onPress={() => props.onPress(props.contractId)}>
-      <View style={styles.listItemContainer}>
-
-        <View style={styles.listItemContainerInternal}>
-          <CoinLogo contractId={props.contractId} size={36} />
-          <CoinSymbol contractId={props.contractId} />
-        </View>
-
+    <TouchableOpacity onPress={() => props.onPress(props.coin.contractId)}>
+      <View style={{...styles.rowGapSmall, ...styles.paddingSmall}}>
+          <CoinLogo contractId={props.coin.contractId} size={36} />
+          <Text>{props.coin.symbol}</Text>
       </View>
-    </TouchableHighlight>
+    </TouchableOpacity>
   );
-}
-
-const createStyles = (theme: Theme) => {
-  const { Spacing } = theme.vars;
-  return StyleSheet.create({
-    ...theme.styles,
-    listItemContainerInternal: {
-      flexDirection: 'row', 
-      columnGap: Spacing.base, 
-      alignItems: 'center'
-    }
-  })
 }

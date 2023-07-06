@@ -1,15 +1,15 @@
 import { View, StyleSheet } from "react-native";
 import AccountAvatar from "./AccountAvatar";
 import Text from "./Text";
-import { useTheme, useWallet } from "../hooks";
+import { useTheme } from "../hooks";
 import Address from "./Address";
 import type { Theme } from "../types/store";
 
 export default (props: {
     address: string
+    name?: string
 }) => {
 
-    const wallet = useWallet(props.address).get();
     const theme = useTheme();
     const styles = createStyles(theme);
 
@@ -17,8 +17,10 @@ export default (props: {
         <View style={styles.container}>
             <AccountAvatar size={36} address={props.address} />
             <View>
-                <Text>{wallet.name}</Text>
-                <Address address={props.address} copiable={true}/>
+                {props.name &&
+                    <Text style={styles.listItemTitle}>{props.name}</Text>
+                }
+                <Address address={props.address} />
             </View>
         </View>
     );
@@ -30,7 +32,6 @@ const createStyles = (theme: Theme) => {
     return StyleSheet.create({
         ...theme.styles,
         container: {
-            flex: 1,
             flexDirection: 'row',
             columnGap: Spacing.base,
             alignItems: 'center'

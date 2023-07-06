@@ -2,8 +2,8 @@ import { StyleSheet, View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { CoinRouteProp, AssetsNavigationProp } from '../types/navigation';
 import type { Theme } from '../types/store';
-import { Button, TransactionList, Address, Screen, MoreVertical } from '../components';
-import { useCoin, useTheme } from '../hooks';
+import { Button, TransactionList, Address, Screen, MoreVertical, Text, CoinLogo, Wrapper } from '../components';
+import { useCoin, useCoinBalance, useCoinValue, useI18n, useTheme } from '../hooks';
 import { Feather } from '@expo/vector-icons';
 import { useEffect } from 'react';
 import { SheetManager } from "react-native-actions-sheet";
@@ -15,12 +15,14 @@ export default () => {
     const walletCoin = useCoin(route.params.contractId);
     const coin = walletCoin.get();
     const theme = useTheme();
-    const styles = createStyles(theme);
+    const styles = theme.styles;
+    const coinBalance = useCoinBalance(route.params.contractId);
+    const coinValue = useCoinValue(route.params.contractId);
+    const i18n = useI18n();
 
     useEffect(() => {
         navigation.setOptions({
-            headerTitleAlign: 'center',
-            title: walletCoin.symbol.get(),
+            title: '',
             headerRight: () => {
                 if (!DEFAULT_COINS.includes(coin.symbol)) {
                     return (
@@ -35,76 +37,53 @@ export default () => {
 
     return (
         <Screen>
-            <View style={styles.header}>
+            <View style={{ ...styles.paddingBase, ...styles.rowGapLarge }}>
 
-                <View style={styles.headerContent}>
-                    <View style={styles.titleContent}>
-                        <Address address={coin.contractId} copiable={true} compress={true} />
+                <View style={{ ...styles.directionRow, ...styles.alignSpaceBetweenRow, ...styles.alignCenterColumn }}>
+                    <View>
+                        <View>
+                            <Text style={styles.textXlarge}>${coinValue.get().toFixed(2)}</Text>
+                            <Text style={styles.textMedium}>{coinBalance.get()} {walletCoin.symbol.get()}</Text>
+                        </View>
                     </View>
 
-                    {walletCoin.symbol.get() !== 'VHP' &&
-                        <View style={styles.buttonsContainer}>
-                            <Button
-                                style={{ flex: 1 }}
-                                title="Send"
-                                onPress={() => {
-                                    navigation.navigate('Withdraw', {
-                                        screen: 'WithdrawTo',
-                                        params: {
-                                            contractId: route.params.contractId
-                                        }
-                                    });
-                                }}
-                                icon={<Feather name="arrow-up-right" />}
-                            />
-                            <Button
-                                style={{ flex: 1 }}
-                                title="Receive"
-                                onPress={() => navigation.navigate('Deposit')}
-                                icon={<Feather name="arrow-down-right" />}
-                                type='secondary'
-                            />
-                        </View>
-                    }
+                    <View style={{ ...styles.alignCenterColumn, ...styles.rowGapSmall }}>
+                        <CoinLogo size={48} contractId={route.params.contractId} />
+                        <Address address={coin.contractId} copiable={true} length={3} />
+                    </View>
                 </View>
 
+                {walletCoin.symbol.get() !== 'VHP' &&
+                    <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
+                        <Button
+                            style={{ flex: 1 }}
+                            title="Send"
+                            onPress={() => {
+                                navigation.navigate('Withdraw', {
+                                    screen: 'WithdrawTo',
+                                    params: {
+                                        contractId: route.params.contractId
+                                    }
+                                });
+                            }}
+                            icon={<Feather name="arrow-up-right" />}
+                        />
+                        <Button
+                            style={{ flex: 1 }}
+                            title="Receive"
+                            onPress={() => navigation.navigate('Deposit')}
+                            icon={<Feather name="arrow-down-right" />}
+                            type='secondary'
+                        />
+                    </View>
+                }
             </View>
 
+            <View style={{ ...styles.paddingBase }}>
+                <Text style={styles.sectionTitle}>{i18n.t('transactions')}</Text>
+            </View>
+            
             <TransactionList contractId={route.params.contractId} />
-
         </Screen>
     );
-}
-
-const createStyles = (theme: Theme) => {
-    const { Color, Border, Spacing } = theme.vars;
-
-    return StyleSheet.create({
-        ...theme.styles,
-        wrapper: {
-            flex: 1,
-            backgroundColor: Color.base
-        },
-        header: {
-            height: 170,
-            borderBottomWidth: Border.width,
-            borderBottomColor: Border.color,
-            backgroundColor: Color.base,
-            alignItems: 'center',
-            justifyContent: 'center',
-
-        },
-        headerContent: {
-            width: 300,
-            rowGap: Spacing.base
-        },
-        titleContent: {
-            alignItems: 'center'
-        },
-        buttonsContainer: {
-            height: 40,
-            flexDirection: 'row',
-            columnGap: Spacing.base
-        }
-    });
 }

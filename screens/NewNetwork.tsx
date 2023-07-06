@@ -17,7 +17,7 @@ export default () => {
   const navigation = useNavigation<NewNetworkNavigationProp>();
   const i18n = useI18n();
   const theme = useTheme();
-  const styles = createStyles(theme);
+  const styles = theme.styles;
   const name = useHookstate('');
   const chainId = useHookstate('');
   const rpcNode = useHookstate('');
@@ -84,9 +84,9 @@ export default () => {
 
   return (
     <Screen>
-      <Wrapper type="full">
-        <ScrollView>
-          <View style={styles.inputGroup}>
+      
+        <ScrollView contentContainerStyle={{...styles.paddingBase, ...styles.rowGapBase}}>
+          <View style={styles.rowGapSmall}>
             <TextInput
               autoFocus={true}
               value={name.get()}
@@ -95,7 +95,7 @@ export default () => {
             />
             <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.name}</Text>
           </View>
-          <View style={styles.inputGroup}>
+          <View style={styles.rowGapSmall}>
             <TextInput
               autoFocus={true}
               value={chainId.get()}
@@ -104,7 +104,7 @@ export default () => {
             />
             <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.chainId}</Text>
           </View>
-          <View style={styles.inputGroup}>
+          <View style={styles.rowGapSmall}>
             <TextInput
               autoFocus={true}
               value={rpcNode.get()}
@@ -113,7 +113,7 @@ export default () => {
             />
             <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.rpcNodes[0]}</Text>
           </View>
-          <View style={styles.inputGroup}>
+          <View style={styles.rowGapSmall}>
             <TextInput
               autoFocus={true}
               value={explorer.get()}
@@ -122,7 +122,7 @@ export default () => {
             />
             <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.explorer}</Text>
           </View>
-          <View style={styles.inputGroup}>
+          <View style={styles.rowGapSmall}>
             <TextInput
               autoFocus={true}
               value={KOIN.get()}
@@ -131,7 +131,7 @@ export default () => {
             />
             <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.coins.KOIN.contractId}</Text>
           </View>
-          <View style={styles.inputGroup}>
+          <View style={styles.rowGapSmall}>
             <TextInput
               autoFocus={true}
               value={MANA.get()}
@@ -140,7 +140,7 @@ export default () => {
             />
             <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.coins.MANA.contractId}</Text>
           </View>
-          <View style={styles.inputGroup}>
+          <View style={styles.rowGapSmall}>
             <TextInput
               autoFocus={true}
               value={VHP.get()}
@@ -151,7 +151,7 @@ export default () => {
           </View>
         </ScrollView>
         
-        <View style={styles.screenFooter}>
+        <View style={{...styles.paddingBase, ...styles.directionRow, ...styles.columnGapBase}}>
           <Button
             type='secondary'
             style={{ flex: 1 }}
@@ -167,22 +167,6 @@ export default () => {
           />
         </View>
 
-      </Wrapper>
     </Screen>
   );
-}
-
-const createStyles = (theme: Theme) => {
-  const { Spacing } = theme.vars;
-
-  return StyleSheet.create({
-    ...theme.styles,
-    inputGroup: {
-      rowGap: Spacing.small
-    },
-    screenFooter: {
-      flexDirection: 'row',
-      columnGap: Spacing.base
-    }
-  });
 }

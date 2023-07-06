@@ -8,7 +8,6 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { UnlockNavigationProp, UnlockRouteProp } from '../types/navigation';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useEffect } from 'react';
-import type { Theme } from '../types/store';
 
 export default () => {
     const route = useRoute<UnlockRouteProp>();
@@ -17,8 +16,7 @@ export default () => {
     const password = useHookstate('');
     const key = route.params.key;
     const biometric = useBiometric();
-    const theme = useTheme();
-    const styles = createStyles(theme);
+    const { styles } = useTheme();
     const preventBack = useHookstate(true);
 
     const unlockPassword = () => {
@@ -82,7 +80,7 @@ export default () => {
         <Screen>
 
             <Wrapper>
-                <View style={styles.container}>
+                <View style={styles.alignCenterColumn}>
                     <Logo />
                 </View>
 
@@ -93,14 +91,14 @@ export default () => {
                     placeholder={i18n.t('password')}
                     secureTextEntry={true}
                 />
-                <View style={styles.container}>
+                <View style={styles.alignCenterColumn}>
                     <Pressable onPress={() => navigation.navigate('ResetPassword')}>
                         <Text>{i18n.t('forgot_password')}</Text>
                     </Pressable>
                 </View>
             </Wrapper>
 
-            <View style={styles.screenFooter}>
+            <View style={styles.paddingBase}>
                 <Button
                     title={i18n.t('unlock')}
                     icon={<Feather name="unlock" />}
@@ -110,16 +108,4 @@ export default () => {
 
         </Screen >
     );
-}
-
-const createStyles = (theme: Theme) => {
-    const { Spacing } = theme.vars;
-
-    return StyleSheet.create({
-        ...theme.styles,
-        container: { 
-            marginBottom: Spacing.medium, 
-            alignItems: 'center'
-        }
-    });
 }

@@ -4,7 +4,7 @@ import { useNavigation, CommonActions, useRoute } from '@react-navigation/native
 import { WithdrawConfirmNavigationProp, WithdrawConfirmRouteProp } from '../types/navigation';
 import { withdrawCoin, confirmTransaction, showToast } from '../actions'
 import { Feather } from '@expo/vector-icons';
-import { useCoin, useTheme, useI18n, useWallet, useAddressbookItem } from '../hooks';
+import { useCoin, useTheme, useI18n, useWallet, useContact } from '../hooks';
 import { View, StyleSheet } from 'react-native';
 import type { Theme } from '../types/store';
 
@@ -18,7 +18,7 @@ export default () => {
     const note = useHookstate('');
 
     const toAccount = useWallet(to).get();
-    const toAddressbookItem = useAddressbookItem(to).get();
+    const toContact = useContact(to).get();
     const coin = useCoin(contractId).get();
     const theme = useTheme();
     const i18n = useI18n();
@@ -46,7 +46,7 @@ export default () => {
                                 state: {
                                     routes: [
                                         {
-                                            name: "Account"
+                                            name: "AssetsCoins"
                                         },
                                         {
                                             name: "Coin",
@@ -91,24 +91,25 @@ export default () => {
 
     return (
         <Screen>
-            <Wrapper type="full">
-                <View>
-                    <Text style={styles.textSmall}>{i18n.t('recipient')}</Text>
+            <View style={{...styles.flex1, ...styles.paddingBase, ...styles.rowGapMedium}}>
+                <View style={styles.rowGapSmall}>
+                    
                     <View style={styles.recipientContainer}>
-                        <AccountAvatar size={32} address={to} />
+                        <AccountAvatar size={48} address={to} />
                         <View>
                             <Text>
                                 {toAccount && toAccount.name}
-                                {!toAccount && toAddressbookItem && toAddressbookItem.name}
+                                {!toAccount && toContact && toContact.name}
                             </Text>
-                            <Address address={to} />
+                            <Address address={to} length={10}/>
                         </View>
                     </View>
+                    <Text style={styles.textSmall}>{i18n.t('recipient')}</Text>
                 </View>
 
                 <View>
-                    <Text style={styles.textSmall}>{i18n.t('amount')}</Text>
                     <Text>{amount} {coin.symbol}</Text>
+                    <Text style={styles.textSmall}>{i18n.t('amount')}</Text>
                 </View>
 
                 <TextInput
@@ -119,9 +120,9 @@ export default () => {
                     placeholder={i18n.t('note')}
                     onChangeText={(v: string) => note.set(v)}
                 />
-            </Wrapper>
+            </View>
 
-            <View style={styles.screenFooter}>
+            <View style={styles.paddingBase}>
                 <Button
                     title={i18n.t('send')}
                     onPress={send}

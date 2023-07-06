@@ -16,7 +16,7 @@ export type UserStoreState = {
     theme: string,
     biometric: boolean,
     autolock: number,
-    addressbook: Record<string,AddressbookItem>,
+    addressbook: Record<string,Contact>,
     rcLimit: string,
     version: string
 }
@@ -80,7 +80,8 @@ export type ThemeVars = {
         base: number,
         small: number,
         medium: number,
-        large: number
+        large: number,
+        xlarge: number
     },
     FontFamily: {
         sans: string
@@ -109,7 +110,7 @@ export type Theme = {
     statusBarStyle: StatusBarStyle
 }
 
-export type AddressbookItem = {
+export type Contact = {
     name: string,
     address: string
 }

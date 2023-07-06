@@ -73,7 +73,7 @@ export default () => {
                 <View style={styles.container}>
                     <View style={styles.coinListItemContainer}>
                         <View style={styles.leftContainer}>
-                            <CoinLogo contractId={network.coins.MANA.contractId.get()} size={36}/>
+                            <CoinLogo contractId={network.coins.MANA.contractId.get()} size={48}/>
                             <View>
                                 <Text style={styles.symbol}>{i18n.t('MANA')}</Text>
                                 {currentMana.get() > -1 &&
@@ -84,7 +84,7 @@ export default () => {
                                 }
                             </View>
                         </View>
-                        <Text>{currentPercent.get()}%</Text>
+                        <Text style={styles.textMedium}>{currentPercent.get()}%</Text>
                     </View>
 
                     <View style={styles.progressBarContainer}>
@@ -109,12 +109,6 @@ const createStyles = (theme: Theme) => {
             justifyContent: 'space-between',
             alignItems: 'center',
             padding: Spacing.base
-        },
-        symbol: {
-            fontFamily: FontFamily.sans,
-            fontSize: FontSize.base,
-            fontWeight: 'bold',
-            color: Color.baseContrast
         },
         balance: {
             fontFamily: FontFamily.sans,

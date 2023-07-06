@@ -1,6 +1,6 @@
 import { FlatList, View } from 'react-native';
 import { useNetworks, useCurrentNetworkId, useTheme, useI18n } from '../hooks';
-import { setCurrentNetwork, showToast } from '../actions';
+import { setCurrentNetwork } from '../actions';
 import { ListItemSelected, Separator, Text, Screen, Link } from '../components';
 import { SheetManager } from 'react-native-actions-sheet';
 import { useNavigation } from '@react-navigation/native';
@@ -65,7 +65,7 @@ const Footer = () => {
   const i18n = useI18n();
 
   return (
-    <View style={styles.addMoreContainer}>
+    <View style={{...styles.paddingBase, ...styles.alignCenterColumn}}>
       <Link text={i18n.t('add_network')} onPress={() => navigation.navigate('NewNetwork')} />
     </View>
   );

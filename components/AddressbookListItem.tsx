@@ -1,7 +1,7 @@
 import { View, StyleSheet } from "react-native";
 import AccountAvatar from "./AccountAvatar";
 import Text from "./Text";
-import { useTheme, useAddressbookItem } from "../hooks";
+import { useTheme, useContact } from "../hooks";
 import Address from "./Address";
 import type { Theme } from "../types/store";
 
@@ -9,7 +9,7 @@ export default (props: {
     address: string
 }) => {
 
-    const item = useAddressbookItem(props.address).get();
+    const item = useContact(props.address).get();
     const theme = useTheme();
     const styles = createStyles(theme);
 
