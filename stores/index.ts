@@ -37,7 +37,7 @@ export const UserStoreDefault: UserStoreState = {
             address: DONATION_ADDRESS
         }
     },
-    rcLimit: '100',
+    rcLimit: '95',
     version: '20230705'
 };
 export const UserStore = hookstate(
