@@ -51,7 +51,7 @@ export type Network = {
         KOIN: Coin,
         VHP: Coin,
         MANA: Coin,
-        KAP: Coin
+        KAP?: Coin
     }
 }
 

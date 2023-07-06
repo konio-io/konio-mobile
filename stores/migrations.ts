@@ -27,7 +27,8 @@ const migrations : Record<string,Function> = {
                 name: 'Adrihoke',
                 address: DONATION_ADDRESS
             }
-        })
+        });
+        UserStore.rcLimit.set('95');
     }
 }
 

@@ -10,8 +10,10 @@ import { UserStore } from '../stores';
 import { useTheme } from '../hooks';
 import type { Network, Theme } from '../types/store';
 import { DEFAULT_NETWORKS } from '../lib/Constants';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default () => {
+  const DEFAULT_NETWORK = Object.values(DEFAULT_NETWORKS)[0];
   const navigation = useNavigation<NewNetworkNavigationProp>();
   const i18n = useI18n();
   const theme = useTheme();
@@ -20,6 +22,9 @@ export default () => {
   const chainId = useHookstate('');
   const rpcNode = useHookstate('');
   const explorer = useHookstate('');
+  const KOIN = useHookstate('');
+  const MANA = useHookstate('');
+  const VHP = useHookstate('');
 
   const showAlert = () => {
     return Alert.alert(
@@ -55,7 +60,11 @@ export default () => {
       name: name.get(),
       chainId: chainId.get(),
       rpcNodes: [rpcNode.get()],
-      coins: { ...Object.values(DEFAULT_NETWORKS)[0].coins }, //ToDo fetch from blockchain
+      coins: { //ToDo fetch from blockchain
+        KOIN: { ...DEFAULT_NETWORK.coins.KOIN, contractId: KOIN.get() },
+        MANA: { ...DEFAULT_NETWORK.coins.MANA, contractId: MANA.get() },
+        VHP: { ...DEFAULT_NETWORK.coins.VHP, contractId: VHP.get() }
+      },
       explorer: explorer.get()
     };
 
@@ -64,69 +73,100 @@ export default () => {
   };
 
   const reset = () => {
-    const network = Object.values(DEFAULT_NETWORKS)[0];
-    name.set(network.name);
-    chainId.set(network.chainId);
-    rpcNode.set(network.rpcNodes[0]);
-    explorer.set(network.explorer);
+    name.set(DEFAULT_NETWORK.name);
+    chainId.set(DEFAULT_NETWORK.chainId);
+    rpcNode.set(DEFAULT_NETWORK.rpcNodes[0]);
+    explorer.set(DEFAULT_NETWORK.explorer);
+    KOIN.set(DEFAULT_NETWORK.coins.KOIN.contractId);
+    MANA.set(DEFAULT_NETWORK.coins.MANA.contractId);
+    VHP.set(DEFAULT_NETWORK.coins.VHP.contractId);
   };
 
   return (
     <Screen>
       <Wrapper type="full">
-        <View style={styles.inputGroup}>
-          <TextInput
-            autoFocus={true}
-            value={name.get()}
-            onChangeText={(v: string) => name.set(v)}
-            placeholder={i18n.t('name')}
-          />
-          <Text style={styles.textSmall}>Ex: "My network"</Text>
-        </View>
-        <View style={styles.inputGroup}>
-          <TextInput
-            autoFocus={true}
-            value={chainId.get()}
-            onChangeText={(v: string) => chainId.set(v)}
-            placeholder={'chain id'}
-          />
-          <Text style={styles.textSmall}>Ex: EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==</Text>
-        </View>
-        <View style={styles.inputGroup}>
-          <TextInput
-            autoFocus={true}
-            value={rpcNode.get()}
-            onChangeText={(v: string) => rpcNode.set(v)}
-            placeholder={'rpc node'}
-          />
-          <Text style={styles.textSmall}>Ex: https://api.koinosblocks.com</Text>
-        </View>
-        <View style={styles.inputGroup}>
-          <TextInput
-            autoFocus={true}
-            value={explorer.get()}
-            onChangeText={(v: string) => explorer.set(v)}
-            placeholder={'explorer'}
-          />
-          <Text style={styles.textSmall}>Ex: https://koinosblocks.com</Text>
-        </View>
-
-
+        <ScrollView>
+          <View style={styles.inputGroup}>
+            <TextInput
+              autoFocus={true}
+              value={name.get()}
+              onChangeText={(v: string) => name.set(v)}
+              placeholder={i18n.t('name')}
+            />
+            <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.name}</Text>
+          </View>
+          <View style={styles.inputGroup}>
+            <TextInput
+              autoFocus={true}
+              value={chainId.get()}
+              onChangeText={(v: string) => chainId.set(v)}
+              placeholder={'chain id'}
+            />
+            <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.chainId}</Text>
+          </View>
+          <View style={styles.inputGroup}>
+            <TextInput
+              autoFocus={true}
+              value={rpcNode.get()}
+              onChangeText={(v: string) => rpcNode.set(v)}
+              placeholder={'rpc node'}
+            />
+            <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.rpcNodes[0]}</Text>
+          </View>
+          <View style={styles.inputGroup}>
+            <TextInput
+              autoFocus={true}
+              value={explorer.get()}
+              onChangeText={(v: string) => explorer.set(v)}
+              placeholder={'explorer'}
+            />
+            <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.explorer}</Text>
+          </View>
+          <View style={styles.inputGroup}>
+            <TextInput
+              autoFocus={true}
+              value={KOIN.get()}
+              onChangeText={(v: string) => KOIN.set(v)}
+              placeholder={'KOIN contract ID'}
+            />
+            <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.coins.KOIN.contractId}</Text>
+          </View>
+          <View style={styles.inputGroup}>
+            <TextInput
+              autoFocus={true}
+              value={MANA.get()}
+              onChangeText={(v: string) => MANA.set(v)}
+              placeholder={'MANA contract ID'}
+            />
+            <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.coins.MANA.contractId}</Text>
+          </View>
+          <View style={styles.inputGroup}>
+            <TextInput
+              autoFocus={true}
+              value={VHP.get()}
+              onChangeText={(v: string) => VHP.set(v)}
+              placeholder={'VHP contract ID'}
+            />
+            <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.coins.VHP.contractId}</Text>
+          </View>
+        </ScrollView>
+        
         <View style={styles.screenFooter}>
           <Button
             type='secondary'
-            style={{flex: 1}}
+            style={{ flex: 1 }}
             title={i18n.t('default')}
             onPress={() => reset()}
             icon={<Feather name="refresh-cw" />}
           />
           <Button
-            style={{flex: 1}}
+            style={{ flex: 1 }}
             title={i18n.t('add_network')}
             onPress={() => add()}
             icon={<Feather name="plus" />}
           />
         </View>
+
       </Wrapper>
     </Screen>
   );
