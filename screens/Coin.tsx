@@ -22,14 +22,13 @@ export default () => {
             headerTitleAlign: 'center',
             title: walletCoin.symbol.get(),
             headerRight: () => {
-                //if (!DEFAULT_COINS.includes(coin.symbol)) {
+                if (!DEFAULT_COINS.includes(coin.symbol)) {
                     return (
                         <MoreVertical onPress={() => {
                             SheetManager.show('coin', { payload: { contractId: route.params.contractId } });
                         }} />
                     )
-                //}
-                return <></>;
+                }
             }
         });
     }, [walletCoin, navigation]);
