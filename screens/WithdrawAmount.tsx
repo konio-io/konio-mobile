@@ -1,4 +1,4 @@
-import { Button, Screen, Selector, Wrapper, CoinListItem, Text, TextInput } from "../components"
+import { Button, Screen, Selector, CoinListItem, Text, TextInput } from "../components"
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { WithdrawAmountNavigationProp, WithdrawAmountRouteProp } from "../types/navigation";
 import { useCoinBalance, useTheme, useI18n, useCurrentKoin, useCoinValue } from "../hooks";
@@ -32,7 +32,7 @@ export default () => {
 
     useEffect(() => {
         if (amount.get()) {
-            const v = (value.get() * parseFloat(amount.get()))/parseFloat(balance.get());
+            const v = (value.get() * parseFloat(amount.get())) / parseFloat(balance.get());
             if (!isNaN(v)) {
                 amountUsd.set(v.toString());
             }
@@ -70,28 +70,29 @@ export default () => {
 
     const isOutAmount = parseFloat(amount.get()) > parseFloat(balance.get());
     const amountStyle = isOutAmount ?
-        {...styles.amount, color: Color.error} :
+        { ...styles.amount, color: Color.error } :
         styles.amount;
 
     const amountUsdStyle = isOutAmount ?
-        {...styles.text, color: Color.error} :
+        { ...styles.text, color: Color.error } :
         styles.text;
 
     return (
         <Screen>
 
-            <View style={{...styles.flex1, ...styles.paddingBase, ...styles.rowGapSmall}}>
+            <View style={{ ...styles.flex1, ...styles.paddingBase, ...styles.rowGapSmall }}>
                 <Selector onPress={() => navigation.navigate('WithdrawSelectCoin', {
-                    selected: contractId.get(), 
+                    selected: contractId.get(),
                     to: route.params.to
                 })}>
                     <View style={styles.coinSelectorContainer}>
-                        <CoinListItem contractId={contractId.get()}/>
+                        <CoinListItem contractId={contractId.get()} />
                     </View>
                 </Selector>
 
-                <View style={styles.amountContainer}>
-                    <View style={styles.amountInput}>
+                <View style={{ ...styles.flex1, ...styles.paddingBase, ...styles.alignCenterRow, ...styles.rowGapMedium }}>
+
+                    <View style={styles.rowGapSmall}>
                         <TextInput
                             autoFocus={true}
                             keyboardType='numeric'
@@ -102,9 +103,11 @@ export default () => {
                             style={amountStyle}
                         />
 
-                        {amountUsd.get() &&
-                            <Text style={amountUsdStyle}>{amountUsd.get()} USD</Text>
-                        }
+                        <View style={{ ...styles.alignCenterColumn, height: 20 }}>
+                            {amountUsd.get() &&
+                                <Text style={amountUsdStyle}>{amountUsd.get()} USD</Text>
+                            }
+                        </View>
                     </View>
 
                     <View style={styles.percContainer}>
@@ -153,21 +156,12 @@ const createStyles = (theme: Theme) => {
             fontSize: FontSize.large
         },
         coinSelectorContainer: {
-            marginRight: 40, 
+            marginRight: 40,
             height: 50
         },
-        amountContainer: {
-            rowGap: Spacing.small
-        },
         percContainer: {
-            flexDirection: 'row', 
+            flexDirection: 'row',
             columnGap: Spacing.small
-        },
-        amountInput: {
-            ...styles.textInput,
-            padding: Spacing.small,
-            alignItems: 'center',
-            justifyContent: 'center'
         }
     });
 }

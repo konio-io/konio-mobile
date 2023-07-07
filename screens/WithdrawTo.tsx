@@ -1,14 +1,13 @@
-import { Pressable, View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { Screen, TextInput, Button, Text, AccountAvatar, ListItemSelected, DrawerToggler, AddressListItem, Link } from '../components';
 import { useTheme, useI18n, useWallets, useWallet, useTransactions, useAddressbook, useContact, useCurrentAddress } from '../hooks';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { WithdrawToNavigationProp, WithdrawToRouteProp } from '../types/navigation';
 import { showToast } from '../actions';
-import { Feather, AntDesign } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { useEffect } from 'react';
 import { useHookstate } from '@hookstate/core';
 import { utils } from 'koilib';
-import type { Theme } from '../types/store';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SheetManager } from "react-native-actions-sheet";
 
@@ -16,7 +15,7 @@ export default () => {
     const route = useRoute<WithdrawToRouteProp>();
     const navigation = useNavigation<WithdrawToNavigationProp>();
     const theme = useTheme();
-    const styles = createStyles(theme);
+    const styles = theme.styles;
     const i18n = useI18n();
     const address = useHookstate('');
     const currentAddress = useCurrentAddress();
@@ -63,7 +62,7 @@ export default () => {
 
     return (
         <Screen>
-            <View style={styles.toContainer}>
+            <View style={styles.paddingBase}>
                 <To value={address.get()} onChange={(v: string) => address.set(v)} />
             </View>
 
@@ -110,8 +109,7 @@ const To = (props: {
 
     const i18n = useI18n();
     const theme = useTheme();
-    const styles = createStyles(theme);
-    const { Color } = theme.vars;
+    const styles = theme.styles;
 
     useEffect(() => {
         props.onChange(address.get());
@@ -135,25 +133,20 @@ const To = (props: {
 
     return (
         <View>
-            <View style={styles.toInputAddressContainer}>
-                {
-                    address.get() &&
-                    <AccountAvatar size={55} address={address.get()} />
-                }
-                <View style={{ flex: 1 }}>
-                    {name.get() &&
-                        <Text style={styles.textMedium}>{name.get()}</Text>
-                    }
-                    <TextInput
-                        multiline={true}
-                        autoFocus={true}
-                        style={{ ...styles.addressText, ...styles.addressContainer }}
-                        value={address.get()}
-                        onChangeText={(v: string) => { address.set(v) }}
-                        placeholder={i18n.t('select_recipient')}
-                    />
+            <TextInput
+                multiline={true}
+                autoFocus={true}
+                style={{ fontSize: 16 }}
+                value={address.get()}
+                onChangeText={(v: string) => { address.set(v) }}
+                placeholder={i18n.t('select_recipient')}
+            />
+            {name.get() &&
+                <View style={{ ...styles.directionRow, ...styles.columnGapSmall, paddingLeft: 25 }}>
+                    <AccountAvatar size={24} address={address.get()} />
+                    <Text style={styles.textSmall}>{name.get()}</Text>
                 </View>
-            </View>
+            }
         </View>
     )
 }
@@ -259,29 +252,4 @@ const ToListItem = (props: {
             onLongPress={() => SheetManager.show('addressbook_item', { payload: { address: props.address } })}
         />
     )
-}
-
-const createStyles = (theme: Theme) => {
-    const { Spacing } = theme.vars;
-
-    return StyleSheet.create({
-        ...theme.styles,
-        toContainer: {
-            padding: Spacing.base,
-            rowGap: Spacing.small
-        },
-        toInputContainer: {
-            ...theme.styles.textInput,
-            rowGap: Spacing.small
-        },
-        toInputAddressContainer: {
-            flexDirection: 'row',
-            columnGap: Spacing.small,
-            alignItems: 'center'
-        },
-        toInputIconsContainer: {
-            flexDirection: 'row',
-            columnGap: Spacing.small
-        }
-    });
 }

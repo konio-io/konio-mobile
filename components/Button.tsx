@@ -46,7 +46,7 @@ export default (props: {
 }
 
 const createStyles = (theme: Theme) => {
-    const { Color, FontFamily, Border, Spacing } = theme.vars;
+    const { Color, FontFamily, FontSize, Border, Spacing } = theme.vars;
 
     return StyleSheet.create({
         ...theme.styles,
@@ -62,6 +62,7 @@ const createStyles = (theme: Theme) => {
         },
         text: {
             fontFamily: FontFamily.sans,
+            fontSize: FontSize.base
         },
         primaryContainer: {
             backgroundColor: Color.primary,

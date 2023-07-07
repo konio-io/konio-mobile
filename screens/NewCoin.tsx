@@ -43,21 +43,21 @@ export default () => {
 
   return (
     <Screen>
-      <View style={{...styles.paddingBase, ...styles.rowGapSmall}}>
+      <View style={{ ...styles.paddingBase }}>
         <TextInput
           autoFocus={true}
           value={contractId.get()}
           onChangeText={(v: string) => contractId.set(v.trim())}
           placeholder={i18n.t('contract_address')}
+          note={i18n.t('ex_contract_id')}
         />
-        <Text style={styles.textSmall}>{i18n.t('ex_contract_id')}</Text>
       </View>
 
       <View style={styles.paddingBase}>
         <Text style={styles.sectionTitle}>{i18n.t('recents')}</Text>
       </View>
 
-      <View style={{...styles.flex1, ...styles.paddingBase}}>
+      <View style={{ ...styles.flex1, ...styles.paddingBase }}>
         <RecentList onPressCoin={(cId: string) => contractId.set(cId)} />
       </View>
 
@@ -84,13 +84,13 @@ const RecentList = (props: {
     .filter(coin => coin.networkId === currentNetworkId.get() && !DEFAULT_COINS.includes(coin.symbol))
     .slice(0, 5);
 
-    return (
-      <View style={{...styles.directionRow, ...styles.columnGapBase}}>
-        {data.map(coin =>
-          <RecentListItem key={coin.contractId} coin={coin} onPress={(cId: string) => props.onPressCoin(cId)} />
-        )}
-      </View>
-    )
+  return (
+    <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
+      {data.map(coin =>
+        <RecentListItem key={coin.contractId} coin={coin} onPress={(cId: string) => props.onPressCoin(cId)} />
+      )}
+    </View>
+  )
 }
 
 const RecentListItem = (props: {
@@ -100,13 +100,13 @@ const RecentListItem = (props: {
 
   const theme = useTheme();
   const styles = theme.styles;
-  const{ Color } = theme.vars;
+  const { Color } = theme.vars;
 
   return (
     <TouchableOpacity onPress={() => props.onPress(props.coin.contractId)}>
-      <View style={{...styles.rowGapSmall, ...styles.paddingSmall}}>
-          <CoinLogo contractId={props.coin.contractId} size={36} />
-          <Text>{props.coin.symbol}</Text>
+      <View style={{ ...styles.rowGapSmall, ...styles.paddingSmall }}>
+        <CoinLogo contractId={props.coin.contractId} size={36} />
+        <Text>{props.coin.symbol}</Text>
       </View>
     </TouchableOpacity>
   );

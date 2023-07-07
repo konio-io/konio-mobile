@@ -26,22 +26,19 @@ export const getStyles = (themeVars : ThemeVars) => {
             color: Color.error,
             fontFamily: FontFamily.sans
         },
-        textInput: {
-            borderWidth: Border.width,
-            borderColor: Border.color,
-            borderRadius: Border.radius,
+        textInputContainer: {
             fontFamily: FontFamily.sans,
-            padding: Spacing.small,
             backgroundColor: Color.base,
             color: Color.baseContrast,
             minHeight: 48
         },
-        textInputMultiline: {
-            borderWidth: Border.width,
-            borderColor: Border.color,
-            borderRadius: Border.radius,
+        textInputText: {
             fontFamily: FontFamily.sans,
-            padding: Spacing.small,
+            fontSize: FontSize.base,
+            color: Color.baseContrast,
+        },
+        textInputMultiline: {
+            fontFamily: FontFamily.sans,
             backgroundColor: Color.base,
             color: Color.baseContrast,
             minHeight: 100
