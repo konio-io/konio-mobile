@@ -10,13 +10,15 @@ const Stack = createStackNavigator<AssetsParamList>();
 export default () => {
   const i18n = useI18n();
   const theme = useTheme();
-  const { FontFamily, Color } = theme.vars;
+  const { FontFamily, Color, Border } = theme.vars;
 
   return (
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
           backgroundColor: Color.base,
+          borderBottomColor: Border.color,
+          borderBottomWidth: Border.width
         },
         headerTitleStyle: {
           fontFamily: FontFamily.sans,

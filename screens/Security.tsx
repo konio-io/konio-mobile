@@ -1,19 +1,17 @@
-import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { SettingNavigationProp } from '../types/navigation';
-import { useTheme, useI18n, useBiometric } from '../hooks';
-import { Screen, Text, Switch, Separator } from '../components';
+import { SecurityNavigationProp } from '../types/navigation';
+import { useI18n, useBiometric } from '../hooks';
+import { Screen, Switch } from '../components';
 import ListItem from '../components/ListItem';
 import { setBiometric } from '../actions';
 import { useEffect } from 'react';
 import { useHookstate } from '@hookstate/core';
 import * as LocalAuthentication from "expo-local-authentication";
+import { Feather, Ionicons } from '@expo/vector-icons';
 
 export default () => {
-    const navigation = useNavigation<SettingNavigationProp>();
+    const navigation = useNavigation<SecurityNavigationProp>();
     const i18n = useI18n();
-    const theme = useTheme();
-    const styles = theme.styles;
     const biometric = useBiometric();
 
     const biometricSupport = useHookstate(false);
@@ -33,47 +31,45 @@ export default () => {
     return (
         <Screen>
             <ListItem
-                title={i18n.t('change_password')}
+                content={i18n.t('change_password')}
                 name={i18n.t('change_password')}
                 description={i18n.t('change_password_desc')}
                 onPress={() => navigation.navigate('ChangePassword')}
+                icon={(<Feather name="key" />)}
             />
 
-            <Separator/>
-
             <ListItem
-                title={i18n.t('show_seed')}
+                content={i18n.t('show_seed')}
                 name={i18n.t('show_seed')}
                 description={i18n.t('show_seed_desc')}
                 onPress={() => navigation.navigate('ShowSeed')}
+                icon={(<Feather name="eye" />)}
             />
 
-            <Separator/>
-
             <ListItem
-                title={i18n.t('change_autolock')}
+                content={i18n.t('change_autolock')}
                 name={i18n.t('change_autolock')}
                 description={i18n.t('change_autolock_desc')}
                 onPress={() => navigation.navigate('ChangeAutolock')}
+                icon={(<Feather name="lock" />)}
             />
 
             {biometricSupport.get() === true && fingerprint.get() === true &&
-                <View>
-                    <Separator/>
-
-                    <View style={styles.listItemContainer}>
-                        <View>
-                            <Text style={styles.listItemTitle}>{i18n.t('biometric_unlock')}</Text>
-                            <Text style={styles.textSmall}>{i18n.t('enable_biometric_unlock')}</Text>
-                        </View>
-
+                <ListItem
+                    content={i18n.t('biometric_unlock')}
+                    name={i18n.t('enable_biometric_unlock')}
+                    description={i18n.t('biometric_unlock')}
+                    onPress={() => navigation.navigate('ChangeAutolock')}
+                    icon={(<Ionicons name="ios-finger-print-outline" />)}
+                    right={(
                         <Switch
                             onValueChange={() => setBiometric(!biometric.get())}
                             value={biometric.get()}
                         />
-                    </View>
-                </View>
+                    )}
+                />
             }
+            
         </Screen>
     );
 }

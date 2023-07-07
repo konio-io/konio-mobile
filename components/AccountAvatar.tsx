@@ -41,7 +41,7 @@ const createStyles = (theme: Theme) => {
         container: {
             borderWidth: Border.width,
             borderColor: Border.color,
-            borderRadius: Border.radius,
+            borderRadius: 3,
             justifyContent: 'center',
             alignItems: 'center',
             padding: 1,

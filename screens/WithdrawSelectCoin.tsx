@@ -17,14 +17,12 @@ const ListItem = (props: {
     const route = useRoute<WithdrawSelectCoinRouteProp>();
     const navigation = useNavigation<WithdrawSelectCoinNavigationProp>();
 
-    const ItemComponent = () => (
-        <View style={{ flex: 1 }}>
-            <CoinListItem contractId={props.contractId} />
-        </View>
-    );
-
     return <ListItemSelected
-        ItemComponent={ItemComponent}
+        ItemComponent={(
+            <View style={{ flex: 1 }}>
+                <CoinListItem contractId={props.contractId} />
+            </View>
+        )}
         selected={route.params.selected === props.contractId}
         onPress={() => {
             navigation.navigate('WithdrawAmount', {

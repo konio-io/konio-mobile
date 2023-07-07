@@ -17,7 +17,6 @@ export default () => {
       <FlatList
         data={Object.values(networks.get())}
         renderItem={({ item }) => <ListItem network={item} />}
-        ItemSeparatorComponent={() => <Separator />}
       />
       <Footer />
     </Screen>
@@ -27,19 +26,10 @@ export default () => {
 export const ListItem = (props: {
   network: ImmutableObject<Network>
 }) => {
-  const i18n = useI18n();
   const currentNetworkId = useCurrentNetworkId().get();
   const theme = useTheme();
   const styles = theme.styles;
   const { network } = props;
-
-  const ItemComponent = () => (
-    <View>
-      <Text>{network.name}</Text>
-      <Text style={styles.textSmall}>{network.rpcNodes[0]}</Text>
-    </View>
-  );
-
   const selected = currentNetworkId === network.chainId;
 
   const changeNetwork = () => {
@@ -47,7 +37,12 @@ export const ListItem = (props: {
   }
 
   return <ListItemSelected
-    ItemComponent={ItemComponent}
+    ItemComponent={(
+      <View>
+        <Text>{network.name}</Text>
+        <Text style={styles.textSmall}>{network.rpcNodes[0]}</Text>
+      </View>
+    )}
     selected={selected}
     onPress={changeNetwork}
     onLongPress={() => {
@@ -65,7 +60,7 @@ const Footer = () => {
   const i18n = useI18n();
 
   return (
-    <View style={{...styles.paddingBase, ...styles.alignCenterColumn}}>
+    <View style={{ ...styles.paddingBase, ...styles.alignCenterColumn }}>
       <Link text={i18n.t('add_network')} onPress={() => navigation.navigate('NewNetwork')} />
     </View>
   );

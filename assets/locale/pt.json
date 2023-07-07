@@ -132,7 +132,7 @@
   "recents": "Recentes",
   "select_recipient_account": "Conta do destinatário",
   "select_recipient_addressbook": "Endereço do destinatário",
-  "new_addressbook_item": "Novo endereço",
+  "new_contact": "Novo endereço",
   "name": "Nome",
   "address": "Endereço",
   "missing_address": "Endereço em falta",
@@ -153,5 +153,9 @@
   "are_you_sure": "Tem certeza?",
   "are_you_sure_replace_network": "Já existe uma rede com o mesmo ID de cadeia. Tem certeza de que deseja substituí-la?",
   "edit_account": "Editar conta",
-  "default": "Padrão"
+  "default": "Padrão",
+  "total_balance": "Saldo total",
+  "transactions": "Transações",
+  "add_contact": "Adicionar contato",
+  "add_to_addressbook": "Adicionar à agenda de endereços"
 }

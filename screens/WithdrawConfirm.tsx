@@ -91,9 +91,9 @@ export default () => {
 
     return (
         <Screen>
-            <View style={{...styles.flex1, ...styles.paddingBase, ...styles.rowGapMedium}}>
+            <View style={{ ...styles.flex1, ...styles.paddingBase, ...styles.rowGapMedium }}>
                 <View style={styles.rowGapSmall}>
-                    
+                    <Text style={styles.textSmall}>{i18n.t('recipient')}</Text>
                     <View style={styles.recipientContainer}>
                         <AccountAvatar size={48} address={to} />
                         <View>
@@ -101,19 +101,18 @@ export default () => {
                                 {toAccount && toAccount.name}
                                 {!toAccount && toContact && toContact.name}
                             </Text>
-                            <Address address={to} length={10}/>
+                            <Address address={to} length={10} />
                         </View>
                     </View>
-                    <Text style={styles.textSmall}>{i18n.t('recipient')}</Text>
+
                 </View>
 
                 <View>
-                    <Text>{amount} {coin.symbol}</Text>
                     <Text style={styles.textSmall}>{i18n.t('amount')}</Text>
+                    <Text>{amount} {coin.symbol}</Text>
                 </View>
 
                 <TextInput
-                    style={{ ...styles.textInputMultiline }}
                     multiline={true}
                     autoFocus={true}
                     value={note.get()}
@@ -140,8 +139,8 @@ const createStyles = (theme: Theme) => {
     return StyleSheet.create({
         ...theme.styles,
         recipientContainer: {
-            flexDirection: 'row', 
-            alignItems: 'center', 
+            flexDirection: 'row',
+            alignItems: 'center',
             columnGap: Spacing.small
         }
     });

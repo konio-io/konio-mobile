@@ -155,9 +155,6 @@
     "default":"Default",
     "total_balance":"Total balance",
     "transactions":"Transactions",
-    "ex_my_account_name":"Ex: My Account",
     "add_contact":"Add contact",
-    "ex_contact_name":"Ex: Flavio",
-    "ex_address":"Ex: 1Pbh4S8iSXRJrsa4rm4DKSBr9QhbPA4Sxj",
-    "ex_contract_id":"Ex: 18tWNU7E4yuQzz7hMVpceb9ixmaWLVyQsr"
+    "add_to_addressbook":"Add to addressbook"
   }

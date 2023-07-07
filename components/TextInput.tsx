@@ -5,6 +5,7 @@ import { Feather } from '@expo/vector-icons';
 import React, { useEffect } from 'react';
 import { useHookstate } from '@hookstate/core';
 import Text from './Text';
+import TextInputAction from './TextInputAction';
 
 export default (props: any) => {
 
@@ -32,6 +33,7 @@ export default (props: any) => {
             ...defaultProps.style,
             ...props.style
         },
+        textAlignVertical: "top", //android multiline vertical align issue
         value: value.get(),
         onChangeText: (v: string) => {
             value.set(v)
@@ -40,26 +42,34 @@ export default (props: any) => {
     };
 
     return (
-        <View>
-            <View style={{ ...styles.textInputContainer, ...styles.directionRow, ...styles.alignCenterColumn, ...styles.columnGapSmall }}>
-                <Feather size={18} name="chevron-right" color={rgba(Color.baseContrast, 0.5)} />
+
+        <View style={{ ...styles.textInputContainer, ...props.styleContainer }}>
+            <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
+                <View style={{ marginTop: 2 }}>
+                    <Feather size={18} name="chevron-right" color={rgba(Color.baseContrast, 0.5)} />
+                </View>
+
                 <TextInput {...wprops} />
 
-                <View style={{ width: 18 }}>
-                    {wprops.value &&
-                        <Pressable onPress={() => {
-                            wprops.onChangeText('')
-                        }}>
-                            <Feather size={18} name="x" color={rgba(Color.baseContrast, 0.5)} />
-                        </Pressable>
-                    }
-                </View>
+                {wprops.value &&
+                    <TextInputAction
+                        onPress={() => wprops.onChangeText('')}
+                        icon={(<Feather name="x" />)}
+                    />
+                }
             </View>
+            {wprops.actions &&
+                <View style={styles.alignEndColumn}>
+                    {wprops.actions}
+                </View>
+            }
+
             {wprops.note &&
                 <View style={{ paddingLeft: 25 }}>
                     <Text style={styles.textSmall}>{wprops.note}</Text>
                 </View>
             }
         </View>
+
     );
 }

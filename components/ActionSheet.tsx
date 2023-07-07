@@ -54,7 +54,7 @@ const Item = (props: {
                 }
 
                 <View>
-                    <Text style={styles.listItemTitle}>{props.title}</Text>
+                    <Text>{props.title}</Text>
                     {props.description &&
                         <Text style={styles.textSmall}>{props.description}</Text>
                     }

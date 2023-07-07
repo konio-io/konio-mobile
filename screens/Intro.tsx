@@ -30,7 +30,7 @@ export default () => {
                 </View>
             </Wrapper>
 
-            <View style={styles.screenFooter}>
+            <View style={styles.paddingBase}>
                 <Button
                     title={i18n.t('lets_begin')}
                     icon={<Feather name="arrow-right" />}

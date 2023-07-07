@@ -1,8 +1,7 @@
 import { View } from "react-native";
-import { Wrapper, Screen, Seed, Copiable } from "../components"
+import { Wrapper, Screen, Seed, TextInputActionCopy } from "../components"
 import { useCurrentSeed, useLocker, useTheme } from "../hooks"
 import React from "react";
-import { Feather } from '@expo/vector-icons';
 
 export default () => {
     const currentSeed = useCurrentSeed().get() ?? '';
@@ -15,14 +14,16 @@ export default () => {
     return (
         <Screen>
             <Wrapper>
-                <Copiable copy={currentSeed}>
-                    <View style={styles.textInputMultiline}>
-                        <View style={{ position: 'absolute', right: Spacing.small, bottom: Spacing.small }}>
-                            <Feather name="copy" color={Border.color} />
+
+                <View style={styles.textInputContainer}>
+                    <Seed phrase={currentSeed} />
+                    <View style={{ ...styles.alignEndColumn }}>
+                        <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
+                            <TextInputActionCopy copy={currentSeed} />
                         </View>
-                        <Seed phrase={currentSeed} />
                     </View>
-                </Copiable>
+                </View>
+
             </Wrapper>
         </Screen>
     );

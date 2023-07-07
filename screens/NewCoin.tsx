@@ -45,11 +45,11 @@ export default () => {
     <Screen>
       <View style={{ ...styles.paddingBase }}>
         <TextInput
+          style={{ fontSize: 12 }}
           autoFocus={true}
           value={contractId.get()}
           onChangeText={(v: string) => contractId.set(v.trim())}
           placeholder={i18n.t('contract_address')}
-          note={i18n.t('ex_contract_id')}
         />
       </View>
 

@@ -39,7 +39,9 @@ export default () => {
             borderTopWidth: Border.width
           },
           headerStyle: {
-            backgroundColor: Color.base
+            backgroundColor: Color.base,
+            borderBottomColor: Border.color,
+            borderBottomWidth: Border.width
           },
           headerTitleStyle: {
             fontFamily: FontFamily.sans,

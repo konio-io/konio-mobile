@@ -21,7 +21,6 @@ export default (props: {
         <FlatList
             data={transactions.get().map(t => t.transactionId)}
             renderItem={({ item }) => <TransactionListItem transactionId={item} />}
-            ItemSeparatorComponent={() => <Separator />}
         />
     );
 }

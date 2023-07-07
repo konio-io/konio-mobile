@@ -132,7 +132,7 @@
   "recents": "Kürzliche",
   "select_recipient_account": "Empfängerkonto",
   "select_recipient_addressbook": "Empfängeradresse",
-  "new_addressbook_item": "Neue Adresse",
+  "new_contact": "Neue Adresse",
   "name": "Name",
   "address": "Adresse",
   "missing_address": "Fehlende Adresse",
@@ -153,5 +153,9 @@
   "are_you_sure": "Bist du sicher?",
   "are_you_sure_replace_network": "Ein Netzwerk mit derselben Ketten-ID existiert bereits. Bist du sicher, dass du es ersetzen möchtest?",
   "edit_account": "Konto bearbeiten",
-  "default":"Standard"
+  "default": "Standard",
+  "total_balance": "Gesamtguthaben",
+  "transactions": "Transaktionen",
+  "add_contact": "Kontakt hinzufügen",
+  "add_to_addressbook": "Zum Adressbuch hinzufügen"
 }

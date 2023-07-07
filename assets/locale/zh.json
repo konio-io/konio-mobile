@@ -132,7 +132,7 @@
   "recents": "最近",
   "select_recipient_account": "收件人帐户",
   "select_recipient_addressbook": "收件人地址",
-  "new_addressbook_item": "新地址",
+  "new_contact": "新地址",
   "name": "姓名",
   "address": "地址",
   "missing_address": "缺少地址",
@@ -153,5 +153,9 @@
   "are_you_sure": "您确定吗？",
   "are_you_sure_replace_network": "已经存在具有相同链ID的网络。您确定要替换它吗？",
   "edit_account": "编辑帐户",
-  "default":"默认"
+  "default": "默认",
+  "total_balance": "总余额",
+  "transactions": "交易记录",
+  "add_contact": "添加联系人",
+  "add_to_addressbook": "添加到通讯录"
 }

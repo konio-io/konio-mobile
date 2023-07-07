@@ -132,7 +132,7 @@
   "recents": "اخیرا",
   "select_recipient_account": "حساب گیرنده",
   "select_recipient_addressbook": "آدرس گیرنده",
-  "new_addressbook_item": "آدرس جدید",
+  "new_contact": "آدرس جدید",
   "name": "نام",
   "address": "آدرس",
   "missing_address": "آدرس ناقص",
@@ -153,5 +153,9 @@
   "are_you_sure": "آیا مطمئن هستید؟",
   "are_you_sure_replace_network": "یک شبکه با همان شناسه زنجیره در حال حاضر وجود دارد. آیا مطمئن هستید که میخواهید آن را جایگزین کنید؟",
   "edit_account": "ویرایش حساب",
-  "default": "پیش‌فرض"
+  "default": "پیش‌فرض",
+  "total_balance": "موجودی کل",
+  "transactions": "تراکنش‌ها",
+  "add_contact": "افزودن مخاطب",
+  "add_to_addressbook": "افزودن به دفترچه آدرس"
 }

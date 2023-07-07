@@ -132,7 +132,7 @@
     "recents": "Son Alıcılar",
     "select_recipient_account": "Alıcı hesabı",
     "select_recipient_addressbook": "Alıcı adresi",
-    "new_addressbook_item": "Yeni adres",
+    "new_contact": "Yeni adres",
     "name": "Ad",
     "address": "Adres",
     "missing_address": "Eksik adres",
@@ -153,5 +153,9 @@
     "are_you_sure": "Emin misiniz?",
     "are_you_sure_replace_network": "Aynı zincir kimliğiyle bir ağ zaten mevcut. Onu değiştirmek istediğinizden emin misiniz?",
     "edit_account": "Hesabı düzenle",
-    "default": "Varsayılan"
+    "default": "Varsayılan",
+    "total_balance": "Toplam bakiye",
+    "transactions": "İşlemler",
+    "add_contact": "Kişi ekle",
+    "add_to_addressbook": "Adres defterine ekle"
 }

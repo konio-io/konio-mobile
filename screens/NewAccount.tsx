@@ -47,7 +47,6 @@ export default () => {
                     placeholder={i18n.t('account_name')}
                     onChangeText={(text: string) => name.set(text)}
                 />
-                <Text style={styles.textSmall}>{i18n.t('ex_my_account_name')}</Text>
             </View>
 
             <View style={styles.paddingBase}>

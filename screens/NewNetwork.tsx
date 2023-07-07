@@ -5,10 +5,10 @@ import { addNetwork, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen, Text, Wrapper } from '../components';
 import { useI18n } from '../hooks';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, Alert } from 'react-native';
 import { UserStore } from '../stores';
 import { useTheme } from '../hooks';
-import type { Network, Theme } from '../types/store';
+import type { Network } from '../types/store';
 import { DEFAULT_NETWORKS } from '../lib/Constants';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -86,69 +86,57 @@ export default () => {
     <Screen>
       
         <ScrollView contentContainerStyle={{...styles.paddingBase, ...styles.rowGapBase}}>
-          <View style={styles.rowGapSmall}>
+          
             <TextInput
               autoFocus={true}
               value={name.get()}
               onChangeText={(v: string) => name.set(v)}
               placeholder={i18n.t('name')}
+              note={`Ex: ${DEFAULT_NETWORK.name}`}
             />
-            <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.name}</Text>
-          </View>
-          <View style={styles.rowGapSmall}>
+          
             <TextInput
-              autoFocus={true}
               value={chainId.get()}
               onChangeText={(v: string) => chainId.set(v)}
               placeholder={'chain id'}
+              note={`Ex: ${DEFAULT_NETWORK.chainId}`}
             />
-            <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.chainId}</Text>
-          </View>
-          <View style={styles.rowGapSmall}>
+          
             <TextInput
-              autoFocus={true}
               value={rpcNode.get()}
               onChangeText={(v: string) => rpcNode.set(v)}
               placeholder={'rpc node'}
+              note={`Ex: ${DEFAULT_NETWORK.rpcNodes[0]}`}
             />
-            <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.rpcNodes[0]}</Text>
-          </View>
-          <View style={styles.rowGapSmall}>
+
             <TextInput
-              autoFocus={true}
               value={explorer.get()}
               onChangeText={(v: string) => explorer.set(v)}
               placeholder={'explorer'}
+              note={`Ex: ${DEFAULT_NETWORK.explorer}`}
             />
-            <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.explorer}</Text>
-          </View>
-          <View style={styles.rowGapSmall}>
+
             <TextInput
-              autoFocus={true}
               value={KOIN.get()}
               onChangeText={(v: string) => KOIN.set(v)}
               placeholder={'KOIN contract ID'}
+              note={`Ex: ${DEFAULT_NETWORK.coins.KOIN.contractId}`}
             />
-            <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.coins.KOIN.contractId}</Text>
-          </View>
-          <View style={styles.rowGapSmall}>
+
             <TextInput
-              autoFocus={true}
               value={MANA.get()}
               onChangeText={(v: string) => MANA.set(v)}
               placeholder={'MANA contract ID'}
+              note={`Ex: ${DEFAULT_NETWORK.coins.MANA.contractId}`}
             />
-            <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.coins.MANA.contractId}</Text>
-          </View>
-          <View style={styles.rowGapSmall}>
+
             <TextInput
-              autoFocus={true}
               value={VHP.get()}
               onChangeText={(v: string) => VHP.set(v)}
               placeholder={'VHP contract ID'}
+              note={`Ex: ${DEFAULT_NETWORK.coins.VHP.contractId}`}
             />
-            <Text style={styles.textSmall}>Ex: {DEFAULT_NETWORK.coins.VHP.contractId}</Text>
-          </View>
+
         </ScrollView>
         
         <View style={{...styles.paddingBase, ...styles.directionRow, ...styles.columnGapBase}}>

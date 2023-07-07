@@ -1,11 +1,12 @@
-import { TouchableHighlight, View } from "react-native";
+import { View } from "react-native";
 import { useTheme } from "../hooks";
-import { JSXElementConstructor } from "react";
-import { AntDesign } from '@expo/vector-icons';
+import { ReactElement } from "react";
+import { Feather } from '@expo/vector-icons';
+import ListItem from "./ListItem";
 
 export default (props: {
-  ItemComponent: JSXElementConstructor<any>
-  onPress: Function,
+  ItemComponent: ReactElement,
+  onPress?: Function,
   onLongPress?: Function,
   selected: boolean
 }) => {
@@ -13,32 +14,28 @@ export default (props: {
   const ItemComponent = props.ItemComponent;
   const theme = useTheme();
   const { Color } = theme.vars;
-  const styles = theme.styles;
 
   return (
-    <TouchableHighlight
+    <ListItem
+      content={(ItemComponent)}
+      name=''
       onPress={() => {
-        props.onPress();
+        if (props.onPress) {
+          props.onPress();
+        }
       }}
       onLongPress={() => {
         if (props.onLongPress) {
           props.onLongPress();
         }
       }}
-    >
-      <View style={styles.listItemContainer}>
-
-        <View style={{ flexGrow: 1 }}>
-          <ItemComponent />
-        </View>
-
+      right={(
         <View style={{ width: 30 }}>
           {props.selected &&
-            <AntDesign name="check" size={24} color={Color.primary} />
+            <Feather name="check" size={24} color={Color.primary} />
           }
         </View>
-
-      </View>
-    </TouchableHighlight>
-  );
+      )}
+    />
+  )
 }

@@ -58,7 +58,6 @@ export default () => {
 
                 <TextInput
                     autoFocus={true}
-                    style={{ ...styles.textInputMultiline }}
                     multiline={true}
                     numberOfLines={4}
                     value={seed.get()}

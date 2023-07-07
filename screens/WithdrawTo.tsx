@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { Screen, TextInput, Button, Text, AccountAvatar, ListItemSelected, DrawerToggler, AddressListItem, Link } from '../components';
+import { Screen, TextInput, Button, Text, AccountAvatar, ListItemSelected, DrawerToggler, AddressListItem, Link, TextInputActionPaste } from '../components';
 import { useTheme, useI18n, useWallets, useWallet, useTransactions, useAddressbook, useContact, useCurrentAddress } from '../hooks';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { WithdrawToNavigationProp, WithdrawToRouteProp } from '../types/navigation';
@@ -18,7 +18,6 @@ export default () => {
     const styles = theme.styles;
     const i18n = useI18n();
     const address = useHookstate('');
-    const currentAddress = useCurrentAddress();
 
     useEffect(() => {
         address.set(route.params.to ?? '');
@@ -30,10 +29,6 @@ export default () => {
             headerLeft: () => (<DrawerToggler />)
         });
     }, [navigation]);
-
-    useEffect(() => {
-        address.set('');
-    }, [currentAddress]);
 
     const next = () => {
         if (!address.get()) {
@@ -67,23 +62,30 @@ export default () => {
             </View>
 
             <ScrollView>
-                <View style={styles.paddingBase}>
-                    <Text style={styles.sectionTitle}>{i18n.t('recents')}</Text>
+
+                <View style={styles.paddingVerticalBase}>
+                    <View style={styles.paddingHorizontalBase}>
+                        <Text style={styles.sectionTitle}>{i18n.t('recents')}</Text>
+                    </View>
+
+                    <RecentList onPressItem={(addr: string) => address.set(addr)} selected={address.get()} />
                 </View>
 
-                <RecentList onPressItem={(addr: string) => address.set(addr)} selected={address.get()} />
+                <View style={styles.paddingVerticalBase}>
+                    <View style={styles.paddingHorizontalBase}>
+                        <Text style={styles.sectionTitle}>{i18n.t('accounts')}</Text>
+                    </View>
 
-                <View style={styles.paddingBase}>
-                    <Text style={styles.sectionTitle}>{i18n.t('accounts')}</Text>
+                    <AccountList onPressItem={(addr: string) => address.set(addr)} selected={address.get()} />
                 </View>
 
-                <AccountList onPressItem={(addr: string) => address.set(addr)} selected={address.get()} />
+                <View style={styles.paddingVerticalBase}>
+                    <View style={styles.paddingHorizontalBase}>
+                        <Text style={styles.sectionTitle}>{i18n.t('addressbook')}</Text>
+                    </View>
 
-                <View style={styles.paddingBase}>
-                    <Text style={styles.sectionTitle}>{i18n.t('addressbook')}</Text>
+                    <Addressbook onPressItem={(addr: string) => address.set(addr)} selected={address.get()} />
                 </View>
-
-                <Addressbook onPressItem={(addr: string) => address.set(addr)} selected={address.get()} />
             </ScrollView>
 
             <View style={styles.paddingBase}>
@@ -101,9 +103,9 @@ const To = (props: {
     value: string,
     onChange: Function
 }) => {
+    const navigation = useNavigation<WithdrawToNavigationProp>();
     const address = useHookstate('');
     const name = useHookstate('');
-
     const account = useWallet(address.get());
     const contact = useContact(address.get());
 
@@ -136,17 +138,34 @@ const To = (props: {
             <TextInput
                 multiline={true}
                 autoFocus={true}
-                style={{ fontSize: 16 }}
+                style={{ fontSize: 12 }}
+                styleContainer={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
                 value={address.get()}
                 onChangeText={(v: string) => { address.set(v) }}
                 placeholder={i18n.t('select_recipient')}
             />
-            {name.get() &&
-                <View style={{ ...styles.directionRow, ...styles.columnGapSmall, paddingLeft: 25 }}>
-                    <AccountAvatar size={24} address={address.get()} />
-                    <Text style={styles.textSmall}>{name.get()}</Text>
-                </View>
-            }
+            <View style={{ ...styles.textInputContainer, paddingLeft: 40, paddingTop: 0, borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>
+                {name.get() &&
+                    <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
+                        <AccountAvatar size={24} address={address.get()} />
+                        <Text style={styles.textSmall}>{name.get()}</Text>
+                    </View>
+                }
+                {!name.get() && address.get() &&
+                    <Button
+                        type='secondary'
+                        title={i18n.t('add_to_addressbook')}
+                        icon={<Feather name="plus" />}
+                        onPress={() => navigation.navigate('NewContact', { address: address.get() })}
+                    />
+                }
+
+                {!name.get() && !address.get() &&
+                    <View style={{ ...styles.alignEndColumn }}>
+                        <TextInputActionPaste state={address} />
+                    </View>
+                }
+            </View>
         </View>
     )
 }
@@ -217,11 +236,11 @@ const Addressbook = (props: {
     return (
         <View>
             {data.map(item =>
-                <ToListItem address={item} selected={props.selected === item} onPress={(address: string) => props.onPressItem(address)} />
+                <ToListItem key={item} address={item} selected={props.selected === item} onPress={(address: string) => props.onPressItem(address)} />
             )}
 
             <View style={{ ...styles.paddingBase, ...styles.alignCenterColumn }}>
-                <Link text={i18n.t('new_contact')} onPress={() => navigation.navigate('NewContact')} />
+                <Link text={i18n.t('new_contact')} onPress={() => navigation.navigate('NewContact', {})} />
             </View>
         </View>
     );
@@ -246,7 +265,7 @@ const ToListItem = (props: {
 
     return (
         <ListItemSelected
-            ItemComponent={() => <AddressListItem address={props.address} name={name} />}
+            ItemComponent={<AddressListItem address={props.address} name={name} />}
             selected={props.selected}
             onPress={() => props.onPress(props.address)}
             onLongPress={() => SheetManager.show('addressbook_item', { payload: { address: props.address } })}

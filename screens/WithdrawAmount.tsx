@@ -79,8 +79,8 @@ export default () => {
 
     return (
         <Screen>
+            <View style={{ ...styles.flex1, ...styles.paddingBase, ...styles.alignCenterRow, ...styles.rowGapSmall }}>
 
-            <View style={{ ...styles.flex1, ...styles.paddingBase, ...styles.rowGapSmall }}>
                 <Selector onPress={() => navigation.navigate('WithdrawSelectCoin', {
                     selected: contractId.get(),
                     to: route.params.to
@@ -90,39 +90,38 @@ export default () => {
                     </View>
                 </Selector>
 
-                <View style={{ ...styles.flex1, ...styles.paddingBase, ...styles.alignCenterRow, ...styles.rowGapMedium }}>
+                <View style={styles.rowGapSmall}>
+                    <TextInput
+                        autoFocus={true}
+                        keyboardType='numeric'
+                        value={amount.get().toString()}
+                        placeholder={i18n.t('amount')}
+                        onChangeText={(v: string) => amount.set(v)}
+                        textAlign={'center'}
+                        style={amountStyle}
+                        actions={(
+                            <View style={styles.percContainer}>
+                                <View style={{ flex: 1 }}>
+                                    <Button onPress={() => setAmauntPerc(25)} title={i18n.t('perc_25')} type="secondary" />
+                                </View>
+                                <View style={{ flex: 1 }}>
+                                    <Button onPress={() => setAmauntPerc(50)} title={i18n.t('perc_50')} type="secondary" />
+                                </View>
+                                <View style={{ flex: 1 }}>
+                                    <Button onPress={() => setAmauntPerc(100)} title={i18n.t('perc_100')} type="secondary" />
+                                </View>
+                            </View>
+                        )}
+                    />
 
-                    <View style={styles.rowGapSmall}>
-                        <TextInput
-                            autoFocus={true}
-                            keyboardType='numeric'
-                            value={amount.get().toString()}
-                            placeholder={i18n.t('amount')}
-                            onChangeText={(v: string) => amount.set(v)}
-                            textAlign={'center'}
-                            style={amountStyle}
-                        />
-
-                        <View style={{ ...styles.alignCenterColumn, height: 20 }}>
-                            {amountUsd.get() &&
-                                <Text style={amountUsdStyle}>{amountUsd.get()} USD</Text>
-                            }
-                        </View>
-                    </View>
-
-                    <View style={styles.percContainer}>
-                        <View style={{ flex: 1 }}>
-                            <Button onPress={() => setAmauntPerc(25)} title={i18n.t('perc_25')} type="secondary" />
-                        </View>
-                        <View style={{ flex: 1 }}>
-                            <Button onPress={() => setAmauntPerc(50)} title={i18n.t('perc_50')} type="secondary" />
-                        </View>
-                        <View style={{ flex: 1 }}>
-                            <Button onPress={() => setAmauntPerc(100)} title={i18n.t('perc_100')} type="secondary" />
-                        </View>
+                    <View style={{ ...styles.alignCenterColumn, height: 20 }}>
+                        {amountUsd.get() &&
+                            <Text style={amountUsdStyle}>{amountUsd.get()} USD</Text>
+                        }
                     </View>
                 </View>
             </View>
+
 
             <View style={styles.paddingBase}>
                 <Button
@@ -161,7 +160,8 @@ const createStyles = (theme: Theme) => {
         },
         percContainer: {
             flexDirection: 'row',
-            columnGap: Spacing.small
+            columnGap: Spacing.small,
+            padding: Spacing.base
         }
     });
 }

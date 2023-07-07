@@ -8,7 +8,7 @@ import Modal from './Modal';
 import type { Theme } from '../types/store';
 import Text from './Text';
 import ActivityIndicator from './ActivityIndicator';
-import CoinLogo from './CoinLogo';
+import ManaProgressLogo from './ManaProgressLogo';
 
 export default () => {
     const FIVE_DAYS = 432e6; // 5 * 24 * 60 * 60 * 1000
@@ -72,8 +72,12 @@ export default () => {
             <TouchableHighlight onPress={() => modalState.set(true)}>
                 <View style={styles.container}>
                     <View style={styles.coinListItemContainer}>
-                        <View style={styles.leftContainer}>
-                            <CoinLogo contractId={network.coins.MANA.contractId.get()} size={48}/>
+                        <View style={{...styles.directionRow, ...styles.columnGapBase}}>
+                            <ManaProgressLogo
+                                size={55}
+                                strokeWidth={3}
+                                progressPercent={currentPercent.get()}
+                            />
                             <View>
                                 <Text style={styles.symbol}>{i18n.t('MANA')}</Text>
                                 {currentMana.get() > -1 &&
@@ -85,12 +89,6 @@ export default () => {
                             </View>
                         </View>
                         <Text style={styles.textMedium}>{currentPercent.get()}%</Text>
-                    </View>
-
-                    <View style={styles.progressBarContainer}>
-                        <View style={styles.progressBar}>
-                            <View style={{ ...styles.progressBarPerc, width }}></View>
-                        </View>
                     </View>
                 </View>
             </TouchableHighlight>
@@ -115,30 +113,8 @@ const createStyles = (theme: Theme) => {
             fontSize: FontSize.base,
             color: Color.baseContrast
         },
-        progressBar: {
-            backgroundColor: Color.error,
-            height: 10,
-            position: 'absolute',
-            bottom: 0,
-            borderRadius: 5,
-            width: '100%', 
-        },
-        progressBarPerc: {
-            height: '100%',
-            borderRadius: 5,
-            backgroundColor: Color.success
-        },
         container: {
             backgroundColor: Color.base
-        },
-        leftContainer: {
-            flexDirection: 'row', 
-            columnGap: Spacing.base, 
-            alignItems: 'center'
-        },
-        progressBarContainer: {
-            marginHorizontal: Spacing.base,
-            marginBottom: Spacing.base
         }
     });
 }

@@ -114,7 +114,7 @@
     "security_desc": "الأمان والوصول",
     "cancel": "إلغاء",
     "yes": "نعم",
-    "no":"لا",
+    "no": "لا",
     "change_password": "تغيير كلمة المرور",
     "change_password_desc": "تغيير كلمة مرور المحفظة الخاصة بك",
     "change_autolock": "الغلق التلقائي",
@@ -131,7 +131,7 @@
     "recents": "الأخيرة",
     "select_recipient_account": "حساب المستلم",
     "select_recipient_addressbook": "عنوان المستلم",
-    "new_addressbook_item": "عنوان جديد",
+    "new_contact": "عنوان جديد",
     "name": "الاسم",
     "address": "العنوان",
     "missing_address": "عنوان مفقود",
@@ -152,5 +152,9 @@
     "are_you_sure": "هل أنت متأكد؟",
     "are_you_sure_replace_network": "يوجد بالفعل شبكة بنفس معرف السلسلة. هل أنت متأكد أنك تريد استبدالها؟",
     "edit_account": "تعديل الحساب",
-    "default": "الافتراضي"
+    "default": "الافتراضي",
+    "total_balance": "الرصيد الإجمالي",
+    "transactions": "المعاملات",
+    "add_contact": "إضافة جهة اتصال",
+    "add_to_addressbook": "إضافة إلى دفتر العناوين"
 }

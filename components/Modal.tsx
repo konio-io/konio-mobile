@@ -55,8 +55,6 @@ const createStyles = (theme: Theme) => {
         ...theme.styles,
         modalHeader: {
             height: 50,
-            borderBottomColor: Border.color,
-            borderBottomWidth: Border.width,
             justifyContent: 'center'
         },
         modalXicon: {
@@ -80,7 +78,8 @@ const createStyles = (theme: Theme) => {
             shadowOpacity: 0.25,
             shadowRadius: 4,
             elevation: 5,
-            minWidth: 300
+            minWidth: 300,
+            borderRadius: Border.radius
         },
         modalOverlay: {
             flex: 1,

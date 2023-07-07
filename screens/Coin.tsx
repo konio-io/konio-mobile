@@ -22,7 +22,7 @@ export default () => {
 
     useEffect(() => {
         navigation.setOptions({
-            title: '',
+            title: coin.symbol,
             headerRight: () => {
                 if (!DEFAULT_COINS.includes(coin.symbol)) {
                     return (

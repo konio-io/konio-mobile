@@ -1,18 +1,18 @@
 import { useHookstate } from '@hookstate/core';
-import { useNavigation } from '@react-navigation/native';
-import type { NewCoinNavigationProp } from '../types/navigation';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { NewCoinNavigationProp, NewContactRouteProp } from '../types/navigation';
 import { addContact, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
-import { TextInput, Button, Screen, Text } from '../components';
+import { TextInput, Button, Screen } from '../components';
 import { useI18n } from '../hooks';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { useTheme } from '../hooks';
 import { utils } from 'koilib';
-import type { Theme } from '../types/store';
 
 export default () => {
     const navigation = useNavigation<NewCoinNavigationProp>();
-    const address = useHookstate('');
+    const route = useRoute<NewContactRouteProp>();
+    const address = useHookstate(route.params.address ?? '');
     const name = useHookstate('');
     const i18n = useI18n();
     const theme = useTheme();
@@ -67,7 +67,6 @@ export default () => {
                         onChangeText={(v: string) => name.set(v.trim())}
                         placeholder={i18n.t('name')}
                     />
-                    <Text style={styles.textSmall}>{i18n.t('ex_contact_name')}</Text>
                 </View>
                 <View style={styles.rowGapSmall}>
                     <TextInput
@@ -75,7 +74,6 @@ export default () => {
                         onChangeText={(v: string) => address.set(v.trim())}
                         placeholder={i18n.t('address')}
                     />
-                    <Text style={styles.textSmall}>{i18n.t('ex_address')}</Text>
                 </View>
 
             </View>

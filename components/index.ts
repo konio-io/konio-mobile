@@ -28,12 +28,15 @@ import AccountListItem from './AccountListItem';
 import CoinLogo from './CoinLogo';
 import Screen from './Screen';
 import Link from './Link';
-import AddressbookListItem from './AddressbookListItem';
 import ActionSheet from './ActionSheet';
 import CircleLogo from './CircleLogo';
 import MoreVertical from './MoreVertical';
 import DrawerToggler from './DrawerToggler';
 import AddressListItem from './AddressListItem';
+import TextInputAction from './TextInputAction';
+import TextInputActionCopy from './TextInputActionCopy';
+import TextInputActionPaste from './TextInputActionPaste';
+import ManaProgressLogo from './ManaProgressLogo';
 
 export {
     ActivityIndicator,
@@ -66,10 +69,13 @@ export {
     CoinLogo,
     Screen,
     Link,
-    AddressbookListItem,
     ActionSheet,
     CircleLogo,
     MoreVertical,
     DrawerToggler,
-    AddressListItem
+    AddressListItem,
+    TextInputAction,
+    TextInputActionPaste,
+    TextInputActionCopy,
+    ManaProgressLogo
 }

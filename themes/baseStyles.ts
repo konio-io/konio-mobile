@@ -28,24 +28,19 @@ export const getStyles = (themeVars : ThemeVars) => {
         },
         textInputContainer: {
             fontFamily: FontFamily.sans,
-            backgroundColor: Color.base,
+            backgroundColor: rgba(Color.baseContrast, 0.015),
             color: Color.baseContrast,
-            minHeight: 48
+            borderRadius: Border.radius,
+            padding: Spacing.base
         },
         textInputText: {
             fontFamily: FontFamily.sans,
             fontSize: FontSize.base,
             color: Color.baseContrast,
-        },
-        textInputMultiline: {
-            fontFamily: FontFamily.sans,
-            backgroundColor: Color.base,
-            color: Color.baseContrast,
-            minHeight: 100
+            paddingTop: 0,
+            paddingBottom: 0
         },
         textInputDisabled: {
-            borderWidth: Border.width,
-            borderColor: Border.color,
             fontFamily: FontFamily.sans,
             padding: 5,
             color: rgba(Color.baseContrast, 0.6)
@@ -87,11 +82,6 @@ export const getStyles = (themeVars : ThemeVars) => {
             justifyContent: 'space-between',
             alignItems: 'center',
         },
-        listItemTitle: {
-            color: Color.baseContrast,
-            fontFamily: FontFamily.sans,
-            fontSize: FontSize.medium
-        },
         addressText: {
             fontFamily: FontFamily.sans,
             fontSize: FontSize.small,
@@ -106,7 +96,7 @@ export const getStyles = (themeVars : ThemeVars) => {
             columnGap: Spacing.small,
             justifyContent: 'space-between',
             alignItems: 'center',
-            paddingHorizontal: 4,
+            paddingHorizontal: 6,
             paddingVertical: 2
         },
         symbol: {
@@ -163,6 +153,18 @@ export const getStyles = (themeVars : ThemeVars) => {
         paddingHorizontalLarge: {
             paddingHorizontal: Spacing.large,
         },
+        paddingVerticalSmall: {
+            paddingVertical: Spacing.small,
+        },
+        paddingVerticalBase: {
+            paddingVertical: Spacing.base,
+        },
+        paddingVerticalMedium: {
+            paddingVertical: Spacing.medium,
+        },
+        paddingVerticalLarge: {
+            paddingVertical: Spacing.large,
+        },
         marginSmall: {
             margin: Spacing.small,
         },
@@ -207,6 +209,12 @@ export const getStyles = (themeVars : ThemeVars) => {
         },
         alignSpaceBetweenColumn: {
             alignItems: 'space-between'
+        },
+        alignEndRow: {
+            justifyContent: 'flex-end'
+        },
+        alignEndColumn: {
+            alignItems: 'flex-end'
         },
         sectionTitle: {
             fontFamily: FontFamily.sans,

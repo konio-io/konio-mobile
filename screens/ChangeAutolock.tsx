@@ -22,7 +22,6 @@ export default () => {
       <FlatList
         data={data}
         renderItem={({ item }) => <ListItem item={item} />}
-        ItemSeparatorComponent={() => <Separator/>}
       />
 
     </Screen>
@@ -36,7 +35,7 @@ export const ListItem = (props: {
   const i18n = useI18n();
   const autolock = useAutolock().get();
 
-  const convertMils = (ms: number) : string => {
+  const convertMils = (ms: number): string => {
     if (ms === -1) {
       return i18n.t('never');
     }
@@ -46,19 +45,13 @@ export const ListItem = (props: {
 
     const seconds = Math.floor(ms / 1000);
     const minutes = Math.floor(seconds / 60);
-  
+
     if (minutes > 0) {
       return i18n.t('after') + ' ' + minutes + (minutes === 1 ? ' ' + i18n.t('minute') : ' ' + i18n.t('minutes'));
     } else {
       return i18n.t('after') + ' ' + seconds + (seconds === 1 ? ' ' + i18n.t('second') : ' ' + i18n.t('seconds'));
-    } 
+    }
   }
-
-  const ItemComponent = () => (
-    <View>
-      <Text>{convertMils(props.item)}</Text>
-    </View>
-  );
 
   const selected = autolock === props.item;
 
@@ -66,5 +59,13 @@ export const ListItem = (props: {
     setAutolock(props.item);
   }
 
-  return <ListItemSelected ItemComponent={ItemComponent} selected={selected} onPress={changeAutolock}/>
+  return <ListItemSelected
+    ItemComponent={(
+      <View>
+        <Text>{convertMils(props.item)}</Text>
+      </View>
+    )}
+    selected={selected}
+    onPress={changeAutolock}
+  />
 }

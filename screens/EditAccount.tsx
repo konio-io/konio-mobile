@@ -30,7 +30,6 @@ export default () => {
                     onChangeText={(v: string) => name.set(v)}
                     placeHolder={i18n.t('name')}
                 />
-                <Text style={styles.textSmall}>{i18n.t('ex_my_account_name')}</Text>
             </View>
 
             <View style={styles.paddingBase}>

@@ -1,6 +1,6 @@
 import { View, StyleSheet } from 'react-native';
 import { useHookstate } from '@hookstate/core';
-import { Text, Button, TextInput, Wrapper, Screen, Copiable, Seed } from '../components';
+import { Text, Button, TextInput, Wrapper, Screen, Copiable, Seed, TextInputActionCopy } from '../components';
 import { generateSeed, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n } from '../hooks';
@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NewWalletSeedNavigationProp } from '../types/navigation';
 import { useEffect } from 'react';
 import { Theme } from '../types/store';
+import TextInputAction from '../components/TextInputAction';
 
 export default () => {
     const navigation = useNavigation<NewWalletSeedNavigationProp>();
@@ -15,8 +16,7 @@ export default () => {
     const name = useHookstate('');
     const i18n = useI18n();
     const theme = useTheme();
-    const styles = createStyles(theme);
-    const { Border } = theme.vars;
+    const styles = theme.styles;
 
     const next = () => {
         if (!name.get()) {
@@ -31,7 +31,7 @@ export default () => {
 
     useEffect(() => {
         seed.set(generateSeed());
-    },[]);
+    }, []);
 
     return (
         <Screen>
@@ -46,25 +46,21 @@ export default () => {
 
                 <Text>{i18n.t('save_seed')}</Text>
 
-                <View>
-                    <Copiable copy={seed.get()}>
-                        <View style={styles.textInputMultiline}>
-                            <View style={styles.copyIconContainer}>
-                                <Feather name="copy" color={Border.color} />
-                            </View>
-                            <Seed phrase={seed.get()} />
+                <View style={styles.textInputContainer}>
+                    <Seed phrase={seed.get()} />
+                    <View style={{ ...styles.alignEndColumn }}>
+                        <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
+                            <TextInputAction
+                                onPress={() => seed.set(generateSeed())}
+                                icon={(<Feather name="refresh-cw" />)}
+                            />
+                            <TextInputActionCopy copy={seed.get()}/>
                         </View>
-                    </Copiable>
-
-                    <Button
-                        type="secondary"
-                        title={i18n.t('generate')}
-                        icon={<Feather name="refresh-cw" />}
-                        onPress={() => seed.set(generateSeed())} />
+                    </View>
                 </View>
             </Wrapper>
 
-            <View style={styles.screenFooter}>
+            <View style={styles.paddingBase}>
                 <Button
                     title={i18n.t('next')}
                     icon={<Feather name="arrow-right" />}
@@ -73,17 +69,4 @@ export default () => {
             </View>
         </Screen>
     );
-}
-
-const createStyles = (theme: Theme) => {
-    const { Spacing } = theme.vars;
-
-    return StyleSheet.create({
-        ...theme.styles,
-        copyIconContainer: { 
-            position: 'absolute', 
-            right: Spacing.small, 
-            bottom: Spacing.small
-        }
-    });
 }

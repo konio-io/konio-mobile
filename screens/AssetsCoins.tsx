@@ -24,10 +24,12 @@ export default () => {
 
   useEffect(() => {
     navigation.setOptions({
+      title: wallet.name.get(),
+      headerShadowVisible: false,
       headerTitleAlign: 'center',
       headerLeft: () => (<DrawerToggler />),
       headerRight: () => (<MoreVertical onPress={() => SheetManager.show('account', { payload: { address: currentAddress.get() } })} />),
-      title: ''
+      headerTitle: () => (<></>)
     });
   }, [navigation]);
 
@@ -35,14 +37,14 @@ export default () => {
 
   return (
     <Screen>
-      <View style={{...styles.rowGapBase}}>
+      <View style={{ ...styles.rowGapBase }}>
         <View style={{ ...styles.directionRow, ...styles.paddingBase, ...styles.alignSpaceBetweenRow }}>
           <View>
             <Text style={styles.textXlarge}>${coinValue.get() && coinValue.get().toFixed(2)}</Text>
             <Text style={styles.textSmall}>{i18n.t('total_balance')}</Text>
           </View>
 
-          <View>
+          <View style={styles.alignCenterColumn}>
             <Text style={styles.textMedium}>{wallet.name.get()}</Text>
             <Address address={currentAddressOrNull.get()} copiable={true}/>
           </View>

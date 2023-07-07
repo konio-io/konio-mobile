@@ -70,7 +70,7 @@ export default () => {
             <Wrapper>
                 <Text>{i18n.t('confirm_wallet_seed')}</Text>
 
-                <View style={styles.textInputMultiline}>
+                <View style={styles.textInputContainer}>
                     <Seed phrase={sortedWords.get().join(' ')} onWordClick={(word: string) => {
                         removeWord(sortedWords, word);
                         addWord(unsortedWords, word);
@@ -83,7 +83,7 @@ export default () => {
                 }} />
             </Wrapper>
 
-            <View style={styles.screenFooter}>
+            <View style={styles.paddingBase}>
                 <Button
                     title={i18n.t('confirm')}
                     icon={<Feather name="check" />}

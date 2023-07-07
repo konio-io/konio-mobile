@@ -132,7 +132,7 @@
   "recents": "Недавние",
   "select_recipient_account": "Счет получателя",
   "select_recipient_addressbook": "Адрес получателя",
-  "new_addressbook_item": "Новый адрес",
+  "new_contact": "Новый адрес",
   "name": "Имя",
   "address": "Адрес",
   "missing_address": "Отсутствует адрес",
@@ -153,5 +153,9 @@
   "are_you_sure": "Вы уверены?",
   "are_you_sure_replace_network": "Сеть с тем же идентификатором цепи уже существует. Вы уверены, что хотите ее заменить?",
   "edit_account": "Редактировать аккаунт",
-  "default":"По умолчанию"
+  "default": "По умолчанию",
+  "total_balance": "Общий баланс",
+  "transactions": "Транзакции",
+  "add_contact": "Добавить контакт",
+  "add_to_addressbook": "Добавить в адресную книгу"
 }

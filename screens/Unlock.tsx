@@ -1,4 +1,4 @@
-import { Pressable, View, StyleSheet } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useHookstate } from '@hookstate/core';
 import { checkPassword, showToast, unlock } from '../actions';
@@ -78,7 +78,6 @@ export default () => {
 
     return (
         <Screen>
-
             <Wrapper>
                 <View style={styles.alignCenterColumn}>
                     <Logo />
@@ -105,7 +104,6 @@ export default () => {
                     onPress={unlockPassword}
                 />
             </View>
-
-        </Screen >
+        </Screen>
     );
 }

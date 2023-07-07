@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { useHookstate } from '@hookstate/core';
-import { Button, TextInput, Wrapper, Screen } from '../components';
+import { Button, TextInput, Wrapper, Screen, TextInputActionPaste } from '../components';
 import { addSeed, setCurrentWallet } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n } from '../hooks';
@@ -48,26 +48,21 @@ export default () => {
           placeholder={i18n.t('account_name')}
           onChangeText={(text: string) => name.set(text)} />
 
-        <View>
-          <TextInput
-            style={{ ...styles.textInputMultiline }}
-            multiline={true}
-            numberOfLines={4}
-            value={seed.get()}
-            placeholder={i18n.t('seed_phrase')}
-            onChangeText={(text: string) => seed.set(text)}
-          />
+        <TextInput
+          multiline={true}
+          numberOfLines={4}
+          value={seed.get()}
+          placeholder={i18n.t('seed_phrase')}
+          onChangeText={(text: string) => seed.set(text)}
+          actions={(
 
-          <Button
-            type="secondary"
-            title={i18n.t('reset')}
-            icon={<Feather name="x" />}
-            onPress={() => { seed.set('') }}
-          />
-        </View>
+            <TextInputActionPaste state={seed} />
+
+          )}
+        />
       </Wrapper>
 
-      <View style={styles.screenFooter}>
+      <View style={styles.paddingBase}>
         <Button
           title={i18n.t('import')}
           icon={<Feather name="arrow-right" />}

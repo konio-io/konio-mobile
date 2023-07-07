@@ -14,17 +14,13 @@ export default (props: {
 
     const theme = useTheme();
     const styles = createStyles(theme);;
-    const style = props.style ?? {};
     const textStyle = props.type ? styles[`${props.type}Text`] : styles.primaryText;
     const containerStyle = props.type ? styles[`${props.type}Container`] : styles.primaryContainer;
     const iconColor = props.type ? styles[`${props.type}Text`].color : styles.primaryText.color;
 
     return (
-        <TouchableHighlight onPress={() => props.onPress()} style={{height: 48, ...style}}>
-            <View style={{
-                ...styles.container,
-                ...containerStyle
-            }}>
+        <TouchableHighlight onPress={() => props.onPress()} style={{height: 48, ...containerStyle, ...props.style}}>
+            <View style={{...containerStyle}}>
                 <View style={styles.containerInternal}>
                 {props.icon &&
                     React.cloneElement(props.icon, {
@@ -57,21 +53,20 @@ const createStyles = (theme: Theme) => {
             columnGap: Spacing.base,
             height: 48
         },
-        container: {
-            borderRadius: Border.radius
-        },
         text: {
             fontFamily: FontFamily.sans,
             fontSize: FontSize.base
         },
         primaryContainer: {
             backgroundColor: Color.primary,
+            borderRadius: Border.radius
         },
         primaryText: {
             color: Color.primaryContrast
         },
         secondaryContainer: {
-            backgroundColor: Border.color
+            backgroundColor: Border.color,
+            borderRadius: Border.radius
         },
         secondaryText: {
             color: Color.baseContrast
