@@ -12,11 +12,11 @@ export const getTheme = () : Theme => {
     };
 
     const FontSize = {
-        base: 14,
         small: 12,
-        medium: 16,
-        large: 22,
-        xlarge: 26
+        base: 16,
+        medium: 18,
+        large: 24,
+        xlarge: 28
     };
 
     const FontFamily = {
@@ -37,7 +37,7 @@ export const getTheme = () : Theme => {
     const Border = {
         color: 'rgba(70,70,70,1)',
         width: 1,
-        radius: 4
+        radius: 15
     };
 
     const vars : ThemeVars = { Spacing, FontSize, FontFamily, Color, Border };
