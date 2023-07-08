@@ -33,7 +33,7 @@ export const UserStoreDefault: UserStoreState = {
     autolock: -1,
     addressbook: {
         [DONATION_ADDRESS]: {
-            name: 'Adrihoke',
+            name: 'Konio Donations',
             address: DONATION_ADDRESS
         }
     },

@@ -1,8 +1,7 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { CoinRouteProp, AssetsNavigationProp } from '../types/navigation';
-import type { Theme } from '../types/store';
-import { Button, TransactionList, Address, Screen, MoreVertical, Text, CoinLogo, Wrapper } from '../components';
+import { Button, TransactionList, Screen, MoreVertical, Text, CoinLogo } from '../components';
 import { useCoin, useCoinBalance, useCoinValue, useI18n, useTheme } from '../hooks';
 import { Feather } from '@expo/vector-icons';
 import { useEffect } from 'react';
@@ -24,13 +23,11 @@ export default () => {
         navigation.setOptions({
             title: coin.symbol,
             headerRight: () => {
-                if (!DEFAULT_COINS.includes(coin.symbol)) {
-                    return (
-                        <MoreVertical onPress={() => {
-                            SheetManager.show('coin', { payload: { contractId: route.params.contractId } });
-                        }} />
-                    )
-                }
+                return (
+                    <MoreVertical onPress={() => {
+                        SheetManager.show('coin', { payload: { contractId: route.params.contractId } });
+                    }} />
+                )
             }
         });
     }, [walletCoin, navigation]);
@@ -42,14 +39,13 @@ export default () => {
                 <View style={{ ...styles.directionRow, ...styles.alignSpaceBetweenRow, ...styles.alignCenterColumn }}>
                     <View>
                         <View>
-                            <Text style={styles.textXlarge}>${coinValue.get().toFixed(2)}</Text>
+                            <Text style={styles.textXlarge}>${coinValue.get() && coinValue.get().toFixed(2)}</Text>
                             <Text style={styles.textMedium}>{coinBalance.get()} {walletCoin.symbol.get()}</Text>
                         </View>
                     </View>
 
                     <View style={{ ...styles.alignCenterColumn, ...styles.rowGapSmall }}>
                         <CoinLogo size={48} contractId={route.params.contractId} />
-                        <Address address={coin.contractId} copiable={true} length={3} />
                     </View>
                 </View>
 
@@ -82,7 +78,7 @@ export default () => {
             <View style={{ ...styles.paddingBase }}>
                 <Text style={styles.sectionTitle}>{i18n.t('transactions')}</Text>
             </View>
-            
+
             <TransactionList contractId={route.params.contractId} />
         </Screen>
     );

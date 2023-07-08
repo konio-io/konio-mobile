@@ -29,6 +29,14 @@ const migrations : Record<string,Function> = {
             }
         });
         UserStore.rcLimit.set('95');
+    },
+    '20230708': () => {
+        UserStore.addressbook.merge({
+            [DONATION_ADDRESS]: {
+                name: 'Konio Donations',
+                address: DONATION_ADDRESS
+            }
+        });
     }
 }
 
