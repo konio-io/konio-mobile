@@ -10,6 +10,7 @@ import { AntDesign } from '@expo/vector-icons';
 import Withdraw from "./Withdraw";
 import Deposit from "../screens/Deposit";
 import { showToast } from "../actions";
+import Dapps from "../screens/Dapps";
 
 const Tab = createBottomTabNavigator();
 export default () => {
@@ -95,19 +96,12 @@ export default () => {
         />
         <Tab.Screen
           name="Dapps"
-          component={Unavailable}
+          component={Dapps}
           options={{
             title: i18n.t('dapps'),
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="appstore-o" size={size} color={color} />
-            ),
-            tabBarButton: (props) => {
-              props.onPress = () => showToast({
-                type: 'info',
-                text1: i18n.t('available_soon')
-              });
-              return <TouchableOpacity {...props} />
-            }
+            )
           }}
         />
       </Tab.Navigator>

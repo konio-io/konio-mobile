@@ -15,7 +15,6 @@ import Constants from 'expo-constants';
 import { DONATION_ADDRESS } from '../lib/Constants';
 import { State } from '@hookstate/core';
 import Loading from '../screens/Loading';
-import { CommonActions } from '@react-navigation/native';
 
 function DrawerContent(props: any) {
     const { navigation } = props;
@@ -122,7 +121,7 @@ function DrawerContent(props: any) {
 const Drawer = createDrawerNavigator();
 
 export default () => {
-    useLocker({ key: 'app', initialValue: true });
+    //useLocker({ key: 'app', initialValue: true });
 
     return (
         <Drawer.Navigator
