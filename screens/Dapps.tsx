@@ -9,6 +9,8 @@ import Loading from "./Loading";
 import PairingModal from "./PairingModal";
 import { SignClientTypes, SessionTypes } from "@walletconnect/types";
 import { getSdkError } from "@walletconnect/utils";
+import SignModal from "./SigningModal";
+import { View } from "react-native";
 
 export default () => {
     const currentAddress = useCurrentAddress().get();
@@ -20,6 +22,9 @@ export default () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [currentProposal, setCurrentProposal] = useState();
     const [successfulSession, setSuccessfulSession] = useState(false);
+    const [requestSession, setRequestSession] = useState();
+    const [requestEventData, setRequestEventData] = useState();
+    const [signModalVisible, setSignModalVisible] = useState(false);
 
     //Add Initialization
     useInitialization();
@@ -32,26 +37,45 @@ export default () => {
         []
     );
 
+    const onSessionRequest = useCallback(
+        async (requestEvent: SignClientTypes.EventArguments["session_request"]) => {
+            const { topic, params } = requestEvent;
+            const { request } = params;
+            const requestSessionData =
+                web3wallet.engine.signClient.session.get(topic);
+
+            if (request.method === 'koinos_signTransaction') {
+                setRequestSession(requestSessionData);
+                setRequestEventData(requestEvent);
+                setSignModalVisible(true);
+                return;
+            }
+        },
+        []
+    );
+
     async function pair() {
         const pairing = await web3WalletPair({ uri: currentWCURI });
         return pairing;
     }
 
     async function handleAccept() {
-        console.log('handleAccept')
         const { id, params } = currentProposal;
         const { requiredNamespaces, relays } = params;
+
+        console.log(JSON.stringify(currentProposal));
 
         if (currentProposal) {
             const namespaces: SessionTypes.Namespaces = {};
             Object.keys(requiredNamespaces).forEach((key) => {
                 const accounts: string[] = [];
-                requiredNamespaces[key].chains.map((chain) => {
+                requiredNamespaces[key].chains.map((chain: string) => {
                     [currentAddress].map((acc) => accounts.push(`${chain}:${acc}`));
                 });
 
                 namespaces[key] = {
                     accounts,
+                    chains: requiredNamespaces[key].chains,
                     methods: requiredNamespaces[key].methods,
                     events: requiredNamespaces[key].events,
                 };
@@ -71,7 +95,7 @@ export default () => {
     }
 
     async function handleReject() {
-        console.log('handleReject')
+
         const { id } = currentProposal;
 
         if (currentProposal) {
@@ -86,32 +110,49 @@ export default () => {
         }
     }
 
-    // Adjust your UseEffect
+    async function disconnect() {
+        const activeSessions = await web3wallet.getActiveSessions();
+        const topic = Object.values(activeSessions)[0].topic;
+
+        if (activeSessions) {
+            await web3wallet.disconnectSession({
+                topic,
+                reason: getSdkError("USER_DISCONNECTED"),
+            });
+        }
+        setSuccessfulSession(false);
+    }
 
     useEffect(() => {
         web3wallet?.on("session_proposal", onSessionProposal);
+        web3wallet?.on("session_request", onSessionRequest);
     }, [
         pair,
         handleAccept,
         handleReject,
         currentAddress,
+        onSessionRequest,
         onSessionProposal,
         successfulSession,
     ]);
-
 
     return (
         <Screen>
             <Wrapper>
                 <Text>{currentAddress}</Text>
 
-                <TextInput
-                    onChangeText={setCurrentWCURI}
-                    value={currentWCURI}
-                    placeholder="Enter WC URI (wc:1234...)"
-                />
-                <Button onPress={() => pair()} title="Pair Session" />
-
+                {!successfulSession ? (
+                    <View>
+                        <TextInput
+                            onChangeText={setCurrentWCURI}
+                            value={currentWCURI}
+                            placeholder="Enter WC URI (wc:1234...)"
+                        />
+                        <Button onPress={() => pair()} title="Pair Session" />
+                    </View>
+                ) : (
+                    <Button onPress={() => disconnect()} title="Disconnect" />
+                )}
 
                 <PairingModal
                     handleAccept={handleAccept}
@@ -119,6 +160,13 @@ export default () => {
                     visible={modalVisible}
                     setModalVisible={setModalVisible}
                     currentProposal={currentProposal}
+                />
+
+                <SignModal
+                    visible={signModalVisible}
+                    setModalVisible={setSignModalVisible}
+                    requestEvent={requestEventData}
+                    requestSession={requestSession}
                 />
             </Wrapper>
 
