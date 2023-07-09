@@ -1,10 +1,30 @@
+import { Modal, View, Image, Text, Button, StyleSheet } from "react-native";
 import { web3wallet } from "../lib/WalletConnectUtils";
+import {utils} from 'ethers';
+import { UserStore } from "../stores";
+import { getSigner } from "../lib/utils";
+import { formatJsonRpcError, formatJsonRpcResult } from '@json-rpc-tools/utils'
+import { getSdkError } from '@walletconnect/utils'
 
 interface SignModalProps {
   visible: boolean;
   setModalVisible: (arg1: boolean) => void;
   requestSession: any;
   requestEvent: SignClientTypes.EventArguments["session_request"] | undefined;
+}
+
+export function convertHexToUtf8(value: string) {
+  if (utils.isHexString(value)) {
+    return utils.toUtf8String(value);
+  }
+
+  return value;
+}
+
+export function getSignParamsMessage(params: string[]) {
+  const message = params.filter(p => !utils.isAddress(p))[0];
+
+  return convertHexToUtf8(message);
 }
 
 export default function SignModal({
@@ -19,7 +39,8 @@ export default function SignModal({
 
   const chainID = requestEvent?.params?.chainId?.toUpperCase();
   const method = requestEvent?.params?.request?.method;
-  const message = getSignParamsMessage(requestEvent?.params?.request?.params);
+  //const message = getSignParamsMessage(requestEvent?.params?.request?.params);
+  const message = 'empty'
 
   const requestName = requestSession?.peer?.metadata?.name;
   const requestIcon = requestSession?.peer?.metadata?.icons[0];
@@ -29,18 +50,35 @@ export default function SignModal({
 
   async function onApprove() {
     if (requestEvent) {
-      const response = await approveEIP155Request(requestEvent);
-      await web3wallet.respondSessionRequest({
-        topic,
-        response,
+      const { params, id } = requestEvent;
+      const networkId = UserStore.currentNetworkId.get();
+      const address = UserStore.currentAddress.get();
+
+      if (!address) {
+        return;
+      }
+
+      const signer = getSigner({
+        address,
+        networkId
       });
-      setModalVisible(false);
+
+      const transaction = await signer.signTransaction(requestEvent.params.request.params.transaction);
+      if (transaction.signatures && transaction.signatures.length > 0) {
+        const response = formatJsonRpcResult(id, transaction.signatures[0])
+        await web3wallet.respondSessionRequest({
+          topic,
+          response,
+        });
+        setModalVisible(false);
+      }
     }
   }
 
   async function onReject() {
     if (requestEvent) {
-      const response = rejectEIP155Request(requestEvent);
+      const { id } = requestEvent;
+      const response = formatJsonRpcError(id, getSdkError('USER_REJECTED').message)
       await web3wallet.respondSessionRequest({
         topic,
         response,

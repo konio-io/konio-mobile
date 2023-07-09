@@ -9,7 +9,6 @@ import { SheetManager } from "react-native-actions-sheet";
 import { AntDesign } from '@expo/vector-icons';
 import Withdraw from "./Withdraw";
 import Deposit from "../screens/Deposit";
-import { showToast } from "../actions";
 import Dapps from "../screens/Dapps";
 
 const Tab = createBottomTabNavigator();
