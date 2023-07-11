@@ -1,5 +1,5 @@
 import { State, useHookstate } from "@hookstate/core";
-import { CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore } from "../stores";
+import { CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, W3WStore, W3WProposalStore, W3WRequestStore } from "../stores";
 import { getTheme } from "../themes";
 import { AppState, useColorScheme } from 'react-native';
 import Locales from "../lib/Locales";
@@ -221,4 +221,8 @@ export const useAppState = () => {
     }, []);
 
     return appState;
+}
+
+export const useW3W = () => {
+    return W3WStore;
 }

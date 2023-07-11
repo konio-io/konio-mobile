@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, Linking } from 'react-native';
+import { View, Text, StyleSheet, Linking, ScrollView } from 'react-native';
 import {
     createDrawerNavigator,
-    DrawerContentScrollView,
     DrawerItem,
 } from '@react-navigation/drawer';
 import { useCurrentAddress, useI18n, useLocker, useTheme, useWallets } from '../hooks';
@@ -26,24 +25,23 @@ function DrawerContent(props: any) {
     const currentAddressOrNull: State<string> | null = currentAddress.ornull;
 
     if (!currentAddressOrNull) {
-        return <Loading/>;
+        return <Loading />;
     }
 
     const currentWallet = wallets[currentAddressOrNull.get()];
 
     return (
-        <DrawerContentScrollView contentContainerStyle={styles.drawerContentContainer}>
+        <View style={styles.flex1}>
 
-            <View>
-
-                <View style={styles.currentWalletContainer}>
-                    <AccountAvatar size={48} address={currentWallet.address} />
-                    <View>
-                        <Text style={styles.textLarge}>{currentWallet.name}</Text>
-                        <Address address={currentWallet.address} copiable={true} />
-                    </View>
+            <View style={styles.currentWalletContainer}>
+                <AccountAvatar size={48} address={currentWallet.address} />
+                <View>
+                    <Text style={styles.textLarge}>{currentWallet.name}</Text>
+                    <Address address={currentWallet.address} copiable={true} />
                 </View>
+            </View>
 
+            <ScrollView>
                 <Separator />
 
                 {Object.values(wallets).map(wallet => wallet.address !== currentAddress.get() &&
@@ -82,7 +80,7 @@ function DrawerContent(props: any) {
                         });
                     }}
                 />
-            </View>
+            </ScrollView>
 
             <View style={styles.drawerFooterContainer}>
                 <Logo width={150} height={34} />
@@ -114,14 +112,14 @@ function DrawerContent(props: any) {
                 </View>
             </View>
 
-        </DrawerContentScrollView>
-    );
+        </View>
+    )
 }
 
 const Drawer = createDrawerNavigator();
 
 export default () => {
-    //useLocker({ key: 'app', initialValue: true });
+    useLocker({ key: 'app', initialValue: true });
 
     return (
         <Drawer.Navigator
@@ -147,7 +145,7 @@ const createStyles = (theme: Theme) => {
             justifyContent: 'space-between'
         },
         drawerFooterContainer: {
-            marginBottom: Spacing.base,
+            marginVertical: Spacing.base,
             alignItems: 'center',
             rowGap: Spacing.base
         },

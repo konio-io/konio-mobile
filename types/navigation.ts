@@ -1,5 +1,6 @@
 import type { RouteProp, NavigatorScreenParams } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
+import { SignClientTypes } from "@walletconnect/types";
 
 /** Root */
 export type RootParamList = {
@@ -12,7 +13,8 @@ export type RootParamList = {
     NewAccount: undefined,
     EditAccount: {
         address: string
-    }
+    },
+    WalletConnect: NavigatorScreenParams<WalletConnectParamList>
 }
 export type AccountNavigationProp = StackNavigationProp<RootParamList, 'Account'>;
 export type AccountRouteProp = RouteProp<RootParamList, 'Account'>;
@@ -26,6 +28,26 @@ export type NewAccountNavigationProps = StackNavigationProp<RootParamList, 'NewA
 export type NewAccountRouteProp = RouteProp<RootParamList, 'NewAccount'>;
 export type EditAccountNavigationProps = StackNavigationProp<RootParamList, 'EditAccount'>;
 export type EditAccountRouteProp = RouteProp<RootParamList, 'EditAccount'>;
+
+/** WalletConnect */
+export type WalletConnectParamList = {
+    DappHome: undefined,
+    DappSessions: undefined,
+    DappPair: {
+        proposal: SignClientTypes.EventArguments["session_proposal"]
+    },
+    DappSign: {
+        request:  SignClientTypes.EventArguments["session_request"]
+    }
+}
+export type DappHomeNavigationProp = StackNavigationProp<WalletConnectParamList, 'DappHome'>;
+export type DappHomeRouteProp = RouteProp<WalletConnectParamList, 'DappHome'>;
+export type DappSessionsNavigationProp = StackNavigationProp<WalletConnectParamList, 'DappSessions'>;
+export type DappSessionsRouteProp = RouteProp<WalletConnectParamList, 'DappSessions'>;
+export type DappPairNavigationProp = StackNavigationProp<WalletConnectParamList, 'DappPair'>;
+export type DappPairRouteProp = RouteProp<WalletConnectParamList, 'DappPair'>;
+export type DappSignNavigationProp = StackNavigationProp<WalletConnectParamList, 'DappSign'>;
+export type DappSignRouteProp = RouteProp<WalletConnectParamList, 'DappSign'>;
 
 /** Account */
 export type AccountParamList = {

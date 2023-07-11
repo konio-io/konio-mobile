@@ -7,17 +7,10 @@ import { Web3Wallet, IWeb3Wallet } from "@walletconnect/web3wallet";
 
 export let web3wallet: IWeb3Wallet;
 export let core: ICore;
-export let currentETHAddress: string;
 
 import { useState, useCallback, useEffect } from "react";
-//import { createOrRestoreEIP155Wallet } from "./EIP155Wallet";
 
 async function createWeb3Wallet() {
-  // Here we create / restore an EIP155 wallet
-  //const { eip155Addresses } = await createOrRestoreEIP155Wallet();
-  //currentETHAddress = eip155Addresses[0];
-
-  // HardCoding it here for ease of tutorial
   const ENV_PROJECT_ID = "c0d8292ab97b4f7adb8f12f095d2806a";
   const core = new Core({
     projectId: ENV_PROJECT_ID,

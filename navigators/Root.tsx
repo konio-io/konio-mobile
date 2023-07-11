@@ -8,8 +8,11 @@ import Account from "./Account";
 import Settings from "./Settings";
 import NewAccount from "../screens/NewAccount";
 import EditAccount from "../screens/EditAccount";
+import WalletConnect from "./WalletConnect";
+import { RootParamList } from "../types/navigation";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootParamList>();
+
 export default () => {
   const i18n = useI18n();
   const theme = useTheme();
@@ -32,14 +35,14 @@ export default () => {
         name="Account"
         component={Account}
         options={{
-          header: () => (<View />),
+          headerShown: false,
         }}
       />
       <Stack.Screen
         name="Settings"
         component={Settings}
         options={{
-          header: () => (<View />)
+          headerShown: false
         }}
       />
       <Stack.Screen
@@ -61,7 +64,7 @@ export default () => {
         component={Unlock}
         options={{
           presentation: 'modal',
-          header: () => (<View />)
+          headerShown: false
         }}
       />
       <Stack.Screen
@@ -69,6 +72,13 @@ export default () => {
         component={ResetPassword}
         options={{
           title: i18n.t('reset_password')
+        }}
+      />
+      <Stack.Screen
+        name="WalletConnect"
+        component={WalletConnect}
+        options={{
+          headerShown: false
         }}
       />
     </Stack.Navigator>

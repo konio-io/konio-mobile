@@ -6,6 +6,9 @@ import es from '../assets/locale/es.json';
 import pt from '../assets/locale/pt.json';
 import zh from '../assets/locale/zh.json';
 import fa from '../assets/locale/fa.json';
+import ru from '../assets/locale/ru.json';
+import tr from '../assets/locale/tr.json';
+import ar from '../assets/locale/ar.json';
 
 const Locales = {
   en,
@@ -15,7 +18,10 @@ const Locales = {
   es,
   pt,
   zh,
-  fa
+  fa,
+  ru,
+  tr,
+  ar
 };
 
 export default Locales;

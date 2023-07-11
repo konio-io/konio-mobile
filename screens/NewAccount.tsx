@@ -3,9 +3,11 @@ import { useNavigation } from '@react-navigation/native';
 import type { NewWalletSeedNavigationProp } from '../types/navigation';
 import { setCurrentWallet, addAccount, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
-import { Button, TextInput, Screen, Text } from '../components';
+import { Button, TextInput, Screen } from '../components';
 import { useI18n, useTheme } from '../hooks';
 import { View } from 'react-native';
+import { EncryptedStore } from '../stores';
+import { MAX_ACCOUNT } from '../lib/Constants';
 
 export default () => {
     const navigation = useNavigation<NewWalletSeedNavigationProp>();
@@ -13,8 +15,17 @@ export default () => {
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
+    const accounts = EncryptedStore.accounts;
 
     const addWallet = () => {
+        if (Object.keys(accounts).length >= MAX_ACCOUNT) {
+            showToast({
+                type: 'error',
+                text1: i18n.t('max_accounts_reached', {max: MAX_ACCOUNT})
+            });
+            return;
+        }
+
         if (!name.get()) {
             showToast({
                 type: 'error',

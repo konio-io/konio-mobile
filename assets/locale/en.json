@@ -156,5 +156,16 @@
     "total_balance":"Total balance",
     "transactions":"Transactions",
     "add_contact":"Add contact",
-    "add_to_addressbook":"Add to addressbook"
+    "add_to_addressbook":"Add to addressbook",
+    "max_accounts_reached":"Max accounts reached ({{max}})",
+    "description":"Description",
+    "URL":"URL",
+    "method":"method",
+    "expiry":"Expiry",
+    "disconnect":"Disconnect",
+    "sessions":"Sessions",
+    "accept":"Accept",
+    "reject":"Reject",
+    "pairing":"Pairing",
+    "signing":"Signing"
   }

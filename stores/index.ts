@@ -4,6 +4,8 @@ import { UserStoreState, EncryptedStoreState } from "../types/store";
 import * as ExpoSecureStore from 'expo-secure-store';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { localstored } from "./localstored";
+import { IWeb3Wallet } from "@walletconnect/web3wallet";
+import { SignClientTypes } from "@walletconnect/types";
 
 /**
  * Global states to track if async-storage is loading stored data
@@ -125,3 +127,7 @@ export const LockStoreDefault : Record<string,boolean> = {};
 export const LockStore = hookstate(LockStoreDefault);
 
 
+/**
+ * WalletConnect web3 wallet
+ */
+export const W3WStore = hookstate<IWeb3Wallet|null>(null);

@@ -1,13 +1,18 @@
 import { utils } from "koilib";
 import { TransactionJsonWait } from "koilib/lib/interface";
-import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore } from "../stores";
+import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, W3W, W3WStore } from "../stores";
 import { Contact, Coin, Network, Transaction, Wallet } from "../types/store";
 import { DEFAULT_COINS, TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_WITHDRAW } from "../lib/Constants";
 import HDKoinos from "../lib/HDKoinos";
 import Toast from 'react-native-toast-message';
 import { State, none } from "@hookstate/core";
-import { getCoinBalance, getContract, getProvider } from "../lib/utils";
+import { getCoinBalance, getContract, getProvider, getSigner } from "../lib/utils";
 import migrations from "../stores/migrations";
+import { Core } from "@walletconnect/core";
+import { Web3Wallet } from "@walletconnect/web3wallet";
+import { SignClientTypes, SessionTypes } from "@walletconnect/types";
+import { getSdkError } from "@walletconnect/utils";
+import { formatJsonRpcError, formatJsonRpcResult } from '@json-rpc-tools/utils';
 
 export const setCurrentWallet = (address: string) => {
     UserStore.currentAddress.set(address);
@@ -98,7 +103,7 @@ export const refreshCoinValue = (contractId: string) => {
         });
 }
 
-export const withdrawCoin = async (args: { contractId: string, to: string, value: string, note: string}) => {
+export const withdrawCoin = async (args: { contractId: string, to: string, value: string, note: string }) => {
     const address = UserStore.currentAddress.get();
     if (!address) {
         throw new Error('Current address not set');
@@ -374,7 +379,7 @@ export const setAccountName = (address: string, name: string) => {
 }
 
 export const addContact = (item: Contact) => {
-    UserStore.addressbook.merge({[item.address]: item});
+    UserStore.addressbook.merge({ [item.address]: item });
 }
 
 export const deleteContact = (address: string) => {
@@ -388,7 +393,7 @@ export const addNetwork = (network: Network) => {
 }
 
 export const deleteNetwork = (networkId: string) => {
-    UserStore.networks.merge({[networkId] : none});
+    UserStore.networks.merge({ [networkId]: none });
 }
 
 export const executeMigrations = () => {
@@ -414,5 +419,129 @@ export const executeMigrations = () => {
                 console.error(e);
             }
         }
+    }
+}
+
+export const createW3W = async (onSessionProposal: any, onSessionRequest: any) => {
+    const ENV_PROJECT_ID = "c0d8292ab97b4f7adb8f12f095d2806a";
+    const core = new Core({
+        projectId: ENV_PROJECT_ID,
+    });
+
+    const web3wallet = await Web3Wallet.init({
+        core,
+        metadata: {
+            name: "Web3Wallet React Native Tutorial",
+            description: "ReactNative Web3Wallet",
+            url: "https://walletconnect.com/",
+            icons: ["https://avatars.githubusercontent.com/u/37784886"],
+        },
+    });
+
+    web3wallet.on("session_proposal", onSessionProposal);
+    web3wallet.on("session_request", onSessionRequest);
+
+    W3WStore.set(web3wallet);
+}
+
+export const pair = async (CURI: string) => {
+    const w3wallet = W3WStore.get();
+    if (w3wallet) {
+        await w3wallet.core.pairing.pair({ uri: CURI });
+    }
+}
+
+export const acceptProposal = async (sessionProposal: SignClientTypes.EventArguments["session_proposal"]) => {
+    const w3wallet = W3WStore.get();
+    const currentAddress = UserStore.currentAddress.get();
+
+    if (w3wallet && currentAddress) {
+        const { id, params } = sessionProposal;
+        const { requiredNamespaces, relays } = params;
+        const namespaces: SessionTypes.Namespaces = {};
+
+        for (const key in requiredNamespaces) {
+            const accounts: string[] = [];
+            requiredNamespaces[key].chains.map((chain: string) => {
+                [currentAddress].map((acc) => accounts.push(`${chain}:${acc}`));
+            });
+
+            namespaces[key] = {
+                accounts,
+                chains: requiredNamespaces[key].chains,
+                methods: requiredNamespaces[key].methods,
+                events: requiredNamespaces[key].events,
+            };
+        }
+
+        await w3wallet.approveSession({
+            id,
+            relayProtocol: relays[0].protocol,
+            namespaces,
+        });
+    }
+}
+
+export const rejectProposal = async (sessionProposal: SignClientTypes.EventArguments["session_proposal"]) => {
+    const w3wallet = W3WStore.get();
+    const { id } = sessionProposal;
+
+    if (w3wallet) {
+        await w3wallet.rejectSession({
+            id,
+            reason: getSdkError("USER_REJECTED_METHODS"),
+        });
+    }
+}
+
+export const acceptRequest = async (sessionRequest: SignClientTypes.EventArguments["session_request"]) => {
+    const { params, id, topic } = sessionRequest;
+    const { request } = params;
+    const networkId = UserStore.currentNetworkId.get();
+    const address = UserStore.currentAddress.get();
+    const w3wallet = W3WStore.get();
+
+    if (address && w3wallet) {
+        const signer = getSigner({ address, networkId });
+        let result : any = null;
+
+        switch (request.method) {
+            case 'koinos_signTransaction':
+                const transaction = Object.assign({}, request.params.transaction);
+                const signedTransaction = await signer.signTransaction(transaction);
+                result = signedTransaction;
+                break;
+            case 'koinos_signMessage':
+                const message = request.params.message;
+                const signedMessage = await signer.signMessage(message);
+                result = btoa(signedMessage.toString());
+                break;
+            case 'koinos_signHash':
+                const hash = request.params.hash;
+                const signedHash = await signer.signHash(hash);
+                result = btoa(signedHash.toString());
+                break;
+        }
+
+        if (result !== null) {
+            const response = formatJsonRpcResult(id, result);
+            await w3wallet.respondSessionRequest({
+                topic,
+                response,
+            });
+        }
+    }
+}
+
+export const rejectRequest = async (sessionRequest: SignClientTypes.EventArguments["session_request"]) => {
+    const { id, topic } = sessionRequest;
+    const response = formatJsonRpcError(id, getSdkError('USER_REJECTED').message);
+    const w3wallet = W3WStore.get();
+
+    if (w3wallet) {
+        await w3wallet.respondSessionRequest({
+            topic,
+            response,
+        });
     }
 }
