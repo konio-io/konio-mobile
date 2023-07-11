@@ -35,13 +35,17 @@ async function createWeb3Wallet() {
 }
 
 // Initialize the Web3Wallet
-export default function useInitialization() {
+export default function useInitialization(onSessionProposal: any, onSessionRequest: any) {
   const [initialized, setInitialized] = useState(false);
 
   const onInitialize = useCallback(async () => {
+    console.log('initialize w3w')
     try {
       await createWeb3Wallet();
       setInitialized(true);
+      web3wallet?.on("session_proposal", onSessionProposal);
+      web3wallet?.on("session_request", onSessionRequest);
+
     } catch (err: unknown) {
       console.log("Error for initializing", err);
     }

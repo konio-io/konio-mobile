@@ -26,9 +26,6 @@ export default () => {
     const [requestEventData, setRequestEventData] = useState();
     const [signModalVisible, setSignModalVisible] = useState(false);
 
-    //Add Initialization
-    useInitialization();
-
     const onSessionProposal = useCallback(
         (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
             setModalVisible(true);
@@ -53,6 +50,9 @@ export default () => {
         },
         []
     );
+
+    //Add Initialization
+    useInitialization(onSessionProposal, onSessionRequest);
 
     async function pair() {
         const pairing = await web3WalletPair({ uri: currentWCURI });
@@ -122,19 +122,6 @@ export default () => {
         }
         setSuccessfulSession(false);
     }
-
-    useEffect(() => {
-        web3wallet?.on("session_proposal", onSessionProposal);
-        web3wallet?.on("session_request", onSessionRequest);
-    }, [
-        pair,
-        handleAccept,
-        handleReject,
-        currentAddress,
-        onSessionRequest,
-        onSessionProposal,
-        successfulSession,
-    ]);
 
     return (
         <Screen>
