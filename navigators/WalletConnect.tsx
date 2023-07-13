@@ -1,10 +1,10 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { WalletConnectParamList } from '../types/navigation'
 import { useTheme, useI18n } from '../hooks';
-import DappPair from '../screens/DappPair';
-import DappSessions from '../screens/DappSessions';
-import DappSign from '../screens/DappSign';
-import DappHome from '../screens/DappHome';
+import WcSessions from '../screens/WcSessions';
+import WcPair from '../screens/WcPair';
+import WcPairScan from '../screens/WcPairScan';
+import WcPairInput from '../screens/WcPairInput';
 
 const Stack = createStackNavigator<WalletConnectParamList>();
 
@@ -27,35 +27,33 @@ export default () => {
             headerTintColor: Color.primary
         }}>
             <Stack.Screen
-                name="DappHome"
-                component={DappHome}
+                name="WcPair"
+                component={WcPair}
                 options={{
-                    title: i18n.t('dapp_home'),
+                    title: i18n.t('new_pair'),
                 }}
             />
             <Stack.Screen
-                name="DappSessions"
-                component={DappSessions}
+                name="WcPairScan"
+                component={WcPairScan}
                 options={{
-                    title: i18n.t('sessions'),
+                    title: i18n.t('new_pair'),
+                    presentation: 'modal'
                 }}
             />
             <Stack.Screen
-                name="DappPair"
-                component={DappPair}
+                name="WcPairInput"
+                component={WcPairInput}
                 options={{
-                    title: i18n.t('pairing'),
-                    presentation: 'modal',
-                    headerShown: false
+                    title: i18n.t('new_pair'),
+                    presentation: 'modal'
                 }}
             />
             <Stack.Screen
-                name="DappSign"
-                component={DappSign}
+                name="WcSessions"
+                component={WcSessions}
                 options={{
-                    title: i18n.t('signing'),
-                    presentation: 'modal',
-                    headerShown: false
+                    title: i18n.t('wc_sessions'),
                 }}
             />
         </Stack.Navigator>

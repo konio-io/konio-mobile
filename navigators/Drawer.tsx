@@ -70,6 +70,21 @@ function DrawerContent(props: any) {
                     }}
                 />
 
+
+                <DrawerItem
+                    labelStyle={styles.text}
+                    label={i18n.t('wc_sessions')}
+                    icon={({ size, color }) => <View style={styles.drawerIconContainer}><Feather name="cast" size={size} color={color} /></View>}
+                    onPress={() => {
+                        navigation.navigate('Root', {
+                            screen: 'WalletConnect',
+                            params: {
+                                screen: 'WcSessions'
+                            }
+                        });
+                    }}
+                />
+
                 <DrawerItem
                     labelStyle={styles.text}
                     label={i18n.t('settings')}
@@ -80,6 +95,7 @@ function DrawerContent(props: any) {
                         });
                     }}
                 />
+
             </ScrollView>
 
             <View style={styles.drawerFooterContainer}>
@@ -119,7 +135,7 @@ function DrawerContent(props: any) {
 const Drawer = createDrawerNavigator();
 
 export default () => {
-    useLocker({ key: 'app', initialValue: true });
+    //useLocker({ key: 'app', initialValue: true });
 
     return (
         <Drawer.Navigator

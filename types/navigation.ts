@@ -2,6 +2,13 @@ import type { RouteProp, NavigatorScreenParams } from '@react-navigation/native'
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { SignClientTypes } from "@walletconnect/types";
 
+/** Drawer */
+export type DrawerParamList = {
+    Root: NavigatorScreenParams<RootParamList>
+}
+export type RootNavigationProp = StackNavigationProp<DrawerParamList, 'Root'>;
+export type RootRouteProp = RouteProp<DrawerParamList, 'Root'>;
+
 /** Root */
 export type RootParamList = {
     Account: NavigatorScreenParams<AccountParamList>
@@ -13,6 +20,12 @@ export type RootParamList = {
     NewAccount: undefined,
     EditAccount: {
         address: string
+    },
+    WcProposal: {
+        proposal: SignClientTypes.EventArguments["session_proposal"]
+    },
+    WcRequest: {
+        request:  SignClientTypes.EventArguments["session_request"]
     },
     WalletConnect: NavigatorScreenParams<WalletConnectParamList>
 }
@@ -28,26 +41,29 @@ export type NewAccountNavigationProps = StackNavigationProp<RootParamList, 'NewA
 export type NewAccountRouteProp = RouteProp<RootParamList, 'NewAccount'>;
 export type EditAccountNavigationProps = StackNavigationProp<RootParamList, 'EditAccount'>;
 export type EditAccountRouteProp = RouteProp<RootParamList, 'EditAccount'>;
+export type WcProposalNavigationProp = StackNavigationProp<RootParamList, 'WcProposal'>;
+export type WcProposalRouteProp = RouteProp<RootParamList, 'WcProposal'>;
+export type WcRequestNavigationProp = StackNavigationProp<RootParamList, 'WcRequest'>;
+export type WcRequestRouteProp = RouteProp<RootParamList, 'WcRequest'>;
 
 /** WalletConnect */
 export type WalletConnectParamList = {
-    DappHome: undefined,
-    DappSessions: undefined,
-    DappPair: {
-        proposal: SignClientTypes.EventArguments["session_proposal"]
+    WcPair: {
+        uri: string
     },
-    DappSign: {
-        request:  SignClientTypes.EventArguments["session_request"]
-    }
+    WcPairInput: undefined,
+    WcPairScan: undefined,
+    WcSessions: undefined
 }
-export type DappHomeNavigationProp = StackNavigationProp<WalletConnectParamList, 'DappHome'>;
-export type DappHomeRouteProp = RouteProp<WalletConnectParamList, 'DappHome'>;
-export type DappSessionsNavigationProp = StackNavigationProp<WalletConnectParamList, 'DappSessions'>;
-export type DappSessionsRouteProp = RouteProp<WalletConnectParamList, 'DappSessions'>;
-export type DappPairNavigationProp = StackNavigationProp<WalletConnectParamList, 'DappPair'>;
-export type DappPairRouteProp = RouteProp<WalletConnectParamList, 'DappPair'>;
-export type DappSignNavigationProp = StackNavigationProp<WalletConnectParamList, 'DappSign'>;
-export type DappSignRouteProp = RouteProp<WalletConnectParamList, 'DappSign'>;
+export type WcPairNavigationProp = StackNavigationProp<WalletConnectParamList, 'WcPair'>;
+export type WcPairRouteProp = RouteProp<WalletConnectParamList, 'WcPair'>;
+export type WcPairInputNavigationProp = StackNavigationProp<WalletConnectParamList, 'WcPairInput'>;
+export type WcPairInputRouteProp = RouteProp<WalletConnectParamList, 'WcPairInput'>;
+export type WcPairScanNavigationProp = StackNavigationProp<WalletConnectParamList, 'WcPairScan'>;
+export type WcPairScanRouteProp = RouteProp<WalletConnectParamList, 'WcPairScan'>;
+export type WcSessionsNavigationProp = StackNavigationProp<WalletConnectParamList, 'WcSessions'>;
+export type WcSessionsRouteProp = RouteProp<WalletConnectParamList, 'WcSessions'>;
+
 
 /** Account */
 export type AccountParamList = {

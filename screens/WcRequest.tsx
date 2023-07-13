@@ -1,39 +1,54 @@
-import { Screen, Wrapper, Button, Text } from "../components"
+import { Button, Screen, Wrapper, Text, AccountListItem } from "../components"
+import { useCurrentAddress, useI18n, useTheme, useW3W, useWallet } from "../hooks";
+import Loading from "./Loading";
 import { View } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { DappPairNavigationProp, DappPairRouteProp } from "../types/navigation";
-import { acceptProposal, rejectProposal } from "../actions";
-import { useI18n, useTheme } from "../hooks";
+import { WcRequestNavigationProp, WcRequestRouteProp } from "../types/navigation";
+import { acceptRequest, rejectRequest } from "../actions";
 
 export default () => {
-    const navigation = useNavigation<DappPairNavigationProp>();
-    const route = useRoute<DappPairRouteProp>();
-    const proposal = route.params.proposal;
+    const navigation = useNavigation<WcRequestNavigationProp>();
+    const route = useRoute<WcRequestRouteProp>();
+    const request = route.params.request;
+    const w3wallet = useW3W().get();
+    const currentAddress = useCurrentAddress().get();
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();
 
+    if (!currentAddress || !w3wallet || !request) {
+        return <Loading />
+    }
+
     const accept = async () => {
-        await acceptProposal(proposal);
+        acceptRequest(request);
         navigation.goBack();
     }
 
     const reject = async () => {
-        await rejectProposal(proposal);
+        rejectRequest(request);
         navigation.goBack();
     }
 
-    const name = proposal?.params?.proposer?.metadata?.name;
-    const url = proposal?.params?.proposer?.metadata?.url;
-    const description = proposal?.params?.proposer?.metadata?.description;
-    const methods = proposal?.params?.requiredNamespaces?.koinos?.methods;
-    //const events = proposal.params.requiredNamespaces.koinos.events;
-    //const chains = proposal.params.requiredNamespaces.koinos.chains;
-    //const icons = proposal.params.proposer.metadata.icons;
+    const data = w3wallet.engine.signClient.session.get(request.topic);
+    const name = data?.peer?.metadata?.name;
+    const description = data?.peer?.metadata?.description;
+    const url = data?.peer?.metadata?.url;
+    const method = request.params.request.method;
+    const account = data.namespaces.koinos?.accounts[0]?.split(':')[2];
+    const wallet = useWallet(account);
 
     return (
         <Screen>
             <Wrapper>
+                {
+                    wallet.ornull &&
+                    <View style={{ width: '100%', height: 70 }}>
+                        <Text style={styles.textSmall}>{i18n.t('account')}</Text>
+                        <AccountListItem address={account} />
+                    </View>
+                }
+
                 {
                     name &&
                     <View>
@@ -59,12 +74,10 @@ export default () => {
                 }
 
                 {
-                    methods &&
+                    method &&
                     <View>
                         <Text style={styles.textSmall}>{i18n.t('method')}</Text>
-                        {methods.map(method =>
-                            <Text key={method}>{method}</Text>
-                        )}
+                        <Text>{method}</Text>
                     </View>
                 }
             </Wrapper>

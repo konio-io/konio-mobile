@@ -1,40 +1,33 @@
-import { Button, Screen, Wrapper, Text } from "../components"
-import { useCurrentAddress, useI18n, useTheme, useW3W } from "../hooks";
-import Loading from "./Loading";
+import { Screen, Wrapper, Button, Text } from "../components"
 import { View } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { DappSignNavigationProp, DappSignRouteProp } from "../types/navigation";
-import { acceptRequest, rejectRequest } from "../actions";
+import { WcProposalNavigationProp, WcProposalRouteProp } from "../types/navigation";
+import { acceptProposal, rejectProposal } from "../actions";
+import { useI18n, useTheme } from "../hooks";
 
 export default () => {
-    const navigation = useNavigation<DappSignNavigationProp>();
-    const route = useRoute<DappSignRouteProp>();
-    const request = route.params.request;
-    const w3wallet = useW3W().get();
-    const currentAddress = useCurrentAddress().get();
+    const navigation = useNavigation<WcProposalNavigationProp>();
+    const route = useRoute<WcProposalRouteProp>();
+    const proposal = route.params.proposal;
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();
 
-    if (!currentAddress || !w3wallet || !request) {
-        return <Loading />
-    }
-
     const accept = async () => {
-        acceptRequest(request);
+        await acceptProposal(proposal);
         navigation.goBack();
     }
 
     const reject = async () => {
-        rejectRequest(request);
+        await rejectProposal(proposal);
         navigation.goBack();
     }
 
-    const data = w3wallet.engine.signClient.session.get(request.topic);
-    const name = data?.peer?.metadata?.name;
-    const description = data?.peer?.metadata?.description;
-    const url = data?.peer?.metadata?.url;
-    const method = request.params.request.method;
+    const name = proposal?.params?.proposer?.metadata?.name;
+    const url = proposal?.params?.proposer?.metadata?.url;
+    const description = proposal?.params?.proposer?.metadata?.description;
+    const methods = proposal?.params?.requiredNamespaces?.koinos?.methods;
+    //const icons = proposal.params.proposer.metadata.icons;
 
     return (
         <Screen>
@@ -64,10 +57,12 @@ export default () => {
                 }
 
                 {
-                    method &&
+                    methods &&
                     <View>
                         <Text style={styles.textSmall}>{i18n.t('method')}</Text>
-                        <Text>{method}</Text>
+                        {methods.map(method =>
+                            <Text key={method}>{method}</Text>
+                        )}
                     </View>
                 }
             </Wrapper>

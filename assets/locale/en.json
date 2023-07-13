@@ -160,12 +160,19 @@
     "max_accounts_reached":"Max accounts reached ({{max}})",
     "description":"Description",
     "URL":"URL",
-    "method":"method",
+    "method":"Method",
     "expiry":"Expiry",
     "disconnect":"Disconnect",
-    "sessions":"Sessions",
+    "wc_sessions":"DAPPs Sessions",
     "accept":"Accept",
     "reject":"Reject",
-    "pairing":"Pairing",
-    "signing":"Signing"
+    "new_pair":"New pair",
+    "wc_proposal":"Dapp Proposal",
+    "wc_request":"Dapp Request",
+    "account":"Account",
+    "scan_again":"Scan again",
+    "requesting_camera_permission":"Requesting camera permission",
+    "no_access_camera":"No access camera",
+    "wc_pair_scan":"Scan qrcode",
+    "wc_pair_input":"Input manually"
   }

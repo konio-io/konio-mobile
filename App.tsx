@@ -13,7 +13,10 @@ import Drawer from './navigators/Drawer';
 import { executeMigrations } from './actions';
 import Loading from './screens/Loading';
 import Intro from './navigators/Intro';
-import { userStoreIsLoading, encryptedStoreIsLoading, UserStore } from './stores';
+import { userStoreIsLoading, encryptedStoreIsLoading } from './stores';
+import * as Linking from 'expo-linking';
+
+const prefix = Linking.createURL('/');
 
 export default function App() {
   useFonts({
@@ -25,13 +28,33 @@ export default function App() {
   const PolyfillCrypto = global.PolyfillCrypto;
   const navigationTheme = theme.name === 'dark' ? DarkTheme : DefaultTheme;
 
+  const linking = {
+    prefixes: [prefix],
+    config: {
+      screens: {
+        Root: {
+          initialRouteName: 'Account',
+          screens: {
+            Account: 'account',
+            Settings: 'settings',
+            WalletConnect: {
+              screens: {
+                WcPair: 'wc'
+              }
+            }
+          }
+        }
+      }
+    }
+  };
+
   return (
-    <NavigationContainer theme={navigationTheme}>
+    <NavigationContainer theme={navigationTheme} linking={linking} fallback={<Loading />}>
       <PolyfillCrypto />
 
       <SheetProvider>
         <SafeAreaView style={{ flex: 1, backgroundColor: Color.base }}>
-          <Main/>
+          <Main />
         </SafeAreaView>
       </SheetProvider>
 
@@ -43,16 +66,16 @@ export default function App() {
 
 const Main = () => {
   const currentAddress = useCurrentAddress();
-  
+
   if (userStoreIsLoading.get() || encryptedStoreIsLoading.get()) {
-      return <Loading />;
+    return <Loading />;
   }
 
   executeMigrations();
 
   if (!currentAddress.get()) {
-      return <Intro />;
+    return <Intro />;
   }
 
-  return <Drawer/>;
+  return <Drawer />;
 }
