@@ -114,3 +114,13 @@ export type Contact = {
     name: string,
     address: string
 }
+
+export interface Dapp {
+    icon: string,
+    name: string,
+    summary: string,
+    description: string,
+    url: string,
+    tags: Array<string>,
+    compatible: boolean
+}

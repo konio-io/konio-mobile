@@ -6,7 +6,7 @@ import { useFonts } from 'expo-font';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Toast } from "./components";
-import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
+import { DarkTheme, DefaultTheme, NavigationContainer, getStateFromPath } from "@react-navigation/native";
 import { useCurrentAddress, useTheme } from './hooks';
 import { SheetProvider } from "react-native-actions-sheet";
 import Drawer from './navigators/Drawer';
@@ -39,13 +39,55 @@ export default function App() {
             Settings: 'settings',
             WalletConnect: {
               screens: {
-                WcPair: 'wc'
+                WcPair: 'wc/:uri'
               }
             }
           }
         }
       }
-    }
+    },
+    getStateFromPath: (path: string, options: any) => {
+      if (path.includes('wc?uri=')) {
+        const newPath = path.replace('wc?uri=','wc/').replace('?','$');
+        return getStateFromPath(newPath, options);
+        /*
+        return {
+          index: 1,
+          routes: [
+            {
+              name: "Root",
+              state: {
+                routes: [
+                  {
+                    name: "Account",
+                  },
+                  {
+                    name: "WalletConnect",
+                    state: {
+                      routes: [
+                        {
+                          name: "Pair",
+                          path: "wc",
+                          params: {
+                            uri: path.replace('wc?uri=','')
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }*/
+      }
+
+      return getStateFromPath(path, options);
+    },
+    /*getPathFromState(state, config) {
+      // Return a path string here
+      // You can also reuse the default logic by importing `getPathFromState` from `@react-navigation/native`
+    },*/
   };
 
   return (

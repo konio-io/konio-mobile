@@ -224,5 +224,5 @@ export const useAppState = () => {
 }
 
 export const useW3W = () => {
-    return W3WStore;
+    return useHookstate(W3WStore);
 }

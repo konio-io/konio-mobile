@@ -1,4 +1,4 @@
-import { Screen, Text, Separator, Button, ActivityIndicator, AccountListItem } from "../components"
+import { Screen, Text, Separator, Button, ActivityIndicator, AccountListItem, Accordion, AccountAvatar } from "../components"
 import { useCallback } from "react";
 import { getSdkError } from "@walletconnect/utils";
 import { ImmutableObject, none, useHookstate } from "@hookstate/core";
@@ -56,10 +56,10 @@ export default () => {
             />
 
             <View style={styles.paddingBase}>
-                <Button 
+                <Button
                     icon={(<AntDesign name="scan1" size={24} color="black" />)}
-                    title={i18n.t('new_pair')} 
-                    onPress={() => SheetManager.show('wc_pair')} 
+                    title={i18n.t('new_pair')}
+                    onPress={() => SheetManager.show('wc_pair')}
                 />
             </View>
         </Screen>
@@ -80,44 +80,67 @@ const DappSession = (props: {
     const description = props.item?.peer?.metadata?.description;
     const url = props.item?.peer?.metadata?.url;
     const account = props.item?.namespaces.koinos?.accounts[0]?.split(':')[2];
-    const wallet = useWallet(account);
 
     return (
-        <View style={{ ...styles.rowGapBase, ...styles.paddingBase }}>
-            {
-                wallet.ornull &&
-                <AccountListItem address={account} />
-            }
-            {
-                name &&
-                <View>
-                    <Text style={styles.textSmall}>{i18n.t('name')}</Text>
-                    <Text>{name}</Text>
-                </View>
-            }
+        <Accordion header={(<ItemHeader address={account} name={name} />)}>
+            <View style={{ ...styles.rowGapBase }}>
+                {
+                    name &&
+                    <View>
+                        <Text style={styles.textSmall}>{i18n.t('name')}</Text>
+                        <Text>{name}</Text>
+                    </View>
+                }
 
-            {
-                description &&
-                <View>
-                    <Text style={styles.textSmall}>{i18n.t('description')}</Text>
-                    <Text>{description}</Text>
-                </View>
-            }
+                {
+                    description &&
+                    <View>
+                        <Text style={styles.textSmall}>{i18n.t('description')}</Text>
+                        <Text>{description}</Text>
+                    </View>
+                }
 
-            {
-                url &&
-                <View>
-                    <Text style={styles.textSmall}>{i18n.t('URL')}</Text>
-                    <Text>{url}</Text>
-                </View>
-            }
+                {
+                    url &&
+                    <View>
+                        <Text style={styles.textSmall}>{i18n.t('URL')}</Text>
+                        <Text>{url}</Text>
+                    </View>
+                }
 
-            <View>
-                <Text style={styles.textSmall}>{i18n.t('expiry')}</Text>
-                <Text>{expiry}</Text>
+                <View>
+                    <Text style={styles.textSmall}>{i18n.t('expiry')}</Text>
+                    <Text>{expiry}</Text>
+                </View>
+
+                <Button 
+                    icon={(<AntDesign name="disconnect"/>)}
+                    type="secondary" 
+                    title={i18n.t('disconnect')} 
+                    onPress={() => props.onPress(props.item.topic)}
+                />
             </View>
+        </Accordion>
+    );
+}
 
-            <Button type="secondary" title={i18n.t('disconnect')} onPress={() => props.onPress(props.item.topic)} />
+const ItemHeader = (props: {
+    address: string,
+    name: string
+}) => {
+    const wallet = useWallet(props.address).get();
+    const theme = useTheme();
+    const styles = theme.styles;
+
+    return (
+        <View style={{ ...styles.directionRow, ...styles.alignSpaceBetweenRow }}>
+            <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
+                <AccountAvatar address={props.address} size={24} />
+                <Text>{wallet.name}</Text>
+            </View>
+            <View>
+                <Text>{props.name}</Text>
+            </View>
         </View>
     );
 }

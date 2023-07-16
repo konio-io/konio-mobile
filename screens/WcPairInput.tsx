@@ -17,6 +17,8 @@ export default () => {
 
             <View style={{...styles.paddingBase, ...styles.rowGapBase}}>
                 <TextInput
+                    autoFocus={true}
+                    multiline={true}
                     value={uri.get()}
                     onChangeText={(v: string) => uri.set(v)}
                     actions={(

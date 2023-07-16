@@ -15,7 +15,25 @@ import { DONATION_ADDRESS } from '../lib/Constants';
 import { State } from '@hookstate/core';
 import Loading from '../screens/Loading';
 
-function DrawerContent(props: any) {
+const Drawer = createDrawerNavigator();
+export default () => {
+    //useLocker({ key: 'app', initialValue: true });
+
+    return (
+        <Drawer.Navigator
+            useLegacyImplementation
+            drawerContent={(props) => <DrawerContent {...props} />}
+            screenOptions={{
+                headerShown: false
+
+            }}
+        >
+            <Drawer.Screen name="Root" component={Root} />
+        </Drawer.Navigator>
+    );
+}
+
+const DrawerContent = (props: any) => {
     const { navigation } = props;
     const wallets = useWallets().get();
     const i18n = useI18n();
@@ -70,7 +88,6 @@ function DrawerContent(props: any) {
                     }}
                 />
 
-
                 <DrawerItem
                     labelStyle={styles.text}
                     label={i18n.t('wc_sessions')}
@@ -95,7 +112,6 @@ function DrawerContent(props: any) {
                         });
                     }}
                 />
-
             </ScrollView>
 
             <View style={styles.drawerFooterContainer}>
@@ -132,27 +148,8 @@ function DrawerContent(props: any) {
     )
 }
 
-const Drawer = createDrawerNavigator();
-
-export default () => {
-    //useLocker({ key: 'app', initialValue: true });
-
-    return (
-        <Drawer.Navigator
-            useLegacyImplementation
-            drawerContent={(props) => <DrawerContent {...props} />}
-            screenOptions={{
-                headerShown: false
-
-            }}
-        >
-            <Drawer.Screen name="Root" component={Root} />
-        </Drawer.Navigator>
-    );
-}
-
 const createStyles = (theme: Theme) => {
-    const { Spacing, Color } = theme.vars;
+    const { Spacing } = theme.vars;
 
     return StyleSheet.create({
         ...theme.styles,

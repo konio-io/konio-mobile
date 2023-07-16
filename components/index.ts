@@ -37,6 +37,8 @@ import TextInputAction from './TextInputAction';
 import TextInputActionCopy from './TextInputActionCopy';
 import TextInputActionPaste from './TextInputActionPaste';
 import ManaProgressLogo from './ManaProgressLogo';
+import Accordion from './Accordion';
+import Badge from './Badge';
 
 export {
     ActivityIndicator,
@@ -77,5 +79,7 @@ export {
     TextInputAction,
     TextInputActionPaste,
     TextInputActionCopy,
-    ManaProgressLogo
+    ManaProgressLogo,
+    Accordion,
+    Badge
 }

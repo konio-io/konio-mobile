@@ -11,7 +11,6 @@ export default (props: {
 }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
-  const { Border } = theme.vars;
 
   return (
     <Pressable onPress={() => props.onPress()}>

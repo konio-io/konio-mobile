@@ -3,13 +3,17 @@ import Text from "./Text";
 import { useTheme } from "../hooks";
 
 export default (props: {
-    onPress: Function,
+    onPress?: Function,
     text: string
 }) => {
     const {styles} = useTheme();
 
     return (
-        <Pressable onPress={() => props.onPress()}>
+        <Pressable onPress={() => {
+            if (props.onPress) {
+                props.onPress();
+            }
+        }}>
             <Text style={styles.link}>{props.text}</Text>
         </Pressable>
     );

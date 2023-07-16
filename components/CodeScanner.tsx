@@ -47,11 +47,13 @@ export default (props: {
 
     return (
         <View style={styles.flex1}>
-            <BarCodeScanner
-                barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
-                onBarCodeScanned={scanned.get() ? undefined : handleBarCodeScanned}
-                style={StyleSheet.absoluteFillObject}
-            />
+            <View style={styles.flex1}>
+                <BarCodeScanner
+                    barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
+                    onBarCodeScanned={scanned.get() ? undefined : handleBarCodeScanned}
+                    style={StyleSheet.absoluteFillObject}
+                />
+            </View>
 
             {scanned.get() &&
                 <View style={styles.paddingBase}>

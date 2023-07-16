@@ -2,6 +2,7 @@ import { useHookstate } from '@hookstate/core';
 import CircleLogo from './CircleLogo';
 import { View, Image } from 'react-native';
 import { useTheme } from '../hooks';
+import { RESOURCES_DOMAIN } from '../lib/Constants';
 
 export default (props: {
     contractId: string
@@ -11,7 +12,7 @@ export default (props: {
     const theme = useTheme();
     const { Border } = theme.vars;
 
-    fetch(`https://konio.io/tokenlist/${props.contractId}.json`)
+    fetch(`https://${RESOURCES_DOMAIN}/tokenlist/${props.contractId}.json`)
         .then(response => response.json())
         .then(json => {
             if (json.logo) {

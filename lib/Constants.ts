@@ -83,3 +83,4 @@ export const OS_THEME = 'auto';
 export const MAX_ACCOUNT = 10;
 export const DONATION_ADDRESS = '1Pbh4S8iSXRJrsa4rm4DKSBr9QhbPA4Sxj';
 export const UNIVERSAL_LINK_PREFIX = 'https://wallet.konio.io';
+export const RESOURCES_DOMAIN = 'konio.io';

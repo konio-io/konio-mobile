@@ -174,5 +174,7 @@
     "requesting_camera_permission":"Requesting camera permission",
     "no_access_camera":"No access camera",
     "wc_pair_scan":"Scan qrcode",
-    "wc_pair_input":"Input manually"
+    "wc_pair_input":"Input manually",
+    "pairing_error":"Pairing failed",
+    "compatible":"Compatible"
   }

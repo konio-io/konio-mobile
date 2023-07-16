@@ -66,7 +66,6 @@ const ItemContent = (props: {
                 </View>
             }
 
-
             <View style={{ ...styles.flex1, ...styles.directionRow, ...styles.alignSpaceBetweenRow }}>
                 {typeof props.content === 'string' &&
                     <View>
