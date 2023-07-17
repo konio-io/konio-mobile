@@ -1,4 +1,4 @@
-import { Screen, Text, Separator, Button, ActivityIndicator, AccountListItem, Accordion, AccountAvatar } from "../components"
+import { Screen, Text, Separator, Button, ActivityIndicator, AccountListItem, Accordion, AccountAvatar, Link } from "../components"
 import { useCallback } from "react";
 import { getSdkError } from "@walletconnect/utils";
 import { ImmutableObject, none, useHookstate } from "@hookstate/core";
@@ -55,12 +55,8 @@ export default () => {
                 ItemSeparatorComponent={() => <Separator />}
             />
 
-            <View style={styles.paddingBase}>
-                <Button
-                    icon={(<AntDesign name="scan1" size={24} color="black" />)}
-                    title={i18n.t('new_pair')}
-                    onPress={() => SheetManager.show('wc_pair')}
-                />
+            <View style={{ ...styles.paddingBase, ...styles.alignCenterColumn }}>
+                <Link text={i18n.t('new_connection')} onPress={() => SheetManager.show('wc_pair')} />
             </View>
         </Screen>
     );
@@ -113,10 +109,10 @@ const DappSession = (props: {
                     <Text>{expiry}</Text>
                 </View>
 
-                <Button 
-                    icon={(<AntDesign name="disconnect"/>)}
-                    type="secondary" 
-                    title={i18n.t('disconnect')} 
+                <Button
+                    icon={(<AntDesign name="disconnect" />)}
+                    type="secondary"
+                    title={i18n.t('disconnect')}
                     onPress={() => props.onPress(props.item.topic)}
                 />
             </View>

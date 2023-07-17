@@ -30,14 +30,14 @@ export default () => {
                 name="WcPair"
                 component={WcPair}
                 options={{
-                    title: i18n.t('new_pair'),
+                    title: i18n.t('new_connection'),
                 }}
             />
             <Stack.Screen
                 name="WcPairScan"
                 component={WcPairScan}
                 options={{
-                    title: i18n.t('new_pair'),
+                    title: i18n.t('new_connection'),
                     presentation: 'modal'
                 }}
             />
@@ -45,7 +45,7 @@ export default () => {
                 name="WcPairInput"
                 component={WcPairInput}
                 options={{
-                    title: i18n.t('new_pair'),
+                    title: i18n.t('new_connection'),
                     presentation: 'modal'
                 }}
             />
