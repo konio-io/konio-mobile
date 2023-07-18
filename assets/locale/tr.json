@@ -177,5 +177,7 @@
     "wc_pair_scan": "QR kodunu tarayın",
     "wc_pair_input": "Elle giriş yapın",
     "pairing_error": "Eşleştirme başarısız",
-    "compatible": "Uyumlu"
+    "compatible": "Uyumlu",
+    "dapp_proposal_success": "Dapp bağlandı",
+    "wrong_rpc_node": "Hatalı rpc düğümü"
 }

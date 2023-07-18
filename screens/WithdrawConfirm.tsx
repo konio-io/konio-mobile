@@ -1,10 +1,10 @@
-import { Button, Screen, TextInput, Text, Wrapper, AccountAvatar, Address } from '../components';
+import { Button, Screen, TextInput, Text, AccountAvatar, Address } from '../components';
 import { useHookstate } from '@hookstate/core';
 import { useNavigation, CommonActions, useRoute } from '@react-navigation/native';
 import { WithdrawConfirmNavigationProp, WithdrawConfirmRouteProp } from '../types/navigation';
 import { withdrawCoin, confirmTransaction, showToast } from '../actions'
 import { Feather } from '@expo/vector-icons';
-import { useCoin, useTheme, useI18n, useWallet, useContact } from '../hooks';
+import { useCoin, useTheme, useI18n, useAccount, useContact } from '../hooks';
 import { View, StyleSheet } from 'react-native';
 import type { Theme } from '../types/store';
 
@@ -17,7 +17,7 @@ export default () => {
     const contractId = route.params.contractId;
     const note = useHookstate('');
 
-    const toAccount = useWallet(to).get();
+    const toAccount = useAccount(to).get();
     const toContact = useContact(to).get();
     const coin = useCoin(contractId).get();
     const theme = useTheme();

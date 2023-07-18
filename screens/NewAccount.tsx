@@ -1,7 +1,7 @@
 import { useHookstate } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import type { NewWalletSeedNavigationProp } from '../types/navigation';
-import { setCurrentWallet, addAccount, showToast } from '../actions';
+import { setCurrentAccount, addAccount, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { Button, TextInput, Screen } from '../components';
 import { useI18n, useTheme } from '../hooks';
@@ -17,7 +17,7 @@ export default () => {
     const styles = theme.styles;
     const accounts = EncryptedStore.accounts;
 
-    const addWallet = () => {
+    const add = () => {
         if (Object.keys(accounts).length >= MAX_ACCOUNT) {
             showToast({
                 type: 'error',
@@ -36,7 +36,7 @@ export default () => {
 
         addAccount(name.get().trim())
             .then(address => {
-                setCurrentWallet(address);
+                setCurrentAccount(address);
                 navigation.goBack();
             })
             .catch(e => {
@@ -63,7 +63,7 @@ export default () => {
             <View style={styles.paddingBase}>
                 <Button
                     title={i18n.t('add_account')}
-                    onPress={() => addWallet()}
+                    onPress={() => add()}
                     icon={<Feather name="plus" />}
                 />
             </View>

@@ -1,10 +1,10 @@
 import { Button, Screen, Wrapper, Text, AccountListItem } from "../components"
-import { useCurrentAddress, useI18n, useTheme, useW3W, useWallet } from "../hooks";
+import { useCurrentAddress, useI18n, useTheme, useW3W, useAccount } from "../hooks";
 import Loading from "./Loading";
 import { View } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { WcRequestNavigationProp, WcRequestRouteProp } from "../types/navigation";
-import { acceptRequest, rejectRequest } from "../actions";
+import { acceptRequest, rejectRequest, showToast } from "../actions";
 
 export default () => {
     const navigation = useNavigation<WcRequestNavigationProp>();
@@ -21,7 +21,19 @@ export default () => {
     }
 
     const accept = async () => {
-        acceptRequest(request);
+        try {
+            await acceptRequest(request);
+            showToast({
+                type: 'success',
+                text1: i18n.t('dapp_request_success')
+            });
+        } catch (e) {
+            showToast({
+                type: 'error',
+                text1: i18n.t('dapp_request_error')
+            });
+        }
+
         navigation.goBack();
     }
 
@@ -35,17 +47,17 @@ export default () => {
     const description = data?.peer?.metadata?.description;
     const url = data?.peer?.metadata?.url;
     const method = request.params.request.method;
-    const account = data.namespaces.koinos?.accounts[0]?.split(':')[2];
-    const wallet = useWallet(account);
+    const address = data.namespaces.koinos?.accounts[0]?.split(':')[2];
+    const account = useAccount(address);
 
     return (
         <Screen>
             <Wrapper>
                 {
-                    wallet.ornull &&
+                    account.ornull &&
                     <View style={{ width: '100%', height: 70 }}>
                         <Text style={styles.textSmall}>{i18n.t('account')}</Text>
-                        <AccountListItem address={account} />
+                        <AccountListItem address={address} />
                     </View>
                 }
 

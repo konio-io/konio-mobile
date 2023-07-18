@@ -176,5 +176,10 @@
     "wc_pair_scan":"Scan qrcode",
     "wc_pair_input":"Input manually",
     "pairing_error":"Pairing failed",
-    "compatible":"Compatible"
+    "compatible":"Compatible",
+    "dapp_proposal_success":"Dapp connected",
+    "dapp_proposal_error":"Dapp connection error",
+    "dapp_request_success":"Dapp request approved",
+    "dapp_request_error":"Dapp request error",
+    "wrong_rpc_node":"Wrong rpc node"
   }

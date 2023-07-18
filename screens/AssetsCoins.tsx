@@ -1,7 +1,7 @@
 import { TouchableHighlight, View } from 'react-native';
 import { State } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
-import { useCurrentAddress, useTheme, useI18n, useCurrentKoin, useCoinValue, useWallet } from '../hooks';
+import { useCurrentAddress, useTheme, useI18n, useCurrentKoin, useCoinValue, useAccount } from '../hooks';
 import { CoinList, ManaBar, CoinListItem, Screen, Link, DrawerToggler, MoreVertical, Text, Address } from '../components';
 import { AssetsCoinsNavigationProp, } from '../types/navigation';
 import Loading from './Loading';
@@ -21,10 +21,11 @@ export default () => {
   const currentKoin = useCurrentKoin();
   const coinValue = useCoinValue(currentKoin.get());
   const i18n = useI18n();
+  const account = useAccount(currentAddressOrNull.get());
 
   useEffect(() => {
     navigation.setOptions({
-      title: wallet.name.get(),
+      title: account.name.get(),
       headerShadowVisible: false,
       headerTitleAlign: 'center',
       headerLeft: () => (<DrawerToggler />),
@@ -33,7 +34,7 @@ export default () => {
     });
   }, [navigation]);
 
-  const wallet = useWallet(currentAddressOrNull.get());
+  
 
   return (
     <Screen>
@@ -45,7 +46,7 @@ export default () => {
           </View>
 
           <View style={styles.alignCenterColumn}>
-            <Text style={styles.textMedium}>{wallet.name.get()}</Text>
+            <Text style={styles.textMedium}>{account.name.get()}</Text>
             <Address address={currentAddressOrNull.get()} copiable={true}/>
           </View>
         </View>

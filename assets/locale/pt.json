@@ -177,5 +177,7 @@
   "wc_pair_scan": "Escanear código QR",
   "wc_pair_input": "Inserir manualmente",
   "pairing_error": "Falha na associação",
-  "compatible": "Compatível"
+  "compatible": "Compatível",
+  "dapp_proposal_success": "Dapp conectada",
+  "wrong_rpc_node": "Nodo RPC incorrecto"
 }

@@ -4,9 +4,9 @@ import {
     createDrawerNavigator,
     DrawerItem,
 } from '@react-navigation/drawer';
-import { useCurrentAddress, useI18n, useLocker, useTheme, useWallets } from '../hooks';
-import { AccountAvatar, Logo, Separator, Link, Button, Address } from '../components';
-import { setCurrentWallet } from '../actions';
+import { useCurrentAddress, useI18n, useLocker, useTheme, useAccounts } from '../hooks';
+import { AccountAvatar, Logo, Separator, Link, Button, Address, WcLogo } from '../components';
+import { setCurrentAccount } from '../actions';
 import Root from './Root';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import type { Theme } from '../types/store';
@@ -17,7 +17,7 @@ import Loading from '../screens/Loading';
 
 const Drawer = createDrawerNavigator();
 export default () => {
-    //useLocker({ key: 'app', initialValue: true });
+    useLocker({ key: 'app', initialValue: true });
 
     return (
         <Drawer.Navigator
@@ -35,7 +35,7 @@ export default () => {
 
 const DrawerContent = (props: any) => {
     const { navigation } = props;
-    const wallets = useWallets().get();
+    const accounts = useAccounts().get();
     const i18n = useI18n();
     const theme = useTheme();
     const styles = createStyles(theme);
@@ -46,30 +46,30 @@ const DrawerContent = (props: any) => {
         return <Loading />;
     }
 
-    const currentWallet = wallets[currentAddressOrNull.get()];
+    const currentAccount = accounts[currentAddressOrNull.get()];
 
     return (
         <View style={styles.flex1}>
 
-            <View style={styles.currentWalletContainer}>
-                <AccountAvatar size={48} address={currentWallet.address} />
+            <View style={styles.currentAccountContainer}>
+                <AccountAvatar size={48} address={currentAccount.address} />
                 <View>
-                    <Text style={styles.textLarge}>{currentWallet.name}</Text>
-                    <Address address={currentWallet.address} copiable={true} />
+                    <Text style={styles.textLarge}>{currentAccount.name}</Text>
+                    <Address address={currentAccount.address} copiable={true} />
                 </View>
             </View>
 
             <ScrollView>
                 <Separator />
 
-                {Object.values(wallets).map(wallet => wallet.address !== currentAddress.get() &&
+                {Object.values(accounts).map(account => account.address !== currentAddress.get() &&
                     <DrawerItem
                         labelStyle={styles.text}
-                        key={wallet.address}
-                        label={wallet.name}
-                        icon={() => <AccountAvatar size={28} address={wallet.address} />}
+                        key={account.address}
+                        label={account.name}
+                        icon={() => <AccountAvatar size={28} address={account.address} />}
                         onPress={() => {
-                            setCurrentWallet(wallet.address);
+                            setCurrentAccount(account.address);
                             navigation.navigate('Root', {
                                 screen: 'Account'
                             });
@@ -90,25 +90,25 @@ const DrawerContent = (props: any) => {
 
                 <DrawerItem
                     labelStyle={styles.text}
-                    label={i18n.t('wc_sessions')}
-                    icon={({ size, color }) => <View style={styles.drawerIconContainer}><Feather name="cast" size={size} color={color} /></View>}
+                    label={i18n.t('settings')}
+                    icon={({ size, color }) => <View style={styles.drawerIconContainer}><AntDesign name="setting" size={size} color={color} /></View>}
                     onPress={() => {
                         navigation.navigate('Root', {
-                            screen: 'WalletConnect',
-                            params: {
-                                screen: 'WcSessions'
-                            }
+                            screen: 'Settings'
                         });
                     }}
                 />
 
                 <DrawerItem
                     labelStyle={styles.text}
-                    label={i18n.t('settings')}
-                    icon={({ size, color }) => <View style={styles.drawerIconContainer}><AntDesign name="setting" size={size} color={color} /></View>}
+                    label='WalletConnect'
+                    icon={({ size }) => <View style={styles.drawerIconContainer}><WcLogo/></View>}
                     onPress={() => {
                         navigation.navigate('Root', {
-                            screen: 'Settings'
+                            screen: 'WalletConnect',
+                            params: {
+                                screen: 'WcSessions'
+                            }
                         });
                     }}
                 />
@@ -179,7 +179,7 @@ const createStyles = (theme: Theme) => {
             alignItems: 'center',
             width: 28
         },
-        currentWalletContainer: {
+        currentAccountContainer: {
             padding: Spacing.base,
             flexDirection: 'row',
             columnGap: Spacing.base,

@@ -40,7 +40,7 @@ export const TransactionListItem = (props: {
     const i18n = useI18n();
 
     const openTransactionLink = () => {
-        Linking.openURL(`${network.explorer}/tx/${props.transactionId}`);
+        Linking.openURL(`${network.explorer}/${props.transactionId}`);
     };
 
     return (
@@ -70,7 +70,7 @@ export const TransactionListItem = (props: {
                 </View>
             )}
         >
-            <View>
+            <View style={styles.rowGapBase}>
                 <Copiable copy={transaction.transactionId}>
                     <View>
                         <Text style={styles.textSmall}>TXid <Feather name="copy" size={12} /></Text>
@@ -85,16 +85,20 @@ export const TransactionListItem = (props: {
                     <Text style={styles.textSmall}>{i18n.t('status')}</Text>
                     <Text>{transaction.status}</Text>
                 </View>
-                <View>
-                    <Text style={styles.textSmall}>{i18n.t('note')}</Text>
-                    <Text>{transaction.note}</Text>
-                </View>
 
-                <Button 
-                    title={i18n.t('open_explorer')} 
-                    onPress={openTransactionLink} 
+                {
+                    transaction.note &&
+                    <View>
+                        <Text style={styles.textSmall}>{i18n.t('note')}</Text>
+                        <Text>{transaction.note}</Text>
+                    </View>
+                }
+
+                <Button
+                    title={i18n.t('open_explorer')}
+                    onPress={openTransactionLink}
                     type='secondary'
-                     icon={<Feather name="external-link"/>}
+                    icon={<Feather name="external-link" />}
                 />
             </View>
         </Accordion>

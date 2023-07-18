@@ -1,5 +1,5 @@
 import { Screen, TextInput, Button, Text } from "../components"
-import { useI18n, useTheme, useWallet } from "../hooks"
+import { useI18n, useTheme, useAccount } from "../hooks"
 import { useHookstate } from "@hookstate/core";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { EditAccountNavigationProps, EditAccountRouteProp } from "../types/navigation";
@@ -11,8 +11,8 @@ export default () => {
     const route = useRoute<EditAccountRouteProp>();
     const navigation = useNavigation<EditAccountNavigationProps>();
 
-    const wallet = useWallet(route.params.address);
-    const name = useHookstate(wallet.name.get());
+    const account = useAccount(route.params.address);
+    const name = useHookstate(account.name.get());
     const theme = useTheme();
     const styles = theme.styles;
 

@@ -1,8 +1,8 @@
 import { utils } from "koilib";
 import { TransactionJsonWait } from "koilib/lib/interface";
-import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, W3W, W3WStore } from "../stores";
-import { Contact, Coin, Network, Transaction, Wallet } from "../types/store";
-import { DEFAULT_COINS, TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_WITHDRAW } from "../lib/Constants";
+import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, W3WStore } from "../stores";
+import { Contact, Coin, Network, Transaction, Account } from "../types/store";
+import { DEFAULT_COINS, TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_WITHDRAW, WALLET_CONNECT_PROJECT_ID } from "../lib/Constants";
 import HDKoinos from "../lib/HDKoinos";
 import Toast from 'react-native-toast-message';
 import { State, none } from "@hookstate/core";
@@ -14,7 +14,7 @@ import { SignClientTypes, SessionTypes } from "@walletconnect/types";
 import { getSdkError } from "@walletconnect/utils";
 import { formatJsonRpcError, formatJsonRpcResult } from '@json-rpc-tools/utils';
 
-export const setCurrentWallet = (address: string) => {
+export const setCurrentAccount = (address: string) => {
     UserStore.currentAddress.set(address);
     refreshCoinListBalance();
     refreshMana();
@@ -58,7 +58,7 @@ export const refreshCoinListBalance = () => {
         return;
     }
 
-    const coins = UserStore.wallets[currentAddressOrNull.get()].coins.get()
+    const coins = UserStore.accounts[currentAddressOrNull.get()].coins.get()
         .filter((contractId: string) => {
             const coin = UserStore.coins[contractId];
             return coin.networkId.get() === UserStore.currentNetworkId.get();
@@ -176,7 +176,7 @@ export const addCoin = async (contractId: string) => {
     }
 
     const networkId = UserStore.currentNetworkId.get();
-    const currentCoins = UserStore.wallets[address].coins;
+    const currentCoins = UserStore.accounts[address].coins;
     const coins = UserStore.coins;
 
     if (currentCoins.get().includes(contractId)) {
@@ -216,17 +216,19 @@ const addAddress = (address: string, name: string) => {
     const networks = Object.values(UserStore.networks.get());
     for (const network of networks) {
         for (const symbol of DEFAULT_COINS) {
-            coins.push(network.coins[symbol].contractId);
+            if (symbol === 'KOIN' || symbol === 'VHP') {
+                coins.push(network.coins[symbol].contractId);
+            }
         }
     }
 
-    const wallets = UserStore.wallets;
-    const wallet: Wallet = {
+    const accounts = UserStore.accounts;
+    const account: Account = {
         name,
         address,
         coins
     };
-    wallets.merge({ [wallet.address]: wallet });
+    accounts.merge({ [account.address]: account });
 }
 
 export const addSeed = async (args: {
@@ -253,21 +255,21 @@ export const addSeed = async (args: {
 
 export const addAccount = async (name: string) => {
     const accounts = EncryptedStore.accounts;
-    const wallet = Object.values(accounts.get()).find(w => w.seed !== undefined);
+    const account = Object.values(accounts.get()).find(w => w.seed !== undefined);
 
-    if (!wallet) {
-        throw new Error("Unable to find main seed wallet");
+    if (!account) {
+        throw new Error("Unable to find main seed account");
     }
 
-    if (wallet.seed === undefined) {
-        throw new Error("Provided wallet address is not a seed wallet");
+    if (account.seed === undefined) {
+        throw new Error("Provided account address is not a seed account");
     }
 
-    if (wallet.accountIndex === undefined) {
-        throw new Error("Provided wallet address does not have an accountIndex");
+    if (account.accountIndex === undefined) {
+        throw new Error("Provided account address does not have an accountIndex");
     }
 
-    const { address, privateKey } = await HDKoinos.createWallet(wallet.seed, wallet.accountIndex + 1);
+    const { address, privateKey } = await HDKoinos.createWallet(account.seed, account.accountIndex + 1);
 
     addAddress(address, name);
 
@@ -278,7 +280,7 @@ export const addAccount = async (name: string) => {
         }
     });
 
-    accounts[wallet.address].accountIndex.set(wallet.accountIndex + 1);
+    accounts[account.address].accountIndex.set(account.accountIndex + 1);
     return address;
 }
 
@@ -357,7 +359,7 @@ export const deleteCoin = (contractId: string) => {
     if (!address) {
         throw new Error('Current address not set');
     }
-    const coins = UserStore.wallets[address].coins;
+    const coins = UserStore.accounts[address].coins;
     const index = coins.get().indexOf(contractId);
     if (index > -1) {
         coins[index].set(none);
@@ -366,16 +368,12 @@ export const deleteCoin = (contractId: string) => {
     }
 }
 
-export const deleteWallet = (address: string) => {
-    UserStore.wallets[address].set(none);
-}
-
 export const setAutolock = (autolock: number) => {
     UserStore.autolock.set(autolock);
 }
 
 export const setAccountName = (address: string, name: string) => {
-    UserStore.wallets[address].name.set(name);
+    UserStore.accounts[address].name.set(name);
 }
 
 export const addContact = (item: Contact) => {
@@ -423,9 +421,8 @@ export const executeMigrations = () => {
 }
 
 export const createW3W = async (onSessionProposal: any, onSessionRequest: any) => {
-    const ENV_PROJECT_ID = "c0d8292ab97b4f7adb8f12f095d2806a";
     const core = new Core({
-        projectId: ENV_PROJECT_ID,
+        projectId: WALLET_CONNECT_PROJECT_ID,
     });
 
     const web3wallet = await Web3Wallet.init({
@@ -462,7 +459,7 @@ export const acceptProposal = async (sessionProposal: SignClientTypes.EventArgum
 
         for (const key in requiredNamespaces) {
             const accounts: string[] = [];
-            requiredNamespaces[key].chains.map((chain: string) => {
+            requiredNamespaces[key].chains?.map((chain: string) => {
                 [currentAddress].map((acc) => accounts.push(`${chain}:${acc}`));
             });
 

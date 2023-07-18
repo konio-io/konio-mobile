@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { useHookstate } from '@hookstate/core';
 import { Button, TextInput, Wrapper, Screen, TextInputActionPaste } from '../components';
-import { addSeed, setCurrentWallet } from '../actions';
+import { addSeed, setCurrentAccount } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n } from '../hooks';
 import { showToast } from '../actions';
@@ -27,7 +27,7 @@ export default () => {
       seed: seed.get().toLowerCase().trim()
     })
       .then(address => {
-        setCurrentWallet(address);
+        setCurrentAccount(address);
       })
       .catch(e => {
         console.log(e);

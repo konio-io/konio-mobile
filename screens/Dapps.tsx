@@ -2,11 +2,11 @@ import { View, Image, FlatList, TouchableHighlight, Linking, StyleSheet } from "
 import { RESOURCES_DOMAIN } from "../lib/Constants";
 import { ImmutableArray, ImmutableObject, useHookstate } from "@hookstate/core";
 import { Dapp, Theme } from "../types/store";
-import { Text, Screen, Link, Badge } from "../components";
+import { Text, Screen, Link, Badge, Accordion } from "../components";
 import { useI18n, useTheme } from "../hooks";
 import { useEffect } from "react";
 import { rgba } from "../lib/utils";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 export default () => {
 
@@ -70,7 +70,7 @@ const Tagsbar = (props: {
         <View style={{ ...styles.paddingBase, ...styles.directionRow, ...styles.columnGapSmall, ...styles.rowGapSmall, flexWrap: 'wrap' }}>
             {
                 Object.keys(tags).map(tag =>
-                    <Tag name={tag} count={tags[tag]} selected={props.selected === tag} onPress={(tag: string) => props.onSelect(tag)} />
+                    <Tag key={tag} name={tag} count={tags[tag]} selected={props.selected === tag} onPress={(tag: string) => props.onSelect(tag)} />
                 )
             }
         </View>
@@ -101,32 +101,27 @@ const Item = (props: {
 
     const theme = useTheme();
     const styles = createStyles(theme);
-    const { Color } = theme.vars;
-    const i18n = useI18n();
 
     return (
-        <TouchableHighlight onPress={() => Linking.openURL(props.item.url)}>
-            <View style={styles.itemContainer}>
-                {
-                    props.item.compatible &&
-                    <View style={styles.compatibleContainer}>
-                        <Badge label={i18n.t('compatible')} color={Color.base} backgroundColor={Color.success} />
+        <Accordion
+            header={(
+                <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
+                    <TouchableWithoutFeedback onPress={() => Linking.openURL(props.item.url)}>
+                        <Image style={styles.itemIcon} source={{ uri: props.item.icon }} />
+                    </TouchableWithoutFeedback>
+
+                    <View style={styles.itemRightContainer}>
+                        <Text style={styles.textMedium}>{props.item.name}</Text>
+                        <Text style={styles.textSmall}>{props.item.summary}</Text>
                     </View>
-                }
-
-                <Image style={styles.itemIcon} source={{ uri: props.item.icon }} />
-
-                <View style={styles.itemRightContainer}>
-                    <Text style={styles.textMedium}>{props.item.name}</Text>
-                    <Text style={styles.textSmall}>{props.item.summary}</Text>
-                    <View style={styles.directionRow}>
-                        <Text style={styles.itemDescription}>{props.item.description}</Text>
-                    </View>
-
-                    <Link text={props.item.url} />
                 </View>
+            )}
+        >
+            <View style={{ marginLeft: styles.itemIcon.width + 15 }}>
+                <Text style={styles.itemDescription}>{props.item.description}</Text>
+                <Link text={props.item.url} onPress={() => Linking.openURL(props.item.url)} />
             </View>
-        </TouchableHighlight>
+        </Accordion>
     )
 }
 
@@ -136,12 +131,6 @@ const createStyles = (theme: Theme) => {
 
     return StyleSheet.create({
         ...theme.styles,
-        itemContainer: {
-            ...styles.paddingBase,
-            ...styles.directionRow,
-            ...styles.columnGapBase,
-            backgroundColor: Color.base
-        },
         itemIcon: {
             width: 50,
             height: 50,
@@ -171,11 +160,6 @@ const createStyles = (theme: Theme) => {
             fontFamily: FontFamily.sans,
             padding: Spacing.small,
             borderRadius: Border.radius
-        },
-        compatibleContainer: {
-            position: 'absolute',
-            right: Spacing.base,
-            top: Spacing.base
         }
     });
 }

@@ -39,6 +39,7 @@ import TextInputActionPaste from './TextInputActionPaste';
 import ManaProgressLogo from './ManaProgressLogo';
 import Accordion from './Accordion';
 import Badge from './Badge';
+import WcLogo from './Wclogo';
 
 export {
     ActivityIndicator,
@@ -81,5 +82,6 @@ export {
     TextInputActionCopy,
     ManaProgressLogo,
     Accordion,
-    Badge
+    Badge,
+    WcLogo
 }

@@ -2,7 +2,7 @@ import { Screen, Wrapper, Button, Text } from "../components"
 import { View } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { WcProposalNavigationProp, WcProposalRouteProp } from "../types/navigation";
-import { acceptProposal, rejectProposal } from "../actions";
+import { acceptProposal, rejectProposal, showToast } from "../actions";
 import { useI18n, useTheme } from "../hooks";
 
 export default () => {
@@ -14,7 +14,19 @@ export default () => {
     const i18n = useI18n();
 
     const accept = async () => {
-        await acceptProposal(proposal);
+        try {
+            await acceptProposal(proposal);
+            showToast({
+                type: 'success',
+                text1: i18n.t('dapp_proposal_success')
+            });
+        } catch (e) {
+            showToast({
+                type: 'error',
+                text1: i18n.t('dapp_proposal_error')
+            });
+        }
+
         navigation.goBack();
     }
 

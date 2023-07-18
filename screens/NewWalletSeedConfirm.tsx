@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { State, useHookstate } from '@hookstate/core';
 import { Text, Button, Wrapper, Screen, Seed } from '../components';
-import { addSeed, setCurrentWallet, showToast } from '../actions';
+import { addSeed, setCurrentAccount, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
 import { NewWalletSeedConfirmRouteProp } from '../types/navigation';
@@ -46,7 +46,7 @@ export default () => {
             seed: seed
         })
             .then(address => {
-                setCurrentWallet(address);
+                setCurrentAccount(address);
             })
             .catch(e => {
                 console.log(e);

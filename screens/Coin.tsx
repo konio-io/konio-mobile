@@ -6,13 +6,12 @@ import { useCoin, useCoinBalance, useCoinValue, useI18n, useTheme } from '../hoo
 import { Feather } from '@expo/vector-icons';
 import { useEffect } from 'react';
 import { SheetManager } from "react-native-actions-sheet";
-import { DEFAULT_COINS } from '../lib/Constants';
 
 export default () => {
     const navigation = useNavigation<AssetsNavigationProp>();
     const route = useRoute<CoinRouteProp>();
-    const walletCoin = useCoin(route.params.contractId);
-    const coin = walletCoin.get();
+    const accountCoin = useCoin(route.params.contractId);
+    const coin = accountCoin.get();
     const theme = useTheme();
     const styles = theme.styles;
     const coinBalance = useCoinBalance(route.params.contractId);
@@ -30,7 +29,7 @@ export default () => {
                 )
             }
         });
-    }, [walletCoin, navigation]);
+    }, [accountCoin, navigation]);
 
     return (
         <Screen>
@@ -40,7 +39,7 @@ export default () => {
                     <View>
                         <View>
                             <Text style={styles.textXlarge}>${coinValue.get() && coinValue.get().toFixed(2)}</Text>
-                            <Text style={styles.textMedium}>{coinBalance.get()} {walletCoin.symbol.get()}</Text>
+                            <Text style={styles.textMedium}>{coinBalance.get()} {accountCoin.symbol.get()}</Text>
                         </View>
                     </View>
 
@@ -49,7 +48,7 @@ export default () => {
                     </View>
                 </View>
 
-                {walletCoin.symbol.get() !== 'VHP' &&
+                {accountCoin.symbol.get() !== 'VHP' &&
                     <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
                         <Button
                             style={{ flex: 1 }}
@@ -75,9 +74,12 @@ export default () => {
                 }
             </View>
 
-            <View style={{ ...styles.paddingBase }}>
-                <Text style={styles.sectionTitle}>{i18n.t('transactions')}</Text>
-            </View>
+            {
+                coin.transactions.length > 0 &&
+                <View style={{ ...styles.paddingBase }}>
+                    <Text style={styles.sectionTitle}>{i18n.t('transactions')}</Text>
+                </View>
+            }
 
             <TransactionList contractId={route.params.contractId} />
         </Screen>

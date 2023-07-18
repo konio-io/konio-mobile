@@ -11,6 +11,7 @@ import { useTheme } from '../hooks';
 import type { Network } from '../types/store';
 import { DEFAULT_NETWORKS } from '../lib/Constants';
 import { ScrollView } from 'react-native-gesture-handler';
+import { Provider } from 'koilib';
 
 export default () => {
   const DEFAULT_NETWORK = Object.values(DEFAULT_NETWORKS)[0];
@@ -19,7 +20,6 @@ export default () => {
   const theme = useTheme();
   const styles = theme.styles;
   const name = useHookstate('');
-  const chainId = useHookstate('');
   const rpcNode = useHookstate('');
   const explorer = useHookstate('');
   const KOIN = useHookstate('');
@@ -42,8 +42,8 @@ export default () => {
     );
   };
 
-  const add = (replace = false) => {
-    if (!name.get() || !chainId.get() || !rpcNode.get() || !explorer.get()) {
+  const add = async (replace = false) => {
+    if (!name.get() || !rpcNode.get() || !explorer.get()) {
       showToast({
         type: 'error',
         text1: i18n.t('missing_data')
@@ -51,16 +51,27 @@ export default () => {
       return;
     }
 
-    if (UserStore.networks[chainId.get()].get() && replace === false) {
+    const provider = new Provider([rpcNode.get()]);
+    const chainId = await provider.getChainId();
+
+    if (!chainId) {
+      showToast({
+        type: 'error',
+        text1: i18n.t('wrong_rpc_node')
+      });
+      return;
+    }
+
+    if (UserStore.networks[chainId].get() && replace === false) {
       showAlert();
       return;
     }
 
     const network: Network = {
       name: name.get(),
-      chainId: chainId.get(),
+      chainId: chainId,
       rpcNodes: [rpcNode.get()],
-      coins: { //ToDo fetch from blockchain
+      coins: {
         KOIN: { ...DEFAULT_NETWORK.coins.KOIN, contractId: KOIN.get() },
         MANA: { ...DEFAULT_NETWORK.coins.MANA, contractId: MANA.get() },
         VHP: { ...DEFAULT_NETWORK.coins.VHP, contractId: VHP.get() }
@@ -74,7 +85,6 @@ export default () => {
 
   const reset = () => {
     name.set(DEFAULT_NETWORK.name);
-    chainId.set(DEFAULT_NETWORK.chainId);
     rpcNode.set(DEFAULT_NETWORK.rpcNodes[0]);
     explorer.set(DEFAULT_NETWORK.explorer);
     KOIN.set(DEFAULT_NETWORK.coins.KOIN.contractId);
@@ -93,13 +103,6 @@ export default () => {
               onChangeText={(v: string) => name.set(v)}
               placeholder={i18n.t('name')}
               note={`Ex: ${DEFAULT_NETWORK.name}`}
-            />
-          
-            <TextInput
-              value={chainId.get()}
-              onChangeText={(v: string) => chainId.set(v)}
-              placeholder={'chain id'}
-              note={`Ex: ${DEFAULT_NETWORK.chainId}`}
             />
           
             <TextInput

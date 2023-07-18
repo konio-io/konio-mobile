@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { Screen, TextInput, Button, Text, AccountAvatar, ListItemSelected, DrawerToggler, AddressListItem, Link, TextInputActionPaste } from '../components';
-import { useTheme, useI18n, useWallets, useWallet, useTransactions, useAddressbook, useContact, useCurrentAddress } from '../hooks';
+import { useTheme, useI18n, useAccounts, useAccount, useTransactions, useAddressbook, useContact, useCurrentAddress } from '../hooks';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { WithdrawToNavigationProp, WithdrawToRouteProp } from '../types/navigation';
 import { showToast } from '../actions';
@@ -62,22 +62,9 @@ export default () => {
             </View>
 
             <ScrollView>
+                <RecentList onPressItem={(addr: string) => address.set(addr)} selected={address.get()} />
 
-                <View style={styles.paddingVerticalBase}>
-                    <View style={styles.paddingHorizontalBase}>
-                        <Text style={styles.sectionTitle}>{i18n.t('recents')}</Text>
-                    </View>
-
-                    <RecentList onPressItem={(addr: string) => address.set(addr)} selected={address.get()} />
-                </View>
-
-                <View style={styles.paddingVerticalBase}>
-                    <View style={styles.paddingHorizontalBase}>
-                        <Text style={styles.sectionTitle}>{i18n.t('accounts')}</Text>
-                    </View>
-
-                    <AccountList onPressItem={(addr: string) => address.set(addr)} selected={address.get()} />
-                </View>
+                <AccountList onPressItem={(addr: string) => address.set(addr)} selected={address.get()} />
 
                 <View style={styles.paddingVerticalBase}>
                     <View style={styles.paddingHorizontalBase}>
@@ -106,7 +93,7 @@ const To = (props: {
     const navigation = useNavigation<WithdrawToNavigationProp>();
     const address = useHookstate('');
     const name = useHookstate('');
-    const account = useWallet(address.get());
+    const account = useAccount(address.get());
     const contact = useContact(address.get());
 
     const i18n = useI18n();
@@ -176,6 +163,8 @@ const RecentList = (props: {
 }) => {
     const currentAddress = useCurrentAddress();
     const transactions = useTransactions().get();
+    const { styles } = useTheme();
+    const i18n = useI18n();
     const result = Object.values(transactions)
         .filter(t => t.type === 'WITHDRAW')
         .sort((a, b) => (a.timestamp > b.timestamp) ? 1 : ((b.timestamp > a.timestamp) ? -1 : 0))
@@ -186,7 +175,13 @@ const RecentList = (props: {
     const data = [...new Set(result)];
 
     return (
-        <View>
+        <View style={styles.paddingVerticalBase}>
+            {
+                data.length &&
+                <View style={styles.paddingHorizontalBase}>
+                    <Text style={styles.sectionTitle}>{i18n.t('recents')}</Text>
+                </View>
+            }
             {data.map(item =>
                 <ToListItem key={item} address={item} selected={props.selected === item} onPress={(address: string) => props.onPressItem(address)} />
             )}
@@ -199,8 +194,10 @@ const AccountList = (props: {
     selected: string
 }) => {
     const currentAddress = useCurrentAddress();
-    const wallets = useWallets().get();
-    const result = Object.values(wallets)
+    const accounts = useAccounts().get();
+    const { styles } = useTheme();
+    const i18n = useI18n();
+    const result = Object.values(accounts)
         .sort((a, b) => a.name > b.name ? 1 : -1)
         .map(t => t.address)
         .filter(address => address !== currentAddress.get());
@@ -208,7 +205,13 @@ const AccountList = (props: {
     const data = [...new Set(result)];
 
     return (
-        <View>
+        <View style={styles.paddingVerticalBase}>
+            {
+                data.length &&
+                <View style={styles.paddingHorizontalBase}>
+                    <Text style={styles.sectionTitle}>{i18n.t('accounts')}</Text>
+                </View>
+            }
             {data.map(item =>
                 <ToListItem key={item} address={item} selected={props.selected === item} onPress={(address: string) => props.onPressItem(address)} />
             )}
@@ -252,7 +255,7 @@ const ToListItem = (props: {
     selected: boolean
 }) => {
 
-    const account = useWallet(props.address);
+    const account = useAccount(props.address);
     const contact = useContact(props.address);
     let name = '';
 

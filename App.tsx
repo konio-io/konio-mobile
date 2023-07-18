@@ -50,44 +50,10 @@ export default function App() {
       if (path.includes('wc?uri=')) {
         const newPath = path.replace('wc?uri=','wc/').replace('?','$');
         return getStateFromPath(newPath, options);
-        /*
-        return {
-          index: 1,
-          routes: [
-            {
-              name: "Root",
-              state: {
-                routes: [
-                  {
-                    name: "Account",
-                  },
-                  {
-                    name: "WalletConnect",
-                    state: {
-                      routes: [
-                        {
-                          name: "Pair",
-                          path: "wc",
-                          params: {
-                            uri: path.replace('wc?uri=','')
-                          }
-                        }
-                      ]
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        }*/
       }
 
       return getStateFromPath(path, options);
     },
-    /*getPathFromState(state, config) {
-      // Return a path string here
-      // You can also reuse the default logic by importing `getPathFromState` from `@react-navigation/native`
-    },*/
   };
 
   return (

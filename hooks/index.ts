@@ -1,5 +1,5 @@
 import { State, useHookstate } from "@hookstate/core";
-import { CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, W3WStore, W3WProposalStore, W3WRequestStore } from "../stores";
+import { CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, W3WStore } from "../stores";
 import { getTheme } from "../themes";
 import { AppState, useColorScheme } from 'react-native';
 import Locales from "../lib/Locales";
@@ -14,8 +14,8 @@ export const useNetworks = () => {
     return useHookstate(UserStore.networks);
 }
 
-export const useWallets = () => {
-    return useHookstate(UserStore.wallets);
+export const useAccounts = () => {
+    return useHookstate(UserStore.accounts);
 }
 
 export const useNetwork = (networkId: string) => {
@@ -30,8 +30,8 @@ export const useCurrentAddress = (): State<string | null> => {
     return useHookstate(UserStore.currentAddress);
 }
 
-export const useWallet = (address: string) => {
-    return useHookstate(UserStore.wallets[address]);
+export const useAccount = (address: string) => {
+    return useHookstate(UserStore.accounts[address]);
 }
 
 export const useCoin = (contractId: string) => {
@@ -47,21 +47,21 @@ export const useCoinValue = (contractId: string) => {
 }
 
 /**
- * Current wallet coins
+ * Current account coins
  * @returns 
  */
 export const useCoins = () => {
     const currentAddress = useHookstate(UserStore.currentAddress);
     const currentAddressOrNull: State<string> | null = currentAddress.ornull;
     if (currentAddressOrNull) {
-        return useHookstate(UserStore.wallets[currentAddressOrNull.get()].coins);
+        return useHookstate(UserStore.accounts[currentAddressOrNull.get()].coins);
     }
     return useHookstate([]);
 }
 
 
 /**
- * Current wallet/network/coin transactions
+ * Current account/network/coin transactions
  * @param contractId 
  * @returns 
  */

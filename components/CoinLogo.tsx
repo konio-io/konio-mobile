@@ -15,10 +15,11 @@ export default (props: {
     fetch(`https://${RESOURCES_DOMAIN}/tokenlist/${props.contractId}.json`)
         .then(response => response.json())
         .then(json => {
-            if (json.logo) {
+            if (json && json.logo) {
                 logo.set(json.logo);
             }
-        });
+        })
+        .catch(() => {})
 
     return (
         <View style={{borderRadius: props.size, borderColor: Border.color, borderWidth: Border.width, padding: 1}}>

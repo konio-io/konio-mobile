@@ -5,7 +5,6 @@ import * as ExpoSecureStore from 'expo-secure-store';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { localstored } from "./localstored";
 import { IWeb3Wallet } from "@walletconnect/web3wallet";
-import { SignClientTypes } from "@walletconnect/types";
 
 /**
  * Global states to track if async-storage is loading stored data
@@ -20,7 +19,7 @@ export const encryptedStoreIsLoading = hookstate(true);
 export const UserStoreDefault: UserStoreState = {
     currentNetworkId: DEFAULT_NETWORK,
     currentAddress: null,
-    wallets: {},
+    accounts: {},
     coins: {
         [Object.values(DEFAULT_NETWORKS)[0].coins.KOIN.contractId] : Object.values(DEFAULT_NETWORKS)[0].coins.KOIN,
         [Object.values(DEFAULT_NETWORKS)[0].coins.VHP.contractId] : Object.values(DEFAULT_NETWORKS)[0].coins.VHP,
@@ -86,7 +85,7 @@ export const EncryptedStore = hookstate(
  * It is used to provide global "mana" recharge
  * The "manaBar" is watching this store.mana value and it creates a setInterval to provide fake "live" mana recharge
  * Everytime someone calls "refreshMana" the store.mana value is updated and the manaBar is rendering again with a new interval
- * We call refreshMana actually in transactionConfirm, setCurrentNetwork and setCurrentWallet
+ * We call refreshMana actually in transactionConfirm, setCurrentNetwork and setCurrentAccount
  */
 const ManaStoreDefault = {
     mana: 0,

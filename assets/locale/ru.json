@@ -177,5 +177,7 @@
   "wc_pair_scan": "Сканировать QR-код",
   "wc_pair_input": "Ввести вручную",
   "pairing_error": "Сбой сопряжения",
-  "compatible": "Совместимый"
+  "compatible": "Совместимый",
+  "dapp_proposal_success": "Dapp подключена",
+  "wrong_rpc_node": "Неправильный узел RPC"
 }

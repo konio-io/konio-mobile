@@ -1,10 +1,10 @@
-import { Screen, Text, Separator, Button, ActivityIndicator, AccountListItem, Accordion, AccountAvatar, Link } from "../components"
+import { Screen, Text, Separator, Button, ActivityIndicator, Accordion, AccountAvatar, Link } from "../components"
 import { useCallback } from "react";
 import { getSdkError } from "@walletconnect/utils";
 import { ImmutableObject, none, useHookstate } from "@hookstate/core";
 import { FlatList } from "react-native-gesture-handler";
 import { View } from "react-native";
-import { useI18n, useTheme, useW3W, useWallet } from "../hooks";
+import { useI18n, useTheme, useW3W, useAccount } from "../hooks";
 import { SessionTypes } from "@walletconnect/types";
 import Loading from "./Loading";
 import { useFocusEffect } from "@react-navigation/native";
@@ -79,7 +79,7 @@ const DappSession = (props: {
 
     return (
         <Accordion header={(<ItemHeader address={account} name={name} />)}>
-            <View style={{ ...styles.rowGapBase }}>
+            <View style={{ ...styles.rowGapBase, ...styles.flex1 }}>
                 {
                     name &&
                     <View>
@@ -124,7 +124,7 @@ const ItemHeader = (props: {
     address: string,
     name: string
 }) => {
-    const wallet = useWallet(props.address).get();
+    const account = useAccount(props.address).get();
     const theme = useTheme();
     const styles = theme.styles;
 
@@ -132,7 +132,7 @@ const ItemHeader = (props: {
         <View style={{ ...styles.directionRow, ...styles.alignSpaceBetweenRow }}>
             <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
                 <AccountAvatar address={props.address} size={24} />
-                <Text>{wallet.name}</Text>
+                <Text>{account.name}</Text>
             </View>
             <View>
                 <Text>{props.name}</Text>

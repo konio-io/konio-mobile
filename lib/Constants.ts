@@ -9,7 +9,7 @@ export const DEFAULT_NETWORKS: Record<string, Network> = {
             "https://api.koinos.io",
             "https://api.koinosblocks.com"
         ],
-        explorer: "https://koinosblocks.com",
+        explorer: "https://koiner.app/transactions",
         coins: {
             KOIN: {
                 contractId: "15DJN4a8SgrbGhhGksSBASiSYjGnMU8dGL",
@@ -34,34 +34,34 @@ export const DEFAULT_NETWORKS: Record<string, Network> = {
             }
         }
     },
-    "EiAAKqFi-puoXnuJTdn7qBGGJa8yd-dcS2P0ciODe4wupQ==": {
+    "EiBncD4pKRIQWco_WRqo5Q-xnXR7JuO3PtZv983mKdKHSQ==": {
         name: "Koinos Harbinger (testnet)",
-        chainId: "EiAAKqFi-puoXnuJTdn7qBGGJa8yd-dcS2P0ciODe4wupQ==",
+        chainId: "EiBncD4pKRIQWco_WRqo5Q-xnXR7JuO3PtZv983mKdKHSQ==",
         rpcNodes: [
             "https://harbinger-api.koinos.io",
             "https://testnet.koinosblocks.com",
         ],
-        explorer: "https://harbinger.koinosblocks.com",
+        explorer: "https://koiner.app/transactions",
         coins: {
             KOIN: {
-                contractId: "19JntSm8pSNETT9aHTwAUHC5RMoaSmgZPJ",
+                contractId: "1FaSvLjQJsCJKq5ybmGsMMQs8RQYyVv8ju",
                 symbol: "KOIN",
                 decimal: 8,
-                networkId: "EiAAKqFi-puoXnuJTdn7qBGGJa8yd-dcS2P0ciODe4wupQ==",
+                networkId: "EiBncD4pKRIQWco_WRqo5Q-xnXR7JuO3PtZv983mKdKHSQ==",
                 transactions: []
             },
             VHP: {
-                contractId: "1JZqj7dDrK5LzvdJgufYBJNUFo88xBoWC8",
+                contractId: "17n12ktwN79sR6ia9DDgCfmw77EgpbTyBi",
                 symbol: "VHP",
                 decimal: 8,
-                networkId: "EiAAKqFi-puoXnuJTdn7qBGGJa8yd-dcS2P0ciODe4wupQ==",
+                networkId: "EiBncD4pKRIQWco_WRqo5Q-xnXR7JuO3PtZv983mKdKHSQ==",
                 transactions: []
             },
             MANA: {
-                contractId: "1BXi4SX4jjbaLzcRbmRKtpMQbQmFYnmX9Z",
+                contractId: "16X6cKyqiT8EzPEksRJxXcqMnHMMm9Vxct",
                 symbol: "MANA",
                 decimal: 8,
-                networkId: "EiAAKqFi-puoXnuJTdn7qBGGJa8yd-dcS2P0ciODe4wupQ==",
+                networkId: "EiBncD4pKRIQWco_WRqo5Q-xnXR7JuO3PtZv983mKdKHSQ==",
                 transactions: []
             }
         }
@@ -84,3 +84,4 @@ export const MAX_ACCOUNT = 10;
 export const DONATION_ADDRESS = '1Pbh4S8iSXRJrsa4rm4DKSBr9QhbPA4Sxj';
 export const UNIVERSAL_LINK_PREFIX = 'https://wallet.konio.io';
 export const RESOURCES_DOMAIN = 'konio.io';
+export const WALLET_CONNECT_PROJECT_ID = 'c0d8292ab97b4f7adb8f12f095d2806a';

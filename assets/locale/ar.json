@@ -176,5 +176,7 @@
     "wc_pair_scan": "مسح رمز الاستجابة السريعة",
     "wc_pair_input": "إدخال يدوي",
     "pairing_error": "فشل الاقتران",
-    "compatible": "متوافق"
+    "compatible": "متوافق",
+    "dapp_proposal_success": "تم الاتصال بالتطبيق اللامركزي",
+    "wrong_rpc_node": "العقدة RPC الخاطئة"
 }

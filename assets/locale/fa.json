@@ -177,5 +177,7 @@
   "wc_pair_scan": "اسکن کد QR",
   "wc_pair_input": "وارد کردن به صورت دستی",
   "pairing_error": "ناموفقیت در جفت‌شدن",
-  "compatible":"سازگار"
+  "compatible":"سازگار",
+  "dapp_proposal_success": "دپ متصل است",
+  "wrong_rpc_node": "گره RPC اشتباه"
 }

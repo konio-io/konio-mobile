@@ -11,8 +11,8 @@ export default (props: {
 }) => {
     const refreshing = useHookstate(false);
     const currentNetworkId = useCurrentNetworkId();
-    const walletCoins = useCoins();
-    const coins = walletCoins.get()
+    const accountCoins = useCoins();
+    const coins = accountCoins.get()
         .filter((contractId: string) => {
             const coin = UserStore.coins[contractId];
             if (coin) {

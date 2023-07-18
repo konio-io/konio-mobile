@@ -177,5 +177,7 @@
   "wc_pair_scan": "扫描二维码",
   "wc_pair_input": "手动输入",
   "pairing_error": "配对失败",
-  "compatible": "兼容"
+  "compatible": "兼容",
+  "dapp_proposal_success": "Dapp 连接成功",
+  "wrong_rpc_node": "错误的RPC节点"
 }

@@ -1,14 +1,14 @@
 import { StatusBarStyle } from "expo-status-bar"
 
 export type EncryptedStoreState = {
-    accounts: Record<string, Account>,
+    accounts: Record<string, AccountSecure>,
     password: string
 }
 
 export type UserStoreState = {
     currentNetworkId: string,
     currentAddress: string|null,
-    wallets: Record<string, Wallet>,
+    accounts: Record<string, Account>,
     coins: Record<string, Coin>,
     transactions: Record<string, Transaction>,
     networks: Record<string, Network>,
@@ -21,14 +21,14 @@ export type UserStoreState = {
     version: string
 }
 
-export type Account = {
+export type AccountSecure = {
     address: string,
     privateKey: string,
     seed?: string,
     accountIndex?: number
 }
 
-export type Wallet = {
+export type Account = {
     name: string,
     address: string,
     coins: Array<string>
