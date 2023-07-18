@@ -85,3 +85,5 @@ export const DONATION_ADDRESS = '1Pbh4S8iSXRJrsa4rm4DKSBr9QhbPA4Sxj';
 export const UNIVERSAL_LINK_PREFIX = 'https://wallet.konio.io';
 export const RESOURCES_DOMAIN = 'konio.io';
 export const WALLET_CONNECT_PROJECT_ID = 'c0d8292ab97b4f7adb8f12f095d2806a';
+export const DAPPS_URL = 'https://dapps.konio.io';
+export const TOKENS_URL = 'https://tokens.konio.io';

@@ -2,7 +2,7 @@ import { useHookstate } from '@hookstate/core';
 import CircleLogo from './CircleLogo';
 import { View, Image } from 'react-native';
 import { useTheme } from '../hooks';
-import { RESOURCES_DOMAIN } from '../lib/Constants';
+import { RESOURCES_DOMAIN, TOKENS_URL } from '../lib/Constants';
 
 export default (props: {
     contractId: string
@@ -12,7 +12,7 @@ export default (props: {
     const theme = useTheme();
     const { Border } = theme.vars;
 
-    fetch(`https://${RESOURCES_DOMAIN}/tokenlist/${props.contractId}.json`)
+    fetch(`${TOKENS_URL}/${props.contractId}.json`)
         .then(response => response.json())
         .then(json => {
             if (json && json.logo) {

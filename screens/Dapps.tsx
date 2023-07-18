@@ -1,9 +1,9 @@
-import { View, Image, FlatList, TouchableHighlight, Linking, StyleSheet } from "react-native";
-import { RESOURCES_DOMAIN } from "../lib/Constants";
+import { View, Image, FlatList, Linking, StyleSheet } from "react-native";
+import { DAPPS_URL } from "../lib/Constants";
 import { ImmutableArray, ImmutableObject, useHookstate } from "@hookstate/core";
 import { Dapp, Theme } from "../types/store";
-import { Text, Screen, Link, Badge, Accordion } from "../components";
-import { useI18n, useTheme } from "../hooks";
+import { Text, Screen, Link, Accordion } from "../components";
+import { useTheme } from "../hooks";
 import { useEffect } from "react";
 import { rgba } from "../lib/utils";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
@@ -14,7 +14,7 @@ export default () => {
     const selectedTag = useHookstate('all');
 
     const load = () => {
-        fetch(`https://${RESOURCES_DOMAIN}/dapplist.json`)
+        fetch(`${DAPPS_URL}/index.json`)
             .then(response => response.json())
             .then(json => {
                 const list: Array<Dapp> = Object.values(json);
