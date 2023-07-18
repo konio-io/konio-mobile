@@ -177,7 +177,7 @@ const RecentList = (props: {
     return (
         <View style={styles.paddingVerticalBase}>
             {
-                data.length &&
+                data.length > 0 &&
                 <View style={styles.paddingHorizontalBase}>
                     <Text style={styles.sectionTitle}>{i18n.t('recents')}</Text>
                 </View>
@@ -207,7 +207,7 @@ const AccountList = (props: {
     return (
         <View style={styles.paddingVerticalBase}>
             {
-                data.length &&
+                data.length > 0 &&
                 <View style={styles.paddingHorizontalBase}>
                     <Text style={styles.sectionTitle}>{i18n.t('accounts')}</Text>
                 </View>
