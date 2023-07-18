@@ -11,7 +11,6 @@ import Animated, {
     withTiming,
     Easing,
 } from 'react-native-reanimated';
-import Text from "./Text";
 
 export default (props: {
     header: ReactElement,
