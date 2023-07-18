@@ -159,10 +159,13 @@
     "add_contact": "Kişi ekle",
     "add_to_addressbook": "Adres defterine ekle",
     "max_accounts_reached": "Maksimum hesap sayısına ulaşıldı ({{max}})",
-    "description": "Açıklama",
-    "URL": "URL",
-    "method": "Yöntem",
-    "expiry": "Süre sonu",
+    "dapp_name": "Dapp Adı",
+    "dapp_description": "Açıklama",
+    "dapp_URL": "URL",
+    "dapp_method": "Yöntem",
+    "dapp_connection_expiry": "Bağlantı sona erme süresi",
+    "dapp_proposal_desc": "Bir Dapp, cüzdanınıza bağlanmak istiyor",
+    "dapp_request_desc": "Bir Dapp, cüzdanınıza bir istek gönderdi",
     "disconnect": "Bağlantıyı kes",
     "wc_sessions": "DAPP bağlantısı",
     "accept": "Kabul et",
@@ -179,5 +182,9 @@
     "pairing_error": "Eşleştirme başarısız",
     "compatible": "Uyumlu",
     "dapp_proposal_success": "Dapp bağlandı",
-    "wrong_rpc_node": "Hatalı rpc düğümü"
+    "dapp_proposal_error": "Dapp bağlantı hatası",
+    "dapp_request_success": "Dapp isteği onaylandı",
+    "dapp_request_error": "Dapp isteği hatası",
+    "wrong_rpc_node": "Yanlış RPC düğümü",
+    "pair":"çift"
 }

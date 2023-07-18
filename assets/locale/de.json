@@ -159,10 +159,13 @@
   "add_contact": "Kontakt hinzufügen",
   "add_to_addressbook": "Zum Adressbuch hinzufügen",
   "max_accounts_reached": "Maximale Anzahl von Konten erreicht ({{max}})",
-  "description": "Beschreibung",
-  "URL": "URL",
-  "method": "Methode",
-  "expiry": "Ablauf",
+  "dapp_name": "Dapp-Name",
+  "dapp_description": "Beschreibung",
+  "dapp_URL": "URL",
+  "dapp_method": "Methode",
+  "dapp_connection_expiry": "Ablauf der Verbindung",
+  "dapp_proposal_desc": "Eine Dapp möchte eine Verbindung zu Ihrer Brieftasche herstellen",
+  "dapp_request_desc": "Eine Dapp hat eine Anfrage an Ihre Brieftasche gesendet",
   "disconnect": "Trennen",
   "wc_sessions": "DAPP-Verbindung",
   "accept": "Akzeptieren",
@@ -179,5 +182,9 @@
   "pairing_error": "Kopplung fehlgeschlagen",
   "compatible": "Kompatibel",
   "dapp_proposal_success": "Dapp verbunden",
-  "wrong_rpc_node": "Falscher RPC-Knoten"
+  "dapp_proposal_error": "Dapp-Verbindungsfehler",
+  "dapp_request_success": "Dapp-Anfrage genehmigt",
+  "dapp_request_error": "Dapp-Anfragefehler",
+  "wrong_rpc_node": "Falscher RPC-Knoten",
+  "pair":"Paar"
 }

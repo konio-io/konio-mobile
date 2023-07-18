@@ -53,6 +53,9 @@ export default () => {
     return (
         <Screen>
             <Wrapper>
+
+                <Text style={styles.textMedium}>{i18n.t('dapp_request_desc')}</Text>
+
                 {
                     account.ornull &&
                     <View style={{ width: '100%', height: 70 }}>
@@ -95,8 +98,8 @@ export default () => {
             </Wrapper>
 
             <View style={{ ...styles.directionRow, ...styles.paddingBase, ...styles.columnGapBase }}>
+                <Button type="secondary" style={styles.flex1} onPress={() => reject()} title={i18n.t('reject')} />
                 <Button style={styles.flex1} onPress={() => accept()} title={i18n.t('accept')} />
-                <Button style={styles.flex1} onPress={() => reject()} title={i18n.t('reject')} />
             </View>
         </Screen>
     )

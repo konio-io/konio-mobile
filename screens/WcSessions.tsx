@@ -83,7 +83,7 @@ const DappSession = (props: {
                 {
                     name &&
                     <View>
-                        <Text style={styles.textSmall}>{i18n.t('name')}</Text>
+                        <Text style={styles.textSmall}>{i18n.t('dapp_name')}</Text>
                         <Text>{name}</Text>
                     </View>
                 }
@@ -91,7 +91,7 @@ const DappSession = (props: {
                 {
                     description &&
                     <View>
-                        <Text style={styles.textSmall}>{i18n.t('description')}</Text>
+                        <Text style={styles.textSmall}>{i18n.t('dapp_description')}</Text>
                         <Text>{description}</Text>
                     </View>
                 }
@@ -99,13 +99,13 @@ const DappSession = (props: {
                 {
                     url &&
                     <View>
-                        <Text style={styles.textSmall}>{i18n.t('URL')}</Text>
+                        <Text style={styles.textSmall}>{i18n.t('dapp_URL')}</Text>
                         <Text>{url}</Text>
                     </View>
                 }
 
                 <View>
-                    <Text style={styles.textSmall}>{i18n.t('expiry')}</Text>
+                    <Text style={styles.textSmall}>{i18n.t('dapp_expiry')}</Text>
                     <Text>{expiry}</Text>
                 </View>
 
@@ -129,9 +129,9 @@ const ItemHeader = (props: {
     const styles = theme.styles;
 
     return (
-        <View style={{ ...styles.directionRow, ...styles.alignSpaceBetweenRow }}>
-            <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
-                <AccountAvatar address={props.address} size={24} />
+        <View style={{ ...styles.directionRow, ...styles.alignSpaceBetweenRow, ...styles.alignCenterColumn }}>
+            <View style={{ ...styles.directionRow, ...styles.columnGapBase, ...styles.alignCenterColumn }}>
+                <AccountAvatar address={props.address} size={36} />
                 <Text>{account.name}</Text>
             </View>
             <View>

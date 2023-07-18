@@ -159,10 +159,13 @@
   "add_contact": "Aggiungi contatto",
   "add_to_addressbook": "Aggiungi alla rubrica",
   "max_accounts_reached": "Numero massimo di account raggiunto ({{max}})",
-  "description": "Descrizione",
-  "URL": "URL",
-  "method": "Metodo",
-  "expiry": "Scadenza",
+  "dapp_name": "Nome Dapp",
+  "dapp_description": "Descrizione",
+  "dapp_URL": "URL",
+  "dapp_method": "Metodo",
+  "dapp_connection_expiry": "Scadenza connessione",
+  "dapp_proposal_desc": "Una Dapp desidera connettersi al tuo portafoglio",
+  "dapp_request_desc": "Una Dapp ha inviato una richiesta al tuo portafoglio",
   "disconnect": "Disconnetti",
   "wc_sessions": "Connessione DAPP",
   "accept": "Accetta",
@@ -179,5 +182,9 @@
   "pairing_error": "Associazione non riuscita",
   "compatible": "Compatibile",
   "dapp_proposal_success": "Dapp connessa",
-  "wrong_rpc_node": "Nodo RPC errato"
+  "dapp_proposal_error": "Errore di connessione Dapp",
+  "dapp_request_success": "Richiesta Dapp approvata",
+  "dapp_request_error": "Errore nella richiesta Dapp",
+  "wrong_rpc_node": "Nodo RPC errato",
+  "pair":"Accoppia"
 }

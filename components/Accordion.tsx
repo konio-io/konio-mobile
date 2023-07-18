@@ -1,4 +1,3 @@
-import { useHookstate } from "@hookstate/core";
 import { TouchableWithoutFeedback, StyleSheet, View } from "react-native";
 import { Theme } from "../types/store";
 import { AntDesign } from '@expo/vector-icons';
@@ -17,7 +16,6 @@ export default (props: {
     children?: ReactElement
 }) => {
 
-    const collapsed = useHookstate(true);
     const theme = useTheme();
     const { Border } = theme.vars;
     const styles = createStyles(theme);
@@ -97,13 +95,13 @@ const createStyles = (theme: Theme) => {
             top: Spacing.base
         },
         detailContainer: {
-            paddingRight: 25
+            paddingRight: 30
         },
         bodyContainer: {
             position: 'absolute',
             bottom: 0,
             left: 0,
-            paddingBottom: 20,
+            paddingTop: Spacing.base,
             width: '100%'
         },
         descStyle: {

@@ -142,8 +142,7 @@ const createStyles = (theme: Theme) => {
         itemDescription: {
             ...styles.text,
             flex: 1,
-            flexWrap: 'wrap',
-            textAlign: 'justify'
+            flexWrap: 'wrap'
         },
         tagSelected: {
             backgroundColor: Color.secondary,

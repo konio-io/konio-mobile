@@ -159,10 +159,13 @@
   "add_contact": "Agregar contacto",
   "add_to_addressbook": "Agregar a la libreta de direcciones",
   "max_accounts_reached": "Límite máximo de cuentas alcanzado ({{max}})",
-  "description": "Descripción",
-  "URL": "URL",
-  "method": "Método",
-  "expiry": "Vencimiento",
+  "dapp_name": "Nombre de Dapp",
+  "dapp_description": "Descripción",
+  "dapp_URL": "URL",
+  "dapp_method": "Método",
+  "dapp_connection_expiry": "Caducidad de la conexión",
+  "dapp_proposal_desc": "Una Dapp desea conectarse a tu billetera",
+  "dapp_request_desc": "Una Dapp ha enviado una solicitud a tu billetera",
   "disconnect": "Desconectar",
   "wc_sessions": "Conexión DAPP",
   "accept": "Aceptar",
@@ -179,5 +182,9 @@
   "pairing_error": "Error de asociación",
   "compatible": "Compatible",
   "dapp_proposal_success": "Dapp conectada",
-  "wrong_rpc_node": "Nodo RPC incorrecto"
+  "dapp_proposal_error": "Error de conexión de la Dapp",
+  "dapp_request_success": "Solicitud de Dapp aprobada",
+  "dapp_request_error": "Error en la solicitud de la Dapp",
+  "wrong_rpc_node": "Nodo RPC incorrecto",
+  "pair":"Par"
 }

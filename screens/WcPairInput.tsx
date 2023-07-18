@@ -1,5 +1,5 @@
 import { Screen, TextInput, Button, TextInputActionPaste } from "../components"
-import { useTheme } from "../hooks";
+import { useI18n, useTheme } from "../hooks";
 import { useHookstate } from "@hookstate/core";
 import { useNavigation } from "@react-navigation/native";
 import { WcPairInputNavigationProp } from "../types/navigation";
@@ -11,6 +11,7 @@ export default () => {
     const uri = useHookstate('');
     const theme = useTheme();
     const styles = theme.styles;
+    const i18n = useI18n();
 
     return (
         <Screen>
@@ -27,7 +28,7 @@ export default () => {
                 />
                 <Button 
                     icon={(<Feather name="link" />)}
-                    title='pair' 
+                    title={i18n.t('pair')}
                     onPress={() => navigation.push('WcPair', {uri: uri.get()})} 
                 />
             </View>

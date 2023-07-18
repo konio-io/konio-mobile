@@ -159,10 +159,13 @@
   "add_contact": "Добавить контакт",
   "add_to_addressbook": "Добавить в адресную книгу",
   "max_accounts_reached": "Достигнуто максимальное количество аккаунтов ({{max}})",
-  "description": "Описание",
-  "URL": "URL",
-  "method": "Метод",
-  "expiry": "Истечение срока",
+  "dapp_name": "Название Dapp",
+  "dapp_description": "Описание",
+  "dapp_URL": "URL",
+  "dapp_method": "Метод",
+  "dapp_connection_expiry": "Истекает срок действия подключения",
+  "dapp_proposal_desc": "Dapp хочет подключиться к вашему кошельку",
+  "dapp_request_desc": "Dapp отправил запрос на ваш кошелек",
   "disconnect": "Отключить",
   "wc_sessions": "Подключение DAPP",
   "accept": "Принять",
@@ -179,5 +182,9 @@
   "pairing_error": "Сбой сопряжения",
   "compatible": "Совместимый",
   "dapp_proposal_success": "Dapp подключена",
-  "wrong_rpc_node": "Неправильный узел RPC"
+  "dapp_proposal_error": "Ошибка подключения Dapp",
+  "dapp_request_success": "Запрос Dapp одобрен",
+  "dapp_request_error": "Ошибка запроса Dapp",
+  "wrong_rpc_node": "Неправильный узел RPC",
+  "pair":"пара"
 }
