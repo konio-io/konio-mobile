@@ -1,8 +1,9 @@
-import { Screen, Text, CodeScanner, Link } from "../components"
+import { Screen, Text, Link } from "../components"
 import { useNavigation } from "@react-navigation/native";
 import { WcPairNavigationProp } from "../types/navigation";
 import { useI18n, useTheme } from "../hooks";
 import { View } from "react-native";
+import CodeScanner from "../components/CodeScanner";
 
 export default () => {
     const navigation = useNavigation<WcPairNavigationProp>();

@@ -40,7 +40,6 @@ import ManaProgressLogo from './ManaProgressLogo';
 import Accordion from './Accordion';
 import Badge from './Badge';
 import WcLogo from './Wclogo';
-import CodeScanner from './CodeScanner';
 
 export {
     ActivityIndicator,
@@ -84,6 +83,5 @@ export {
     ManaProgressLogo,
     Accordion,
     Badge,
-    WcLogo,
-    CodeScanner
+    WcLogo
 }
