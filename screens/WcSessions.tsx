@@ -106,7 +106,7 @@ const DappSession = (props: {
                 }
 
                 <View>
-                    <Text style={styles.textSmall}>{i18n.t('dapp_expiry')}</Text>
+                    <Text style={styles.textSmall}>{i18n.t('dapp_connection_expiry')}</Text>
                     <Text>{expiry}</Text>
                 </View>
 

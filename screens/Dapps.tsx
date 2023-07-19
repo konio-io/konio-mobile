@@ -60,7 +60,7 @@ export default () => {
 
 const ScanButton = () => {
     const theme = useTheme();
-    const styles = theme.styles;
+    const { Spacing, Color } = theme.vars;
     const navigation = useNavigation<RootNavigationProp>();
 
     const openScan = () => {
@@ -74,8 +74,8 @@ const ScanButton = () => {
 
     return (
         <TouchableOpacity onPress={() => openScan()}>
-            <View style={styles.paddingBase}>
-                <AntDesign name='scan1' size={28}/>
+            <View style={{marginRight: Spacing.base}}>
+                <AntDesign name='scan1' size={28} color={Color.baseContrast}/>
             </View>
         </TouchableOpacity>
     );
