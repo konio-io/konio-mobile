@@ -1,10 +1,10 @@
 import { View } from 'react-native';
-import { Screen, TextInput, Button, Text, AccountAvatar, ListItemSelected, DrawerToggler, AddressListItem, Link, TextInputActionPaste } from '../components';
+import { Screen, TextInput, Button, Text, AccountAvatar, ListItemSelected, DrawerToggler, AddressListItem, Link, TextInputActionPaste, TextInputAction } from '../components';
 import { useTheme, useI18n, useAccounts, useAccount, useTransactions, useAddressbook, useContact, useCurrentAddress } from '../hooks';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { WithdrawToNavigationProp, WithdrawToRouteProp } from '../types/navigation';
 import { showToast } from '../actions';
-import { Feather } from '@expo/vector-icons';
+import { Feather, AntDesign } from '@expo/vector-icons';
 import { useEffect } from 'react';
 import { useHookstate } from '@hookstate/core';
 import { utils } from 'koilib';
@@ -149,7 +149,13 @@ const To = (props: {
 
                 {!name.get() && !address.get() &&
                     <View style={{ ...styles.alignEndColumn }}>
-                        <TextInputActionPaste state={address} />
+                        <View style={{...styles.directionRow, ...styles.columnGapSmall}}>
+                            <TextInputAction
+                                onPress={() => navigation.navigate('WithdrawToScan')}
+                                icon={(<AntDesign name="scan1" />)}
+                            />
+                            <TextInputActionPaste state={address} />
+                        </View>
                     </View>
                 }
             </View>

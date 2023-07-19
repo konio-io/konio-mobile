@@ -167,7 +167,7 @@
   "dapp_proposal_desc": "Une Dapp souhaite se connecter à votre portefeuille",
   "dapp_request_desc": "Une Dapp a envoyé une demande à votre portefeuille",
   "disconnect": "Déconnecter",
-  "wc_sessions": "Connexion DAPP",
+  "wc_sessions": "Connexions DAPP",
   "accept": "Accepter",
   "reject": "Rejeter",
   "new_connection": "Nouvelle connexion",
@@ -186,5 +186,8 @@
   "dapp_request_success": "Demande de Dapp approuvée",
   "dapp_request_error": "Erreur de demande de la Dapp",
   "wrong_rpc_node": "Nœud RPC incorrect",
-  "pair":"Paire"
+  "pair": "Paire",
+  "scan_wc_code_or": "Scanner le code WalletConnect ou",
+  "enter_code_manually": "saisir le code manuellement",
+  "scan_to_code": "Scanner le code du destinataire"
 }

@@ -167,7 +167,7 @@
   "dapp_proposal_desc": "Dapp хочет подключиться к вашему кошельку",
   "dapp_request_desc": "Dapp отправил запрос на ваш кошелек",
   "disconnect": "Отключить",
-  "wc_sessions": "Подключение DAPP",
+  "wc_sessions": "Подключения DAPP",
   "accept": "Принять",
   "reject": "Отклонить",
   "new_connection": "Новое подключение",
@@ -186,5 +186,8 @@
   "dapp_request_success": "Запрос Dapp одобрен",
   "dapp_request_error": "Ошибка запроса Dapp",
   "wrong_rpc_node": "Неправильный узел RPC",
-  "pair":"пара"
+  "pair": "пара",
+  "scan_wc_code_or": "Отсканируйте код WalletConnect или",
+  "enter_code_manually": "введите код вручную",
+  "scan_to_code": "Отсканировать QR-код получателя"
 }

@@ -167,7 +167,7 @@
   "dapp_proposal_desc": "Una Dapp desea conectarse a tu billetera",
   "dapp_request_desc": "Una Dapp ha enviado una solicitud a tu billetera",
   "disconnect": "Desconectar",
-  "wc_sessions": "Conexión DAPP",
+  "wc_sessions": "Conexiones DAPP",
   "accept": "Aceptar",
   "reject": "Rechazar",
   "new_connection": "Nueva conexión",
@@ -186,5 +186,8 @@
   "dapp_request_success": "Solicitud de Dapp aprobada",
   "dapp_request_error": "Error en la solicitud de la Dapp",
   "wrong_rpc_node": "Nodo RPC incorrecto",
-  "pair":"Par"
+  "pair": "Par",
+  "scan_wc_code_or": "Escanear el código WalletConnect o",
+  "enter_code_manually": "introducir el código manualmente",
+  "scan_to_code": "Escanear el código del destinatario"
 }

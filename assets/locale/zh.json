@@ -186,5 +186,8 @@
   "dapp_request_success": "Dapp 请求已批准",
   "dapp_request_error": "Dapp 请求错误",
   "wrong_rpc_node": "错误的 RPC 节点",
-  "pair":"对"
+  "pair": "对",
+  "scan_wc_code_or": "扫描WalletConnect二维码或",
+  "enter_code_manually": "手动输入代码",
+  "scan_to_code": "扫描收件人的二维码"
 }

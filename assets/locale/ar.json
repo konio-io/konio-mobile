@@ -166,7 +166,7 @@
     "dapp_proposal_desc": "داب يرغب في الاتصال بمحفظتك",
     "dapp_request_desc": "داب أرسل طلبًا إلى محفظتك",
     "disconnect": "فصل",
-    "wc_sessions": "اتصال DAPP",
+    "wc_sessions": "اتصالات DAPP",
     "accept": "قبول",
     "reject": "رفض",
     "new_connection": "اتصال جديد",
@@ -185,5 +185,8 @@
     "dapp_request_success": "تمت الموافقة على طلب الداب",
     "dapp_request_error": "خطأ في طلب الداب",
     "wrong_rpc_node": "نقطة RPC خاطئة",
-    "pair":"زوج"
+    "pair": "زوج",
+    "scan_wc_code_or": "مسح رمز WalletConnect أو",
+    "enter_code_manually": "أدخل الرمز يدويًا",
+    "scan_to_code": "مسح رمز المستلم"
 }

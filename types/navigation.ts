@@ -157,7 +157,8 @@ export type WithdrawParamList = {
     WithdrawTo: {
         to?: string,
         contractId?: string
-    }
+    },
+    WithdrawToScan: undefined,
     WithdrawAmount: {
         to: string,
         contractId?: string
@@ -177,6 +178,8 @@ export type WithdrawParamList = {
 }
 export type WithdrawToNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawTo'>;
 export type WithdrawToRouteProp = RouteProp<WithdrawParamList, 'WithdrawTo'>;
+export type WithdrawToScanNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawToScan'>;
+export type WithdrawToScanRouteProp = RouteProp<WithdrawParamList, 'WithdrawToScan'>;
 export type WithdrawAmountNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawAmount'>;
 export type WithdrawAmountRouteProp = RouteProp<WithdrawParamList, 'WithdrawAmount'>;
 export type WithdrawConfirmNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawConfirm'>;

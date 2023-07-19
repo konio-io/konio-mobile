@@ -6,6 +6,7 @@ import WithdrawAmount from '../screens/WithdrawAmount';
 import WithdrawConfirm from '../screens/WithdrawConfirm';
 import WithdrawSelectCoin from '../screens/WithdrawSelectCoin';
 import NewContact from '../screens/NewContact';
+import WithdrawToScan from '../screens/WithdrawToScan';
 
 const Stack = createStackNavigator<WithdrawParamList>();
 
@@ -34,6 +35,13 @@ export default () => {
           title: i18n.t('send'),
         }}
         initialParams={{}}
+      />
+      <Stack.Screen
+        name="WithdrawToScan"
+        component={WithdrawToScan}
+        options={{
+          title: i18n.t('send'),
+        }}
       />
       <Stack.Screen
         name="WithdrawAmount"

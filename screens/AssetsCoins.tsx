@@ -34,8 +34,6 @@ export default () => {
     });
   }, [navigation]);
 
-  
-
   return (
     <Screen>
       <View style={{ ...styles.rowGapBase }}>

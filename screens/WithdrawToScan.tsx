@@ -1,11 +1,11 @@
 import { Screen, Text, CodeScanner, Link } from "../components"
 import { useNavigation } from "@react-navigation/native";
-import { WcPairNavigationProp } from "../types/navigation";
+import { WithdrawToNavigationProp } from "../types/navigation";
 import { useI18n, useTheme } from "../hooks";
 import { View } from "react-native";
 
 export default () => {
-    const navigation = useNavigation<WcPairNavigationProp>();
+    const navigation = useNavigation<WithdrawToNavigationProp>();
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();
@@ -13,11 +13,9 @@ export default () => {
     return (
         <Screen>
             <View style={{ ...styles.alignCenterColumn, ...styles.aligncenterRow, ...styles.paddingBase }}>
-                <Text>{i18n.t('scan_wc_code_or')}</Text>
-                <Link text={i18n.t('enter_code_manually')} onPress={() => navigation.navigate('WcPairInput')}/>
+                <Text>{i18n.t('scan_to_code')}</Text>
             </View>
-            <CodeScanner onScan={(uri: string) => navigation.navigate('WcPair', { uri })} />
+            <CodeScanner onScan={(to: string) => navigation.navigate('WithdrawTo', { to })} />
         </Screen>
     );
 }
-

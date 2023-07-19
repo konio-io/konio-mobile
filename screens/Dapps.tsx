@@ -1,15 +1,18 @@
-import { View, Image, FlatList, Linking, StyleSheet } from "react-native";
+import { View, Image, FlatList, Linking, StyleSheet, TouchableHighlight } from "react-native";
 import { DAPPS_URL } from "../lib/Constants";
 import { ImmutableArray, ImmutableObject, useHookstate } from "@hookstate/core";
 import { Dapp, Theme } from "../types/store";
-import { Text, Screen, Link, Accordion } from "../components";
+import { Text, Screen, Link, Accordion, DrawerToggler } from "../components";
 import { useTheme } from "../hooks";
 import { useEffect } from "react";
 import { rgba } from "../lib/utils";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
+import { DappsNavigationProp, RootNavigationProp } from "../types/navigation";
+import { AntDesign } from '@expo/vector-icons';
 
 export default () => {
-
+    const navigation = useNavigation<DappsNavigationProp>();
     const data = useHookstate<Array<Dapp>>([]);
     const selectedTag = useHookstate('all');
 
@@ -30,6 +33,15 @@ export default () => {
         load();
     }, []);
 
+    useEffect(() => {
+        navigation.setOptions({
+          headerShadowVisible: false,
+          headerTitleAlign: 'center',
+          headerLeft: () => (<DrawerToggler />),
+          headerRight: () => (<ScanButton/>)
+        });
+      }, [navigation]);
+
     let filteredData = data.get();
     if (selectedTag.get() !== 'all') {
         filteredData = data.get().filter(item => item.tags.includes(selectedTag.get()));
@@ -44,6 +56,29 @@ export default () => {
             />
         </Screen>
     )
+}
+
+const ScanButton = () => {
+    const theme = useTheme();
+    const styles = theme.styles;
+    const navigation = useNavigation<RootNavigationProp>();
+
+    const openScan = () => {
+        navigation.navigate('Root', {
+            screen: 'WalletConnect',
+            params: {
+                screen: 'WcPairScan'
+            }
+        })
+    }
+
+    return (
+        <TouchableOpacity onPress={() => openScan()}>
+            <View style={styles.paddingBase}>
+                <AntDesign name='scan1' size={28}/>
+            </View>
+        </TouchableOpacity>
+    );
 }
 
 const Tagsbar = (props: {

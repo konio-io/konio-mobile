@@ -7,9 +7,9 @@ import { View } from "react-native";
 import { useI18n, useTheme, useW3W, useAccount } from "../hooks";
 import { SessionTypes } from "@walletconnect/types";
 import Loading from "./Loading";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { AntDesign } from '@expo/vector-icons';
-import { SheetManager } from "react-native-actions-sheet";
+import { WcSessionsNavigationProp } from "../types/navigation";
 
 export default () => {
     const activeSessions = useHookstate<Record<string, SessionTypes.Struct>>({});
@@ -17,6 +17,7 @@ export default () => {
     const web3wallet = useW3W().get();
     const i18n = useI18n();
     const { styles } = useTheme();
+    const navigation = useNavigation<WcSessionsNavigationProp>();
 
     if (!web3wallet) {
         return <Loading />;
@@ -56,7 +57,7 @@ export default () => {
             />
 
             <View style={{ ...styles.paddingBase, ...styles.alignCenterColumn }}>
-                <Link text={i18n.t('new_connection')} onPress={() => SheetManager.show('wc_pair')} />
+                <Link text={i18n.t('new_connection')} onPress={() => navigation.navigate('WcPairScan')} />
             </View>
         </Screen>
     );

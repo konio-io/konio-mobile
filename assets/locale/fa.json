@@ -167,7 +167,7 @@
   "dapp_proposal_desc": "یک Dapp می‌خواهد به کیف پول شما متصل شود",
   "dapp_request_desc": "یک Dapp درخواستی به کیف پول شما ارسال کرده است",
   "disconnect": "قطع ارتباط",
-  "wc_sessions": "اتصال DAPP",
+  "wc_sessions": "اتصالات DAPP",
   "accept": "پذیرش",
   "reject": "رد",
   "new_connection": "اتصال جدید",
@@ -186,5 +186,8 @@
   "dapp_request_success": "درخواست Dapp تایید شد",
   "dapp_request_error": "خطای درخواست Dapp",
   "wrong_rpc_node": "نقطه RPC اشتباه",
-  "pair":"جفت"
+  "pair": "جفت",
+  "scan_wc_code_or": "اسکن کد WalletConnect یا",
+  "enter_code_manually": "کد را به صورت دستی وارد کنید",
+  "scan_to_code": "کد گیرنده را اسکن کنید"
 }

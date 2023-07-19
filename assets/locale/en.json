@@ -166,7 +166,7 @@
     "dapp_proposal_desc":"A dapp wants to connect to your wallet",
     "dapp_request_desc":"A dapp sent request to your wallet",
     "disconnect":"Disconnect",
-    "wc_sessions":"DAPP connection",
+    "wc_sessions":"DAPP connections",
     "accept":"Accept",
     "reject":"Reject",
     "new_connection":"New connection",
@@ -185,5 +185,8 @@
     "dapp_request_success":"Dapp request approved",
     "dapp_request_error":"Dapp request error",
     "wrong_rpc_node":"Wrong rpc node",
-    "pair":"Pair"
+    "pair":"Pair",
+    "scan_wc_code_or":"Scan WalletConnect qrcode or",
+    "enter_code_manually":"enter the code manually",
+    "scan_to_code":"Scan the recipient's qrcode"
   }

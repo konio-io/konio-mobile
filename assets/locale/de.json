@@ -167,7 +167,7 @@
   "dapp_proposal_desc": "Eine Dapp möchte eine Verbindung zu Ihrer Brieftasche herstellen",
   "dapp_request_desc": "Eine Dapp hat eine Anfrage an Ihre Brieftasche gesendet",
   "disconnect": "Trennen",
-  "wc_sessions": "DAPP-Verbindung",
+  "wc_sessions": "DAPP-Verbindungen",
   "accept": "Akzeptieren",
   "reject": "Ablehnen",
   "new_connection": "Neue Verbindung",
@@ -186,5 +186,8 @@
   "dapp_request_success": "Dapp-Anfrage genehmigt",
   "dapp_request_error": "Dapp-Anfragefehler",
   "wrong_rpc_node": "Falscher RPC-Knoten",
-  "pair":"Paar"
+  "pair": "Paar",
+  "scan_wc_code_or": "WalletConnect-QR-Code scannen oder",
+  "enter_code_manually": "den Code manuell eingeben",
+  "scan_to_code": "Den QR-Code des Empfängers scannen"
 }
