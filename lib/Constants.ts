@@ -87,3 +87,18 @@ export const RESOURCES_DOMAIN = 'konio.io';
 export const WALLET_CONNECT_PROJECT_ID = 'c0d8292ab97b4f7adb8f12f095d2806a';
 export const DAPPS_URL = 'https://dapps.konio.io';
 export const TOKENS_URL = 'https://tokens.konio.io';
+export const WC_METHODS = {
+    SIGN_MESSAGE: 'koinos_signMessage',
+    SIGN_HASH: 'koinos_signHash',
+    SIGN_TRANSACTION: 'koinos_signTransaction',
+    SIGN_AND_SEND_TRANSACTION: 'koinos_signAndSendTransaction',
+    PREPARE_TRANSACTION: 'koinos_prepareTransaction',
+    WAIT_FOR_TRANSACTION: 'koinos_waitForTransaction',
+    SEND_TRANSACTION: 'koinos_sendTransaction'
+}
+export const WC_SECURE_METHODS = [
+    WC_METHODS.SIGN_MESSAGE,
+    WC_METHODS.SIGN_TRANSACTION,
+    WC_METHODS.SEND_TRANSACTION,
+    WC_METHODS.SIGN_AND_SEND_TRANSACTION
+]

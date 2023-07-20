@@ -27,7 +27,7 @@
           "backgroundColor": "#000000"
         }
       },
-      "buildNumber": "6"
+      "buildNumber": "7"
     },
     "android": {
       "adaptiveIcon": {
@@ -45,7 +45,7 @@
           "backgroundColor": "#000000"
         }
       },
-      "versionCode": 10
+      "versionCode": 11
     },
     "web": {
       "favicon": "./assets/favicon.png"

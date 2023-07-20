@@ -10,10 +10,11 @@ import EditAccount from "../screens/EditAccount";
 import WalletConnect from "./WalletConnect";
 import { RootNavigationProp, RootParamList } from "../types/navigation";
 import { SignClientTypes } from "@walletconnect/types";
-import { createW3W } from "../actions";
+import { acceptRequest, createW3W, showToast } from "../actions";
 import { useNavigation } from "@react-navigation/native";
 import WcProposal from "../screens/WcProposal";
 import WcRequest from "../screens/WcRequest";
+import { WC_SECURE_METHODS } from "../lib/Constants";
 
 const Stack = createStackNavigator<RootParamList>();
 
@@ -24,19 +25,28 @@ export default () => {
   const W3W = useW3W();
   const navigation = useNavigation<RootNavigationProp>();
 
-  const onSessionProposal = useCallback(
-    (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
-      navigation.navigate('WcProposal', { proposal });
-    },
-    []
-  );
+  const onSessionProposal = (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
+    navigation.navigate('WcProposal', { proposal });
+  }
 
-  const onSessionRequest = useCallback(
-    async (request: SignClientTypes.EventArguments["session_request"]) => {
+  const onSessionRequest = async (request: SignClientTypes.EventArguments["session_request"]) => {
+    console.log('req', request.params.request.method);
+
+    if (WC_SECURE_METHODS.includes(request.params.request.method)) {
+      console.log('req nonsecure', request)
       navigation.navigate('WcRequest', { request });
-    },
-    []
-  );
+    } else {
+      console.log('req secure', request);
+      acceptRequest(request)
+      .catch(e => {
+        console.log(e);
+        showToast({
+          type: 'error',
+          text1: 'error in ' + request.params.request.method
+        })
+      });
+    }
+  }
 
   useEffect(() => {
     if (!W3W.get()) {

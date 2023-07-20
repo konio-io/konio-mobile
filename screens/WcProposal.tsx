@@ -20,24 +20,24 @@ export default () => {
     }
 
     const accept = async () => {
-        try {
-            await acceptProposal(proposal);
-            showToast({
-                type: 'success',
-                text1: i18n.t('dapp_proposal_success')
+        acceptProposal(proposal)
+            .then(() => {
+                showToast({
+                    type: 'success',
+                    text1: i18n.t('dapp_proposal_success')
+                });
+            })
+            .catch(e => {
+                showToast({
+                    type: 'error',
+                    text1: i18n.t('dapp_proposal_error')
+                });
             });
-        } catch (e) {
-            showToast({
-                type: 'error',
-                text1: i18n.t('dapp_proposal_error')
-            });
-        }
-
         navigation.goBack();
     }
 
     const reject = async () => {
-        await rejectProposal(proposal);
+        rejectProposal(proposal);
         navigation.goBack();
     }
 

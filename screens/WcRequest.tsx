@@ -21,18 +21,20 @@ export default () => {
     }
 
     const accept = async () => {
-        try {
-            await acceptRequest(request);
-            showToast({
-                type: 'success',
-                text1: i18n.t('dapp_request_success')
-            });
-        } catch (e) {
-            showToast({
-                type: 'error',
-                text1: i18n.t('dapp_request_error')
-            });
-        }
+        acceptRequest(request)
+            .then(() => {
+                showToast({
+                    type: 'success',
+                    text1: i18n.t('dapp_request_success')
+                });
+            })
+            .catch(e => {
+                console.log(e);
+                showToast({
+                    type: 'error',
+                    text1: i18n.t('dapp_request_error')
+                });
+            })
 
         navigation.goBack();
     }

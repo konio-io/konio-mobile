@@ -6,7 +6,7 @@ import { DEFAULT_COINS, TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TR
 import HDKoinos from "../lib/HDKoinos";
 import Toast from 'react-native-toast-message';
 import { State, none } from "@hookstate/core";
-import { getCoinBalance, getContract, getProvider, getSigner } from "../lib/utils";
+import { getCoinBalance, getContract, getProvider, getSigner, wcMethods } from "../lib/utils";
 import migrations from "../stores/migrations";
 import { Core } from "@walletconnect/core";
 import { Web3Wallet } from "@walletconnect/web3wallet";
@@ -494,29 +494,40 @@ export const rejectProposal = async (sessionProposal: SignClientTypes.EventArgum
 export const acceptRequest = async (sessionRequest: SignClientTypes.EventArguments["session_request"]) => {
     const { params, id, topic } = sessionRequest;
     const { request } = params;
+    const w3wallet = W3WStore.get();
     const networkId = UserStore.currentNetworkId.get();
     const address = UserStore.currentAddress.get();
-    const w3wallet = W3WStore.get();
+
+    console.log('process',request.method)
 
     if (address && w3wallet) {
         const signer = getSigner({ address, networkId });
         let result : any = null;
 
         switch (request.method) {
-            case 'koinos_signTransaction':
-                const transaction = Object.assign({}, request.params.transaction);
-                const signedTransaction = await signer.signTransaction(transaction);
-                result = signedTransaction;
+            case 'koinos_getAddress':
+                result = wcMethods.getAddress(signer);
                 break;
             case 'koinos_signMessage':
-                const message = request.params.message;
-                const signedMessage = await signer.signMessage(message);
-                result = btoa(signedMessage.toString());
+                result = await wcMethods.signMessage(signer, request.params.message);
                 break;
             case 'koinos_signHash':
-                const hash = request.params.hash;
-                const signedHash = await signer.signHash(hash);
-                result = btoa(signedHash.toString());
+                result = await wcMethods.signHash(signer, request.params.hash);
+                break;
+            case 'koinos_prepareTransaction':
+                result = await wcMethods.prepareTransaction(signer, request.params.transaction);
+                break;
+            case 'koinos_signTransaction':
+                result = await wcMethods.signTransaction(signer, request.params.transaction, request.params.options?.abis);
+                break;
+            case 'koinos_sendTransaction':
+                result = await wcMethods.sendTransaction(signer, request.params.transaction, request.params.options);
+                break;
+            case 'koinos_signAndSendTransaction':
+                result = await wcMethods.signAndSendTransaction(signer, request.params.transaction, request.params.options);
+                break;
+            case 'koinos_waitForTransaction':
+                result = await wcMethods.waitForTransaction(request.params.transactionId, request.params.type, request.params.timeout);
                 break;
         }
 
