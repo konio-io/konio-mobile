@@ -2,7 +2,7 @@ import { Contract, utils, Provider, Signer } from "koilib";
 import { UserStore, EncryptedStore } from "../stores";
 import { Abi, SendTransactionOptions, TransactionJson, TransactionJsonWait, TransactionReceipt } from "koilib/lib/interface";
 
-export const rgba = (color: string, opacity: number) : string => {
+export const rgba = (color: string, opacity: number): string => {
     return color.replace('1)', opacity.toString() + ')');
 }
 
@@ -97,87 +97,79 @@ export const getKAP = async (name: string) => {
     const token_id = "0x" + utils.toHexString(buffer);
 
     try {
-        const response = await contract.functions.owner_of<{value: string;}>({ token_id });
+        const response = await contract.functions.owner_of<{ value: string; }>({ token_id });
         return response.result?.value;
     } catch (e) {
         throw e;
     }
 }
 
-export const wcMethods = {
+export const signHash = async (
+    signer: Signer,
+    hash: string
+): Promise<string> => {
+    const signedHash = await signer.signHash(utils.decodeBase64(hash));
+    return utils.encodeBase64(signedHash);
+}
 
-    getAddress: (signer: Signer): string => {
-        return signer.getAddress();
-    },
-    
-    signHash: async (
-        signer: Signer,
-        hash: string
-    ): Promise<string> => {
-        const signedHash = await signer.signHash(utils.decodeBase64(hash));
-        return utils.encodeBase64(signedHash);
-    },
-    
-    signMessage: async (
-        signer: Signer,
-        message: string
-    ): Promise<string> => {
-        const signedMessage = await signer.signMessage(message);
-        return utils.encodeBase64(signedMessage);
-    },
-    
-    prepareTransaction: async (
-        signer: Signer,
-        tx: TransactionJson
-    ): Promise<TransactionJson> => {
-        const transaction = Object.assign({}, tx);
-        return await signer.prepareTransaction(transaction);
-    },
-    
-    signTransaction: async (
-        signer: Signer,
-        tx: TransactionJson,
-        abis?: Record<string, Abi>
-    ): Promise<TransactionJson> => {
-        const transaction = Object.assign({}, tx);
-        return await signer.signTransaction(transaction, abis);
-    },
-    
-    sendTransaction: async (
-        signer: Signer,
-        tx: TransactionJson,
-        options?: SendTransactionOptions
-    ): Promise<{
-        receipt: TransactionReceipt
-        transaction: TransactionJsonWait
-    }> => {
-        const transaction = Object.assign({}, tx);
-        return await signer.sendTransaction(transaction, options);
-    },
-    
-    signAndSendTransaction: async (
-        signer: Signer,
-        tx: TransactionJson,
-        options?: SendTransactionOptions
-    ): Promise<{
-        receipt: TransactionReceipt
-        transaction: TransactionJsonWait
-    }> => {
-        const transaction = await wcMethods.signTransaction(signer, tx, options?.abis);
-        return await wcMethods.sendTransaction(signer, transaction, options);
-    },
-    
-    waitForTransaction: async (
-        transactionId: string,
-        type?: 'byTransactionId' | 'byBlock',
-        timeout?: number
-    ): Promise<{
-        blockId: string,
-        blockNumber?: number
-    }> => {
-        const provider = getProvider(UserStore.currentNetworkId.get());
-        return await provider.wait(transactionId, type, timeout);
-    }
+export const signMessage = async (
+    signer: Signer,
+    message: string
+): Promise<string> => {
+    const signedMessage = await signer.signMessage(message);
+    return utils.encodeBase64(signedMessage);
+}
 
+export const prepareTransaction = async (
+    signer: Signer,
+    tx: TransactionJson
+): Promise<TransactionJson> => {
+    const transaction = Object.assign({}, tx);
+    return await signer.prepareTransaction(transaction);
+}
+
+export const signTransaction = async (
+    signer: Signer,
+    tx: TransactionJson,
+    abis?: Record<string, Abi>
+): Promise<TransactionJson> => {
+    const transaction = Object.assign({}, tx);
+    return await signer.signTransaction(transaction, abis);
+}
+
+export const sendTransaction = async (
+    signer: Signer,
+    tx: TransactionJson,
+    options?: SendTransactionOptions
+): Promise<{
+    receipt: TransactionReceipt
+    transaction: TransactionJsonWait
+}> => {
+    const transaction = Object.assign({}, tx);
+    return await signer.sendTransaction(transaction, options);
+}
+
+export const signAndSendTransaction = async (
+    signer: Signer,
+    tx: TransactionJson,
+    options?: SendTransactionOptions
+): Promise<{
+    receipt: TransactionReceipt
+    transaction: TransactionJsonWait
+}> => {
+    const transaction = await signTransaction(signer, tx, options?.abis);
+    return await sendTransaction(signer, transaction, options);
+}
+
+export const waitForTransaction = async (
+    transactionId: string,
+    type?: 'byTransactionId' | 'byBlock',
+    timeout?: number
+): Promise<{
+    blockId: string,
+    blockNumber?: number
+}> => {
+    const provider = getProvider(UserStore.currentNetworkId.get());
+    return await provider.wait(transactionId, type, timeout);
 }
 

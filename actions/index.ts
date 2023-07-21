@@ -2,11 +2,11 @@ import { utils } from "koilib";
 import { TransactionJsonWait } from "koilib/lib/interface";
 import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, W3WStore } from "../stores";
 import { Contact, Coin, Network, Transaction, Account } from "../types/store";
-import { DEFAULT_COINS, TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_WITHDRAW, WALLET_CONNECT_PROJECT_ID } from "../lib/Constants";
+import { DEFAULT_COINS, TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_WITHDRAW, WALLET_CONNECT_PROJECT_ID, WC_METHODS } from "../lib/Constants";
 import HDKoinos from "../lib/HDKoinos";
 import Toast from 'react-native-toast-message';
 import { State, none } from "@hookstate/core";
-import { getCoinBalance, getContract, getProvider, getSigner, wcMethods } from "../lib/utils";
+import { getCoinBalance, getContract, getProvider, getSigner, getAddress, signMessage, prepareTransaction, sendTransaction, signAndSendTransaction, signHash, signTransaction, waitForTransaction } from "../lib/utils";
 import migrations from "../stores/migrations";
 import { Core } from "@walletconnect/core";
 import { Web3Wallet } from "@walletconnect/web3wallet";
@@ -498,47 +498,49 @@ export const acceptRequest = async (sessionRequest: SignClientTypes.EventArgumen
     const networkId = UserStore.currentNetworkId.get();
     const address = UserStore.currentAddress.get();
 
-    console.log('process',request.method)
-
-    if (address && w3wallet) {
-        const signer = getSigner({ address, networkId });
-        let result : any = null;
-
-        switch (request.method) {
-            case 'koinos_getAddress':
-                result = wcMethods.getAddress(signer);
-                break;
-            case 'koinos_signMessage':
-                result = await wcMethods.signMessage(signer, request.params.message);
-                break;
-            case 'koinos_signHash':
-                result = await wcMethods.signHash(signer, request.params.hash);
-                break;
-            case 'koinos_prepareTransaction':
-                result = await wcMethods.prepareTransaction(signer, request.params.transaction);
-                break;
-            case 'koinos_signTransaction':
-                result = await wcMethods.signTransaction(signer, request.params.transaction, request.params.options?.abis);
-                break;
-            case 'koinos_sendTransaction':
-                result = await wcMethods.sendTransaction(signer, request.params.transaction, request.params.options);
-                break;
-            case 'koinos_signAndSendTransaction':
-                result = await wcMethods.signAndSendTransaction(signer, request.params.transaction, request.params.options);
-                break;
-            case 'koinos_waitForTransaction':
-                result = await wcMethods.waitForTransaction(request.params.transactionId, request.params.type, request.params.timeout);
-                break;
-        }
-
-        if (result !== null) {
-            const response = formatJsonRpcResult(id, result);
-            await w3wallet.respondSessionRequest({
-                topic,
-                response,
-            });
-        }
+    if (!w3wallet) {
+        throw new Error("W3 Wallet not available");
     }
+
+    if (!address) {
+        throw new Error("Current address not available");
+    }
+
+    const signer = getSigner({ address, networkId });
+    let result: any = null;
+
+    switch (request.method) {
+        case WC_METHODS.SIGN_MESSAGE:
+            result = await signMessage(signer, request.params.message);
+            break;
+        case WC_METHODS.SIGN_HASH:
+            result = await signHash(signer, request.params.hash);
+            break;
+        case WC_METHODS.PREPARE_TRANSACTION:
+            result = await prepareTransaction(signer, request.params.transaction);
+            break;
+        case WC_METHODS.SIGN_TRANSACTION:
+            result = await signTransaction(signer, request.params.transaction, request.params.options?.abis);
+            break;
+        case WC_METHODS.SEND_TRANSACTION:
+            result = await sendTransaction(signer, request.params.transaction, request.params.options);
+            break;
+        case WC_METHODS.SIGN_AND_SEND_TRANSACTION:
+            result = await signAndSendTransaction(signer, request.params.transaction, request.params.options);
+            break;
+        case WC_METHODS.WAIT_FOR_TRANSACTION:
+            result = await waitForTransaction(request.params.transactionId, request.params.type, request.params.timeout);
+            break;
+    }
+
+    if (result !== null) {
+        const response = formatJsonRpcResult(id, result);
+        await w3wallet.respondSessionRequest({
+            topic,
+            response,
+        });
+    }
+
 }
 
 export const rejectRequest = async (sessionRequest: SignClientTypes.EventArguments["session_request"]) => {
