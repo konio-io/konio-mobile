@@ -6,10 +6,11 @@ import Text from './Text';
 import { useI18n, useTheme } from '../hooks';
 import { useHookstate } from '@hookstate/core';
 import Loading from '../screens/Loading';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 
 export default (props: {
-    onScan: Function
+    onScan: Function,
+    onClose: Function
 }) => {
     const hasPermission = useHookstate<boolean | null>(null);
     const scanned = useHookstate(false);
@@ -33,13 +34,13 @@ export default (props: {
 
     if (hasPermission.get() === null) {
         return (
-            <Loading/>
+            <Loading />
         )
     }
 
     if (hasPermission.get() === false) {
         return (
-            <View style={{...styles.flex1, ...styles.alignCenterColumn, ...styles.alignCenterRow}}>
+            <View style={{ ...styles.flex1, ...styles.alignCenterColumn, ...styles.alignCenterRow }}>
                 <Text>{i18n.t('no_access_camera')}</Text>
             </View>
         );
@@ -55,15 +56,22 @@ export default (props: {
                 />
             </View>
 
-            {scanned.get() &&
-                <View style={styles.paddingBase}>
-                    <Button 
-                        icon={(<AntDesign name="scan1" size={24} color="black" />)}
-                        title={i18n.t('scan_again')} 
-                        onPress={() => scanned.set(false)} 
-                    />
-                </View>
-            }
+            <View style={{ ...styles.paddingBase, ...styles.directionRow, ...styles.columnGapBase }}>
+                <Button
+                    style={styles.flex1}
+                    type="secondary"
+                    icon={(<Feather name="x" />)}
+                    title={i18n.t('cancel')}
+                    onPress={() => props.onClose()}
+                />
+                <Button
+                    style={styles.flex1}
+                    icon={(<AntDesign name="scan1" />)}
+                    title={i18n.t('scan_again')}
+                    onPress={() => scanned.set(false)}
+                />
+            </View>
+
         </View>
     );
 }

@@ -47,8 +47,7 @@ export default () => {
             fontFamily: FontFamily.sans,
             color: Color.baseContrast
           },
-          headerTintColor: Color.primary,
-          unmountOnBlur: true
+          headerTintColor: Color.primary
         }}
       >
         <Tab.Screen
@@ -59,7 +58,8 @@ export default () => {
             headerShown: false,
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="wallet" size={size} color={color} />
-            )
+            ),
+            unmountOnBlur: true
           }}
         />
         <Tab.Screen

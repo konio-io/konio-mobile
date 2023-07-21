@@ -25,7 +25,7 @@ export default () => {
         name={i18n.t('theme')}
         description={i18n.t('change_theme_desc')}
         onPress={() => navigation.navigate('ChangeTheme')}
-        icon={(<Ionicons name="color-palette-outline"/>)}
+        icon={(<Ionicons name="color-palette-outline" />)}
       />
 
       <ListItem
@@ -33,7 +33,7 @@ export default () => {
         name={i18n.t('locale')}
         description={i18n.t('change_locale_desc')}
         onPress={() => navigation.navigate('ChangeLocale')}
-        icon={(<Ionicons name="ios-language-outline"/>)}
+        icon={(<Ionicons name="ios-language-outline" />)}
       />
 
       <ListItem
@@ -50,6 +50,14 @@ export default () => {
         description={i18n.t('advanced_desc')}
         onPress={() => navigation.navigate('Advanced')}
         icon={(<AntDesign name="warning" />)}
+      />
+
+      <ListItem
+        content={i18n.t('logs')}
+        name={i18n.t('logs')}
+        description={i18n.t('logs_desc')}
+        onPress={() => navigation.navigate('Logs')}
+        icon={(<AntDesign name="exception1" />)}
       />
 
     </Screen>

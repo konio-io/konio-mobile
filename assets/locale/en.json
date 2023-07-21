@@ -183,10 +183,17 @@
     "dapp_proposal_success":"Dapp connected",
     "dapp_proposal_error":"Dapp connection error",
     "dapp_request_success":"Dapp request approved",
-    "dapp_request_error":"Dapp request error",
+    "dapp_request_error":"Request {{method}} failed",
     "wrong_rpc_node":"Wrong rpc node",
     "pair":"Pair",
     "scan_wc_code_or":"Scan WalletConnect qrcode or",
     "enter_code_manually":"enter the code manually",
-    "scan_to_code":"Scan the recipient's qrcode"
+    "scan_to_code":"Scan the recipient's qrcode",
+    "unsupported_methods":"Methods unsupported",
+    "invalid_network":"Misaligned networks. Required is {{requiredNetwork}}, current is {{currentNetwork}}. Switch to required network.",
+    "logs":"Logs",
+    "logs_desc":"Check and report for application errors",
+    "check_logs":"Check logs for details",
+    "share":"Share",
+    "unknown":"Unknown"
   }

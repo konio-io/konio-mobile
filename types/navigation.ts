@@ -108,7 +108,8 @@ export type SettingsParamList = {
     ChangeAutolock: undefined,
     Security: undefined,
     Advanced: undefined
-    NewNetwork: undefined
+    NewNetwork: undefined,
+    Logs: undefined
 };
 export type SettingMenuNavigationProp = StackNavigationProp<SettingsParamList, 'SettingMenu'>;
 export type SettingMenuRouteProp = RouteProp<SettingsParamList, 'SettingMenu'>;
@@ -130,6 +131,8 @@ export type AdvancedNavigationProp = StackNavigationProp<SettingsParamList, 'Adv
 export type AdvancedRouteProp = RouteProp<SettingsParamList, 'Advanced'>;
 export type NewNetworkNavigationProp = StackNavigationProp<SettingsParamList, 'NewNetwork'>;
 export type NewNetworkRouteProp = RouteProp<SettingsParamList, 'NewNetwork'>;
+export type LogsNavigationProp = StackNavigationProp<SettingsParamList, 'Logs'>;
+export type LogsRouteProp = RouteProp<SettingsParamList, 'Logs'>;
 
 /** Intro */
 export type IntroParamList = {

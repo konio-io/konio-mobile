@@ -189,5 +189,12 @@
   "pair": "Paire",
   "scan_wc_code_or": "Scanner le code WalletConnect ou",
   "enter_code_manually": "saisir le code manuellement",
-  "scan_to_code": "Scanner le code du destinataire"
+  "scan_to_code": "Scanner le code du destinataire",
+  "unsupported_methods": "Méthodes non prises en charge",
+  "invalid_network": "Réseaux non alignés. Le réseau requis est {{requiredNetwork}}, le réseau actuel est {{currentNetwork}}. Basculer vers le réseau requis.",
+  "logs": "Journaux",
+  "logs_desc": "Vérifiez et signalez les erreurs de l'application",
+  "check_logs": "Vérifiez les journaux pour plus de détails",
+  "share": "Partager",
+  "unknown": "Inconnu"
 }

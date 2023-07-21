@@ -41,6 +41,7 @@ export default () => {
         component={WithdrawToScan}
         options={{
           title: i18n.t('send'),
+          headerShown: false
         }}
       />
       <Stack.Screen

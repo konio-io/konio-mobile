@@ -5,6 +5,7 @@ import * as ExpoSecureStore from 'expo-secure-store';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { localstored } from "./localstored";
 import { IWeb3Wallet } from "@walletconnect/web3wallet";
+import { SessionTypes } from "@walletconnect/types";
 
 /**
  * Global states to track if async-storage is loading stored data
@@ -39,7 +40,8 @@ export const UserStoreDefault: UserStoreState = {
         }
     },
     rcLimit: '95',
-    version: '20230705'
+    version: '20230705',
+    logs: []
 };
 export const UserStore = hookstate(
     {... UserStoreDefault}, localstored({
@@ -130,3 +132,8 @@ export const LockStore = hookstate(LockStoreDefault);
  * WalletConnect web3 wallet
  */
 export const W3WStore = hookstate<IWeb3Wallet|null>(null);
+
+/**
+ * WalletConnect sessions
+ */
+export const W3WSessionsStore = hookstate<Record<string, SessionTypes.Struct>>({});

@@ -189,5 +189,12 @@
   "pair": "对",
   "scan_wc_code_or": "扫描WalletConnect二维码或",
   "enter_code_manually": "手动输入代码",
-  "scan_to_code": "扫描收件人的二维码"
+  "scan_to_code": "扫描收件人的二维码",
+  "unsupported_methods": "不支持的方法",
+  "invalid_network": "网络不匹配。所需网络为{{requiredNetwork}}，当前网络为{{currentNetwork}}。切换到所需网络。",
+  "logs": "日志",
+  "logs_desc": "检查和报告应用程序错误",
+  "check_logs": "查看详细日志",
+  "share": "分享",
+  "unknown": "未知"
 }

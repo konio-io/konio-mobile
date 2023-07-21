@@ -11,6 +11,7 @@ import ChangePassword from '../screens/ChangePassword';
 import ChangeAutolock from '../screens/ChangeAutolock';
 import Advanced from '../screens/Advanced';
 import NewNetwork from '../screens/NewNetwork';
+import Logs from '../screens/Logs';
 
 const Stack = createStackNavigator<SettingsParamList>();
 
@@ -101,6 +102,13 @@ export default () => {
         component={Advanced}
         options={{
           title: i18n.t('advanced'),
+        }}
+      />
+      <Stack.Screen
+        name="Logs"
+        component={Logs}
+        options={{
+          title: i18n.t('logs'),
         }}
       />
     </Stack.Navigator>

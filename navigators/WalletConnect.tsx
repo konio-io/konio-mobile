@@ -38,7 +38,8 @@ export default () => {
                 component={WcPairScan}
                 options={{
                     title: i18n.t('new_connection'),
-                    presentation: 'modal'
+                    presentation: 'modal',
+                    headerShown: false
                 }}
             />
             <Stack.Screen

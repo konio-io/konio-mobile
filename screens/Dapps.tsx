@@ -10,11 +10,14 @@ import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture
 import { useNavigation } from "@react-navigation/native";
 import { DappsNavigationProp, RootNavigationProp } from "../types/navigation";
 import { AntDesign } from '@expo/vector-icons';
+import { logError } from "../actions";
+import Loading from "./Loading";
 
 export default () => {
     const navigation = useNavigation<DappsNavigationProp>();
     const data = useHookstate<Array<Dapp>>([]);
     const selectedTag = useHookstate('all');
+    const isLoading = useHookstate(true);
 
     const load = () => {
         fetch(`${DAPPS_URL}/index.json`)
@@ -22,7 +25,9 @@ export default () => {
             .then(json => {
                 const list: Array<Dapp> = Object.values(json);
                 data.set(list);
-            });
+                isLoading.set(false);
+            })
+            .catch(e => logError(e));
     }
 
     const selectTag = (tag: string) => {
@@ -45,6 +50,10 @@ export default () => {
     let filteredData = data.get();
     if (selectedTag.get() !== 'all') {
         filteredData = data.get().filter(item => item.tags.includes(selectedTag.get()));
+    }
+
+    if (isLoading.get() === true) {
+        return <Loading/>
     }
 
     return (

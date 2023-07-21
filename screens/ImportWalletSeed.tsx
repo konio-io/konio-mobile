@@ -30,7 +30,6 @@ export default () => {
         setCurrentAccount(address);
       })
       .catch(e => {
-        console.log(e);
         showToast({
           type: 'error',
           text1: i18n.t('unable_to_import_seed'),

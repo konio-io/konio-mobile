@@ -72,6 +72,9 @@ const migrations : Record<string,Function> = {
         for (const networkId in UserStore.networks) {
             UserStore.networks[networkId].explorer.set('https://koiner.app/transactions');
         }
+    },
+    '20230721': () => {
+        UserStore.logs.set([]);
     }
 }
 

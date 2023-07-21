@@ -16,7 +16,10 @@ export default () => {
             <View style={{ ...styles.alignCenterColumn, ...styles.aligncenterRow, ...styles.paddingBase }}>
                 <Text>{i18n.t('scan_to_code')}</Text>
             </View>
-            <CodeScanner onScan={(to: string) => navigation.navigate('WithdrawTo', { to })} />
+            <CodeScanner 
+                onScan={(to: string) => navigation.navigate('WithdrawTo', { to })} 
+                onClose={() => navigation.goBack()}
+            />
         </Screen>
     );
 }

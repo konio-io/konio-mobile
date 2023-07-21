@@ -1,19 +1,19 @@
 import { Screen, Text, Separator, Button, ActivityIndicator, Accordion, AccountAvatar, Link } from "../components"
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { getSdkError } from "@walletconnect/utils";
 import { ImmutableObject, none, useHookstate } from "@hookstate/core";
 import { FlatList } from "react-native-gesture-handler";
 import { View } from "react-native";
-import { useI18n, useTheme, useW3W, useAccount } from "../hooks";
-import { SessionTypes } from "@walletconnect/types";
+import { useI18n, useTheme, useW3W, useAccount, useW3WSessions } from "../hooks";
 import Loading from "./Loading";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { AntDesign } from '@expo/vector-icons';
 import { WcSessionsNavigationProp } from "../types/navigation";
+import { refreshW3WSessions } from "../actions";
+import { SessionTypes } from "@walletconnect/types";
 
 export default () => {
-    const activeSessions = useHookstate<Record<string, SessionTypes.Struct>>({});
-    const refreshing = useHookstate(false);
+    const activeSessions = useW3WSessions();
     const web3wallet = useW3W().get();
     const i18n = useI18n();
     const { styles } = useTheme();
@@ -23,27 +23,17 @@ export default () => {
         return <Loading />;
     }
 
-    if (refreshing.get()) {
-        return <ActivityIndicator />;
-    }
-
-    const load = () => {
-        activeSessions.set(web3wallet.getActiveSessions());
-    }
-
     const disconnect = async (topic: string) => {
         await web3wallet.disconnectSession({
             topic,
             reason: getSdkError("USER_DISCONNECTED"),
         });
-        activeSessions[topic].set(none);
+        refreshW3WSessions();
     }
 
-    useFocusEffect(
-        useCallback(() => {
-            load()
-        }, [])
-    );
+    useEffect(() => {
+        refreshW3WSessions();
+    }, []);
 
     const data = Object.values(activeSessions.get())
         .sort((a, b) => a.expiry < b.expiry ? 1 : -1);

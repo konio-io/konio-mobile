@@ -189,5 +189,12 @@
     "pair": "çift",
     "scan_wc_code_or": "WalletConnect kodunu tarayın veya",
     "enter_code_manually": "kodu manuel olarak girin",
-    "scan_to_code": "Alıcının QR kodunu tarayın"
+    "scan_to_code": "Alıcının QR kodunu tarayın",
+    "unsupported_methods": "Desteklenmeyen yöntemler",
+    "invalid_network": "Hatalı ağlar. Gerekli ağ: {{requiredNetwork}}, mevcut ağ: {{currentNetwork}}. Gerekli ağa geçin.",
+    "logs": "Kayıtlar",
+    "logs_desc": "Uygulama hataları için kontrol ve raporlama",
+    "check_logs": "Ayrıntılar için kayıtları kontrol edin",
+    "share": "Paylaş",
+    "unknown": "Bilinmeyen"
 }

@@ -1,18 +1,17 @@
 import { utils } from "koilib";
 import { TransactionJsonWait } from "koilib/lib/interface";
-import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, W3WStore } from "../stores";
+import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, W3WStore, W3WSessionsStore } from "../stores";
 import { Contact, Coin, Network, Transaction, Account } from "../types/store";
-import { DEFAULT_COINS, TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_WITHDRAW, WALLET_CONNECT_PROJECT_ID, WC_METHODS } from "../lib/Constants";
+import { DEFAULT_COINS, TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_WITHDRAW, WC_METHODS } from "../lib/Constants";
 import HDKoinos from "../lib/HDKoinos";
 import Toast from 'react-native-toast-message';
 import { State, none } from "@hookstate/core";
-import { getCoinBalance, getContract, getProvider, getSigner, getAddress, signMessage, prepareTransaction, sendTransaction, signAndSendTransaction, signHash, signTransaction, waitForTransaction } from "../lib/utils";
+import { getCoinBalance, getContract, getProvider, getSigner, signMessage, prepareTransaction, sendTransaction, signAndSendTransaction, signHash, signTransaction, waitForTransaction } from "../lib/utils";
 import migrations from "../stores/migrations";
-import { Core } from "@walletconnect/core";
-import { Web3Wallet } from "@walletconnect/web3wallet";
 import { SignClientTypes, SessionTypes } from "@walletconnect/types";
 import { getSdkError } from "@walletconnect/utils";
 import { formatJsonRpcError, formatJsonRpcResult } from '@json-rpc-tools/utils';
+import { initWCWallet } from "../lib/WalletConnect";
 
 export const setCurrentAccount = (address: string) => {
     UserStore.currentAddress.set(address);
@@ -98,7 +97,8 @@ export const refreshCoinValue = (contractId: string) => {
             const value = Number(balanceKoin * price);
             CoinValueStore[contractId].set(value);
         })
-        .catch(error => {
+        .catch(e => {
+            logError(e);
             CoinValueStore[contractId].set(0);
         });
 }
@@ -421,24 +421,13 @@ export const executeMigrations = () => {
 }
 
 export const createW3W = async (onSessionProposal: any, onSessionRequest: any) => {
-    const core = new Core({
-        projectId: WALLET_CONNECT_PROJECT_ID,
-    });
-
-    const web3wallet = await Web3Wallet.init({
-        core,
-        metadata: {
-            name: "Web3Wallet React Native Tutorial",
-            description: "ReactNative Web3Wallet",
-            url: "https://walletconnect.com/",
-            icons: ["https://avatars.githubusercontent.com/u/37784886"],
-        },
-    });
-
-    web3wallet.on("session_proposal", onSessionProposal);
-    web3wallet.on("session_request", onSessionRequest);
-
-    W3WStore.set(web3wallet);
+    const wallet = await initWCWallet();
+    wallet.on("session_proposal", onSessionProposal);
+    wallet.on("session_request", onSessionRequest);
+    wallet.on("session_delete", () => {
+        refreshW3WSessions();
+    })
+    W3WStore.set(wallet);
 }
 
 export const pair = async (CURI: string) => {
@@ -450,62 +439,69 @@ export const pair = async (CURI: string) => {
 
 export const acceptProposal = async (sessionProposal: SignClientTypes.EventArguments["session_proposal"]) => {
     const w3wallet = W3WStore.get();
-    const currentAddress = UserStore.currentAddress.get();
-
-    if (w3wallet && currentAddress) {
-        const { id, params } = sessionProposal;
-        const { requiredNamespaces, relays } = params;
-        const namespaces: SessionTypes.Namespaces = {};
-
-        for (const key in requiredNamespaces) {
-            const accounts: string[] = [];
-            requiredNamespaces[key].chains?.map((chain: string) => {
-                [currentAddress].map((acc) => accounts.push(`${chain}:${acc}`));
-            });
-
-            namespaces[key] = {
-                accounts,
-                chains: requiredNamespaces[key].chains,
-                methods: requiredNamespaces[key].methods,
-                events: requiredNamespaces[key].events,
-            };
-        }
-
-        await w3wallet.approveSession({
-            id,
-            relayProtocol: relays[0].protocol,
-            namespaces,
-        });
+    if (!w3wallet) {
+        throw new Error("WalletConnect wallet not initialized");
     }
+
+    const currentAddress = UserStore.currentAddress.get();
+    if (!currentAddress) {
+        throw new Error("Current address not set");
+    }
+
+    const { id, params } = sessionProposal;
+    const { requiredNamespaces, relays } = params;
+    const namespaces: SessionTypes.Namespaces = {};
+
+    for (const key in requiredNamespaces) {
+        const accounts: string[] = [];
+        requiredNamespaces[key].chains?.map((chain: string) => {
+            [currentAddress].map((acc) => accounts.push(`${chain}:${acc}`));
+        });
+
+        namespaces[key] = {
+            accounts,
+            chains: requiredNamespaces[key].chains,
+            methods: requiredNamespaces[key].methods,
+            events: requiredNamespaces[key].events,
+        };
+    }
+
+    await w3wallet.approveSession({
+        id,
+        relayProtocol: relays[0].protocol,
+        namespaces,
+    });
+
+    refreshW3WSessions();
 }
 
 export const rejectProposal = async (sessionProposal: SignClientTypes.EventArguments["session_proposal"]) => {
     const w3wallet = W3WStore.get();
-    const { id } = sessionProposal;
-
-    if (w3wallet) {
-        await w3wallet.rejectSession({
-            id,
-            reason: getSdkError("USER_REJECTED_METHODS"),
-        });
-    }
-}
-
-export const acceptRequest = async (sessionRequest: SignClientTypes.EventArguments["session_request"]) => {
-    const { params, id, topic } = sessionRequest;
-    const { request } = params;
-    const w3wallet = W3WStore.get();
-    const networkId = UserStore.currentNetworkId.get();
-    const address = UserStore.currentAddress.get();
-
     if (!w3wallet) {
         throw new Error("W3 Wallet not available");
     }
 
+    const { id } = sessionProposal;
+    await w3wallet.rejectSession({
+        id,
+        reason: getSdkError("USER_REJECTED_METHODS"),
+    });
+}
+
+export const acceptRequest = async (sessionRequest: SignClientTypes.EventArguments["session_request"]) => {
+    const w3wallet = W3WStore.get();
+    if (!w3wallet) {
+        throw new Error("W3 Wallet not available");
+    }
+
+    const address = UserStore.currentAddress.get();
     if (!address) {
         throw new Error("Current address not available");
     }
 
+    const networkId = UserStore.currentNetworkId.get();
+    const { params, id, topic } = sessionRequest;
+    const { request } = params;
     const signer = getSigner({ address, networkId });
     let result: any = null;
 
@@ -540,18 +536,33 @@ export const acceptRequest = async (sessionRequest: SignClientTypes.EventArgumen
             response,
         });
     }
-
 }
 
 export const rejectRequest = async (sessionRequest: SignClientTypes.EventArguments["session_request"]) => {
+    const w3wallet = W3WStore.get();
+    if (!w3wallet) {
+        throw new Error("W3 Wallet not available");
+    }
+
     const { id, topic } = sessionRequest;
     const response = formatJsonRpcError(id, getSdkError('USER_REJECTED').message);
-    const w3wallet = W3WStore.get();
+    await w3wallet.respondSessionRequest({
+        topic,
+        response,
+    });
+}
 
+export const logError = (text: string) => {
+    UserStore.logs.merge([`${Date.now()}|ERROR|${text}`]);
+}
+
+export const logReset = () => {
+    UserStore.logs.set([]);
+}
+
+export const refreshW3WSessions = () => {
+    const w3wallet = W3WStore.get();
     if (w3wallet) {
-        await w3wallet.respondSessionRequest({
-            topic,
-            response,
-        });
+        W3WSessionsStore.set(w3wallet.getActiveSessions());
     }
 }

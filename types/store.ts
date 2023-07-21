@@ -18,7 +18,8 @@ export type UserStoreState = {
     autolock: number,
     addressbook: Record<string,Contact>,
     rcLimit: string,
-    version: string
+    version: string,
+    logs: Array<string>
 }
 
 export type AccountSecure = {

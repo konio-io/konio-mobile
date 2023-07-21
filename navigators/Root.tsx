@@ -1,5 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect } from "react";
 import { useI18n, useTheme, useW3W } from "../hooks";
 import ResetPassword from "../screens/ResetPassword";
 import Unlock from "../screens/Unlock";
@@ -10,7 +10,7 @@ import EditAccount from "../screens/EditAccount";
 import WalletConnect from "./WalletConnect";
 import { RootNavigationProp, RootParamList } from "../types/navigation";
 import { SignClientTypes } from "@walletconnect/types";
-import { acceptRequest, createW3W, showToast } from "../actions";
+import { acceptRequest, createW3W, logError, showToast } from "../actions";
 import { useNavigation } from "@react-navigation/native";
 import WcProposal from "../screens/WcProposal";
 import WcRequest from "../screens/WcRequest";
@@ -30,19 +30,18 @@ export default () => {
   }
 
   const onSessionRequest = async (request: SignClientTypes.EventArguments["session_request"]) => {
-    console.log('req', request.params.request.method);
+    const method = request.params.request.method;
 
-    if (WC_SECURE_METHODS.includes(request.params.request.method)) {
-      console.log('req nonsecure', request)
+    if (WC_SECURE_METHODS.includes(method)) {
       navigation.navigate('WcRequest', { request });
     } else {
-      console.log('req secure', request);
       acceptRequest(request)
       .catch(e => {
-        console.log(e);
+        logError(e);
         showToast({
           type: 'error',
-          text1: 'error in ' + request.params.request.method
+          text1: i18n.t('dapp_request_error', {method}),
+          text2: i18n.t('check_logs')
         })
       });
     }

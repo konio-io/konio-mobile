@@ -2,7 +2,7 @@ import { Button, Screen, TextInput, Text, AccountAvatar, Address } from '../comp
 import { useHookstate } from '@hookstate/core';
 import { useNavigation, CommonActions, useRoute } from '@react-navigation/native';
 import { WithdrawConfirmNavigationProp, WithdrawConfirmRouteProp } from '../types/navigation';
-import { withdrawCoin, confirmTransaction, showToast } from '../actions'
+import { withdrawCoin, confirmTransaction, showToast, logError } from '../actions'
 import { Feather } from '@expo/vector-icons';
 import { useCoin, useTheme, useI18n, useAccount, useContact } from '../hooks';
 import { View, StyleSheet } from 'react-native';
@@ -73,18 +73,20 @@ export default () => {
                     });
                 })
                     .catch(e => {
-                        console.log(e);
+                        logError(e)
                         showToast({
                             type: 'error',
-                            text1: i18n.t('transaction_confirm_failed')
+                            text1: i18n.t('transaction_confirm_failed'),
+                            text2: i18n.t('check_logs')
                         });
                     });
             })
             .catch(e => {
-                console.log(e);
+                logError(e);
                 showToast({
                     type: 'error',
-                    text1: i18n.t('transaction_commit_failed')
+                    text1: i18n.t('transaction_commit_failed'),
+                    text2: i18n.t('check_logs')
                 });
             });
     };

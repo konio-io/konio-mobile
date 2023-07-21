@@ -188,5 +188,12 @@
     "pair": "زوج",
     "scan_wc_code_or": "مسح رمز WalletConnect أو",
     "enter_code_manually": "أدخل الرمز يدويًا",
-    "scan_to_code": "مسح رمز المستلم"
+    "scan_to_code": "مسح رمز المستلم",
+    "unsupported_methods": "طرق غير مدعومة",
+    "invalid_network": "شبكات غير متطابقة. المطلوبة هي {{requiredNetwork}}، الحالية هي {{currentNetwork}}. انتقل إلى الشبكة المطلوبة.",
+    "logs": "السجلات",
+    "logs_desc": "تحقق وقدم تقارير عن أخطاء التطبيق",
+    "check_logs": "تحقق من السجلات للحصول على التفاصيل",
+    "share": "مشاركة",
+    "unknown": "غير معروف"
 }

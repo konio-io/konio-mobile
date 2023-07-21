@@ -1,7 +1,7 @@
 import { useHookstate } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import type { NewWalletSeedNavigationProp } from '../types/navigation';
-import { setCurrentAccount, addAccount, showToast } from '../actions';
+import { setCurrentAccount, addAccount, showToast, logError } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { Button, TextInput, Screen } from '../components';
 import { useI18n, useTheme } from '../hooks';
@@ -40,10 +40,11 @@ export default () => {
                 navigation.goBack();
             })
             .catch(e => {
-                console.log(e);
+                logError(e);
                 showToast({
                     type: 'error',
-                    text1: i18n.t('unable_to_add_account')
+                    text1: i18n.t('unable_to_add_account'),
+                    text2: i18n.t('check_logs')
                 });
             });
 

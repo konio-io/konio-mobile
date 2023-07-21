@@ -189,5 +189,12 @@
   "pair": "Par",
   "scan_wc_code_or": "Digitalizar o código WalletConnect ou",
   "enter_code_manually": "inserir o código manualmente",
-  "scan_to_code": "Digitalizar o código do destinatário"
+  "scan_to_code": "Digitalizar o código do destinatário",
+  "unsupported_methods": "Métodos não suportados",
+  "invalid_network": "Redes desalinhadas. Requerido é {{requiredNetwork}}, atual é {{currentNetwork}}. Mude para a rede requerida.",
+  "logs": "Registros",
+  "logs_desc": "Verificar e relatar erros de aplicativo",
+  "check_logs": "Verificar registros para obter detalhes",
+  "share": "Compartilhar",
+  "unknown": "Desconhecido"
 }

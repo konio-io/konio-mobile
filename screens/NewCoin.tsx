@@ -1,7 +1,7 @@
 import { ImmutableObject, useHookstate } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import type { NewCoinNavigationProp } from '../types/navigation';
-import { addCoin, showToast } from '../actions';
+import { addCoin, logError, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen, Text, CoinLogo } from '../components';
 import { useCurrentNetworkId, useI18n } from '../hooks';
@@ -33,6 +33,7 @@ export default () => {
         navigation.goBack();
       })
       .catch(e => {
+        logError(e);
         showToast({
           type: 'error',
           text1: i18n.t('unable_to_add_coin'),
