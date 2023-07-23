@@ -2,7 +2,6 @@
   "expo": {
     "name": "Konio",
     "slug": "konio",
-    "scheme": "konio",
     "version": "1.5.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -35,6 +34,32 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.adrihoke.konio",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "konio"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        },
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "wc"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ],
       "splash": {
         "image": "./assets/splash.png",
         "resizeMode": "cover",
@@ -44,8 +69,7 @@
           "resizeMode": "cover",
           "backgroundColor": "#000000"
         }
-      },
-      "versionCode": 13
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -10,13 +10,10 @@ import { DarkTheme, DefaultTheme, NavigationContainer, getStateFromPath } from "
 import { useCurrentAddress, useTheme } from './hooks';
 import { SheetProvider } from "react-native-actions-sheet";
 import Drawer from './navigators/Drawer';
-import { executeMigrations } from './actions';
+import { executeMigrations, logError, showToast } from './actions';
 import Loading from './screens/Loading';
 import Intro from './navigators/Intro';
 import { userStoreIsLoading, encryptedStoreIsLoading } from './stores';
-import * as Linking from 'expo-linking';
-
-const prefix = Linking.createURL('/');
 
 export default function App() {
   useFonts({
@@ -29,7 +26,7 @@ export default function App() {
   const navigationTheme = theme.name === 'dark' ? DarkTheme : DefaultTheme;
 
   const linking = {
-    prefixes: [prefix],
+    prefixes: ['wc://','konio://'],
     config: {
       screens: {
         Root: {
@@ -39,7 +36,7 @@ export default function App() {
             Settings: 'settings',
             WalletConnect: {
               screens: {
-                WcPair: 'wc/:uri'
+                WcPair: 'pair/:uri'
               }
             }
           }
@@ -47,8 +44,8 @@ export default function App() {
       }
     },
     getStateFromPath: (path: string, options: any) => {
-      if (path.includes('wc?uri=')) {
-        const newPath = path.replace('wc?uri=','wc/').replace('?','$');
+      if (path.includes('@2')) {
+        const newPath = `pair/${btoa(`wc:${path}`)}`;
         return getStateFromPath(newPath, options);
       }
 

@@ -55,7 +55,7 @@ export default () => {
 
     useEffect(() => {
         if (W3W.get() && route.params && route.params.uri) {
-            const uri = route.params.uri.replace('$','?');
+            const uri = atob(route.params.uri);
             doPair(uri);
         }
     }, [W3W, route])

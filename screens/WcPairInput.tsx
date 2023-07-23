@@ -29,7 +29,7 @@ export default () => {
                 <Button 
                     icon={(<Feather name="link" />)}
                     title={i18n.t('pair')}
-                    onPress={() => navigation.push('WcPair', {uri: uri.get()})} 
+                    onPress={() => navigation.push('WcPair', {uri: btoa(uri.get()) })} 
                 />
             </View>
 

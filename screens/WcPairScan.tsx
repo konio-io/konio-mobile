@@ -18,7 +18,7 @@ export default () => {
                 <Link text={i18n.t('enter_code_manually')} onPress={() => navigation.navigate('WcPairInput')}/>
             </View>
             <CodeScanner 
-                onScan={(uri: string) => navigation.navigate('WcPair', { uri })}
+                onScan={(uri: string) => navigation.navigate('WcPair', { uri: btoa(uri) })}
                 onClose={() => navigation.goBack()}
             />
         </Screen>
