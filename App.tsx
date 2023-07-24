@@ -44,7 +44,7 @@ export default function App() {
       }
     },
     getStateFromPath: (path: string, options: any) => {
-      if (path.includes('@2')) {
+      if (path.includes('@2') && !path.includes('requestId')) {
         const newPath = `pair/${btoa(`wc:${path}`)}`;
         return getStateFromPath(newPath, options);
       }
