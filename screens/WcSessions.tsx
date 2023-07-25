@@ -4,38 +4,39 @@ import { getSdkError } from "@walletconnect/utils";
 import { ImmutableObject, none, useHookstate } from "@hookstate/core";
 import { FlatList } from "react-native-gesture-handler";
 import { View } from "react-native";
-import { useI18n, useTheme, useW3W, useAccount, useW3WSessions } from "../hooks";
+import { useI18n, useTheme, useWC, useAccount } from "../hooks";
 import Loading from "./Loading";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from '@expo/vector-icons';
 import { WcSessionsNavigationProp } from "../types/navigation";
-import { refreshW3WSessions } from "../actions";
+import { refreshWCActiveSessions } from "../actions";
 import { SessionTypes } from "@walletconnect/types";
 
 export default () => {
-    const activeSessions = useW3WSessions();
-    const web3wallet = useW3W().get();
+    const wc = useWC();
+    const wallet = wc.wallet.get();
+    const activeSessions = wc.activeSessions.get();
     const i18n = useI18n();
     const { styles } = useTheme();
     const navigation = useNavigation<WcSessionsNavigationProp>();
 
-    if (!web3wallet) {
+    if (!wallet) {
         return <Loading />;
     }
 
     const disconnect = async (topic: string) => {
-        await web3wallet.disconnectSession({
+        await wallet.disconnectSession({
             topic,
             reason: getSdkError("USER_DISCONNECTED"),
         });
-        refreshW3WSessions();
+        refreshWCActiveSessions();
     }
 
     useEffect(() => {
-        refreshW3WSessions();
+        refreshWCActiveSessions();
     }, []);
 
-    const data = Object.values(activeSessions.get())
+    const data = Object.values(activeSessions)
         .sort((a, b) => a.expiry < b.expiry ? 1 : -1);
 
     return (

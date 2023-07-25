@@ -1,15 +1,17 @@
 import { View } from "react-native";
 import { Wrapper, Screen, Seed, TextInputActionCopy } from "../components"
-import { useCurrentSeed, useLocker, useTheme } from "../hooks"
-import React from "react";
+import { useCurrentSeed, useTheme } from "../hooks"
+import React, { useEffect } from "react";
+import { lock } from "../actions";
 
 export default () => {
     const currentSeed = useCurrentSeed().get() ?? '';
     const theme = useTheme();
     const styles = theme.styles;
-    const { Border, Spacing } = theme.vars;
 
-    useLocker({ key: 'show_seed', initialValue: true });
+    useEffect(() => {
+        lock();
+    }, [])
 
     return (
         <Screen>

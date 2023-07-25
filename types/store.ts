@@ -1,4 +1,6 @@
 import { StatusBarStyle } from "expo-status-bar"
+import { SessionTypes, SignClientTypes } from "@walletconnect/types";
+import { IWeb3Wallet } from "@walletconnect/web3wallet";
 
 export type EncryptedStoreState = {
     accounts: Record<string, AccountSecure>,
@@ -124,4 +126,11 @@ export interface Dapp {
     url: string,
     tags: Array<string>,
     compatible: boolean
+}
+
+export type WCStoreState = {
+    wallet: IWeb3Wallet|null,
+    activeSessions: Record<string, SessionTypes.Struct>,
+    pendingProposal: SignClientTypes.EventArguments["session_proposal"]|null,
+    pendingRequest: SignClientTypes.EventArguments["session_request"]|null
 }

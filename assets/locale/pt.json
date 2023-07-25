@@ -191,10 +191,11 @@
   "enter_code_manually": "inserir o código manualmente",
   "scan_to_code": "Digitalizar o código do destinatário",
   "unsupported_methods": "Métodos não suportados",
-  "invalid_network": "Redes desalinhadas. Requerido é {{requiredNetwork}}, atual é {{currentNetwork}}. Mude para a rede requerida.",
+  "misaligned_network": "Redes desalinhadas. Requerido é {{requiredNetwork}}, atual é {{currentNetwork}}. Mude para a rede requerida.",
   "logs": "Registros",
   "logs_desc": "Verificar e relatar erros de aplicativo",
   "check_logs": "Verificar registros para obter detalhes",
   "share": "Compartilhar",
-  "unknown": "Desconhecido"
+  "unknown": "Desconhecido",
+  "misaligned_address" : "Endereço desalinhado. Mude para a conta correta."
 }

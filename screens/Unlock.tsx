@@ -4,17 +4,15 @@ import { useHookstate } from '@hookstate/core';
 import { checkPassword, showToast, unlock } from '../actions';
 import { useTheme, useI18n, useBiometric } from '../hooks';
 import { Button, TextInput, Logo, Screen, Text, Wrapper } from '../components';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { UnlockNavigationProp, UnlockRouteProp } from '../types/navigation';
+import { useNavigation } from '@react-navigation/native';
+import { UnlockNavigationProp } from '../types/navigation';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useEffect } from 'react';
 
 export default () => {
-    const route = useRoute<UnlockRouteProp>();
     const navigation = useNavigation<UnlockNavigationProp>();
     const i18n = useI18n();
     const password = useHookstate('');
-    const key = route.params.key;
     const biometric = useBiometric();
     const { styles } = useTheme();
     const preventBack = useHookstate(true);
@@ -50,10 +48,9 @@ export default () => {
     };
 
     const unlockWallet = () => {
-        unlock(key);
-        preventBack.set(false);
+        //preventBack.set(false);
+        unlock();
         password.set('');
-        navigation.goBack();
     }
 
     useEffect(() => {
@@ -61,7 +58,6 @@ export default () => {
             unlockBiometric();
         }
     }, [biometric]);
-
 
     /**
      * prevent go back if action type is "GO_BACK"

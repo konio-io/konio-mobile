@@ -1,8 +1,8 @@
 import { utils } from "koilib";
 import { TransactionJsonWait } from "koilib/lib/interface";
-import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, W3WStore, W3WSessionsStore } from "../stores";
+import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, WCStore } from "../stores";
 import { Contact, Coin, Network, Transaction, Account } from "../types/store";
-import { DEFAULT_COINS, TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_WITHDRAW, WC_METHODS } from "../lib/Constants";
+import { DEFAULT_COINS, TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_WITHDRAW, WC_METHODS, WC_SECURE_METHODS } from "../lib/Constants";
 import HDKoinos from "../lib/HDKoinos";
 import Toast from 'react-native-toast-message';
 import { State, none } from "@hookstate/core";
@@ -334,12 +334,12 @@ export const generateSeed = () => {
     return HDKoinos.randomMnemonic();
 }
 
-export const lock = (key: string) => {
-    LockStore.set({ [key]: true });
+export const lock = () => {
+    LockStore.set(true);
 }
 
-export const unlock = (key: string) => {
-    LockStore.set({ [key]: false });
+export const unlock = () => {
+    LockStore.set(false);
 }
 
 export const setLocale = (locale: string) => {
@@ -420,26 +420,38 @@ export const executeMigrations = () => {
     }
 }
 
-export const createW3W = async (onSessionProposal: any, onSessionRequest: any) => {
+export const initWC = async () => {
+    if (WCStore.wallet.get()) {
+        return;
+    }
+
+    const onSessionProposal = (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
+        setWCPendingProposal(proposal);
+    }
+
+    const onSessionRequest = async (request: SignClientTypes.EventArguments["session_request"]) => {
+        setWCPendingRequest(request);
+    }
+
     const wallet = await initWCWallet();
     wallet.on("session_proposal", onSessionProposal);
     wallet.on("session_request", onSessionRequest);
     wallet.on("session_delete", () => {
-        refreshW3WSessions();
-    })
-    W3WStore.set(wallet);
+        refreshWCActiveSessions();
+    });
+    WCStore.wallet.set(wallet);
 }
 
 export const pair = async (CURI: string) => {
-    const w3wallet = W3WStore.get();
-    if (w3wallet) {
-        await w3wallet.core.pairing.pair({ uri: CURI });
+    const wallet = WCStore.wallet.get();
+    if (wallet) {
+        await wallet.core.pairing.pair({ uri: CURI });
     }
 }
 
 export const acceptProposal = async (sessionProposal: SignClientTypes.EventArguments["session_proposal"]) => {
-    const w3wallet = W3WStore.get();
-    if (!w3wallet) {
+    const wallet = WCStore.wallet.get();
+    if (!wallet) {
         throw new Error("WalletConnect wallet not initialized");
     }
 
@@ -447,6 +459,8 @@ export const acceptProposal = async (sessionProposal: SignClientTypes.EventArgum
     if (!currentAddress) {
         throw new Error("Current address not set");
     }
+
+    unsetWCPendingProposal();
 
     const { id, params } = sessionProposal;
     const { requiredNamespaces, relays } = params;
@@ -466,31 +480,33 @@ export const acceptProposal = async (sessionProposal: SignClientTypes.EventArgum
         };
     }
 
-    await w3wallet.approveSession({
+    await wallet.approveSession({
         id,
         relayProtocol: relays[0].protocol,
         namespaces,
     });
 
-    refreshW3WSessions();
+    refreshWCActiveSessions();
 }
 
 export const rejectProposal = async (sessionProposal: SignClientTypes.EventArguments["session_proposal"]) => {
-    const w3wallet = W3WStore.get();
-    if (!w3wallet) {
+    const wallet = WCStore.wallet.get();
+    if (!wallet) {
         throw new Error("W3 Wallet not available");
     }
 
+    unsetWCPendingProposal();
+
     const { id } = sessionProposal;
-    await w3wallet.rejectSession({
+    await wallet.rejectSession({
         id,
         reason: getSdkError("USER_REJECTED_METHODS"),
     });
 }
 
 export const acceptRequest = async (sessionRequest: SignClientTypes.EventArguments["session_request"]) => {
-    const w3wallet = W3WStore.get();
-    if (!w3wallet) {
+    const wallet = WCStore.wallet.get();
+    if (!wallet) {
         throw new Error("W3 Wallet not available");
     }
 
@@ -498,6 +514,8 @@ export const acceptRequest = async (sessionRequest: SignClientTypes.EventArgumen
     if (!address) {
         throw new Error("Current address not available");
     }
+
+    unsetWCPendingRequest();
 
     const networkId = UserStore.currentNetworkId.get();
     const { params, id, topic } = sessionRequest;
@@ -531,7 +549,7 @@ export const acceptRequest = async (sessionRequest: SignClientTypes.EventArgumen
 
     if (result !== null) {
         const response = formatJsonRpcResult(id, result);
-        await w3wallet.respondSessionRequest({
+        await wallet.respondSessionRequest({
             topic,
             response,
         });
@@ -539,14 +557,16 @@ export const acceptRequest = async (sessionRequest: SignClientTypes.EventArgumen
 }
 
 export const rejectRequest = async (sessionRequest: SignClientTypes.EventArguments["session_request"]) => {
-    const w3wallet = W3WStore.get();
-    if (!w3wallet) {
+    const wallet = WCStore.wallet.get();
+    if (!wallet) {
         throw new Error("W3 Wallet not available");
     }
 
+    unsetWCPendingRequest();
+
     const { id, topic } = sessionRequest;
     const response = formatJsonRpcError(id, getSdkError('USER_REJECTED').message);
-    await w3wallet.respondSessionRequest({
+    await wallet.respondSessionRequest({
         topic,
         response,
     });
@@ -560,9 +580,37 @@ export const logReset = () => {
     UserStore.logs.set([]);
 }
 
-export const refreshW3WSessions = () => {
-    const w3wallet = W3WStore.get();
-    if (w3wallet) {
-        W3WSessionsStore.set(w3wallet.getActiveSessions());
+export const refreshWCActiveSessions = () => {
+    const wallet = WCStore.wallet.get();
+    if (wallet) {
+        WCStore.activeSessions.set(wallet.getActiveSessions());
+    }
+}
+
+export const setWCPendingProposal = (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
+    const wallet = WCStore.wallet.get();
+    if (wallet) {
+        WCStore.pendingProposal.set(proposal);
+    }
+}
+
+export const unsetWCPendingProposal = () => {
+    const wallet = WCStore.wallet.get();
+    if (wallet) {
+        WCStore.pendingProposal.set(none);
+    }
+}
+
+export const setWCPendingRequest = (request: SignClientTypes.EventArguments["session_request"]) => {
+    const wallet = WCStore.wallet.get();
+    if (wallet) {
+        WCStore.pendingRequest.set(request);
+    }
+}
+
+export const unsetWCPendingRequest = () => {
+    const wallet = WCStore.wallet.get();
+    if (wallet) {
+        WCStore.pendingRequest.set(none);
     }
 }

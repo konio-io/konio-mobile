@@ -191,10 +191,11 @@
   "enter_code_manually": "کد را به صورت دستی وارد کنید",
   "scan_to_code": "کد گیرنده را اسکن کنید",
   "unsupported_methods": "روش‌های پشتیبانی نشده",
-  "invalid_network": "شبکه‌های نامطابق. نیازمند شبکه {{requiredNetwork}} است، شبکه کنونی {{currentNetwork}} است. به شبکه نیازمند منتقل شوید.",
+  "misaligned_network": "شبکه‌های نامطابق. نیازمند شبکه {{requiredNetwork}} است، شبکه کنونی {{currentNetwork}} است. به شبکه نیازمند منتقل شوید.",
   "logs": "گزارش‌ها",
   "logs_desc": "خطاهای برنامه را بررسی و گزارش دهید",
   "check_logs": "برای جزئیات گزارش‌ها را بررسی کنید",
   "share": "اشتراک‌گذاری",
-  "unknown": "ناشناخته"
+  "unknown": "ناشناخته",
+  "misaligned_address" : "آدرس ناهماهنگ. به حساب درست بروید."
 }

@@ -1,19 +1,19 @@
 import { Button, Screen, Wrapper, Text, AccountListItem } from "../components"
-import { useCurrentAddress, useI18n, useTheme, useW3W, useAccount, useCurrentNetworkId, useNetwork } from "../hooks";
+import { useCurrentAddress, useI18n, useTheme, useWC, useAccount, useCurrentNetworkId, useNetwork } from "../hooks";
 import Loading from "./Loading";
 import { View } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { WcRequestNavigationProp, WcRequestRouteProp } from "../types/navigation";
-import { acceptRequest, logError, rejectRequest, showToast } from "../actions";
+import { acceptRequest, logError, rejectRequest, showToast, unsetWCPendingRequest } from "../actions";
 import { checkWCMethod, checkWCNetwork, getNetworkByChainId } from "../lib/WalletConnect";
 import { useHookstate } from "@hookstate/core";
 import { useEffect } from "react";
 import { Feather } from '@expo/vector-icons';
 
 export default () => {
-    const w3wallet = useW3W().get();
+    const wallet = useWC().wallet.get();
     const currentAddress = useCurrentAddress().get();
-    if (!currentAddress || !w3wallet) {
+    if (!currentAddress || !wallet) {
         return <Loading />
     }
 
@@ -27,18 +27,25 @@ export default () => {
     const i18n = useI18n();
     const checkMethods = useHookstate(true);
     const checkNetwork = useHookstate(true);
+    const checkAddress = useHookstate(true);
 
     //data
-    const data = w3wallet.engine.signClient.session.get(request.topic);
+    const data = wallet.engine.signClient.session.get(request.topic);
     const name = data?.peer?.metadata?.name;
     const description = data?.peer?.metadata?.description;
     const url = data?.peer?.metadata?.url;
     const method = request.params.request.method;
-    const address = data.namespaces.koinos?.accounts[0]?.split(':')[2];
-    const account = useAccount(address);
     const chainId = route.params.request.params.chainId;
     const requiredNetwork = getNetworkByChainId(chainId);
     const requiredNetworkName = requiredNetwork ? requiredNetwork.name : i18n.t('unknown');
+    const requiredAddress = data.namespaces.koinos?.accounts[0]?.split(':')[2];
+    const account = useAccount(requiredAddress);
+
+    const _checkAddress = () => {
+        if (currentAddress !== requiredAddress) {
+            checkAddress.set(false);
+        }
+    }
 
     const _checkMethods = () => {
         if (!checkWCMethod(method)) {
@@ -74,13 +81,14 @@ export default () => {
 
     const reject = async () => {
         rejectRequest(request)
-            .catch(e => logError(e));
+            .catch(e => logError(e))
         navigation.goBack();
     }
 
     useEffect(() => {
         _checkMethods();
         _checkNetwork();
+        _checkAddress();
     }, [route.params.request]);
 
     return (
@@ -93,7 +101,7 @@ export default () => {
                     account.ornull &&
                     <View style={{ width: '100%', height: 70 }}>
                         <Text style={styles.textSmall}>{i18n.t('account')}</Text>
-                        <AccountListItem address={address} />
+                        <AccountListItem address={requiredAddress} />
                     </View>
                 }
 
@@ -145,29 +153,52 @@ export default () => {
             {
                 checkNetwork.get() === false &&
                 <View style={{ ...styles.paddingBase, ...styles.columnGapBase, ...styles.alignCenterColumn }}>
-                    <Text style={{ ...styles.textError, ...styles.textCenter }}>{i18n.t('invalid_network', { currentNetwork: currentNetwork.name, requiredNetwork: requiredNetworkName })}</Text>
+                    <Text style={{ ...styles.textError, ...styles.textCenter }}>{i18n.t('misaligned_network', { currentNetwork: currentNetwork.name, requiredNetwork: requiredNetworkName })}</Text>
                 </View>
             }
 
-            <View style={{ ...styles.directionRow, ...styles.paddingBase, ...styles.columnGapBase }}>
-                <Button
-                    type="secondary"
-                    style={styles.flex1}
-                    onPress={() => reject()}
-                    title={i18n.t('reject')}
-                    icon={(<Feather name="x" />)}
-                />
-                {
-                    checkMethods.get() === true &&
-                    checkNetwork.get() === true &&
+            {
+                checkAddress.get() === false &&
+                <View style={{ ...styles.paddingBase, ...styles.columnGapBase, ...styles.alignCenterColumn }}>
+                    <Text style={{ ...styles.textError, ...styles.textCenter }}>{i18n.t('misaligned_address', { currentAddress: currentAddress, requiredAddress: requiredAddress })}</Text>
+                </View>
+            }
+
+            {
+                (checkMethods.get() === false ||
+                checkNetwork.get() === false ||
+                checkAddress.get() === false) &&
+
+                <View style={{ ...styles.paddingBase }}>
+                    <Button
+                        type="secondary"
+                        onPress={() => navigation.goBack()}
+                        title={i18n.t('cancel')}
+                        icon={(<Feather name="x" />)}
+                    />
+                </View>
+            }
+
+            {
+                checkMethods.get() === true &&
+                checkNetwork.get() === true &&
+                checkAddress.get() === true &&
+                <View style={{ ...styles.directionRow, ...styles.paddingBase, ...styles.columnGapBase }}>
+                    <Button
+                        type="secondary"
+                        style={styles.flex1}
+                        onPress={() => reject()}
+                        title={i18n.t('reject')}
+                        icon={(<Feather name="x" />)}
+                    />
                     <Button
                         style={styles.flex1}
                         onPress={() => accept()}
                         title={i18n.t('accept')}
                         icon={(<Feather name="check" />)}
                     />
-                }
-            </View>
+                </View>
+            }
 
         </Screen>
     )

@@ -1,11 +1,9 @@
 import { State, hookstate } from "@hookstate/core";
 import { DEFAULT_NETWORK, DEFAULT_NETWORKS, DONATION_ADDRESS, OS_LOCALE, OS_THEME } from "../lib/Constants";
-import { UserStoreState, EncryptedStoreState } from "../types/store";
+import { UserStoreState, EncryptedStoreState, WCStoreState } from "../types/store";
 import * as ExpoSecureStore from 'expo-secure-store';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { localstored } from "./localstored";
-import { IWeb3Wallet } from "@walletconnect/web3wallet";
-import { SessionTypes } from "@walletconnect/types";
 
 /**
  * Global states to track if async-storage is loading stored data
@@ -124,16 +122,15 @@ export const reset = () => {
 /**
  * Lock by password
  */
-export const LockStoreDefault : Record<string,boolean> = {};
-export const LockStore = hookstate(LockStoreDefault);
-
+export const LockStore = hookstate(true);
 
 /**
- * WalletConnect web3 wallet
+ * WalletConnect store
  */
-export const W3WStore = hookstate<IWeb3Wallet|null>(null);
-
-/**
- * WalletConnect sessions
- */
-export const W3WSessionsStore = hookstate<Record<string, SessionTypes.Struct>>({});
+export const WCStoreDefault : WCStoreState = {
+    wallet: null,
+    activeSessions: {},
+    pendingProposal: null,
+    pendingRequest: null
+}
+export const WCStore = hookstate(WCStoreDefault);

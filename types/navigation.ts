@@ -13,9 +13,7 @@ export type RootRouteProp = RouteProp<DrawerParamList, 'Root'>;
 export type RootParamList = {
     Account: NavigatorScreenParams<AccountParamList>
     Settings: NavigatorScreenParams<SettingsParamList>
-    Unlock: {
-        key: string
-    },
+    Unlock: undefined,
     ResetPassword: undefined,
     NewAccount: undefined,
     EditAccount: {

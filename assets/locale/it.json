@@ -191,10 +191,11 @@
   "enter_code_manually": "inserisci il codice manualmente",
   "scan_to_code": "Scansiona il codice del destinatario",
   "unsupported_methods": "Metodi non supportati",
-  "invalid_network": "Reti non allineate. Richiesto {{requiredNetwork}}, attuale è {{currentNetwork}}. Passare alla rete richiesta.",
+  "misaligned_network": "Reti non allineate. Richiesto {{requiredNetwork}}, attuale è {{currentNetwork}}. Passare alla rete richiesta.",
   "logs": "Log",
   "logs_desc": "Verificare e segnalare gli errori dell'applicazione",
   "check_logs": "Controlla i log per i dettagli",
   "share": "Condividi",
-  "unknown": "Sconosciuto"
+  "unknown": "Sconosciuto",
+  "misaligned_address": "Indirizzo disallineato. Passa all'account giusto."
 }

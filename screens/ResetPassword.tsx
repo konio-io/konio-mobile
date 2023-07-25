@@ -80,7 +80,7 @@ export default () => {
                 />
             </Wrapper>
 
-            <View style={styles.screenFooter}>
+            <View style={styles.paddingBase}>
                 <Button
                     title={i18n.t('set_password')}
                     icon={<Feather name="arrow-right" />}

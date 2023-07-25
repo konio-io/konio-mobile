@@ -190,10 +190,11 @@
     "enter_code_manually":"enter the code manually",
     "scan_to_code":"Scan the recipient's qrcode",
     "unsupported_methods":"Methods unsupported",
-    "invalid_network":"Misaligned networks. Required is {{requiredNetwork}}, current is {{currentNetwork}}. Switch to required network.",
+    "misaligned_network":"Misaligned networks. Required is {{requiredNetwork}}, current is {{currentNetwork}}. Switch to required network.",
     "logs":"Logs",
     "logs_desc":"Check and report for application errors",
     "check_logs":"Check logs for details",
     "share":"Share",
-    "unknown":"Unknown"
+    "unknown":"Unknown",
+    "misaligned_address":"Misaligned address. Switch to the right account."
   }

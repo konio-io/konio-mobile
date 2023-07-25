@@ -1,4 +1,4 @@
-import { useI18n, useW3W } from "../hooks";
+import { useI18n, useLock, useWC } from "../hooks";
 import Loading from "./Loading";
 import { CommonActions, useNavigation, useRoute } from "@react-navigation/native";
 import { WcPairNavigationProp, WcPairRouteProp } from "../types/navigation";
@@ -9,7 +9,8 @@ export default () => {
     const navigation = useNavigation<WcPairNavigationProp>();
     const route = useRoute<WcPairRouteProp>();
     const i18n = useI18n();
-    const W3W = useW3W();
+    const wallet = useWC();
+    const lock = useLock();
 
     const doPair = (uri: string) => {
         pair(uri)
@@ -54,11 +55,15 @@ export default () => {
     }
 
     useEffect(() => {
-        if (W3W.get() && route.params && route.params.uri) {
+        if (wallet.get()
+            && lock.get() === false
+            && route.params
+            && route.params.uri
+        ) {
             const uri = atob(route.params.uri);
             doPair(uri);
         }
-    }, [W3W, route])
+    }, [wallet, route, lock])
 
     return <Loading/>
 }

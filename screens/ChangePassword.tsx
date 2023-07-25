@@ -1,11 +1,11 @@
 import { Wrapper, Screen, Button, TextInput } from "../components"
-import { useLocker, useI18n, useTheme } from "../hooks"
-import React from "react";
+import { useI18n, useTheme } from "../hooks"
+import React, { useEffect } from "react";
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 import { UnlockNavigationProp } from "../types/navigation";
 import { useHookstate } from "@hookstate/core";
-import { setPassword, showToast } from "../actions";
+import { lock, setPassword, showToast } from "../actions";
 import { View } from "react-native";
 
 export default () => {
@@ -16,7 +16,9 @@ export default () => {
     const theme = useTheme();
     const styles = theme.styles;
 
-    useLocker({ key: 'change_password', initialValue: true });
+    useEffect(() => {
+        lock();
+    }, []);
 
     const savePassword = () => {
         if ((!password.get())) {

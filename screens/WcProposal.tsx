@@ -142,7 +142,7 @@ export default () => {
             {
                 checkNetwork.get() === false &&
                 <View style={{ ...styles.paddingBase, ...styles.columnGapBase, ...styles.alignCenterColumn }}>
-                    <Text style={{ ...styles.textError, ...styles.textCenter }}>{i18n.t('invalid_network', { currentNetwork: currentNetwork.name, requiredNetwork: requiredNetworkName })}</Text>
+                    <Text style={{ ...styles.textError, ...styles.textCenter }}>{i18n.t('misaligned_network', { currentNetwork: currentNetwork.name, requiredNetwork: requiredNetworkName })}</Text>
                 </View>
             }
 

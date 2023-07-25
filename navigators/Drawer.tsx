@@ -4,7 +4,7 @@ import {
     createDrawerNavigator,
     DrawerItem,
 } from '@react-navigation/drawer';
-import { useCurrentAddress, useI18n, useLocker, useTheme, useAccounts } from '../hooks';
+import { useCurrentAddress, useI18n, useTheme, useAccounts } from '../hooks';
 import { AccountAvatar, Logo, Separator, Link, Button, Address, WcLogo } from '../components';
 import { setCurrentAccount } from '../actions';
 import Root from './Root';
@@ -17,8 +17,6 @@ import Loading from '../screens/Loading';
 
 const Drawer = createDrawerNavigator();
 export default () => {
-    useLocker({ key: 'app', initialValue: true });
-
     return (
         <Drawer.Navigator
             useLegacyImplementation

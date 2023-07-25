@@ -2,7 +2,7 @@
   "expo": {
     "name": "Konio",
     "slug": "konio",
-    "version": "1.5.1",
+    "version": "1.5.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -26,7 +26,7 @@
           "backgroundColor": "#000000"
         }
       },
-      "buildNumber": "8"
+      "buildNumber": "10"
     },
     "android": {
       "adaptiveIcon": {
@@ -69,7 +69,8 @@
           "resizeMode": "cover",
           "backgroundColor": "#000000"
         }
-      }
+      },
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"

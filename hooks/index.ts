@@ -1,5 +1,5 @@
 import { State, useHookstate } from "@hookstate/core";
-import { CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, W3WStore, W3WSessionsStore } from "../stores";
+import { CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, WCStore } from "../stores";
 import { getTheme } from "../themes";
 import { AppState, useColorScheme } from 'react-native';
 import Locales from "../lib/Locales";
@@ -147,63 +147,6 @@ export const useRcLimit = () => {
     return useHookstate(UserStore.rcLimit);
 }
 
-export const useLocker = (props: {
-    key: string,
-    initialValue: boolean
-}) => {
-    const { key, initialValue } = props;
-
-    const navigation = useNavigation<UnlockNavigationProp>();
-    const locker = useHookstate(LockStore[key]);
-    const nextAppState = useAppState();
-    const dateLock = useHookstate(0);
-    const autoLock = useAutolock();
-
-    //set locker initial value on mount
-    //reset locker initial value on mount
-    useEffect(() => {
-        LockStore[key].set(initialValue);
-
-        return () => {
-            LockStore[key].set(initialValue);
-        }
-    }, []);
-
-    //do redirect to "unlock" on locker true value
-    useEffect(() => {
-        if (locker.get() === true) {
-            dateLock.set(0); //ios
-            navigation.navigate('Unlock', { key });
-        }
-    }, [locker]);
-
-    //autolock
-    useEffect(() => {
-        if (autoLock.get() > -1) {
-            if (nextAppState.get() === 'background') {
-                dateLock.set(Date.now() + autoLock.get());
-            }
-            else if (nextAppState.get() === 'active') {
-                if (dateLock.get() > 0 && Date.now() > dateLock.get()) {
-                    locker.set(true);
-                }
-            }
-        }
-    }, [nextAppState]);
-
-    return {
-        lock: () => {
-            locker.set(true);
-        },
-        get: () => {
-            return locker.get();
-        },
-        set: (val: boolean) => {
-            locker.set(val);
-        }
-    };
-}
-
 export const useAppState = () => {
     const appState = useHookstate('active');
 
@@ -223,14 +166,14 @@ export const useAppState = () => {
     return appState;
 }
 
-export const useW3W = () => {
-    return useHookstate(W3WStore);
-}
-
-export const useW3WSessions = () => {
-    return useHookstate(W3WSessionsStore);
+export const useWC = () => {
+    return useHookstate(WCStore);
 }
 
 export const useLogs = () => {
     return useHookstate(UserStore.logs);
+}
+
+export const useLock = () => {
+    return useHookstate(LockStore);
 }

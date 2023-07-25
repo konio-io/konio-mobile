@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useEffect } from "react";
-import { useI18n, useTheme, useW3W } from "../hooks";
+import { useAppState, useAutolock, useI18n, useLock, useTheme, useWC } from "../hooks";
 import ResetPassword from "../screens/ResetPassword";
 import Unlock from "../screens/Unlock";
 import Account from "./Account";
@@ -9,12 +9,12 @@ import NewAccount from "../screens/NewAccount";
 import EditAccount from "../screens/EditAccount";
 import WalletConnect from "./WalletConnect";
 import { RootNavigationProp, RootParamList } from "../types/navigation";
-import { SignClientTypes } from "@walletconnect/types";
-import { acceptRequest, createW3W, logError, showToast } from "../actions";
-import { useNavigation } from "@react-navigation/native";
+import { acceptRequest, initWC, logError, showToast } from "../actions";
+import { StackActions, useNavigation } from "@react-navigation/native";
 import WcProposal from "../screens/WcProposal";
 import WcRequest from "../screens/WcRequest";
 import { WC_SECURE_METHODS } from "../lib/Constants";
+import { useHookstate } from "@hookstate/core";
 
 const Stack = createStackNavigator<RootParamList>();
 
@@ -22,35 +22,88 @@ export default () => {
   const i18n = useI18n();
   const theme = useTheme();
   const { Color, Border, FontFamily } = theme.vars;
-  const W3W = useW3W();
   const navigation = useNavigation<RootNavigationProp>();
-
-  const onSessionProposal = (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
-    navigation.navigate('WcProposal', { proposal });
-  }
-
-  const onSessionRequest = async (request: SignClientTypes.EventArguments["session_request"]) => {
-    const method = request.params.request.method;
-
-    if (WC_SECURE_METHODS.includes(method)) {
-      navigation.navigate('WcRequest', { request });
-    } else {
-      acceptRequest(request)
-      .catch(e => {
-        logError(e);
-        showToast({
-          type: 'error',
-          text1: i18n.t('dapp_request_error', {method}),
-          text2: i18n.t('check_logs')
-        })
-      });
+  const lock = useLock();
+  const nextAppState = useAppState();
+  const dateLock = useHookstate(0);
+  const autoLock = useAutolock();
+  const WC = useWC();
+  
+  useEffect(() => {
+    if (lock.get() === true) {
+      dateLock.set(0); //ios
+      navigation.navigate('Unlock');
+      return;
     }
-  }
+    
+    if (navigation.getState()) {
+      const popAction = StackActions.pop(1);
+      navigation.dispatch(popAction);
+      return;
+    }
+
+    navigation.navigate('Root');
+  }, [lock]);
 
   useEffect(() => {
-    if (!W3W.get()) {
-      createW3W(onSessionProposal, onSessionRequest);
+    if (autoLock.get() > -1) {
+      if (nextAppState.get() === 'background') {
+        dateLock.set(Date.now() + autoLock.get() + 1000);
+      }
+      else if (nextAppState.get() === 'active') {
+        if (dateLock.get() > 0 && Date.now() > dateLock.get()) {
+          lock.set(true);
+        }
+      }
     }
+  }, [nextAppState, autoLock]);
+
+  useEffect(() => {
+    if (lock.get() === true) {
+      return;
+    }
+
+    const pendingProposal = WC.pendingProposal.get({noproxy: true});
+    if (!pendingProposal) {
+      return;
+    }
+
+    const proposal = Object.assign({}, pendingProposal);
+
+    navigation.navigate('WcProposal', { proposal });
+  }, [lock, WC.pendingProposal]);
+
+  useEffect(() => {
+    if (lock.get() === true) {
+      return;
+    }
+
+    const pendingRequest = WC.pendingRequest.get({noproxy: true});
+    if (!pendingRequest) {
+      return;
+    }
+
+    const request = Object.assign({}, pendingRequest);
+
+    const method = request.params.request.method;
+    if (!WC_SECURE_METHODS.includes(method)) {
+        acceptRequest(request)
+            .catch(e => {
+                logError(e);
+                showToast({
+                    type: 'error',
+                    text1: i18n.t('dapp_request_error', { method }),
+                    text2: i18n.t('check_logs')
+                })
+            });
+        return;
+    }
+
+    navigation.navigate('WcRequest', { request });
+  }, [lock, WC.pendingRequest]);
+
+  useEffect(() => {
+    initWC();
   }, []);
 
   return (

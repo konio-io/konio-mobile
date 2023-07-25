@@ -10,7 +10,7 @@ import { DarkTheme, DefaultTheme, NavigationContainer, getStateFromPath } from "
 import { useCurrentAddress, useTheme } from './hooks';
 import { SheetProvider } from "react-native-actions-sheet";
 import Drawer from './navigators/Drawer';
-import { executeMigrations, logError, showToast } from './actions';
+import { executeMigrations } from './actions';
 import Loading from './screens/Loading';
 import Intro from './navigators/Intro';
 import { userStoreIsLoading, encryptedStoreIsLoading } from './stores';
@@ -26,7 +26,7 @@ export default function App() {
   const navigationTheme = theme.name === 'dark' ? DarkTheme : DefaultTheme;
 
   const linking = {
-    prefixes: ['wc://','konio://'],
+    prefixes: ['wc://', 'konio://'],
     config: {
       screens: {
         Root: {

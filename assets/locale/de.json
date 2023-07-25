@@ -191,10 +191,11 @@
   "enter_code_manually": "den Code manuell eingeben",
   "scan_to_code": "Den QR-Code des Empfängers scannen",
   "unsupported_methods": "Nicht unterstützte Methoden",
-  "invalid_network": "Nicht übereinstimmende Netzwerke. Erforderlich ist {{requiredNetwork}}, aktuell ist {{currentNetwork}}. Wechseln Sie zum erforderlichen Netzwerk.",
+  "misaligned_network": "Nicht übereinstimmende Netzwerke. Erforderlich ist {{requiredNetwork}}, aktuell ist {{currentNetwork}}. Wechseln Sie zum erforderlichen Netzwerk.",
   "logs": "Protokolle",
   "logs_desc": "Überprüfen Sie auf Anwendungsfehler und melden Sie diese",
   "check_logs": "Protokolle für Details überprüfen",
   "share": "Teilen",
-  "unknown": "Unbekannt"
+  "unknown": "Unbekannt",
+  "misaligned_address" : "Fehlausgerichtete Adresse. Wechseln Sie zum richtigen Konto."
 }

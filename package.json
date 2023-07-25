@@ -14,6 +14,7 @@
     "@ethersproject/shims": "^5.7.0",
     "@hookstate/core": "^4.0.1",
     "@hookstate/localstored": "^4.0.2",
+    "@hookstate/subscribable": "^4.0.0",
     "@json-rpc-tools/utils": "^1.7.6",
     "@react-native-async-storage/async-storage": "1.17.11",
     "@react-navigation/bottom-tabs": "^6.5.7",
@@ -25,7 +26,9 @@
     "@walletconnect/web3wallet": "^1.8.6",
     "ethers": "^5.7.2",
     "expo": "~48.0.18",
+    "expo-barcode-scanner": "~12.3.2",
     "expo-clipboard": "~4.1.2",
+    "expo-linking": "~4.0.1",
     "expo-local-authentication": "~13.3.0",
     "expo-localization": "~14.1.1",
     "expo-secure-store": "~12.1.1",
@@ -49,9 +52,7 @@
     "react-native-toast-message": "^2.1.6",
     "react-native-webview": "11.26.0",
     "react-native-webview-crypto": "^0.0.25",
-    "text-encoding-polyfill": "^0.6.7",
-    "expo-linking": "~4.0.1",
-    "expo-barcode-scanner": "~12.3.2"
+    "text-encoding-polyfill": "^0.6.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
