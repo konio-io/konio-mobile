@@ -14,8 +14,8 @@
       "config": {
         "usesNonExemptEncryption": false
       },
-      "supportsTablet": true,
-      "bundleIdentifier": "com.adrihoke.konio",
+      "supportsTablet": false,
+      "bundleIdentifier": "konio.io",
       "splash": {
         "image": "./assets/splash.png",
         "resizeMode": "cover",
@@ -26,14 +26,14 @@
           "backgroundColor": "#000000"
         }
       },
-      "buildNumber": "10"
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.adrihoke.konio",
+      "package": "konio.io",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -70,7 +70,7 @@
           "backgroundColor": "#000000"
         }
       },
-      "versionCode": 2
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"
