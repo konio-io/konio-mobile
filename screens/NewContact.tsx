@@ -8,6 +8,8 @@ import { useI18n } from '../hooks';
 import { View } from 'react-native';
 import { useTheme } from '../hooks';
 import { utils } from 'koilib';
+import { getKapAddressByName, getKapProfileByAddress } from '../lib/utils';
+import { useEffect } from 'react';
 
 export default () => {
     const navigation = useNavigation<NewCoinNavigationProp>();
@@ -55,6 +57,38 @@ export default () => {
 
         navigation.goBack();
     };
+
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+        
+            if (address.get()) {
+                getKapProfileByAddress(address.get()).then(profile => {
+                    if (profile) {
+                        name.set(profile.name);
+                    }
+                });                
+            }
+
+        }, 3000)
+
+        return () => clearTimeout(delayDebounceFn)
+    }, [address])
+
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+        
+            if (name.get()) {
+                getKapAddressByName(name.get()).then(addr => {
+                    if (addr) {
+                        address.set(addr);
+                    }
+                });                
+            }
+
+        }, 3000)
+
+        return () => clearTimeout(delayDebounceFn)
+    }, [name])
 
     return (
         <Screen>

@@ -1,4 +1,4 @@
-import { Pressable, TextInput, View } from 'react-native';
+import { TextInput, View } from 'react-native';
 import { useTheme } from '../hooks';
 import { rgba } from '../lib/utils';
 import { Feather } from '@expo/vector-icons';

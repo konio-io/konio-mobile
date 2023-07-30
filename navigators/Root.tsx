@@ -15,6 +15,7 @@ import WcProposal from "../screens/WcProposal";
 import WcRequest from "../screens/WcRequest";
 import { WC_SECURE_METHODS } from "../lib/Constants";
 import { useHookstate } from "@hookstate/core";
+import { getKapAddressByName } from "../lib/utils";
 
 const Stack = createStackNavigator<RootParamList>();
 

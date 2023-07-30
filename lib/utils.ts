@@ -1,6 +1,7 @@
 import { Contract, utils, Provider, Signer } from "koilib";
 import { UserStore, EncryptedStore } from "../stores";
 import { Abi, SendTransactionOptions, TransactionJson, TransactionJsonWait, TransactionReceipt } from "koilib/lib/interface";
+import { KAP_NAMESERVICE_CID, KAP_PROFILE_CID } from "./Constants";
 
 export const rgba = (color: string, opacity: number): string => {
     return color.replace('1)', opacity.toString() + ')');
@@ -77,18 +78,17 @@ export const getSigner = (args: {
     return signer;
 }
 
-export const getKAP = async (name: string) => {
-    const address = UserStore.currentAddress.get();
-    if (!address) {
+export const getKapAddressByName = async (name: string) => {
+    const currentAddress = UserStore.currentAddress.get();
+    if (!currentAddress) {
         throw new Error('Current address not set');
     }
 
     const networkId = UserStore.currentNetworkId.get();
-    const networks = UserStore.networks;
-    const contractId = networks[networkId].kapContractId.get();
+    const contractId = KAP_NAMESERVICE_CID;
 
     const contract = await getContract({
-        address,
+        address: currentAddress,
         networkId,
         contractId
     });
@@ -96,12 +96,30 @@ export const getKAP = async (name: string) => {
     const buffer = new TextEncoder().encode(name);
     const token_id = "0x" + utils.toHexString(buffer);
 
-    try {
-        const response = await contract.functions.owner_of<{ value: string; }>({ token_id });
-        return response.result?.value;
-    } catch (e) {
-        throw e;
+    const response = await contract.functions.owner_of<{ value: string; }>({ token_id });
+    return response.result?.value;
+}
+
+export const getKapProfileByAddress = async (address: string) => {
+    const currentAddress = UserStore.currentAddress.get();
+    if (!currentAddress) {
+        throw new Error('Current address not set');
     }
+
+    const networkId = UserStore.currentNetworkId.get();
+    const contractId = KAP_PROFILE_CID;
+
+    const contract = await getContract({
+        address: currentAddress,
+        networkId,
+        contractId
+    });
+
+    const response = await contract.functions.get_profile({
+        address
+    });
+
+    return response.result;
 }
 
 export const signHash = async (
