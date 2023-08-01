@@ -1,15 +1,13 @@
 import { useHookstate } from '@hookstate/core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NewCoinNavigationProp, NewContactRouteProp } from '../types/navigation';
-import { addContact, showToast } from '../actions';
+import { addContact, refreshKap, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
-import { TextInput, Button, Screen } from '../components';
-import { useI18n } from '../hooks';
+import { TextInput, Button, Screen, Text } from '../components';
+import { useI18n, useKapAddress, useKapName } from '../hooks';
 import { View } from 'react-native';
 import { useTheme } from '../hooks';
 import { utils } from 'koilib';
-import { getKapAddressByName, getKapProfileByAddress } from '../lib/utils';
-import { useEffect } from 'react';
 
 export default () => {
     const navigation = useNavigation<NewCoinNavigationProp>();
@@ -19,9 +17,16 @@ export default () => {
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
+    const addressLoading = useHookstate(false);
+    const kapAddress = useKapName(address.get());
+    const kapName = useKapAddress(address.get());
 
     const add = () => {
-        if (!address.get()) {
+        const addr = address.get().charAt(0) === `@` ? 
+            kapAddress :
+            address;
+
+        if (!addr.get()) {
             showToast({
                 type: 'error',
                 text1: i18n.t('missing_address')
@@ -38,7 +43,7 @@ export default () => {
         }
 
         try {
-            const check = utils.isChecksumAddress(address.get());
+            const check = utils.isChecksumAddress(addr.get());
             if (!check) {
                 throw "Invalid address";
             }
@@ -51,44 +56,26 @@ export default () => {
         }
 
         addContact({
-            address: address.get(),
+            address: addr.get(),
             name: name.get()
         });
 
         navigation.goBack();
     };
 
-    useEffect(() => {
-        const delayDebounceFn = setTimeout(() => {
-        
-            if (address.get()) {
-                getKapProfileByAddress(address.get()).then(profile => {
-                    if (profile) {
-                        name.set(profile.name);
-                    }
-                });                
-            }
+    const onAddressStopWriting = () => {
+        if (address.get()) {
+            addressLoading.set(true);
 
-        }, 3000)
-
-        return () => clearTimeout(delayDebounceFn)
-    }, [address])
-
-    useEffect(() => {
-        const delayDebounceFn = setTimeout(() => {
-        
-            if (name.get()) {
-                getKapAddressByName(name.get()).then(addr => {
-                    if (addr) {
-                        address.set(addr);
-                    }
-                });                
-            }
-
-        }, 3000)
-
-        return () => clearTimeout(delayDebounceFn)
-    }, [name])
+            refreshKap(address.get())
+            .then(() => {
+                addressLoading.set(false);
+            })
+            .catch(e => {
+                addressLoading.set(false);
+            })
+        }
+    }
 
     return (
         <Screen>
@@ -107,6 +94,9 @@ export default () => {
                         value={address.get()}
                         onChangeText={(v: string) => address.set(v.trim())}
                         placeholder={i18n.t('address')}
+                        loading={addressLoading.get()}
+                        onStopWriting={onAddressStopWriting}
+                        note={kapName.get() || kapAddress.get()}
                     />
                 </View>
 

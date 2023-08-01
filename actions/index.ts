@@ -1,12 +1,12 @@
 import { utils } from "koilib";
 import { TransactionJsonWait } from "koilib/lib/interface";
-import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, WCStore } from "../stores";
+import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, WCStore, KapStore } from "../stores";
 import { Contact, Coin, Network, Transaction, Account } from "../types/store";
 import { DEFAULT_COINS, TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_WITHDRAW, WC_METHODS, WC_SECURE_METHODS } from "../lib/Constants";
 import HDKoinos from "../lib/HDKoinos";
 import Toast from 'react-native-toast-message';
 import { State, none } from "@hookstate/core";
-import { getCoinBalance, getContract, getProvider, getSigner, signMessage, prepareTransaction, sendTransaction, signAndSendTransaction, signHash, signTransaction, waitForTransaction } from "../lib/utils";
+import { getCoinBalance, getContract, getProvider, getSigner, signMessage, prepareTransaction, sendTransaction, signAndSendTransaction, signHash, signTransaction, waitForTransaction, getKapProfileByAddress, getKapAddressByName } from "../lib/utils";
 import migrations from "../stores/migrations";
 import { SignClientTypes, SessionTypes } from "@walletconnect/types";
 import { getSdkError } from "@walletconnect/utils";
@@ -522,6 +522,7 @@ export const acceptRequest = async (sessionRequest: SignClientTypes.EventArgumen
     const { request } = params;
     const signer = getSigner({ address, networkId });
     let result: any = null;
+    const provider = signer.provider;
 
     switch (request.method) {
         case WC_METHODS.SIGN_MESSAGE:
@@ -544,6 +545,9 @@ export const acceptRequest = async (sessionRequest: SignClientTypes.EventArgumen
             break;
         case WC_METHODS.WAIT_FOR_TRANSACTION:
             result = await waitForTransaction(request.params.transactionId, request.params.type, request.params.timeout);
+            break;
+        case WC_METHODS.READ_CONTRACT:
+            result = await provider?.readContract(request.params.operation);
             break;
     }
 
@@ -613,4 +617,22 @@ export const unsetWCPendingRequest = () => {
     if (wallet) {
         WCStore.pendingRequest.set(none);
     }
+}
+
+export const refreshKap = (search: string) => {
+    if (search.charAt(0) === '@') {
+        return getKapAddressByName(search.slice(1))
+        .then(address => {
+            if (address) {
+                KapStore.merge({[address] : search.slice(1)})
+            }
+        });
+    }
+
+    return getKapProfileByAddress(search)
+        .then(profile => {
+            if (profile) {
+                KapStore[search].set(profile.name);
+            }
+        });
 }

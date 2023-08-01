@@ -1,5 +1,5 @@
 import { State, useHookstate } from "@hookstate/core";
-import { CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, WCStore } from "../stores";
+import { CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, WCStore, KapStore } from "../stores";
 import { getTheme } from "../themes";
 import { AppState, useColorScheme } from 'react-native';
 import Locales from "../lib/Locales";
@@ -7,8 +7,7 @@ import { I18n } from 'i18n-js';
 import { getLocales } from 'expo-localization';
 import { FALLBACK_LOCALE, FALLBACK_THEME, OS_LOCALE, OS_THEME } from "../lib/Constants";
 import { useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { UnlockNavigationProp } from "../types/navigation";
+import { utils } from "koilib";
 
 export const useNetworks = () => {
     return useHookstate(UserStore.networks);
@@ -176,4 +175,104 @@ export const useLogs = () => {
 
 export const useLock = () => {
     return useHookstate(LockStore);
+}
+
+export const useKapAddress = (address: string) => {
+    const store = useHookstate(KapStore);
+    const name = useHookstate<string|null>(null);
+    if (store[address].ornull) {
+        name.set(`@${store[address].get()}`);
+    }
+    return name;
+}
+
+export const useKapName = (name: string) => {
+    const store = useHookstate(KapStore);
+    const address = useHookstate('');
+    let foundAddress = '';
+
+    for (const addr in store.get()) {
+        if (store[addr].get() === name.slice(1)) {
+            foundAddress = addr;
+            break;
+        }
+    }
+    address.set(foundAddress);
+
+    return address;
+}
+
+export const useSearchAddress = (search: string) => {
+    const accounts = useHookstate(UserStore.accounts);
+    const addressbook = useHookstate(UserStore.addressbook);
+    const kap = useHookstate(KapStore);
+
+    const accountByAddress = accounts[search].get();
+    if (accountByAddress) {
+        return {
+            name: accountByAddress.name,
+            address: search,
+            addable: false
+        };
+    }
+
+    const accountByName = Object.keys(accounts.get()).filter(address => accounts[address].name.get() === search);
+    if (accountByName.length > 0) {
+        return {
+            name: search,
+            address: accountByName[0],
+            addable: false
+        };
+    }
+    
+    const contactByAddress = addressbook[search].get();
+    if (contactByAddress) {
+        return {
+            name: contactByAddress.name,
+            address: search,
+            addable: false
+        };
+    }
+
+    const contactByName = Object.keys(addressbook.get()).filter(address => addressbook[address].name.get() === search);
+    if (contactByName.length > 0) {
+        return {
+            name: search,
+            address: contactByName[0],
+            addable: false
+        };
+    }
+
+    const kapByAddress = kap[search].get();
+    if (kapByAddress) {
+        return {
+            name: `@${kapByAddress}`,
+            address: search,
+            addable: true
+        }
+    }
+
+    const kapByName = Object.keys(kap.get()).filter(address => kap[address].get() === search.slice(1));
+    if (kapByName.length > 0) {
+        return {
+            name: search,
+            address: kapByName[0],
+            addable: true
+        };
+    }
+
+    try {
+        const check = utils.isChecksumAddress(search);
+        if (check) {
+            return {
+                name: '',
+                address: search,
+                addable: true
+            }
+        }
+    } catch (e) {
+        return null;
+    }
+
+    return null;
 }

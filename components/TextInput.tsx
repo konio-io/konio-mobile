@@ -6,6 +6,7 @@ import React, { useEffect } from 'react';
 import { useHookstate } from '@hookstate/core';
 import Text from './Text';
 import TextInputAction from './TextInputAction';
+import ActivityIndicator from './ActivityIndicator';
 
 export default (props: any) => {
 
@@ -41,6 +42,16 @@ export default (props: any) => {
         }
     };
 
+    if (wprops.onStopWriting) {
+        useEffect(() => {
+            const delayDebounceFn = setTimeout(() => {
+                wprops.onStopWriting();
+            }, 1000)
+    
+            return () => clearTimeout(delayDebounceFn)
+        }, [value])
+    }
+
     return (
 
         <View style={{ ...styles.textInputContainer, ...props.styleContainer }}>
@@ -51,12 +62,17 @@ export default (props: any) => {
 
                 <TextInput {...wprops} />
 
-                {wprops.value &&
+                {wprops.loading &&
+                    <ActivityIndicator/>
+                }
+
+                {wprops.value && wprops.editable !== true &&
                     <TextInputAction
                         onPress={() => wprops.onChangeText('')}
                         icon={(<Feather name="x" />)}
                     />
                 }
+
             </View>
             {wprops.actions &&
                 <View style={styles.alignEndColumn}>

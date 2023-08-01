@@ -94,7 +94,8 @@ export const WC_METHODS = {
     SIGN_AND_SEND_TRANSACTION: 'koinos_signAndSendTransaction',
     PREPARE_TRANSACTION: 'koinos_prepareTransaction',
     WAIT_FOR_TRANSACTION: 'koinos_waitForTransaction',
-    SEND_TRANSACTION: 'koinos_sendTransaction'
+    SEND_TRANSACTION: 'koinos_sendTransaction',
+    READ_CONTRACT: 'koinos_readContract'
 }
 export const WC_SECURE_METHODS = [
     WC_METHODS.SIGN_MESSAGE,

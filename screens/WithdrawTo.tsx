@@ -1,15 +1,16 @@
 import { View } from 'react-native';
-import { Screen, TextInput, Button, Text, AccountAvatar, ListItemSelected, DrawerToggler, AddressListItem, Link, TextInputActionPaste, TextInputAction } from '../components';
-import { useTheme, useI18n, useAccounts, useAccount, useTransactions, useAddressbook, useContact, useCurrentAddress } from '../hooks';
+import { Screen, Button, Text, AccountAvatar, ListItemSelected, DrawerToggler, AddressListItem, Link, TextInputActionPaste, TextInputAction, TextInput } from '../components';
+import { useTheme, useI18n, useAccounts, useAccount, useTransactions, useAddressbook, useContact, useCurrentAddress, useKapAddress, useKapName, useSearchAddress } from '../hooks';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { WithdrawToNavigationProp, WithdrawToRouteProp } from '../types/navigation';
-import { showToast } from '../actions';
-import { Feather, AntDesign } from '@expo/vector-icons';
+import { refreshKap, showToast } from '../actions';
+import { Feather } from '@expo/vector-icons';
 import { useEffect } from 'react';
 import { useHookstate } from '@hookstate/core';
 import { utils } from 'koilib';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SheetManager } from "react-native-actions-sheet";
+import { rgba } from '../lib/utils';
 
 export default () => {
     const route = useRoute<WithdrawToRouteProp>();
@@ -86,79 +87,111 @@ export default () => {
     )
 }
 
+
 const To = (props: {
     value: string,
     onChange: Function
 }) => {
     const navigation = useNavigation<WithdrawToNavigationProp>();
     const address = useHookstate('');
-    const name = useHookstate('');
-    const account = useAccount(address.get());
-    const contact = useContact(address.get());
-
-    const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
+    const { Color } = theme.vars;
+    const i18n = useI18n();
+
+    const searchAddress = useHookstate('');
+    const name = useHookstate('nome');
+    const contact = useSearchAddress(searchAddress.get());
+    const loading = useHookstate(false);
+    const editable = useHookstate(true);
+    const addable = useHookstate(false);
+
+    useEffect(() => {
+        if (contact) {
+            name.set(contact.name);
+            address.set(contact.address);
+            addable.set(contact.addable);
+        }
+    }, [searchAddress, contact]);
 
     useEffect(() => {
         props.onChange(address.get());
     }, [address]);
 
     useEffect(() => {
-        address.set(props.value);
+        searchAddress.set(props.value);
     }, [props.value]);
 
-    useEffect(() => {
-        if (account.ornull) {
-            name.set(account.ornull.name.get());
+    const onStopWriting = () => {
+        if (searchAddress.get()) {
+            loading.set(true);
+            editable.set(false);
+
+            refreshKap(searchAddress.get())
+                .then(() => {
+                    loading.set(false);
+                    editable.set(true);
+                })
+                .catch(e => {
+                    loading.set(false);
+                    editable.set(true);
+                });
         }
-        else if (contact.ornull) {
-            name.set(contact.ornull.name.get());
-        }
-        else {
-            name.set('');
-        }
-    }, [account, contact])
+    };
 
     return (
         <View>
-            <TextInput
-                multiline={true}
-                autoFocus={true}
-                style={{ fontSize: 12 }}
-                styleContainer={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
-                value={address.get()}
-                onChangeText={(v: string) => { address.set(v) }}
-                placeholder={i18n.t('select_recipient')}
-            />
-            <View style={{ ...styles.textInputContainer, paddingLeft: 40, paddingTop: 0, borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>
-                {name.get() &&
-                    <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
-                        <AccountAvatar size={24} address={address.get()} />
-                        <Text style={styles.textSmall}>{name.get()}</Text>
-                    </View>
-                }
-                {!name.get() && address.get() &&
-                    <Button
-                        type='secondary'
-                        title={i18n.t('add_to_addressbook')}
-                        icon={<Feather name="plus" />}
-                        onPress={() => navigation.navigate('NewContact', { address: address.get() })}
-                    />
-                }
+            {!address.get() &&
+                <TextInput
+                    multiline={true}
+                    autoFocus={true}
+                    style={{ fontSize: 12 }}
+                    value={searchAddress.get()}
+                    onChangeText={(v: string) => { searchAddress.set(v) }}
+                    onStopWriting={onStopWriting}
+                    loading={loading.get()}
+                    placeholder={i18n.t('select_recipient')}
+                />
+            }
 
-                {!name.get() && !address.get() &&
-                    <View style={{ ...styles.alignEndColumn }}>
-                        <View style={{...styles.directionRow, ...styles.columnGapSmall}}>
-                            <TextInputAction
-                                onPress={() => navigation.navigate('WithdrawToScan')}
-                                icon={(<AntDesign name="scan1" />)}
-                            />
-                            <TextInputActionPaste state={address} />
+            {address.get() &&
+                <View style={{ ...styles.textInputContainer, ...styles.rowGapSmall }}>
+                    <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
+                        <View style={{ marginTop: 2 }}>
+                            <Feather size={18} name="chevron-right" color={rgba(Color.baseContrast, 0.5)} />
                         </View>
+
+                        <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
+                            <AccountAvatar size={40} address={address.get()} />
+                            <View>
+                                {
+                                    name.get() &&
+                                    <Text>{name.get()}</Text>
+                                }
+                                <Text style={styles.textSmall}>{address.get()}</Text>
+                            </View>
+                        </View>
+
+                        <TextInputAction
+                            onPress={() => {
+                                address.set('');
+                                searchAddress.set('');
+                            }}
+                            icon={(<Feather name="x" />)}
+                        />
+
                     </View>
-                }
-            </View>
+
+                    {addable.get() &&
+                        <Button
+                            type='secondary'
+                            title={i18n.t('add_to_addressbook')}
+                            icon={<Feather name="plus" />}
+                            onPress={() => navigation.navigate('NewContact', { address: address.get() })}
+                        />
+                    }
+                </View>
+            }
         </View>
     )
 }
