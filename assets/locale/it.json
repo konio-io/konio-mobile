@@ -197,5 +197,8 @@
   "check_logs": "Controlla i log per i dettagli",
   "share": "Condividi",
   "unknown": "Sconosciuto",
-  "misaligned_address": "Indirizzo disallineato. Passa all'account giusto."
+  "misaligned_address": "Indirizzo disallineato. Passa all'account giusto.",
+  "warning": "Attenzione",
+  "homograph_attack_warning": "Questo nome contiene caratteri non-ASCII. Siate consapevoli che ci sono caratteri che assomigliano identici o molto simili alle lettere inglesi, specialmente caratteri cirillici e greci. Anche i caratteri cinesi tradizionali possono apparire identici o molto simili alle varianti semplificate.",
+  "ok":"Ok"
 }

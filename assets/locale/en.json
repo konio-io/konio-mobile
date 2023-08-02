@@ -196,5 +196,8 @@
     "check_logs":"Check logs for details",
     "share":"Share",
     "unknown":"Unknown",
-    "misaligned_address":"Misaligned address. Switch to the right account."
+    "misaligned_address":"Misaligned address. Switch to the right account.",
+    "warning":"Warning",
+    "homograph_attack_warning":"This name contains non-ASCII characters. Please be aware that there are characters that look identical or very similar to English letters, especially characters from Cyrillic and Greek. Also traditional Chinese characters can look identical or very similar to simplified variants.",
+    "ok":"Ok"
   }

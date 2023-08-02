@@ -191,3 +191,7 @@ export const waitForTransaction = async (
     return await provider.wait(transactionId, type, timeout);
 }
 
+export const isASCIIString = (str: string) => {
+    const nonASCIIRegex = /[^\x00-\x7F]/;
+    return !nonASCIIRegex.test(str);
+}

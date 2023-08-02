@@ -197,5 +197,8 @@
   "check_logs": "查看详细日志",
   "share": "分享",
   "unknown": "未知",
-  "misaligned_address" : "地址不对齐。请切换到正确的账户。"
+  "misaligned_address": "地址不对齐。请切换到正确的账户。",
+  "warning": "警告",
+  "homograph_attack_warning": "此名称包含非ASCII字符。请注意，有些字符看起来与英文字母相同或非常相似，尤其是来自西里尔文和希腊文的字符。此外，繁体中文字符可能与简化变体看起来完全相同或非常相似。",
+  "ok":"Ok"
 }

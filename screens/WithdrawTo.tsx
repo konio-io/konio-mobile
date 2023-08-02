@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { Screen, Button, Text, AccountAvatar, ListItemSelected, DrawerToggler, AddressListItem, Link, TextInputActionPaste, TextInputAction, TextInput } from '../components';
 import { useTheme, useI18n, useAccounts, useAccount, useTransactions, useAddressbook, useContact, useCurrentAddress, useKapAddress, useKapName, useSearchAddress } from '../hooks';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -10,7 +10,7 @@ import { useHookstate } from '@hookstate/core';
 import { utils } from 'koilib';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SheetManager } from "react-native-actions-sheet";
-import { rgba } from '../lib/utils';
+import { isASCIIString, rgba } from '../lib/utils';
 
 export default () => {
     const route = useRoute<WithdrawToRouteProp>();
@@ -103,7 +103,6 @@ const To = (props: {
     const name = useHookstate('nome');
     const contact = useSearchAddress(searchAddress.get());
     const loading = useHookstate(false);
-    const editable = useHookstate(true);
     const addable = useHookstate(false);
 
     useEffect(() => {
@@ -122,21 +121,32 @@ const To = (props: {
         searchAddress.set(props.value);
     }, [props.value]);
 
+    useEffect(() => {
+        if (name.get().charAt(0) === '@' && !isASCIIString(name.get())) {
+            Alert.alert(i18n.t('warning'), i18n.t('homograph_attack_warning'), [
+                { text: i18n.t('ok') },
+            ]);
+        }
+    }, [name]);
+
     const onStopWriting = () => {
         if (searchAddress.get()) {
             loading.set(true);
-            editable.set(false);
 
             refreshKap(searchAddress.get())
                 .then(() => {
                     loading.set(false);
-                    editable.set(true);
                 })
                 .catch(e => {
                     loading.set(false);
-                    editable.set(true);
                 });
         }
+    };
+
+    const cancel = () => {
+        name.set('');
+        address.set('');
+        searchAddress.set('');
     };
 
     return (
@@ -173,13 +183,9 @@ const To = (props: {
                         </View>
 
                         <TextInputAction
-                            onPress={() => {
-                                address.set('');
-                                searchAddress.set('');
-                            }}
+                            onPress={cancel}
                             icon={(<Feather name="x" />)}
                         />
-
                     </View>
 
                     {addable.get() &&

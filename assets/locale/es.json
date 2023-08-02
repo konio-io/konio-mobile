@@ -197,5 +197,8 @@
   "check_logs": "Ver registros para más detalles",
   "share": "Compartir",
   "unknown": "Desconocido",
-  "misaligned_address" : "Dirección desalineada. Cambie a la cuenta correcta."
+  "misaligned_address": "Dirección desalineada. Cambie a la cuenta correcta.",
+  "warning": "Advertencia",
+  "homograph_attack_warning": "Este nombre contiene caracteres no ASCII. Tenga en cuenta que hay caracteres que se ven idénticos o muy similares a las letras inglesas, especialmente caracteres cirílicos y griegos. Además, los caracteres chinos tradicionales pueden verse idénticos o muy similares a las variantes simplificadas.",
+  "ok":"Ok"
 }
