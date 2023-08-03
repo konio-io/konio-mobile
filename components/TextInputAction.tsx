@@ -12,10 +12,10 @@ export default (props: {
     const { Color } = theme.vars;
 
     return (
-        <Pressable style={{width: 20, height: 20}} onPress={() => props.onPress()}>
+        <Pressable style={{width: 22, height: 22}} onPress={() => props.onPress()}>
             {
                 React.cloneElement(props.icon, {
-                    size: 18,
+                    size: 22,
                     color: rgba(Color.baseContrast, 0.3)
                 })
             }

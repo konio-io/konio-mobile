@@ -192,7 +192,7 @@ export const useKapName = (name: string) => {
     let foundAddress = '';
 
     for (const addr in store.get()) {
-        if (store[addr].get() === name.slice(1)) {
+        if (store[addr].get() === name) {
             foundAddress = addr;
             break;
         }
@@ -202,10 +202,10 @@ export const useKapName = (name: string) => {
     return address;
 }
 
-export const useSearchAddress = (search: string) => {
-    const accounts = useHookstate(UserStore.accounts);
-    const addressbook = useHookstate(UserStore.addressbook);
-    const kap = useHookstate(KapStore);
+export const getContact = (search: string) => {
+    const accounts = UserStore.accounts;
+    const addressbook = UserStore.addressbook;
+    const kap = KapStore;
 
     const accountByAddress = accounts[search].get();
     if (accountByAddress) {
@@ -246,13 +246,13 @@ export const useSearchAddress = (search: string) => {
     const kapByAddress = kap[search].get();
     if (kapByAddress) {
         return {
-            name: `@${kapByAddress}`,
+            name: kapByAddress,
             address: search,
             addable: true
         }
     }
 
-    const kapByName = Object.keys(kap.get()).filter(address => kap[address].get() === search.slice(1));
+    const kapByName = Object.keys(kap.get()).filter(address => kap[address].get() === search);
     if (kapByName.length > 0) {
         return {
             name: search,

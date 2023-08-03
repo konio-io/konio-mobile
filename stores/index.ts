@@ -1,5 +1,5 @@
 import { State, hookstate } from "@hookstate/core";
-import { DEFAULT_NETWORK, DEFAULT_NETWORKS, DONATION_ADDRESS, OS_LOCALE, OS_THEME } from "../lib/Constants";
+import { DEFAULT_NETWORK, DEFAULT_NETWORKS, OS_LOCALE, OS_THEME } from "../lib/Constants";
 import { UserStoreState, EncryptedStoreState, WCStoreState } from "../types/store";
 import * as ExpoSecureStore from 'expo-secure-store';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -31,12 +31,7 @@ export const UserStoreDefault: UserStoreState = {
     theme: OS_THEME,
     biometric: false,
     autolock: -1,
-    addressbook: {
-        [DONATION_ADDRESS]: {
-            name: 'Konio Donations',
-            address: DONATION_ADDRESS
-        }
-    },
+    addressbook: {},
     rcLimit: '95',
     version: '20230705',
     logs: []
@@ -134,3 +129,8 @@ export const WCStoreDefault : WCStoreState = {
     pendingRequest: null
 }
 export const WCStore = hookstate(WCStoreDefault);
+
+/**
+ * Kap store
+ */
+export const KapStore = hookstate<Record<string,string>>({});

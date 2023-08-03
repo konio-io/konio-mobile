@@ -5,9 +5,10 @@ import { addContact, refreshKap, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen, Text } from '../components';
 import { useI18n, useKapAddress, useKapName } from '../hooks';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { useTheme } from '../hooks';
 import { utils } from 'koilib';
+import { isASCIIString } from '../lib/utils';
 
 export default () => {
     const navigation = useNavigation<NewCoinNavigationProp>();
@@ -22,7 +23,7 @@ export default () => {
     const kapName = useKapAddress(address.get());
 
     const add = () => {
-        const addr = address.get().charAt(0) === `@` ? 
+        const addr = address.get().includes('.') ? 
             kapAddress :
             address;
 
@@ -65,17 +66,27 @@ export default () => {
 
     const onAddressStopWriting = () => {
         if (address.get()) {
-            addressLoading.set(true);
-
-            refreshKap(address.get())
-            .then(() => {
-                addressLoading.set(false);
-            })
-            .catch(e => {
-                addressLoading.set(false);
-            })
+            if (!isASCIIString(address.get())) {
+                Alert.alert(i18n.t('warning'), i18n.t('homograph_attack_warning'), [
+                    { text: i18n.t('ok'), onPress: loadKap },
+                ]);
+            } else {
+                loadKap();
+            }
         }
-    }
+    };
+
+    const loadKap = () => {
+        addressLoading.set(true);
+
+        refreshKap(address.get())
+        .then(() => {
+            addressLoading.set(false);
+        })
+        .catch(e => {
+            addressLoading.set(false);
+        })
+    };
 
     return (
         <Screen>

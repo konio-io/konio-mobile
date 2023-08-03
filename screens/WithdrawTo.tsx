@@ -1,16 +1,16 @@
 import { Alert, View } from 'react-native';
 import { Screen, Button, Text, AccountAvatar, ListItemSelected, DrawerToggler, AddressListItem, Link, TextInputActionPaste, TextInputAction, TextInput } from '../components';
-import { useTheme, useI18n, useAccounts, useAccount, useTransactions, useAddressbook, useContact, useCurrentAddress, useKapAddress, useKapName, useSearchAddress } from '../hooks';
+import { useTheme, useI18n, useAccounts, useAccount, useTransactions, useAddressbook, useContact, useCurrentAddress, useKapAddress, useKapName, useSearchAddress, getContact } from '../hooks';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { WithdrawToNavigationProp, WithdrawToRouteProp } from '../types/navigation';
 import { refreshKap, showToast } from '../actions';
-import { Feather } from '@expo/vector-icons';
+import { Feather, AntDesign } from '@expo/vector-icons';
 import { useEffect } from 'react';
 import { useHookstate } from '@hookstate/core';
 import { utils } from 'koilib';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SheetManager } from "react-native-actions-sheet";
-import { isASCIIString, rgba } from '../lib/utils';
+import { isASCIIString } from '../lib/utils';
 
 export default () => {
     const route = useRoute<WithdrawToRouteProp>();
@@ -96,82 +96,98 @@ const To = (props: {
     const address = useHookstate('');
     const theme = useTheme();
     const styles = theme.styles;
-    const { Color } = theme.vars;
     const i18n = useI18n();
 
-    const searchAddress = useHookstate('');
     const name = useHookstate('nome');
-    const contact = useSearchAddress(searchAddress.get());
     const loading = useHookstate(false);
     const addable = useHookstate(false);
-
-    useEffect(() => {
-        if (contact) {
-            name.set(contact.name);
-            address.set(contact.address);
-            addable.set(contact.addable);
-        }
-    }, [searchAddress, contact]);
+    const isValidAddress = useHookstate(false);
+    const searchText = useHookstate('');
 
     useEffect(() => {
         props.onChange(address.get());
     }, [address]);
 
     useEffect(() => {
-        searchAddress.set(props.value);
+        searchText.set(props.value);
     }, [props.value]);
 
-    useEffect(() => {
-        if (name.get().charAt(0) === '@' && !isASCIIString(name.get())) {
-            Alert.alert(i18n.t('warning'), i18n.t('homograph_attack_warning'), [
-                { text: i18n.t('ok') },
-            ]);
+    const onStopWriting = async () => {
+        if (searchText.get()) {
+            if (!isASCIIString(searchText.get())) {
+                Alert.alert(i18n.t('warning'), i18n.t('homograph_attack_warning'), [
+                    { text: i18n.t('ok'), onPress: populateContact },
+                ]);
+            } else {
+                populateContact();
+            }
         }
-    }, [name]);
+    }
 
-    const onStopWriting = () => {
-        if (searchAddress.get()) {
-            loading.set(true);
+    const populateContact = async () => {
+        let contact = getContact(searchText.get());
+        if (contact && contact.name) {
+            isValidAddress.set(true);
+            name.set(contact.name);
+            address.set(contact.address);
+            addable.set(contact.addable);
+        } else {
+            await loadKap();
+            contact = getContact(searchText.get());
+            if (contact) {
+                isValidAddress.set(true);
+                name.set(contact.name);
+                address.set(contact.address);
+                addable.set(contact.addable);
+            }
+        }
+    }
 
-            refreshKap(searchAddress.get())
-                .then(() => {
-                    loading.set(false);
-                })
-                .catch(e => {
-                    loading.set(false);
-                });
+    const loadKap = async () => {
+        loading.set(true);
+        try {
+            await refreshKap(searchText.get());
+            loading.set(false);
+        } catch (e) {
+            loading.set(false);
         }
     };
 
     const cancel = () => {
         name.set('');
         address.set('');
-        searchAddress.set('');
+        isValidAddress.set(false);
+        addable.set(false);
+        searchText.set('');
     };
 
     return (
         <View>
-            {!address.get() &&
+            {!isValidAddress.get() &&
                 <TextInput
                     multiline={true}
                     autoFocus={true}
-                    style={{ fontSize: 12 }}
-                    value={searchAddress.get()}
-                    onChangeText={(v: string) => { searchAddress.set(v) }}
+                    value={searchText.get()}
+                    onChangeText={(v: string) => { searchText.set(v) }}
                     onStopWriting={onStopWriting}
                     loading={loading.get()}
                     placeholder={i18n.t('select_recipient')}
+                    actions={(
+                        <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
+                            <TextInputAction
+                                onPress={() => navigation.navigate('WithdrawToScan')}
+                                icon={(<AntDesign name="scan1" />)}
+                            />
+                            <TextInputActionPaste state={address} />
+                        </View>
+                    )}
                 />
             }
 
-            {address.get() &&
+            {isValidAddress.get() &&
                 <View style={{ ...styles.textInputContainer, ...styles.rowGapSmall }}>
                     <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
-                        <View style={{ marginTop: 2 }}>
-                            <Feather size={18} name="chevron-right" color={rgba(Color.baseContrast, 0.5)} />
-                        </View>
-
-                        <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
+                        <View style={{ ...styles.directionRow, ...styles.columnGapSmall, flexGrow: 1 }}>
                             <AccountAvatar size={40} address={address.get()} />
                             <View>
                                 {
@@ -182,10 +198,12 @@ const To = (props: {
                             </View>
                         </View>
 
-                        <TextInputAction
-                            onPress={cancel}
-                            icon={(<Feather name="x" />)}
-                        />
+                        <View style={{ width: 22 }}>
+                            <TextInputAction
+                                onPress={cancel}
+                                icon={(<Feather name="x" />)}
+                            />
+                        </View>
                     </View>
 
                     {addable.get() &&

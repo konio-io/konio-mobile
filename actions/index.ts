@@ -620,11 +620,11 @@ export const unsetWCPendingRequest = () => {
 }
 
 export const refreshKap = (search: string) => {
-    if (search.charAt(0) === '@') {
-        return getKapAddressByName(search.slice(1))
+    if (search.includes('.')) {
+        return getKapAddressByName(search)
         .then(address => {
             if (address) {
-                KapStore.merge({[address] : search.slice(1)})
+                KapStore.merge({[address] : search})
             }
         });
     }
@@ -632,7 +632,7 @@ export const refreshKap = (search: string) => {
     return getKapProfileByAddress(search)
         .then(profile => {
             if (profile) {
-                KapStore[search].set(profile.name);
+                KapStore.merge({[search]: profile.name});
             }
         });
 }
