@@ -75,6 +75,9 @@ const migrations : Record<string,Function> = {
     },
     '20230721': () => {
         UserStore.logs.set([]);
+    },
+    '20230802': () => {
+        UserStore.addressbook.set({});
     }
 }
 

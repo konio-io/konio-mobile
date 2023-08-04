@@ -41,7 +41,7 @@
   "add": "Aggiungi",
   "password_not_match": "Le due password non corrispondono",
   "password_set": "Password impostata.",
-  "choose_password_desc": "Scegli una password se desideri proteggere l'uso dell'app. Lasciala vuota se non desideri una password.",
+  "choose_password_desc": "Scegli una password se desideri proteggere l'uso dell'app.",
   "password": "Password",
   "confirm_password": "Conferma password",
   "network": "Rete",

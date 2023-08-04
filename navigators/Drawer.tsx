@@ -119,27 +119,6 @@ const DrawerContent = (props: any) => {
                     <Text style={styles.textVersion}>v{Constants.manifest?.version}</Text>
                     <Link text="https://konio.io" onPress={() => Linking.openURL('https://konio.io')} />
                 </View>
-
-                <View style={styles.donateContainer}>
-                    <Button
-                        title={i18n.t('donate')}
-                        icon={<Feather name="heart" />}
-                        onPress={() => {
-                            navigation.navigate('Root', {
-                                screen: 'Account',
-                                params: {
-                                    screen: 'Withdraw',
-                                    params: {
-                                        screen: 'WithdrawTo',
-                                        params: {
-                                            to: DONATION_ADDRESS
-                                        }
-                                    }
-                                }
-                            });
-                        }}
-                    />
-                </View>
             </View>
 
         </View>
@@ -168,10 +147,6 @@ const createStyles = (theme: Theme) => {
             ...theme.styles.textCenter,
             ...theme.styles.text,
             fontWeight: 'bold'
-        },
-        donateContainer: {
-            width: '100%',
-            padding: Spacing.base
         },
         drawerIconContainer: {
             alignItems: 'center',
