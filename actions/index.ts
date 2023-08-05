@@ -6,12 +6,13 @@ import { DEFAULT_COINS, TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TR
 import HDKoinos from "../lib/HDKoinos";
 import Toast from 'react-native-toast-message';
 import { State, none } from "@hookstate/core";
-import { getCoinBalance, getContract, getProvider, getSigner, signMessage, prepareTransaction, sendTransaction, signAndSendTransaction, signHash, signTransaction, waitForTransaction, getKapProfileByAddress, getKapAddressByName } from "../lib/utils";
+import { getCoinBalance, getContract, getProvider, getSigner, signMessage, prepareTransaction, sendTransaction, signAndSendTransaction, signHash, signTransaction, waitForTransaction, getKapProfileByAddress, getKapAddressByName, isMainnet } from "../lib/utils";
 import migrations from "../stores/migrations";
 import { SignClientTypes, SessionTypes } from "@walletconnect/types";
 import { getSdkError } from "@walletconnect/utils";
 import { formatJsonRpcError, formatJsonRpcResult } from '@json-rpc-tools/utils';
 import { initWCWallet } from "../lib/WalletConnect";
+import { DEFAULT_NETWORKS } from "../lib/Constants";
 
 export const setCurrentAccount = (address: string) => {
     UserStore.currentAddress.set(address);
@@ -89,18 +90,23 @@ export const refreshCoinBalance = (contractId: string) => {
 }
 
 export const refreshCoinValue = (contractId: string) => {
-    fetch("https://www.mexc.com/open/api/v2/market/ticker?symbol=koin_usdt")
-        .then(response => response.json())
-        .then(json => {
-            const price = Number(json.data[0].last);
-            const balanceKoin = parseFloat(CoinBalanceStore[contractId].get());
-            const value = Number(balanceKoin * price);
-            CoinValueStore[contractId].set(value);
-        })
-        .catch(e => {
-            logError(e);
-            CoinValueStore[contractId].set(0);
-        });
+    const currentNetworkId = UserStore.currentNetworkId.get();
+    const currentNetwork = DEFAULT_NETWORKS[currentNetworkId];
+
+    if (currentNetwork.coins.KOIN.contractId === contractId) {
+        fetch("https://www.mexc.com/open/api/v2/market/ticker?symbol=koin_usdt")
+            .then(response => response.json())
+            .then(json => {
+                const price = Number(json.data[0].last);
+                const balanceKoin = parseFloat(CoinBalanceStore[contractId].get());
+                const value = Number(balanceKoin * price);
+                CoinValueStore[contractId].set(value);
+            })
+            .catch(e => {
+                logError(e);
+                CoinValueStore[contractId].set(0);
+            });
+    }
 }
 
 export const withdrawCoin = async (args: { contractId: string, to: string, value: string, note: string }) => {
@@ -619,20 +625,19 @@ export const unsetWCPendingRequest = () => {
     }
 }
 
-export const refreshKap = (search: string) => {
-    if (search.includes('.')) {
-        return getKapAddressByName(search)
-        .then(address => {
+export const refreshKap = async (search: string) => {
+    if (isMainnet()) {
+        if (search.includes('.')) {
+            const address = await getKapAddressByName(search)
             if (address) {
-                KapStore.merge({[address] : search})
+                KapStore.merge({ [address]: search })
             }
-        });
-    }
+        }
 
-    return getKapProfileByAddress(search)
-        .then(profile => {
-            if (profile) {
-                KapStore.merge({[search]: profile.name});
-            }
-        });
+        const profile = await getKapProfileByAddress(search)
+        if (profile) {
+            KapStore.merge({ [search]: profile.name });
+        }
+    }
 }
+

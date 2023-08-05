@@ -1,7 +1,7 @@
 import { Contract, utils, Provider, Signer } from "koilib";
 import { UserStore, EncryptedStore } from "../stores";
 import { Abi, SendTransactionOptions, TransactionJson, TransactionJsonWait, TransactionReceipt } from "koilib/lib/interface";
-import { KAP_NAMESERVICE_CID, KAP_PROFILE_CID } from "./Constants";
+import { DEFAULT_NETWORKS, KAP_NAMESERVICE_CID, KAP_PROFILE_CID } from "./Constants";
 
 export const rgba = (color: string, opacity: number): string => {
     return color.replace('1)', opacity.toString() + ')');
@@ -194,4 +194,10 @@ export const waitForTransaction = async (
 export const isASCIIString = (str: string) => {
     const nonASCIIRegex = /[^\x00-\x7F]/;
     return !nonASCIIRegex.test(str);
+}
+
+export const isMainnet = () => {
+    const currentNetworkId = UserStore.currentNetworkId.get();
+    const currentNetwork = DEFAULT_NETWORKS[currentNetworkId];
+    return currentNetwork.name === "Koinos Mainnet";
 }

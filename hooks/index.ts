@@ -8,6 +8,7 @@ import { getLocales } from 'expo-localization';
 import { FALLBACK_LOCALE, FALLBACK_THEME, OS_LOCALE, OS_THEME } from "../lib/Constants";
 import { useEffect } from "react";
 import { utils } from "koilib";
+import { isMainnet } from "../lib/utils";
 
 export const useNetworks = () => {
     return useHookstate(UserStore.networks);
@@ -243,22 +244,24 @@ export const getContact = (search: string) => {
         };
     }
 
-    const kapByAddress = kap[search].get();
-    if (kapByAddress) {
-        return {
-            name: kapByAddress,
-            address: search,
-            addable: true
+    if (isMainnet()) {
+        const kapByAddress = kap[search].get();
+        if (kapByAddress) {
+            return {
+                name: kapByAddress,
+                address: search,
+                addable: true
+            }
         }
-    }
-
-    const kapByName = Object.keys(kap.get()).filter(address => kap[address].get() === search);
-    if (kapByName.length > 0) {
-        return {
-            name: search,
-            address: kapByName[0],
-            addable: true
-        };
+    
+        const kapByName = Object.keys(kap.get()).filter(address => kap[address].get() === search);
+        if (kapByName.length > 0) {
+            return {
+                name: search,
+                address: kapByName[0],
+                addable: true
+            };
+        }
     }
 
     try {

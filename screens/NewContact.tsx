@@ -76,16 +76,14 @@ export default () => {
         }
     };
 
-    const loadKap = () => {
+    const loadKap = async () => {
         addressLoading.set(true);
-
-        refreshKap(address.get())
-        .then(() => {
+        try {
+            await refreshKap(address.get());
             addressLoading.set(false);
-        })
-        .catch(e => {
+        } catch (e) {
             addressLoading.set(false);
-        })
+        }
     };
 
     return (
