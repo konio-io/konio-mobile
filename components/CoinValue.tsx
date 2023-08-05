@@ -15,16 +15,18 @@ export default (props: {
 
     useEffect(() => {
         if (coinValue.get() !== undefined) {
-            formattedPrice.set( coinValue.get().toFixed(2).toString() );
+            formattedPrice.set( `${coinValue.get().toFixed(2).toString()} USD` );
+        } else {
+            formattedPrice.set('--');
         }
     }, [coinValue])
 
     return (
         <View>
-            {coinValue.get() !== undefined &&
-                <Text style={styles.textMedium}>{formattedPrice.get()} USD</Text>
+            { formattedPrice.get() &&
+                <Text style={styles.textMedium}>{formattedPrice.get()}</Text>
             }
-            {coinValue.get() === undefined &&
+            { !formattedPrice.get() &&
                 <ActivityIndicator />
             }
         </View>
