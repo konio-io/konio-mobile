@@ -58,9 +58,7 @@ export default function App() {
       <PolyfillCrypto />
 
       <SheetProvider>
-        <SafeAreaView style={{ flex: 1, backgroundColor: Color.base }}>
-          <Main />
-        </SafeAreaView>
+        <Main />
       </SheetProvider>
 
       <StatusBar style={theme.statusBarStyle} />

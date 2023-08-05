@@ -92,7 +92,7 @@ export default () => {
     }, [route.params.request]);
 
     return (
-        <Screen>
+        <Screen insets={true}>
             <Wrapper>
 
                 <Text style={styles.textMedium}>{i18n.t('dapp_request_desc')}</Text>

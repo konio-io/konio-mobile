@@ -73,7 +73,7 @@ export default () => {
     }, [navigation]);
 
     return (
-        <Screen>
+        <Screen insets={true}>
             <Wrapper>
                 <View style={styles.alignCenterColumn}>
                     <Logo />

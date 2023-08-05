@@ -5,15 +5,15 @@ import {
     DrawerItem,
 } from '@react-navigation/drawer';
 import { useCurrentAddress, useI18n, useTheme, useAccounts } from '../hooks';
-import { AccountAvatar, Logo, Separator, Link, Button, Address, WcLogo } from '../components';
+import { AccountAvatar, Logo, Separator, Link, Address, WcLogo } from '../components';
 import { setCurrentAccount } from '../actions';
 import Root from './Root';
-import { AntDesign, Feather } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import type { Theme } from '../types/store';
 import Constants from 'expo-constants';
-import { DONATION_ADDRESS } from '../lib/Constants';
 import { State } from '@hookstate/core';
 import Loading from '../screens/Loading';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Drawer = createDrawerNavigator();
 export default () => {
@@ -23,7 +23,6 @@ export default () => {
             drawerContent={(props) => <DrawerContent {...props} />}
             screenOptions={{
                 headerShown: false
-
             }}
         >
             <Drawer.Screen name="Root" component={Root} />
@@ -39,6 +38,7 @@ const DrawerContent = (props: any) => {
     const styles = createStyles(theme);
     const currentAddress = useCurrentAddress();
     const currentAddressOrNull: State<string> | null = currentAddress.ornull;
+    const insets = useSafeAreaInsets(); 
 
     if (!currentAddressOrNull) {
         return <Loading />;
@@ -47,7 +47,7 @@ const DrawerContent = (props: any) => {
     const currentAccount = accounts[currentAddressOrNull.get()];
 
     return (
-        <View style={styles.flex1}>
+        <View style={{...styles.flex1, paddingTop: insets.top }}>
 
             <View style={styles.currentAccountContainer}>
                 <AccountAvatar size={48} address={currentAccount.address} />

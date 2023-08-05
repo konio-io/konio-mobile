@@ -83,7 +83,7 @@ export default () => {
     //const icons = proposal.params.proposer.metadata.icons;
 
     return (
-        <Screen>
+        <Screen insets={true}>
             <Wrapper>
                 <Text style={styles.textMedium}>{i18n.t('dapp_proposal_desc')}</Text>
 

@@ -12,7 +12,7 @@ export default () => {
     const i18n = useI18n();
 
     return (
-        <Screen>
+        <Screen insets={true}>
             <View style={{ ...styles.alignCenterColumn, ...styles.aligncenterRow, ...styles.paddingBase }}>
                 <Text>{i18n.t('scan_wc_code_or')}</Text>
                 <Link text={i18n.t('enter_code_manually')} onPress={() => navigation.navigate('WcPairInput')}/>

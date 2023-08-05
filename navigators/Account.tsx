@@ -1,7 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { View, TouchableOpacity } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useI18n, useTheme } from "../hooks";
 import Unavailable from "../screens/Unavailable";
 import Assets from "./Assets";
@@ -16,15 +15,12 @@ export default () => {
   const theme = useTheme();
   const { Color, FontFamily, Border } = theme.vars;
   const styles = theme.styles;
-  const insets = useSafeAreaInsets();
   const i18n = useI18n();
 
   return (
     <View
       style={{
         ...styles.wrapperFull,
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom,
         flex: 1,
       }}>
       <Tab.Navigator
