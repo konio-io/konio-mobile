@@ -8,7 +8,8 @@ export const getStyles = (themeVars : ThemeVars) => {
     return {
         link: {
             color: Color.primary,
-            fontFamily: FontFamily.sans
+            fontFamily: FontFamily.sans,
+            fontSize: FontSize.base,
         },
         separator: {
             height: Border.width,

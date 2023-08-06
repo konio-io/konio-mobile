@@ -1,9 +1,10 @@
-import { View } from 'react-native';
+import { Linking, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Button, Logo, Text, Wrapper, Screen } from '../components';
+import { Button, Logo, Text, Wrapper, Screen, Link } from '../components';
 import type { IntroNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n } from '../hooks';
+import { PRIVACY_URL, TERMS_URL } from '../lib/Constants';
 
 export default () => {
     const navigation = useNavigation<IntroNavigationProp>();
@@ -24,15 +25,19 @@ export default () => {
                     <Text>
                         {i18n.t('welcome')}
                     </Text>
-                    <Text>
-                        {i18n.t('welcome_2')}
-                    </Text>
                 </View>
+
+                <View style={{ marginTop: Spacing.base }}>
+                    <Text>{i18n.t('disclaimer')}</Text>
+                    <Link text={i18n.t('terms_of_service')} onPress={() => Linking.openURL(TERMS_URL)}></Link>
+                    <Link text={i18n.t('privacy_policy')} onPress={() => Linking.openURL(PRIVACY_URL)}></Link>
+                </View>
+                
             </Wrapper>
 
             <View style={styles.paddingBase}>
                 <Button
-                    title={i18n.t('lets_begin')}
+                    title={i18n.t('start')}
                     icon={<Feather name="arrow-right" />}
                     onPress={() => {
                         navigation.navigate('SetPassword');
