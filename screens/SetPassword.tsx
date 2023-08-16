@@ -1,11 +1,13 @@
-import { Text, TextInput, Button, Wrapper, Screen } from '../components';
+import { Text, TextInput, Button, Wrapper, Screen, Switch } from '../components';
 import { useNavigation } from '@react-navigation/native';
 import type { IntroNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
 import { useHookstate } from '@hookstate/core';
-import { setPassword, showToast } from '../actions';
-import { useI18n, useTheme } from '../hooks';
+import { setBiometric, setPassword, showToast } from '../actions';
+import { useBiometric, useI18n, useTheme } from '../hooks';
 import { View } from 'react-native';
+import { useEffect } from 'react';
+import * as LocalAuthentication from "expo-local-authentication";
 
 export default () => {
     const navigation = useNavigation<IntroNavigationProp>();
@@ -14,6 +16,22 @@ export default () => {
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
+
+    const biometric = useBiometric();
+
+    const biometricSupport = useHookstate(false);
+    const fingerprint = useHookstate(false);
+
+    useEffect(() => {
+        (async () => {
+            const compatible = await LocalAuthentication.hasHardwareAsync();
+            biometricSupport.set(compatible);
+            const enroll = await LocalAuthentication.isEnrolledAsync();
+            if (enroll) {
+                fingerprint.set(true);
+            }
+        })();
+    }, []);
 
     const savePassword = () => {
         if (!password.get()) {
@@ -33,12 +51,6 @@ export default () => {
         }
 
         setPassword(password.get());
-        if (password.get()) {
-            showToast({
-                type: 'success',
-                text1: i18n.t('password_set'),
-            });
-        }
         navigation.navigate("NewWallet");
     }
 
@@ -62,6 +74,20 @@ export default () => {
                     placeholder={i18n.t('confirm_password')}
                     secureTextEntry={true}
                 />
+
+                <View style={{...styles.directionRow, ...styles.columnGapBase}}>
+                    <View style={{flexGrow: 1}}>
+                        <Text>{i18n.t('biometric_unlock')}</Text>
+                        <Text style={styles.textSmall}>{i18n.t('enable_biometric_unlock')}</Text>
+                    </View>
+                    
+                    {biometricSupport.get() === true && fingerprint.get() === true &&
+                        <Switch
+                            onValueChange={() => setBiometric(!biometric.get())}
+                            value={biometric.get()}
+                        />
+                    }
+                </View>
             </Wrapper>
 
             <View style={styles.paddingBase}>
