@@ -555,6 +555,39 @@ export const acceptRequest = async (sessionRequest: SignClientTypes.EventArgumen
         case WC_METHODS.READ_CONTRACT:
             result = await provider?.readContract(request.params.operation);
             break;
+        case WC_METHODS.JSON_RPC_CALL:
+            result = await provider?.call(request.params.method, request.params.params);
+            break;
+        case WC_METHODS.GET_NONCE:
+            result = await provider?.getNonce(request.params.address);
+            break;
+        case WC_METHODS.GET_NEXT_NONCE:
+            result = await provider?.getNextNonce(request.params.address);
+            break;
+        case WC_METHODS.GET_ACCOUNT_RC:
+            result = await provider?.getAccountRc(request.params.address);
+            break;
+        case WC_METHODS.GET_TRANSACTIONS_BY_ID:
+            result = await provider?.getTransactionsById(request.params.transactionIds);
+            break;
+        case WC_METHODS.GET_BLOCKS_BY_ID:
+            result = await provider?.getBlocksById(request.params.blockIds);
+            break;
+        case WC_METHODS.GET_HEAD_INFO:
+            result = await provider?.getHeadInfo();
+            break;
+        case WC_METHODS.GET_CHAIN_ID:
+            result = await provider?.getChainId();
+            break;
+        case WC_METHODS.GET_BLOCKS:
+            result = await provider?.getBlocks(request.params.height, request.params.numBlocks, request.params.idRef);
+            break;
+        case WC_METHODS.GET_BLOCK:
+            result = await provider?.getBlock(request.params.height);
+            break;
+        case WC_METHODS.SUBMIT_BLOCK:
+            result = await provider?.submitBlock(request.params.block);
+            break;
     }
 
     if (result !== null) {

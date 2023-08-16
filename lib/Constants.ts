@@ -97,7 +97,18 @@ export const WC_METHODS = {
     PREPARE_TRANSACTION: 'koinos_prepareTransaction',
     WAIT_FOR_TRANSACTION: 'koinos_waitForTransaction',
     SEND_TRANSACTION: 'koinos_sendTransaction',
-    READ_CONTRACT: 'koinos_readContract'
+    READ_CONTRACT: 'koinos_readContract',
+    JSON_RPC_CALL: 'koinos_JsonRpcCall',
+    GET_NONCE: 'koinos_getNonce',
+    GET_NEXT_NONCE: 'koinos_getNextNonce',
+    GET_ACCOUNT_RC: 'koinos_getAccountRc',
+    GET_TRANSACTIONS_BY_ID: 'koinos_getTransactionsById',
+    GET_BLOCKS_BY_ID: 'koinos_getBlocksById',
+    GET_HEAD_INFO: 'koinos_getHeadInfo',
+    GET_CHAIN_ID: 'koinos_getChainId',
+    GET_BLOCKS: 'koinos_getBlocks',
+    GET_BLOCK: 'koinos_getBlock',
+    SUBMIT_BLOCK: 'koinos_submitBlock'
 }
 export const WC_SECURE_METHODS = [
     WC_METHODS.SIGN_MESSAGE,
