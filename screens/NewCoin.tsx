@@ -114,12 +114,12 @@ const SuggestList = (props: {
         contractId: token.address
       })
         .then(value => {
-          //if (value !== '0') {
+          if (value !== '0') {
             coinList.merge([{
               contractId: token.address,
               symbol: token.symbol
             }])
-          //}
+          }
         })
         .catch(e => {
           logError(e);
