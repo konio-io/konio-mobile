@@ -44,10 +44,9 @@ export const getContract = async (args: {
 export const getCoinBalance = async (args: {
     address: string,
     networkId: string,
-    contractId: string,
-    decimal: number
+    contractId: string
 }) => {
-    const { address, networkId, contractId, decimal } = args;
+    const { address, networkId, contractId } = args;
     const contract = await getContract({
         address,
         networkId,
@@ -55,7 +54,12 @@ export const getCoinBalance = async (args: {
     });
     const response = await contract.functions.balance_of({ owner: address });
     if (response.result) {
-        return utils.formatUnits(response.result.value, decimal);
+        const decimalResponse = await contract.functions.decimals();
+        if (decimalResponse.result) {
+            return utils.formatUnits(response.result.value, decimalResponse.result.value);
+        }
+
+        return response.result.value;
     }
 
     return '0';

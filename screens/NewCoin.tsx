@@ -1,16 +1,17 @@
-import { ImmutableObject, useHookstate } from '@hookstate/core';
+import { useHookstate } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import type { NewCoinNavigationProp } from '../types/navigation';
 import { addCoin, logError, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen, Text, CoinLogo } from '../components';
-import { useCurrentNetworkId, useI18n } from '../hooks';
+import { useCoins, useCurrentNetworkId, useI18n } from '../hooks';
 import { View } from 'react-native';
 import { UserStore } from '../stores';
-import { useTheme } from '../hooks';
-import { Coin } from '../types/store';
-import { DEFAULT_COINS } from '../lib/Constants';
+import { useTheme, useCurrentAddress } from '../hooks';
+import { DEFAULT_COINS, TOKENS_URL } from '../lib/Constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { getCoinBalance } from '../lib/utils';
+import { useEffect } from 'react';
 
 export default () => {
   const navigation = useNavigation<NewCoinNavigationProp>();
@@ -54,11 +55,8 @@ export default () => {
         />
       </View>
 
-      <View style={styles.paddingBase}>
-        <Text style={styles.sectionTitle}>{i18n.t('recents')}</Text>
-      </View>
-
-      <View style={{ ...styles.flex1, ...styles.paddingBase }}>
+      <View style={{ ...styles.paddingBase, ...styles.flex1 }}>
+        <SuggestList onPressCoin={(cId: string) => contractId.set(cId)} />
         <RecentList onPressCoin={(cId: string) => contractId.set(cId)} />
       </View>
 
@@ -73,6 +71,86 @@ export default () => {
   );
 }
 
+const SuggestList = (props: {
+  onPressCoin: Function
+}) => {
+  const currentNetworkId = useCurrentNetworkId().get();
+  const currentAddress = useCurrentAddress().get();
+  const currentCoins = useCoins().get();
+
+  if (!currentAddress) {
+    return <View></View>
+  }
+
+  const i18n = useI18n();
+  const theme = useTheme();
+  const styles = theme.styles;
+
+  type Item = {
+    contractId: string,
+    symbol: string
+  }
+  const coinList = useHookstate<Array<Item>>([]);
+
+  type Token = {
+    address: string,
+    symbol: string,
+    chainId: string
+  }
+
+  const refreshList = async () => {
+    const tokenListResponse = await fetch(`${TOKENS_URL}/index.json`);
+    const tokenMap : Array<Token> = await tokenListResponse.json();
+    const tokenList = Object.values(tokenMap).filter(token => {
+      return token.chainId === currentNetworkId 
+        && !currentCoins.includes(token.address)
+        && token.symbol !== "MANA";
+    });
+
+    for (const token of tokenList) {
+      try {
+        const value = await getCoinBalance({
+          address: currentAddress,
+          networkId: currentNetworkId,
+          contractId: token.address
+        });
+  
+        if (1) {
+          coinList.merge([{
+            contractId: token.address,
+            symbol: token.symbol
+          }])
+        }
+      } catch (e) {
+        logError(e);
+      }
+
+    }
+  }
+
+  useEffect(() => {
+    refreshList();
+  }, [currentNetworkId, currentAddress]);
+
+  if (coinList.get().length === 0) {
+    return <></>
+  }
+
+  const data = coinList.get().slice(0,5);
+
+  return (
+    <View>
+      <Text style={styles.sectionTitle}>{i18n.t('auto_discovered')}</Text>
+
+      <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
+        {data.map(coin =>
+          <ListItem key={coin.contractId} contractId={coin.contractId} symbol={coin.symbol} onPress={(cId: string) => props.onPressCoin(cId)} />
+        )}
+      </View>
+    </View>
+  );
+}
+
 const RecentList = (props: {
   onPressCoin: Function
 }) => {
@@ -80,34 +158,43 @@ const RecentList = (props: {
   const coins = useHookstate(UserStore.coins);
   const theme = useTheme();
   const styles = theme.styles;
+  const i18n = useI18n();
 
   const data = Object.values(coins.get())
     .filter(coin => coin.networkId === currentNetworkId.get() && !DEFAULT_COINS.includes(coin.symbol))
     .slice(0, 5);
 
+  if (data.length === 0) {
+    return <></>
+  }
+
   return (
-    <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
-      {data.map(coin =>
-        <RecentListItem key={coin.contractId} coin={coin} onPress={(cId: string) => props.onPressCoin(cId)} />
-      )}
+    <View>
+      <Text style={styles.sectionTitle}>{i18n.t('recents')}</Text>
+
+      <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
+        {data.map(coin =>
+          <ListItem key={coin.contractId} contractId={coin.contractId} symbol={coin.symbol} onPress={(cId: string) => props.onPressCoin(cId)} />
+        )}
+      </View>
     </View>
-  )
+  );
 }
 
-const RecentListItem = (props: {
-  coin: ImmutableObject<Coin>,
+const ListItem = (props: {
+  contractId: string,
+  symbol: string,
   onPress: Function
 }) => {
 
   const theme = useTheme();
   const styles = theme.styles;
-  const { Color } = theme.vars;
 
   return (
-    <TouchableOpacity onPress={() => props.onPress(props.coin.contractId)}>
-      <View style={{ ...styles.rowGapSmall, ...styles.paddingSmall }}>
-        <CoinLogo contractId={props.coin.contractId} size={36} />
-        <Text>{props.coin.symbol}</Text>
+    <TouchableOpacity onPress={() => props.onPress(props.contractId)}>
+      <View style={{ ...styles.rowGapSmall, ...styles.paddingSmall, ...styles.alignCenterColumn }}>
+        <CoinLogo contractId={props.contractId} size={44} />
+        <Text>{props.symbol}</Text>
       </View>
     </TouchableOpacity>
   );

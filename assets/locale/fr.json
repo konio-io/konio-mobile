@@ -202,5 +202,6 @@
   "misaligned_address": "Adresse désalignée. Veuillez passer au bon compte.",
   "warning": "Avertissement",
   "homograph_attack_warning": "Ce nom contient des caractères non-ASCII. Soyez conscient qu'il existe des caractères qui ressemblent identiques ou très similaires aux lettres anglaises, notamment des caractères cyrilliques et grecs. De plus, les caractères chinois traditionnels peuvent être identiques ou très similaires aux variantes simplifiées.",
-  "ok":"Ok"
+  "ok":"Ok",
+  "auto_discovered":"Auto découvert"
 }

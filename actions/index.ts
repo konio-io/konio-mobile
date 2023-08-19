@@ -41,8 +41,7 @@ export const refreshMana = async () => {
     const koinBalance = await getCoinBalance({
         address,
         networkId,
-        contractId,
-        decimal: 8
+        contractId
     });
 
     ManaStore.merge({
@@ -76,13 +75,11 @@ export const refreshCoinBalance = (contractId: string) => {
     }
 
     const networkId = UserStore.currentNetworkId.get();
-    const coin = UserStore.coins[contractId];
 
     getCoinBalance({
         address,
         networkId,
-        contractId,
-        decimal: coin.decimal.get()
+        contractId
     }).then(value => {
         CoinBalanceStore[contractId].set(value);
         refreshCoinValue(contractId);
@@ -200,12 +197,12 @@ export const addCoin = async (contractId: string) => {
         contract.functions.symbol()
     ]);
 
-    if (!decimalResponse.result || !symbolResponse.result) {
-        throw new Error("unable to retrieve coin decimal/symbol");
+    if (!symbolResponse.result) {
+        throw new Error("unable to retrieve coin symbol");
     }
 
     const coin: Coin = {
-        decimal: decimalResponse.result.value,
+        decimal: decimalResponse.result ? decimalResponse.result.value : 0,
         symbol: symbolResponse.result.value,
         contractId,
         transactions: [],
