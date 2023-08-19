@@ -3,7 +3,6 @@ import 'text-encoding-polyfill'; //needs for koilib compatibility
 import '@ethersproject/shims'; //needs for etherjs compatibility
 import './components/sheets';
 import { useFonts } from 'expo-font';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Toast } from "./components";
 import { DarkTheme, DefaultTheme, NavigationContainer, getStateFromPath } from "@react-navigation/native";
@@ -21,7 +20,6 @@ export default function App() {
   });
 
   const theme = useTheme();
-  const { Color } = theme.vars;
   const PolyfillCrypto = global.PolyfillCrypto;
   const navigationTheme = theme.name === 'dark' ? DarkTheme : DefaultTheme;
 

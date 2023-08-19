@@ -2,7 +2,7 @@ import { useHookstate } from '@hookstate/core';
 import CircleLogo from './CircleLogo';
 import { View, Image } from 'react-native';
 import { useTheme } from '../hooks';
-import { RESOURCES_DOMAIN, TOKENS_URL } from '../lib/Constants';
+import { TOKENS_URL } from '../lib/Constants';
 
 export default (props: {
     contractId: string
