@@ -5,7 +5,7 @@ import { addCoin, logError, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen, Text, CoinLogo } from '../components';
 import { useCoins, useCurrentNetworkId, useI18n } from '../hooks';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { UserStore } from '../stores';
 import { useTheme, useCurrentAddress } from '../hooks';
 import { DEFAULT_COINS, TOKENS_URL } from '../lib/Constants';
@@ -47,7 +47,7 @@ export default () => {
     <Screen>
       <View style={{ ...styles.paddingBase }}>
         <TextInput
-          style={{ fontSize: 12 }}
+          multiline={true}
           autoFocus={true}
           value={contractId.get()}
           onChangeText={(v: string) => contractId.set(v.trim())}
@@ -55,10 +55,10 @@ export default () => {
         />
       </View>
 
-      <View style={{ ...styles.paddingBase, ...styles.flex1 }}>
+      <ScrollView contentContainerStyle={styles.paddingBase}>
         <SuggestList onPressCoin={(cId: string) => contractId.set(cId)} />
         <RecentList onPressCoin={(cId: string) => contractId.set(cId)} />
-      </View>
+      </ScrollView>
 
       <View style={styles.paddingBase}>
         <Button
@@ -100,31 +100,30 @@ const SuggestList = (props: {
 
   const refreshList = async () => {
     const tokenListResponse = await fetch(`${TOKENS_URL}/index.json`);
-    const tokenMap : Array<Token> = await tokenListResponse.json();
+    const tokenMap: Array<Token> = await tokenListResponse.json();
     const tokenList = Object.values(tokenMap).filter(token => {
-      return token.chainId === currentNetworkId 
+      return token.chainId === currentNetworkId
         && !currentCoins.includes(token.address)
         && token.symbol !== "MANA";
     });
 
     for (const token of tokenList) {
-      try {
-        const value = await getCoinBalance({
-          address: currentAddress,
-          networkId: currentNetworkId,
-          contractId: token.address
+      getCoinBalance({
+        address: currentAddress,
+        networkId: currentNetworkId,
+        contractId: token.address
+      })
+        .then(value => {
+          //if (value !== '0') {
+            coinList.merge([{
+              contractId: token.address,
+              symbol: token.symbol
+            }])
+          //}
+        })
+        .catch(e => {
+          logError(e);
         });
-  
-        if (1) {
-          coinList.merge([{
-            contractId: token.address,
-            symbol: token.symbol
-          }])
-        }
-      } catch (e) {
-        logError(e);
-      }
-
     }
   }
 
@@ -136,7 +135,7 @@ const SuggestList = (props: {
     return <></>
   }
 
-  const data = coinList.get().slice(0,5);
+  const data = coinList.get().slice(0, 5);
 
   return (
     <View>
