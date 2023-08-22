@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NewWalletSeedNavigationProp } from '../types/navigation';
 import { setCurrentAccount, addAccount, showToast, logError, importAccount } from '../actions';
 import { Feather } from '@expo/vector-icons';
-import { Button, TextInput, Screen } from '../components';
+import { Button, TextInput, Screen, TextInputActionPaste } from '../components';
 import { useI18n, useTheme } from '../hooks';
 import { View } from 'react-native';
 import { EncryptedStore } from '../stores';
@@ -66,8 +66,12 @@ export default () => {
                  <TextInput
                     multiline={true}
                     value={privateKey.get()}
+                    numberOfLines={4}
                     placeholder={i18n.t('private_key')}
                     onChangeText={(text: string) => privateKey.set(text)}
+                    actions={(
+                        <TextInputActionPaste state={privateKey} />
+                    )}
                 />
             </View>
 
@@ -75,7 +79,7 @@ export default () => {
                 <Button
                     title={i18n.t('import_account')}
                     onPress={() => _import()}
-                    icon={<Feather name="arrow-up" />}
+                    icon={<Feather name="download" />}
                 />
             </View>
         </Screen>

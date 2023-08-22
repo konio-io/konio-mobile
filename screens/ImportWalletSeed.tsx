@@ -54,9 +54,7 @@ export default () => {
           placeholder={i18n.t('seed_phrase')}
           onChangeText={(text: string) => seed.set(text)}
           actions={(
-
             <TextInputActionPaste state={seed} />
-
           )}
         />
       </Wrapper>

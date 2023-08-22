@@ -202,7 +202,10 @@
   "misaligned_address": "Fehlausgerichtete Adresse. Wechseln Sie zum richtigen Konto.",
   "warning": "Warnung",
   "homograph_attack_warning": "Dieser Name enthält nicht-ASCII-Zeichen. Bitte beachten Sie, dass es Zeichen gibt, die den englischen Buchstaben ähnlich oder identisch sehen, insbesondere Zeichen aus dem Kyrillischen und Griechischen. Auch traditionelle chinesische Schriftzeichen können den vereinfachten Varianten identisch oder sehr ähnlich sehen.",
-  "ok":"Ok",
-  "auto_discovered":"Auto entdeckt",
-  "import_account": "Konto importieren"
+  "ok": "Ok",
+  "auto_discovered": "Auto entdeckt",
+  "import_account": "Konto importieren",
+  "private_key": "Privater Schlüssel",
+  "show_private_keys": "Private Schlüssel anzeigen",
+  "show_private_keys_desc": "Den privaten Schlüssel jedes Kontos anzeigen"
 }

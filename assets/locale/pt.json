@@ -202,7 +202,10 @@
   "misaligned_address": "Endereço desalinhado. Mude para a conta correta.",
   "warning": "Aviso",
   "homograph_attack_warning": "Este nome contém caracteres não ASCII. Esteja ciente de que existem caracteres que parecem idênticos ou muito semelhantes às letras inglesas, especialmente caracteres cirílicos e gregos. Além disso, os caracteres chineses tradicionais podem parecer idênticos ou muito semelhantes às variantes simplificadas.",
-  "ok":"Ok",
-  "auto_discovered":"Auto descoberto",
-  "import_account": "Importar conta"
+  "ok": "Ok",
+  "auto_discovered": "Auto descoberto",
+  "import_account": "Importar conta",
+  "private_key": "Chave privada",
+  "show_private_keys": "Mostrar chaves privadas",
+  "show_private_keys_desc": "Revelar a chave privada de cada conta"
 }

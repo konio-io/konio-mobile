@@ -47,6 +47,14 @@ export default () => {
             />
 
             <ListItem
+                content={i18n.t('show_private_keys')}
+                name={i18n.t('show_private_keys')}
+                description={i18n.t('show_private_keys_desc')}
+                onPress={() => navigation.navigate('ShowPrivateKeys')}
+                icon={(<Feather name="eye" />)}
+            />
+
+            <ListItem
                 content={i18n.t('change_autolock')}
                 name={i18n.t('change_autolock')}
                 description={i18n.t('change_autolock_desc')}

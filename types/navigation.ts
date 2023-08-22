@@ -103,6 +103,7 @@ export type SettingsParamList = {
     SettingMenu: undefined,
     ChangeNetwork: undefined,
     ShowSeed: undefined,
+    ShowPrivateKeys: undefined,
     ChangeTheme: undefined,
     ChangeLocale: undefined,
     ChangePassword: undefined,

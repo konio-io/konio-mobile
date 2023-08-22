@@ -8,7 +8,7 @@ import { useCurrentAddress, useI18n, useTheme, useAccounts } from '../hooks';
 import { AccountAvatar, Logo, Separator, Link, Address, WcLogo } from '../components';
 import { setCurrentAccount } from '../actions';
 import Root from './Root';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import type { Theme } from '../types/store';
 import Constants from 'expo-constants';
 import { State } from '@hookstate/core';
@@ -89,7 +89,7 @@ const DrawerContent = (props: any) => {
                 <DrawerItem
                     labelStyle={styles.text}
                     label={i18n.t('import_account')}
-                    icon={({ size, color }) => <View style={styles.drawerIconContainer}><AntDesign name="arrowup" size={size} color={color} /></View>}
+                    icon={({ size, color }) => <View style={styles.drawerIconContainer}><Feather name="download" size={size} color={color} /></View>}
                     onPress={() => {
                         navigation.navigate('Root', {
                             screen: 'ImportAccount'

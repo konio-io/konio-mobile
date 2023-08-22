@@ -12,6 +12,7 @@ import ChangeAutolock from '../screens/ChangeAutolock';
 import Advanced from '../screens/Advanced';
 import NewNetwork from '../screens/NewNetwork';
 import Logs from '../screens/Logs';
+import ShowPrivateKeys from '../screens/ShowPrivateKeys';
 
 const Stack = createStackNavigator<SettingsParamList>();
 
@@ -60,6 +61,13 @@ export default () => {
         component={ShowSeed}
         options={{
           title: i18n.t('show_seed'),
+        }}
+      />
+      <Stack.Screen
+        name="ShowPrivateKeys"
+        component={ShowPrivateKeys}
+        options={{
+          title: i18n.t('show_private_keys'),
         }}
       />
       <Stack.Screen
