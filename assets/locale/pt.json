@@ -207,5 +207,6 @@
   "import_account": "Importar conta",
   "private_key": "Chave privada",
   "show_private_keys": "Mostrar chaves privadas",
-  "show_private_keys_desc": "Revelar a chave privada de cada conta"
+  "show_private_keys_desc": "Revelar a chave privada de cada conta",
+  "are_you_sure_delete_account": "Tem certeza de que deseja excluir sua conta?"
 }

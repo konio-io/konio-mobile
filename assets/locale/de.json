@@ -207,5 +207,6 @@
   "import_account": "Konto importieren",
   "private_key": "Privater Schlüssel",
   "show_private_keys": "Private Schlüssel anzeigen",
-  "show_private_keys_desc": "Den privaten Schlüssel jedes Kontos anzeigen"
+  "show_private_keys_desc": "Den privaten Schlüssel jedes Kontos anzeigen",
+  "are_you_sure_delete_account": "Sind Sie sicher, dass Sie Ihr Konto löschen möchten?"
 }

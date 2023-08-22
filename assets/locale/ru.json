@@ -207,5 +207,6 @@
   "import_account": "Импорт аккаунта",
   "private_key": "Приватный ключ",
   "show_private_keys": "Показать приватные ключи",
-  "show_private_keys_desc": "Раскрыть приватный ключ каждого аккаунта"
+  "show_private_keys_desc": "Раскрыть приватный ключ каждого аккаунта",
+  "are_you_sure_delete_account": "Вы уверены, что хотите удалить свой аккаунт?"
 }

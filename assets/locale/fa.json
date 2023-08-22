@@ -207,5 +207,6 @@
   "import_account": "وارد کردن حساب",
   "private_key": "کلید خصوصی",
   "show_private_keys": "نمایش کلیدهای خصوصی",
-  "show_private_keys_desc": "آشکارسازی کلید خصوصی هر حساب"
+  "show_private_keys_desc": "آشکارسازی کلید خصوصی هر حساب",
+  "are_you_sure_delete_account": "آیا از حذف حساب خود اطمینان دارید؟"
 }

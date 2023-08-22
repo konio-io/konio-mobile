@@ -206,5 +206,6 @@
     "import_account":"Import account",
     "private_key":"Private key",
     "show_private_keys":"Show private keys",
-    "show_private_keys_desc":"Reveal the private key of each account"
+    "show_private_keys_desc":"Reveal the private key of each account",
+    "are_you_sure_delete_account":"Are you sure you want to delete your account?"
   }

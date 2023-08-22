@@ -205,3 +205,12 @@ export const isMainnet = () => {
     const currentNetwork = DEFAULT_NETWORKS[currentNetworkId];
     return currentNetwork.name === "Koinos Mainnet";
 }
+
+export const getSeedAddress = () => {
+    const seedAccount = Object.values(EncryptedStore.accounts.get()).filter(account => account.seed)[0];
+    if (!seedAccount) {
+        return null;
+    }
+
+    return seedAccount.address;
+}

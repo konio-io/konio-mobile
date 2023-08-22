@@ -207,5 +207,6 @@
   "import_account": "导入账户",
   "private_key": "私钥",
   "show_private_keys": "显示私钥",
-  "show_private_keys_desc": "显示每个账户的私钥"
+  "show_private_keys_desc": "显示每个账户的私钥",
+  "are_you_sure_delete_account": "您确定要删除您的账户吗？"
 }

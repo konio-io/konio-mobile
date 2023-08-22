@@ -6,7 +6,7 @@ import { DEFAULT_COINS, TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TR
 import HDKoinos from "../lib/HDKoinos";
 import Toast from 'react-native-toast-message';
 import { State, none } from "@hookstate/core";
-import { getCoinBalance, getContract, getProvider, getSigner, signMessage, prepareTransaction, sendTransaction, signAndSendTransaction, signHash, signTransaction, waitForTransaction, getKapProfileByAddress, getKapAddressByName, isMainnet } from "../lib/utils";
+import { getCoinBalance, getContract, getProvider, getSigner, signMessage, prepareTransaction, sendTransaction, signAndSendTransaction, signHash, signTransaction, waitForTransaction, getKapProfileByAddress, getKapAddressByName, isMainnet, getSeedAddress } from "../lib/utils";
 import migrations from "../stores/migrations";
 import { SignClientTypes, SessionTypes } from "@walletconnect/types";
 import { getSdkError } from "@walletconnect/utils";
@@ -307,6 +307,32 @@ export const addAccount = async (name: string) => {
 
     accounts[account.address].accountIndex.set(account.accountIndex + 1);
     return address;
+}
+
+export const deleteAccount = (address: string) => {
+    const seedAddress = getSeedAddress();
+    if (!seedAddress) {
+        throw new Error("Unable to retrieve seed account");
+    }
+
+    if (seedAddress === address) {
+        throw new Error("Cannot delete seed account");
+    }
+
+    const encryptedAccounts = EncryptedStore.accounts;
+    const seedAccount = encryptedAccounts.nested(seedAddress);
+    const currentAddress = UserStore.currentAddress;
+    const encryptedAccount = encryptedAccounts.nested(address);
+    const userAccount = UserStore.accounts.nested(address);
+
+    if (encryptedAccount.accountIndex.get() === undefined) {
+        const accountIndex = seedAccount.accountIndex.get() ?? 1;
+        seedAccount.accountIndex.set(accountIndex - 1);
+    }
+
+    currentAddress.set(seedAddress);
+    encryptedAccount.set(none);
+    userAccount.set(none);
 }
 
 export const confirmTransaction = async (transaction: TransactionJsonWait): Promise<Transaction> => {

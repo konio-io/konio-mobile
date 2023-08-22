@@ -204,5 +204,9 @@
   "homograph_attack_warning": "Questo nome contiene caratteri non-ASCII. Siate consapevoli che ci sono caratteri che assomigliano identici o molto simili alle lettere inglesi, specialmente caratteri cirillici e greci. Anche i caratteri cinesi tradizionali possono apparire identici o molto simili alle varianti semplificate.",
   "ok":"Ok",
   "auto_discovered":"Rilevate automaticamente",
-  "import_account":"Importa account"
+  "import_account":"Importa account",
+  "private_key": "Chiave privata",
+  "show_private_keys": "Mostra chiavi private",
+  "show_private_keys_desc": "Rivela le chiavi private di ogni account",
+  "are_you_sure_delete_account":"Sei sicuro di voler cancellare l'account?"
 }

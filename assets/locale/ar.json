@@ -206,5 +206,6 @@
     "import_account": "استيراد الحساب",
     "private_key": "المفتاح الخاصّ",
     "show_private_keys": "إظهار المفاتيح الخاصّة",
-    "show_private_keys_desc": "كشف المفتاح الخاصّ لكل حساب"
+    "show_private_keys_desc": "كشف المفتاح الخاصّ لكل حساب",
+    "are_you_sure_delete_account": "هل أنت متأكد من أنك تريد حذف حسابك؟"
 }

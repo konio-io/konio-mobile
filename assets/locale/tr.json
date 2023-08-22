@@ -207,5 +207,6 @@
     "import_account": "Hesabı İçe Aktar",
     "private_key": "Özel anahtar",
     "show_private_keys": "Özel anahtarları göster",
-    "show_private_keys_desc": "Her hesabın özel anahtarını göster"
+    "show_private_keys_desc": "Her hesabın özel anahtarını göster",
+    "are_you_sure_delete_account": "Hesabınızı silmek istediğinizden emin misiniz?"
 }
