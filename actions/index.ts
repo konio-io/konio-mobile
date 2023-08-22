@@ -1,4 +1,4 @@
-import { utils } from "koilib";
+import { Signer, utils } from "koilib";
 import { TransactionJsonWait } from "koilib/lib/interface";
 import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, WCStore, KapStore } from "../stores";
 import { Contact, Coin, Network, Transaction, Account } from "../types/store";
@@ -249,6 +249,28 @@ export const addSeed = async (args: {
             address,
             privateKey,
             seed,
+            accountIndex: 0
+        }
+    });
+
+    return address;
+}
+
+export const importAccount = async (args: {
+    privateKey: string,
+    name: string
+}) => {
+    const accounts = EncryptedStore.accounts;
+    const { privateKey, name } = args;
+    const signer = Signer.fromWif(privateKey);
+    const address = signer.getAddress();
+
+    addAddress(address, name);
+
+    accounts.merge({
+        [address]: {
+            address,
+            privateKey,
             accountIndex: 0
         }
     });

@@ -16,6 +16,7 @@ export type RootParamList = {
     Unlock: undefined,
     ResetPassword: undefined,
     NewAccount: undefined,
+    ImportAccount: undefined,
     EditAccount: {
         address: string
     },
@@ -37,6 +38,8 @@ export type SettingsNavigationProp = StackNavigationProp<RootParamList, 'Setting
 export type SettingsRouteProp = RouteProp<RootParamList, 'Settings'>;
 export type NewAccountNavigationProps = StackNavigationProp<RootParamList, 'NewAccount'>;
 export type NewAccountRouteProp = RouteProp<RootParamList, 'NewAccount'>;
+export type ImportAccountNavigationProps = StackNavigationProp<RootParamList, 'ImportAccount'>;
+export type ImportAccountRouteProp = RouteProp<RootParamList, 'ImportAccount'>;
 export type EditAccountNavigationProps = StackNavigationProp<RootParamList, 'EditAccount'>;
 export type EditAccountRouteProp = RouteProp<RootParamList, 'EditAccount'>;
 export type WcProposalNavigationProp = StackNavigationProp<RootParamList, 'WcProposal'>;

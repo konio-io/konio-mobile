@@ -27,7 +27,7 @@
   "new_wallet_seed": "Semilla de nueva billetera",
   "confirm_seed": "Confirmar semilla",
   "import_wallet_seed": "Importar semilla de billetera",
-  "new_wallet_desc": "¿Ya tienes una billetera? Puedes usar tu billetera existente importándola a través de una frase semilla o una clave privada.",
+  "new_wallet_desc": "¿Ya tienes una billetera? Puedes usar tu billetera existente importándola a través de la frase de recuperación.",
   "word_seed": "Semilla de 12 palabras",
   "have_a_wallet": "¿Aún no tienes una billetera? ¡Crea una!",
   "unable_to_add_account": "No se puede agregar la cuenta",
@@ -203,5 +203,6 @@
   "warning": "Advertencia",
   "homograph_attack_warning": "Este nombre contiene caracteres no ASCII. Tenga en cuenta que hay caracteres que se ven idénticos o muy similares a las letras inglesas, especialmente caracteres cirílicos y griegos. Además, los caracteres chinos tradicionales pueden verse idénticos o muy similares a las variantes simplificadas.",
   "ok":"Ok",
-  "auto_discovered":"Auto descubierto"
+  "auto_discovered":"Auto descubierto",
+  "import_account": "Importar cuenta"
 }

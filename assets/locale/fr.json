@@ -27,7 +27,7 @@
   "new_wallet_seed": "Nouvelle phrase de récupération du portefeuille",
   "confirm_seed": "Confirmer la phrase de récupération",
   "import_wallet_seed": "Importer la phrase de récupération du portefeuille",
-  "new_wallet_desc": "Avez-vous déjà un portefeuille ? Vous pouvez utiliser votre portefeuille existant en l'important via une phrase de récupération ou une clé privée.",
+  "new_wallet_desc": "Possédez-vous déjà un portefeuille ? Vous pouvez utiliser votre portefeuille existant en l'important via une graine de récupération.",
   "word_seed": "Phrase de récupération de 12 mots",
   "have_a_wallet": "Vous n'avez pas encore de portefeuille ? Créez-en un !",
   "unable_to_add_account": "Impossible d'ajouter le compte",
@@ -203,5 +203,6 @@
   "warning": "Avertissement",
   "homograph_attack_warning": "Ce nom contient des caractères non-ASCII. Soyez conscient qu'il existe des caractères qui ressemblent identiques ou très similaires aux lettres anglaises, notamment des caractères cyrilliques et grecs. De plus, les caractères chinois traditionnels peuvent être identiques ou très similaires aux variantes simplifiées.",
   "ok":"Ok",
-  "auto_discovered":"Auto découvert"
+  "auto_discovered":"Auto découvert",
+  "import_account": "Importer le compte"
 }

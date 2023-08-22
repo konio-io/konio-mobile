@@ -6,6 +6,7 @@ import Unlock from "../screens/Unlock";
 import Account from "./Account";
 import Settings from "./Settings";
 import NewAccount from "../screens/NewAccount";
+import ImportAccount from "../screens/ImportAccount";
 import EditAccount from "../screens/EditAccount";
 import WalletConnect from "./WalletConnect";
 import { RootNavigationProp, RootParamList } from "../types/navigation";
@@ -138,6 +139,13 @@ export default () => {
         component={NewAccount}
         options={{
           title: i18n.t('add_account')
+        }}
+      />
+      <Stack.Screen
+        name="ImportAccount"
+        component={ImportAccount}
+        options={{
+          title: i18n.t('import_account')
         }}
       />
       <Stack.Screen

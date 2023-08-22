@@ -27,7 +27,7 @@
     "new_wallet_seed": "New wallet seed",
     "confirm_seed": "Confirm seed",
     "import_wallet_seed": "Import wallet seed",
-    "new_wallet_desc": "Do you already have a wallet? You can use your existing wallet by importing it via seed or private key.",
+    "new_wallet_desc": "Do you already have a wallet? You can use your existing wallet by importing it via seed.",
     "word_seed": "12 word seed",
     "have_a_wallet": "Do you not have a wallet yet? Create one!",
     "unable_to_add_account": "Unable to add account",
@@ -202,5 +202,6 @@
     "warning":"Warning",
     "homograph_attack_warning":"This name contains non-ASCII characters. Please be aware that there are characters that look identical or very similar to English letters, especially characters from Cyrillic and Greek. Also traditional Chinese characters can look identical or very similar to simplified variants.",
     "ok":"Ok",
-    "auto_discovered":"Auto discovered"
+    "auto_discovered":"Auto discovered",
+    "import_account":"Import account"
   }

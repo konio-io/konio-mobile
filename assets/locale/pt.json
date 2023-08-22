@@ -27,7 +27,7 @@
   "new_wallet_seed": "Nova frase-semente da carteira",
   "confirm_seed": "Confirmar frase-semente",
   "import_wallet_seed": "Importar frase-semente da carteira",
-  "new_wallet_desc": "Já tem uma carteira? Você pode usar sua carteira existente importando-a através de uma frase-semente ou uma chave privada.",
+  "new_wallet_desc": "Você já possui uma carteira? Você pode usar sua carteira existente importando-a através da semente de recuperação.",
   "word_seed": "Frase-semente de 12 palavras",
   "have_a_wallet": "Ainda não tem uma carteira? Crie uma!",
   "unable_to_add_account": "Não foi possível adicionar a conta",
@@ -203,5 +203,6 @@
   "warning": "Aviso",
   "homograph_attack_warning": "Este nome contém caracteres não ASCII. Esteja ciente de que existem caracteres que parecem idênticos ou muito semelhantes às letras inglesas, especialmente caracteres cirílicos e gregos. Além disso, os caracteres chineses tradicionais podem parecer idênticos ou muito semelhantes às variantes simplificadas.",
   "ok":"Ok",
-  "auto_discovered":"Auto descoberto"
+  "auto_discovered":"Auto descoberto",
+  "import_account": "Importar conta"
 }

@@ -88,6 +88,17 @@ const DrawerContent = (props: any) => {
 
                 <DrawerItem
                     labelStyle={styles.text}
+                    label={i18n.t('import_account')}
+                    icon={({ size, color }) => <View style={styles.drawerIconContainer}><AntDesign name="arrowup" size={size} color={color} /></View>}
+                    onPress={() => {
+                        navigation.navigate('Root', {
+                            screen: 'ImportAccount'
+                        });
+                    }}
+                />
+
+                <DrawerItem
+                    labelStyle={styles.text}
                     label={i18n.t('settings')}
                     icon={({ size, color }) => <View style={styles.drawerIconContainer}><AntDesign name="setting" size={size} color={color} /></View>}
                     onPress={() => {

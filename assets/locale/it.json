@@ -27,7 +27,7 @@
   "new_wallet_seed": "Seed del nuovo portafoglio",
   "confirm_seed": "Conferma seed",
   "import_wallet_seed": "Importa seed del portafoglio",
-  "new_wallet_desc": "Hai già un portafoglio? Puoi utilizzare il tuo portafoglio esistente importandolo tramite seed o chiave privata.",
+  "new_wallet_desc": "Hai già un portafoglio? Puoi utilizzare il tuo portafoglio esistente importandolo tramite seed.",
   "word_seed": "Seed di 12 parole",
   "have_a_wallet": "Non hai ancora un portafoglio? Crea uno!",
   "unable_to_add_account": "Impossibile aggiungere l'account",
@@ -203,5 +203,6 @@
   "warning": "Attenzione",
   "homograph_attack_warning": "Questo nome contiene caratteri non-ASCII. Siate consapevoli che ci sono caratteri che assomigliano identici o molto simili alle lettere inglesi, specialmente caratteri cirillici e greci. Anche i caratteri cinesi tradizionali possono apparire identici o molto simili alle varianti semplificate.",
   "ok":"Ok",
-  "auto_discovered":"Rilevate automaticamente"
+  "auto_discovered":"Rilevate automaticamente",
+  "import_account":"Importa account"
 }

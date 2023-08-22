@@ -27,7 +27,7 @@
   "new_wallet_seed": "新的钱包种子短语",
   "confirm_seed": "确认种子短语",
   "import_wallet_seed": "导入钱包种子短语",
-  "new_wallet_desc": "已经有钱包了吗？您可以通过导入种子短语或私钥来使用现有钱包。",
+  "new_wallet_desc": "您已经有钱包了吗？您可以通过种子导入现有的钱包。",
   "word_seed": "12 个单词的种子短语",
   "have_a_wallet": "还没有钱包吗？创建一个吧！",
   "unable_to_add_account": "无法添加账户",
@@ -203,5 +203,6 @@
   "warning": "警告",
   "homograph_attack_warning": "此名称包含非ASCII字符。请注意，有些字符看起来与英文字母相同或非常相似，尤其是来自西里尔文和希腊文的字符。此外，繁体中文字符可能与简化变体看起来完全相同或非常相似。",
   "ok":"Ok",
-  "auto_discovered":"自动发现"
+  "auto_discovered":"自动发现",
+  "import_account": "导入账户"
 }

@@ -27,7 +27,7 @@
     "new_wallet_seed": "Yeni cüzdan seed'i",
     "confirm_seed": "Seed'i onayla",
     "import_wallet_seed": "Cüzdan seed'ini içe aktar",
-    "new_wallet_desc": "Zaten bir cüzdanınız var mı? Seed veya özel anahtar aracılığıyla mevcut cüzdanınızı içe aktararak kullanabilirsiniz.",
+    "new_wallet_desc": "Zaten bir cüzdanınız var mı? Mevcut cüzdanınızı tohum kullanarak içe aktarabilirsiniz.",
     "word_seed": "12 kelime seed'i",
     "have_a_wallet": "Henüz bir cüzdanınız yok mu? Bir tane oluşturun!",
     "unable_to_add_account": "Hesap eklenemiyor",
@@ -203,5 +203,6 @@
     "warning": "Uyarı",
     "homograph_attack_warning": "Bu ad, ASCII dışı karakterler içeriyor. Lütfen İngiliz harflerine özellikle Kiril ve Yunan alfabesinden karakterlerle çok benzer veya tamamen aynı görünen karakterlerin olduğunu unutmayın. Ayrıca geleneksel Çince karakterler, basitleştirilmiş varyantlarıyla aynı veya çok benzer görünebilir.",
     "ok":"Ok",
-    "auto_discovered":"Otomatik bulundu"
+    "auto_discovered":"Otomatik bulundu",
+    "import_account": "Hesabı İçe Aktar"
 }
