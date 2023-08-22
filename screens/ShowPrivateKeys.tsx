@@ -18,7 +18,7 @@ export default () => {
         <Screen>
             <ScrollView contentContainerStyle={{ ...styles.paddingBase, ...styles.rowGapMedium }}>
                 {Object.values(encryptedStore.accounts.get()).map(account =>
-                    <PrivateKey address={account.address} privateKey={account.privateKey} />
+                    <PrivateKey key={account.address} address={account.address} privateKey={account.privateKey} />
                 )}
             </ScrollView>
         </Screen>
