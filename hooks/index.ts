@@ -182,8 +182,11 @@ export const useKapAddress = (address: string) => {
     const store = useHookstate(KapStore);
     const name = useHookstate<string|null>(null);
     if (store[address].ornull) {
-        name.set(`@${store[address].get()}`);
+        name.set(`${store[address].get()}`);
+    } else {
+        name.set(null);
     }
+
     return name;
 }
 
