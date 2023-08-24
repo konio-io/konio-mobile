@@ -100,7 +100,6 @@ const SuggestList = (props: {
   const refreshList = async () => {
     try {
       const tokenListResponse = await fetch(`${TOKENS_URL}/index.json`);
-      console.log(await tokenListResponse.text());
       const tokenMap: Array<Token> = await tokenListResponse.json();
       const tokenList = Object.values(tokenMap).filter(token => {
         return token.chainId === currentNetworkId
