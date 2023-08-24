@@ -74,23 +74,10 @@ export default () => {
 const SuggestList = (props: {
   onPressCoin: Function
 }) => {
-  const currentNetworkId = useCurrentNetworkId().get();
-  const currentAddress = useCurrentAddress().get();
-  const currentCoins = useCoins().get();
-
-  if (!currentAddress) {
-    return <View></View>
-  }
-
-  const i18n = useI18n();
-  const theme = useTheme();
-  const styles = theme.styles;
-
   type Item = {
     contractId: string,
     symbol: string
   }
-  const coinList = useHookstate<Array<Item>>([]);
 
   type Token = {
     address: string,
@@ -98,32 +85,50 @@ const SuggestList = (props: {
     chainId: string
   }
 
-  const refreshList = async () => {
-    const tokenListResponse = await fetch(`${TOKENS_URL}/index.json`);
-    const tokenMap: Array<Token> = await tokenListResponse.json();
-    const tokenList = Object.values(tokenMap).filter(token => {
-      return token.chainId === currentNetworkId
-        && !currentCoins.includes(token.address)
-        && token.symbol !== "MANA";
-    });
+  const currentNetworkId = useCurrentNetworkId().get();
+  const currentAddress = useCurrentAddress().get();
+  const currentCoins = useCoins().get();
+  const coinList = useHookstate<Array<Item>>([]);
+  const i18n = useI18n();
+  const theme = useTheme();
+  const styles = theme.styles;
 
-    for (const token of tokenList) {
-      getCoinBalance({
-        address: currentAddress,
-        networkId: currentNetworkId,
-        contractId: token.address
-      })
-        .then(value => {
-          if (value !== '0') {
-            coinList.merge([{
-              contractId: token.address,
-              symbol: token.symbol
-            }])
-          }
+  if (!currentAddress) {
+    return <View></View>
+  }
+
+  const refreshList = async () => {
+    try {
+      const tokenListResponse = await fetch(`${TOKENS_URL}/index.json`);
+      console.log(await tokenListResponse.text());
+      const tokenMap: Array<Token> = await tokenListResponse.json();
+      const tokenList = Object.values(tokenMap).filter(token => {
+        return token.chainId === currentNetworkId
+          && !currentCoins.includes(token.address)
+          && token.symbol !== "MANA";
+      });
+
+      for (const token of tokenList) {
+        getCoinBalance({
+          address: currentAddress,
+          networkId: currentNetworkId,
+          contractId: token.address
         })
-        .catch(e => {
-          logError(e);
-        });
+          .then(value => {
+            if (value !== '0') {
+              coinList.merge([{
+                contractId: token.address,
+                symbol: token.symbol
+              }])
+            }
+          })
+          .catch(e => {
+            throw(e);
+          });
+      }
+
+    } catch (e) {
+      logError(e);
     }
   }
 
