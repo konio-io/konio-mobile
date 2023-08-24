@@ -1,6 +1,6 @@
 import { Alert, View } from 'react-native';
 import { Screen, Button, Text, AccountAvatar, ListItemSelected, DrawerToggler, AddressListItem, Link, TextInputActionPaste, TextInputAction, TextInput } from '../components';
-import { useTheme, useI18n, useAccounts, useAccount, useTransactions, useAddressbook, useContact, useCurrentAddress, useKapAddress, useKapName, useSearchAddress, getContact } from '../hooks';
+import { useTheme, useI18n, useAccounts, useAccount, useTransactions, useAddressbook, useContact, useCurrentAddress, getContact } from '../hooks';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { WithdrawToNavigationProp, WithdrawToRouteProp } from '../types/navigation';
 import { refreshKap, showToast } from '../actions';
