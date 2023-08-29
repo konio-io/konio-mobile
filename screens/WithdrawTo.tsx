@@ -1,6 +1,6 @@
 import { Alert, View } from 'react-native';
 import { Screen, Button, Text, AccountAvatar, ListItemSelected, DrawerToggler, AddressListItem, Link, TextInputActionPaste, TextInputAction, TextInput } from '../components';
-import { useTheme, useI18n, useAccounts, useAccount, useTransactions, useAddressbook, useContact, useCurrentAddress, getContact } from '../hooks';
+import { useTheme, useI18n, useAccounts, useAccount, useTransactions, useAddressbook, useContact, useCurrentAddress } from '../hooks';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { WithdrawToNavigationProp, WithdrawToRouteProp } from '../types/navigation';
 import { refreshKap, showToast } from '../actions';
@@ -10,7 +10,7 @@ import { useHookstate } from '@hookstate/core';
 import { utils } from 'koilib';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SheetManager } from "react-native-actions-sheet";
-import { isASCIIString } from '../lib/utils';
+import { isASCIIString, getContact } from '../lib/utils';
 
 export default () => {
     const route = useRoute<WithdrawToRouteProp>();

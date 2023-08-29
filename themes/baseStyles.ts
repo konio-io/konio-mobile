@@ -21,11 +21,17 @@ export const getStyles = (themeVars : ThemeVars) => {
         text: {
             color: Color.baseContrast,
             fontFamily: FontFamily.sans,
-            fontSize: FontSize.base
+            fontSize: FontSize.base,
         },
         textError: {
             color: Color.error,
-            fontFamily: FontFamily.sans
+            fontFamily: FontFamily.sans,
+            fontSize: FontSize.base
+        },
+        textSuccess: {
+            color: Color.success,
+            fontFamily: FontFamily.sans,
+            fontSize: FontSize.base
         },
         textInputContainer: {
             fontFamily: FontFamily.sans,
@@ -101,10 +107,10 @@ export const getStyles = (themeVars : ThemeVars) => {
             paddingVertical: 2
         },
         symbol: {
-            fontFamily: FontFamily.sans,
+            fontFamily: FontFamily.sans+'_bold',
             fontSize: FontSize.medium,
             color: Color.baseContrast,
-            fontWeight: 'bold',
+            //fontWeight: 'bold',
         },
         rowGapSmall: {
             rowGap: Spacing.small

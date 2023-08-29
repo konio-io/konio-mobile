@@ -52,7 +52,8 @@
     "react-native-toast-message": "^2.1.6",
     "react-native-webview": "11.26.0",
     "react-native-webview-crypto": "^0.0.25",
-    "text-encoding-polyfill": "^0.6.7"
+    "text-encoding-polyfill": "^0.6.7",
+    "@react-native-community/netinfo": "9.3.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

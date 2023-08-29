@@ -26,7 +26,8 @@ export type RootParamList = {
     WcRequest: {
         request:  SignClientTypes.EventArguments["session_request"]
     },
-    WalletConnect: NavigatorScreenParams<WalletConnectParamList>
+    WalletConnect: NavigatorScreenParams<WalletConnectParamList>,
+    Faq: undefined
 }
 export type AccountNavigationProp = StackNavigationProp<RootParamList, 'Account'>;
 export type AccountRouteProp = RouteProp<RootParamList, 'Account'>;
@@ -46,6 +47,8 @@ export type WcProposalNavigationProp = StackNavigationProp<RootParamList, 'WcPro
 export type WcProposalRouteProp = RouteProp<RootParamList, 'WcProposal'>;
 export type WcRequestNavigationProp = StackNavigationProp<RootParamList, 'WcRequest'>;
 export type WcRequestRouteProp = RouteProp<RootParamList, 'WcRequest'>;
+export type FaqNavigationProp = StackNavigationProp<RootParamList, 'Faq'>;
+export type FaqRouteProp = RouteProp<RootParamList, 'Faq'>;
 
 /** WalletConnect */
 export type WalletConnectParamList = {

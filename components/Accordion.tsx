@@ -10,6 +10,7 @@ import Animated, {
     withTiming,
     Easing,
 } from 'react-native-reanimated';
+import { ScrollView } from "react-native-gesture-handler";
 
 export default (props: {
     header: ReactElement,
@@ -65,13 +66,13 @@ export default (props: {
                 </View>
 
                 <Animated.View style={[styles.descStyle, bodyHeight]}>
-                    <View
+                    <ScrollView
                         style={styles.bodyContainer}
                         onLayout={event => {
                             setBodySectionHeight(event.nativeEvent.layout.height);
                         }}>
                         {props.children}
-                    </View>
+                    </ScrollView>
                 </Animated.View>
 
             </View>
@@ -85,7 +86,6 @@ const createStyles = (theme: Theme) => {
     return StyleSheet.create({
         ...theme.styles,
         container: {
-            padding: Spacing.base,
             backgroundColor: Color.base,
             rowGap: Spacing.small
         },
@@ -101,7 +101,6 @@ const createStyles = (theme: Theme) => {
             position: 'absolute',
             bottom: 0,
             left: 0,
-            paddingTop: Spacing.base,
             width: '100%'
         },
         descStyle: {

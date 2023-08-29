@@ -3,7 +3,7 @@ import { Network } from "../types/store";
 export const DEFAULT_NETWORK = "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==";
 export const DEFAULT_NETWORKS: Record<string, Network> = {
     "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==": {
-        name: "Koinos Mainnet",
+        name: "Mainnet",
         chainId: "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==",
         rpcNodes: [
             "https://api.koinos.io",
@@ -35,7 +35,7 @@ export const DEFAULT_NETWORKS: Record<string, Network> = {
         }
     },
     "EiBncD4pKRIQWco_WRqo5Q-xnXR7JuO3PtZv983mKdKHSQ==": {
-        name: "Koinos Harbinger (testnet)",
+        name: "Harbinger (testnet)",
         chainId: "EiBncD4pKRIQWco_WRqo5Q-xnXR7JuO3PtZv983mKdKHSQ==",
         rpcNodes: [
             "https://harbinger-api.koinos.io",
@@ -89,6 +89,7 @@ export const DAPPS_URL = 'https://dapps.konio.io';
 export const TOKENS_URL = 'https://tokens.konio.io';
 export const TERMS_URL = 'https://konio.io/terms/';
 export const PRIVACY_URL = 'https://konio.io/privacy-policy/';
+export const FAQ_URL = 'https://konio.io/assets/faq/';
 export const WC_METHODS = {
     SIGN_MESSAGE: 'koinos_signMessage',
     SIGN_HASH: 'koinos_signHash',

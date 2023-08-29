@@ -35,7 +35,7 @@ export const TransactionListItem = (props: {
     const date = new Date(transaction.timestamp).toLocaleDateString();
     const time = new Date(transaction.timestamp).toLocaleTimeString();
     const theme = useTheme();
-    const { Color } = theme.vars;
+    const { Color, Spacing } = theme.vars;
     const styles = createStyles(theme);
     const i18n = useI18n();
 
@@ -44,64 +44,65 @@ export const TransactionListItem = (props: {
     };
 
     return (
-        <Accordion
-            header={(
-                <View>
-                    <Text style={styles.textSmall}>{date} {time}</Text>
-                    <View style={styles.descriptionContainer}>
+        <View style={styles.paddingVerticalSmall}>
+            <Accordion
+                header={(
+                    <View style={{ ...styles.paddingHorizontalBase }}>
+                        <Text style={styles.textSmall}>{date} {time}</Text>
+                        <View style={styles.descriptionContainer}>
 
-                        <View style={styles.statusIconContainer}>
-                            {transaction.status === TRANSACTION_STATUS_PENDING &&
-                                <ActivityIndicator />
-                            }
-                            {transaction.status === TRANSACTION_STATUS_SUCCESS &&
-                                <TypeIcon type={transaction.type} />
-                            }
-                            {transaction.status === TRANSACTION_STATUS_ERROR &&
-                                <AntDesign name="warning" size={24} color={Color.warning} />
-                            }
+                            <View style={styles.statusIconContainer}>
+                                {transaction.status === TRANSACTION_STATUS_PENDING &&
+                                    <ActivityIndicator />
+                                }
+                                {transaction.status === TRANSACTION_STATUS_SUCCESS &&
+                                    <TypeIcon type={transaction.type} />
+                                }
+                                {transaction.status === TRANSACTION_STATUS_ERROR &&
+                                    <AntDesign name="warning" size={24} color={Color.warning} />
+                                }
 
-                            <Text>{i18n.t(transaction.type.toLowerCase())}</Text>
+                                <Text>{i18n.t(transaction.type.toLowerCase())}</Text>
+                            </View>
 
+                            <Text>{transaction.value} {coin.symbol}</Text>
                         </View>
-
-                        <Text>{transaction.value} {coin.symbol}</Text>
                     </View>
-                </View>
-            )}
-        >
-            <View style={styles.rowGapBase}>
-                <Copiable copy={transaction.transactionId}>
+                )}
+            >
+                <View style={{ ...styles.rowGapBase, ...styles.paddingHorizontalBase }}>
+                    <Copiable copy={transaction.transactionId}>
+                        <View>
+                            <Text style={styles.textSmall}>TXid <Feather name="copy" size={12} /></Text>
+                            <Text>{transaction.transactionId}</Text>
+                        </View>
+                    </Copiable>
                     <View>
-                        <Text style={styles.textSmall}>TXid <Feather name="copy" size={12} /></Text>
-                        <Text>{transaction.transactionId}</Text>
+                        <Text style={styles.textSmall}>{i18n.t('type')}</Text>
+                        <Text>{transaction.type}</Text>
                     </View>
-                </Copiable>
-                <View>
-                    <Text style={styles.textSmall}>{i18n.t('type')}</Text>
-                    <Text>{transaction.type}</Text>
-                </View>
-                <View>
-                    <Text style={styles.textSmall}>{i18n.t('status')}</Text>
-                    <Text>{transaction.status}</Text>
-                </View>
-
-                {
-                    transaction.note &&
                     <View>
-                        <Text style={styles.textSmall}>{i18n.t('note')}</Text>
-                        <Text>{transaction.note}</Text>
+                        <Text style={styles.textSmall}>{i18n.t('status')}</Text>
+                        <Text>{transaction.status}</Text>
                     </View>
-                }
 
-                <Button
-                    title={i18n.t('open_explorer')}
-                    onPress={openTransactionLink}
-                    type='secondary'
-                    icon={<Feather name="external-link" />}
-                />
-            </View>
-        </Accordion>
+                    {
+                        transaction.note &&
+                        <View>
+                            <Text style={styles.textSmall}>{i18n.t('note')}</Text>
+                            <Text>{transaction.note}</Text>
+                        </View>
+                    }
+
+                    <Button
+                        title={i18n.t('open_explorer')}
+                        onPress={openTransactionLink}
+                        type='secondary'
+                        icon={<Feather name="external-link" />}
+                    />
+                </View>
+            </Accordion>
+        </View>
     );
 }
 

@@ -131,7 +131,7 @@ const Tag = (props: {
     const theme = useTheme();
     const styles = createStyles(theme);
     const style = selected ? styles.tagSelected : styles.tag;
-
+    
     return (
         <TouchableOpacity key={name} onPress={() => props.onPress(name)}>
             <Text style={style}>{name}({count})</Text>
@@ -147,25 +147,28 @@ const Item = (props: {
     const styles = createStyles(theme);
 
     return (
-        <Accordion
-            header={(
-                <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
-                    <TouchableWithoutFeedback onPress={() => Linking.openURL(props.item.url)}>
-                        <Image style={styles.itemIcon} source={{ uri: props.item.icon }} />
-                    </TouchableWithoutFeedback>
+        <View style={styles.paddingVerticalSmall}>
+            <Accordion
+                header={(
+                    <View style={{ ...styles.directionRow, ...styles.columnGapBase, ...styles.paddingHorizontalBase }}>
+                        <TouchableWithoutFeedback onPress={() => Linking.openURL(props.item.url)}>
+                            <Image style={styles.itemIcon} source={{ uri: props.item.icon }} />
+                        </TouchableWithoutFeedback>
 
-                    <View style={styles.itemRightContainer}>
-                        <Text style={styles.textMedium}>{props.item.name}</Text>
-                        <Text style={styles.textSmall}>{props.item.summary}</Text>
+                        <View style={styles.itemRightContainer}>
+                            <Text style={styles.textMedium}>{props.item.name}</Text>
+                            <Text style={styles.textSmall}>{props.item.summary}</Text>
+                        </View>
                     </View>
+                )}
+            >
+                <View style={{ marginLeft: styles.itemIcon.width + 15, ...styles.paddingHorizontalBase }}>
+                    <Text style={styles.itemDescription}>{props.item.description}</Text>
+                    <Link text={props.item.url} onPress={() => Linking.openURL(props.item.url)} />
                 </View>
-            )}
-        >
-            <View style={{ marginLeft: styles.itemIcon.width + 15 }}>
-                <Text style={styles.itemDescription}>{props.item.description}</Text>
-                <Link text={props.item.url} onPress={() => Linking.openURL(props.item.url)} />
-            </View>
-        </Accordion>
+            </Accordion>
+        </View>
+
     )
 }
 

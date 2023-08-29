@@ -38,7 +38,7 @@ const DrawerContent = (props: any) => {
     const styles = createStyles(theme);
     const currentAddress = useCurrentAddress();
     const currentAddressOrNull: State<string> | null = currentAddress.ornull;
-    const insets = useSafeAreaInsets(); 
+    const insets = useSafeAreaInsets();
 
     if (!currentAddressOrNull) {
         return <Loading />;
@@ -47,7 +47,7 @@ const DrawerContent = (props: any) => {
     const currentAccount = accounts[currentAddressOrNull.get()];
 
     return (
-        <View style={{...styles.flex1, paddingTop: insets.top }}>
+        <View style={{ ...styles.flex1, paddingTop: insets.top }}>
 
             <View style={styles.currentAccountContainer}>
                 <AccountAvatar size={48} address={currentAccount.address} />
@@ -110,8 +110,19 @@ const DrawerContent = (props: any) => {
 
                 <DrawerItem
                     labelStyle={styles.text}
+                    label={i18n.t('faq')}
+                    icon={({ size, color }) => <View style={styles.drawerIconContainer}><AntDesign name="questioncircleo" size={size} color={color} /></View>}
+                    onPress={() => {
+                        navigation.navigate('Root', {
+                            screen: 'Faq'
+                        });
+                    }}
+                />
+
+                <DrawerItem
+                    labelStyle={styles.text}
                     label='WalletConnect'
-                    icon={({ size }) => <View style={styles.drawerIconContainer}><WcLogo/></View>}
+                    icon={({ size }) => <View style={styles.drawerIconContainer}><WcLogo /></View>}
                     onPress={() => {
                         navigation.navigate('Root', {
                             screen: 'WalletConnect',

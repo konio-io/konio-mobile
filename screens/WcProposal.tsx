@@ -1,9 +1,9 @@
-import { Screen, Wrapper, Button, Text, AccountListItem } from "../components"
-import { View } from "react-native";
+import { Screen, Button, Text, AccountAvatar } from "../components"
+import { ScrollView, View, Image } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { WcProposalNavigationProp, WcProposalRouteProp } from "../types/navigation";
 import { acceptProposal, logError, rejectProposal, showToast } from "../actions";
-import { useCurrentAddress, useCurrentNetworkId, useI18n, useNetwork, useTheme } from "../hooks";
+import { useAccount, useCurrentAddress, useCurrentNetworkId, useI18n, useNetwork, useTheme } from "../hooks";
 import { State, useHookstate } from "@hookstate/core";
 import { useEffect } from "react";
 import { checkWCMethod, checkWCNetwork, getNetworkByChainId } from "../lib/WalletConnect";
@@ -16,6 +16,7 @@ export default () => {
         return <></>;
     }
 
+    const account = useAccount(currentAddressOrNull.get()).get();
     const currentNetworkId = useCurrentNetworkId().get();
     const currentNetwork = useNetwork(currentNetworkId).get();
     const navigation = useNavigation<WcProposalNavigationProp>();
@@ -23,6 +24,7 @@ export default () => {
     const proposal = route.params.proposal;
     const theme = useTheme();
     const styles = theme.styles;
+    const { Color } = theme.vars;
     const i18n = useI18n();
     const checkMethods = useHookstate(true);
     const checkNetwork = useHookstate(true);
@@ -35,6 +37,7 @@ export default () => {
     const chains = proposal?.params?.requiredNamespaces?.koinos?.chains ?? ['unknown'];
     const requiredNetwork = getNetworkByChainId(chains[0]);
     const requiredNetworkName = requiredNetwork ? requiredNetwork.name : i18n.t('unknown');
+    const icons = proposal.params.proposer.metadata.icons;
 
     const _checkMethods = () => {
         for (const method of methods) {
@@ -78,30 +81,43 @@ export default () => {
     useEffect(() => {
         _checkMethods();
         _checkNetwork();
-    }, [route.params.proposal])
-
-    //const icons = proposal.params.proposer.metadata.icons;
+    }, [route.params.proposal]);
 
     return (
         <Screen insets={true}>
-            <Wrapper>
-                <Text style={styles.textMedium}>{i18n.t('dapp_proposal_desc')}</Text>
+            <ScrollView contentContainerStyle={{ ...styles.paddingMedium, ...styles.rowGapMedium }}>
 
-                <View style={{ width: '100%', height: 70 }}>
-                    <Text style={styles.textSmall}>{i18n.t('account')}</Text>
-                    <AccountListItem address={currentAddressOrNull.get()} />
-                </View>
 
-                <View>
-                    <Text style={styles.textSmall}>{i18n.t('network')}</Text>
-                    <Text>{requiredNetworkName}</Text>
+                <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
+                    <AccountAvatar size={24} address={account.address} />
+                    <Text>{account.name}</Text>
                 </View>
 
                 {
-                    name &&
+                    icons.length > 0 && !icons[0].includes('.svg') &&
+                    <View style={styles.alignCenterColumn}>
+
+                        <Image
+                            style={{
+                                width: 100,
+                                height: 100,
+                                resizeMode: 'contain',
+                            }}
+                            source={{
+                                uri: icons[0],
+                            }}
+                        />
+
+                    </View>
+                }
+
+                <Text style={styles.textMedium}>{i18n.t('dapp_proposal_desc', { dappName: name ?? 'Unknown Dapp' })}</Text>
+
+                {
+                    url &&
                     <View>
-                        <Text style={styles.textSmall}>{i18n.t('dapp_name')}</Text>
-                        <Text>{name}</Text>
+                        <Text style={styles.textSmall}>{i18n.t('dapp_URL')}</Text>
+                        <Text>{url}</Text>
                     </View>
                 }
 
@@ -113,24 +129,27 @@ export default () => {
                     </View>
                 }
 
-                {
-                    url &&
-                    <View>
-                        <Text style={styles.textSmall}>{i18n.t('dapp_URL')}</Text>
-                        <Text>{url}</Text>
-                    </View>
-                }
 
                 {
                     methods &&
                     <View>
                         <Text style={styles.textSmall}>{i18n.t('dapp_method')}</Text>
                         {methods.map(method =>
-                            <Text key={method}>{method.replace('koinos_', '')}</Text>
+                            <View key={method}>
+                                {
+                                    checkWCMethod(method) &&
+                                    <Text style={styles.textSuccess}><Feather name="check-circle" size={16} color={Color.success} /> {i18n.t(method.replace('koinos_', ''))}</Text>
+                                }
+
+                                {
+                                    !checkWCMethod(method) &&
+                                    <Text style={styles.textError}><Feather name="x-circle" size={16} color={Color.error} /> {i18n.t(method.replace('koinos_', ''))}</Text>
+                                }
+                            </View>
                         )}
                     </View>
                 }
-            </Wrapper>
+            </ScrollView>
 
             {
                 checkMethods.get() === false &&

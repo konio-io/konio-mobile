@@ -7,8 +7,6 @@ import { I18n } from 'i18n-js';
 import { getLocales } from 'expo-localization';
 import { FALLBACK_LOCALE, FALLBACK_THEME, OS_LOCALE, OS_THEME } from "../lib/Constants";
 import { useEffect } from "react";
-import { utils } from "koilib";
-import { isMainnet } from "../lib/utils";
 
 export const useNetworks = () => {
     return useHookstate(UserStore.networks);
@@ -204,81 +202,4 @@ export const useKapName = (name: string) => {
     address.set(foundAddress);
 
     return address;
-}
-
-export const getContact = (search: string) => {
-    const accounts = UserStore.accounts;
-    const addressbook = UserStore.addressbook;
-    const kap = KapStore;
-
-    const accountByAddress = accounts[search].get();
-    if (accountByAddress) {
-        return {
-            name: accountByAddress.name,
-            address: search,
-            addable: false
-        };
-    }
-
-    const accountByName = Object.keys(accounts.get()).filter(address => accounts[address].name.get() === search);
-    if (accountByName.length > 0) {
-        return {
-            name: search,
-            address: accountByName[0],
-            addable: false
-        };
-    }
-    
-    const contactByAddress = addressbook[search].get();
-    if (contactByAddress) {
-        return {
-            name: contactByAddress.name,
-            address: search,
-            addable: false
-        };
-    }
-
-    const contactByName = Object.keys(addressbook.get()).filter(address => addressbook[address].name.get() === search);
-    if (contactByName.length > 0) {
-        return {
-            name: search,
-            address: contactByName[0],
-            addable: false
-        };
-    }
-
-    if (isMainnet()) {
-        const kapByAddress = kap[search].get();
-        if (kapByAddress) {
-            return {
-                name: kapByAddress,
-                address: search,
-                addable: true
-            }
-        }
-    
-        const kapByName = Object.keys(kap.get()).filter(address => kap[address].get() === search);
-        if (kapByName.length > 0) {
-            return {
-                name: search,
-                address: kapByName[0],
-                addable: true
-            };
-        }
-    }
-
-    try {
-        const check = utils.isChecksumAddress(search);
-        if (check) {
-            return {
-                name: '',
-                address: search,
-                addable: true
-            }
-        }
-    } catch (e) {
-        return null;
-    }
-
-    return null;
 }

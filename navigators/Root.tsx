@@ -10,12 +10,14 @@ import ImportAccount from "../screens/ImportAccount";
 import EditAccount from "../screens/EditAccount";
 import WalletConnect from "./WalletConnect";
 import { RootNavigationProp, RootParamList } from "../types/navigation";
-import { acceptRequest, initWC, logError, showToast } from "../actions";
+import { acceptRequest, initWC, logError, refreshCoinListBalance, refreshMana, refreshWCActiveSessions, showToast } from "../actions";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import WcProposal from "../screens/WcProposal";
 import WcRequest from "../screens/WcRequest";
 import { WC_SECURE_METHODS } from "../lib/Constants";
 import { useHookstate } from "@hookstate/core";
+import NetInfo from '@react-native-community/netinfo';
+import Faq from "../screens/Faq";
 
 const Stack = createStackNavigator<RootParamList>();
 
@@ -29,7 +31,33 @@ export default () => {
   const dateLock = useHookstate(0);
   const autoLock = useAutolock();
   const WC = useWC();
+  const connectionAvailable = useHookstate(true);
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      if (connectionAvailable.get() === false && state.isConnected === true) {
+        showToast({
+          type: 'success',
+          text1: i18n.t('you_online')
+        });
+        refreshCoinListBalance();
+        refreshMana();
+        refreshWCActiveSessions();
+      }
+      else if (state.isConnected !== true) {
+        showToast({
+          type: 'error',
+          text1: i18n.t('you_offline'),
+          text2: i18n.t('check_connection')
+        });
+      }
   
+      connectionAvailable.set(state.isConnected === true ? true : false);
+    });
+
+    return unsubscribe;
+  }, []);
+
   useEffect(() => {
     if (lock.get() === true) {
       dateLock.set(0); //ios
@@ -193,6 +221,13 @@ export default () => {
           title: i18n.t('wc_request'),
           presentation: 'modal',
           headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name="Faq"
+        component={Faq}
+        options={{
+          title: i18n.t('faq')
         }}
       />
     </Stack.Navigator>

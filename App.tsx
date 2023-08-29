@@ -17,6 +17,7 @@ import { userStoreIsLoading, encryptedStoreIsLoading } from './stores';
 export default function App() {
   useFonts({
     'Poppins': require('./assets/Poppins-Regular.otf'),
+    'Poppins_bold': require('./assets/Poppins_bold.otf')
   });
 
   const theme = useTheme();
