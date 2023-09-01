@@ -70,45 +70,47 @@ const DappSession = (props: {
     const account = props.item?.namespaces.koinos?.accounts[0]?.split(':')[2];
 
     return (
-        <Accordion header={(<ItemHeader address={account} name={name} />)}>
-            <View style={{ ...styles.rowGapBase, ...styles.flex1 }}>
-                {
-                    name &&
-                    <View>
-                        <Text style={styles.textSmall}>{i18n.t('dapp_name')}</Text>
-                        <Text>{name}</Text>
-                    </View>
-                }
+        
+            <Accordion header={(<ItemHeader address={account} name={name} />)}>
+                <View style={{ ...styles.rowGapBase, ...styles.flex1, ...styles.paddingBase, paddingTop: 0 }}>
+                    {
+                        name &&
+                        <View>
+                            <Text style={styles.textSmall}>{i18n.t('dapp_name')}</Text>
+                            <Text>{name}</Text>
+                        </View>
+                    }
 
-                {
-                    description &&
-                    <View>
-                        <Text style={styles.textSmall}>{i18n.t('dapp_description')}</Text>
-                        <Text>{description}</Text>
-                    </View>
-                }
+                    {
+                        description &&
+                        <View>
+                            <Text style={styles.textSmall}>{i18n.t('dapp_description')}</Text>
+                            <Text>{description}</Text>
+                        </View>
+                    }
 
-                {
-                    url &&
-                    <View>
-                        <Text style={styles.textSmall}>{i18n.t('dapp_URL')}</Text>
-                        <Text>{url}</Text>
-                    </View>
-                }
+                    {
+                        url &&
+                        <View>
+                            <Text style={styles.textSmall}>{i18n.t('dapp_URL')}</Text>
+                            <Text>{url}</Text>
+                        </View>
+                    }
 
-                <View>
-                    <Text style={styles.textSmall}>{i18n.t('dapp_connection_expiry')}</Text>
-                    <Text>{expiry}</Text>
+                    <View>
+                        <Text style={styles.textSmall}>{i18n.t('dapp_connection_expiry')}</Text>
+                        <Text>{expiry}</Text>
+                    </View>
+
+                    <Button
+                        icon={(<AntDesign name="disconnect" />)}
+                        type="secondary"
+                        title={i18n.t('disconnect')}
+                        onPress={() => props.onPress(props.item.topic)}
+                    />
                 </View>
-
-                <Button
-                    icon={(<AntDesign name="disconnect" />)}
-                    type="secondary"
-                    title={i18n.t('disconnect')}
-                    onPress={() => props.onPress(props.item.topic)}
-                />
-            </View>
-        </Accordion>
+            </Accordion>
+        
     );
 }
 
@@ -121,7 +123,7 @@ const ItemHeader = (props: {
     const styles = theme.styles;
 
     return (
-        <View style={{ ...styles.directionRow, ...styles.alignSpaceBetweenRow, ...styles.alignCenterColumn }}>
+        <View style={{ ...styles.directionRow, ...styles.alignSpaceBetweenRow, ...styles.alignCenterColumn, ...styles.paddingBase }}>
             <View style={{ ...styles.directionRow, ...styles.columnGapBase, ...styles.alignCenterColumn }}>
                 <AccountAvatar address={props.address} size={36} />
                 <Text>{account.name}</Text>

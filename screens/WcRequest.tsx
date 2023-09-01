@@ -271,11 +271,13 @@ const SendTransactionDetail = (props: {
                     contract.decodeOperation(operation)
                         .then(decodedOperation => {
                             const { name, args } = decodedOperation;
-                            operations.merge([{
+                            operations.merge([
+                                {
                                 name,
                                 description: contract.abi?.methods[name].description,
-                                ...args
-                            }]);
+                                args: JSON.stringify(args)
+                                }
+                            ]);
                         })
                         .catch(e => {
                             console.error(e);
@@ -297,11 +299,12 @@ const SendTransactionDetail = (props: {
         <View>
             <Text style={styles.textSmall}>{i18n.t('operations')}</Text>
             {
-                operations.get().map(operation =>
+                operations.get().map((operation,index) =>
 
                     <Accordion
+                        key={index}
                         header={(
-                            <View style={styles.paddingVerticalBase}>
+                            <View style={{...styles.paddingVerticalSmall}}>
                                 <Text>{operation.name}</Text>
                             </View>
                         )}

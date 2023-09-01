@@ -233,5 +233,6 @@
   "you_offline": "Vous êtes hors ligne",
   "check_connection": "Vérifiez votre connexion Internet",
   "you_online": "Vous êtes à nouveau en ligne",
-  "faq":"FAQ"
+  "faq":"FAQ",
+  "autodiscovering_coins": "Découverte automatique de pièces de monnaie"
 }

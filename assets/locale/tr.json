@@ -233,5 +233,6 @@
     "you_offline": "Çevrimdışısınız",
     "check_connection": "İnternet bağlantınızı kontrol edin",
     "you_online": "Yeniden çevrimiçisiniz",
-    "faq":"FAQ"
+    "faq":"FAQ",
+    "autodiscovering_coins": "Otomatik madeni para keşfi"
 }

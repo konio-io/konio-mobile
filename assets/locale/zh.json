@@ -233,5 +233,6 @@
   "you_offline": "您处于离线状态",
   "check_connection": "请检查您的互联网连接",
   "you_online": "您已重新上线",
-  "faq":"FAQ"
+  "faq":"FAQ",
+  "autodiscovering_coins": "自动发现硬币"
 }

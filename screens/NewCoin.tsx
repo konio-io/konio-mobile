@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NewCoinNavigationProp } from '../types/navigation';
 import { addCoin, logError, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
-import { TextInput, Button, Screen, Text, CoinLogo } from '../components';
+import { TextInput, Button, Screen, Text, CoinLogo, ActivityIndicator } from '../components';
 import { useCoins, useCurrentNetworkId, useI18n } from '../hooks';
 import { ScrollView, View } from 'react-native';
 import { UserStore } from '../stores';
@@ -92,12 +92,14 @@ const SuggestList = (props: {
   const i18n = useI18n();
   const theme = useTheme();
   const styles = theme.styles;
+  const searching = useHookstate(false);
 
   if (!currentAddress) {
     return <View></View>
   }
 
   const refreshList = async () => {
+    searching.set(true);
     try {
       const tokenListResponse = await fetch(`${TOKENS_URL}/index.json`);
       const tokenMap: Array<Token> = await tokenListResponse.json();
@@ -108,48 +110,51 @@ const SuggestList = (props: {
       });
 
       for (const token of tokenList) {
-        getCoinBalance({
+        const value = await getCoinBalance({
           address: currentAddress,
           networkId: currentNetworkId,
           contractId: token.address
-        })
-          .then(value => {
-            if (value !== '0') {
-              coinList.merge([{
-                contractId: token.address,
-                symbol: token.symbol
-              }])
-            }
-          })
-          .catch(e => {
-            throw(e);
-          });
+        });
+        if (value !== '0') {
+          coinList.merge([{
+            contractId: token.address,
+            symbol: token.symbol
+          }])
+        }
       }
 
     } catch (e) {
       logError(e);
     }
+    searching.set(false);
   }
 
   useEffect(() => {
     refreshList();
   }, [currentNetworkId, currentAddress]);
 
-  if (coinList.get().length === 0) {
-    return <></>
-  }
-
   const data = coinList.get().slice(0, 5);
 
   return (
     <View>
-      <Text style={styles.sectionTitle}>{i18n.t('auto_discovered')}</Text>
+      {coinList.get().length > 0 &&
+        <View>
+          <Text style={styles.sectionTitle}>{i18n.t('auto_discovered')}</Text>
 
-      <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
-        {data.map(coin =>
-          <ListItem key={coin.contractId} contractId={coin.contractId} symbol={coin.symbol} onPress={(cId: string) => props.onPressCoin(cId)} />
-        )}
-      </View>
+          <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
+            {data.map(coin =>
+              <ListItem key={coin.contractId} contractId={coin.contractId} symbol={coin.symbol} onPress={(cId: string) => props.onPressCoin(cId)} />
+            )}
+          </View>
+        </View>
+      }
+
+      {searching.get() === true &&
+        <View style={styles.alignCenterColumn}>
+          <Text style={styles.sectionTitle}>{i18n.t('autodiscovering_coins')}</Text>
+          <ActivityIndicator></ActivityIndicator>
+        </View>
+      }
     </View>
   );
 }

@@ -232,5 +232,6 @@
     "you_offline":"You are offline",
     "check_connection":"Check your internet connection",
     "you_online":"You are online again",
-    "faq":"FAQ"
+    "faq":"FAQ",
+    "autodiscovering_coins":"Auto discovering coins"
   }

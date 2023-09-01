@@ -229,6 +229,10 @@
   "getBlock": "Ottieni blocco",
   "submitBlock": "Invia blocco",
   "message":"Messaggio",
-  "operations":"Operazioni",
-  "faq":"FAQ"
+  "operations":"Operations",
+  "you_offline":"Sei offline",
+  "check_connection":"Controlla la tua connessione ad internet",
+  "you_online":"Sei dinuovo online",
+  "faq":"FAQ",
+  "autodiscovering_coins": "Scoperta automatica di monete"
 }

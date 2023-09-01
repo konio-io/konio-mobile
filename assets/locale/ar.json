@@ -232,5 +232,6 @@
     "you_offline": "أنت غير متصل",
     "check_connection": "تحقق من اتصالك بالإنترنت",
     "you_online": "أنت متصل مرة أخرى",
-    "faq":"FAQ"
+    "faq":"FAQ",
+    "autodiscovering_coins": "اكتشاف العملات تلقائيًا"
 }

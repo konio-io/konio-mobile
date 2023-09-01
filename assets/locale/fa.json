@@ -233,5 +233,6 @@
   "you_offline": "شما آفلاین هستید",
   "check_connection": "اتصال اینترنت خود را بررسی کنید",
   "you_online": "شما دوباره آنلاین هستید",
-  "faq":"FAQ"
+  "faq":"FAQ",
+  "autodiscovering_coins": "کشف خودکار سکه‌ها"
 }

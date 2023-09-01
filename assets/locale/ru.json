@@ -233,5 +233,6 @@
   "you_offline": "Вы офлайн",
   "check_connection": "Проверьте ваше интернет-соединение",
   "you_online": "Вы снова в сети",
-  "faq":"FAQ"
+  "faq":"FAQ",
+  "autodiscovering_coins": "Автоматическое обнаружение монет"
 }
