@@ -2,7 +2,7 @@ import { Signer, utils } from "koilib";
 import { TransactionJsonWait } from "koilib/lib/interface";
 import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, WCStore, KapStore } from "../stores";
 import { Contact, Coin, Network, Transaction, Account } from "../types/store";
-import { DEFAULT_COINS, TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_WITHDRAW, WC_METHODS, WC_SECURE_METHODS } from "../lib/Constants";
+import { DEFAULT_COINS, TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_WITHDRAW, WC_METHODS } from "../lib/Constants";
 import HDKoinos from "../lib/HDKoinos";
 import Toast from 'react-native-toast-message';
 import { State, none } from "@hookstate/core";

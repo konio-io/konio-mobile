@@ -1,7 +1,7 @@
 import { Contract, utils, Provider, Signer } from "koilib";
 import { UserStore, EncryptedStore, KapStore } from "../stores";
 import { Abi, SendTransactionOptions, TransactionJson, TransactionJsonWait, TransactionReceipt } from "koilib/lib/interface";
-import { DEFAULT_NETWORKS, KAP_NAMESERVICE_CID, KAP_PROFILE_CID } from "./Constants";
+import { DEFAULT_NETWORKS, KAP_NAMESERVICE_CID, KAP_PROFILE_CID, MAINNET } from "./Constants";
 
 export const rgba = (color: string, opacity: number): string => {
     return color.replace('1)', opacity.toString() + ')');
@@ -203,7 +203,7 @@ export const isASCIIString = (str: string) => {
 export const isMainnet = () => {
     const currentNetworkId = UserStore.currentNetworkId.get();
     const currentNetwork = DEFAULT_NETWORKS[currentNetworkId];
-    return currentNetwork.name === "Koinos Mainnet";
+    return currentNetwork.chainId === MAINNET;
 }
 
 export const getSeedAddress = () => {

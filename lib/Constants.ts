@@ -1,5 +1,6 @@
 import { Network } from "../types/store";
 
+export const MAINNET = "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==";
 export const DEFAULT_NETWORK = "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==";
 export const DEFAULT_NETWORKS: Record<string, Network> = {
     "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==": {
