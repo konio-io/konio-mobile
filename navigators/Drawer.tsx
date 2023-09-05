@@ -19,7 +19,6 @@ const Drawer = createDrawerNavigator();
 export default () => {
     return (
         <Drawer.Navigator
-            useLegacyImplementation
             drawerContent={(props) => <DrawerContent {...props} />}
             screenOptions={{
                 headerShown: false
@@ -138,7 +137,7 @@ const DrawerContent = (props: any) => {
                 <Logo width={150} height={34} />
 
                 <View style={styles.authorContainer}>
-                    <Text style={styles.textVersion}>v{Constants.manifest?.version}</Text>
+                    <Text style={styles.textVersion}>v{Constants.expoConfig?.version}</Text>
                     <Link text="https://konio.io" onPress={() => Linking.openURL('https://konio.io')} />
                 </View>
             </View>
