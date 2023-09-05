@@ -1,11 +1,13 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import type { AssetsParamList } from '../types/navigation';
+import type { HoldingsParamList } from '../types/navigation';
 import { useTheme, useI18n } from '../hooks';
-import AssetsCoins from '../screens/AssetsCoins';
 import NewCoin from '../screens/NewCoin';
 import Coin from '../screens/Coin';
+import Assets from '../screens/Assets';
+import NewNft from '../screens/NewNft';
+import Nft from '../screens/Nft';
 
-const Stack = createStackNavigator<AssetsParamList>();
+const Stack = createStackNavigator<HoldingsParamList>();
 
 export default () => {
   const i18n = useI18n();
@@ -27,8 +29,8 @@ export default () => {
         headerTintColor: Color.primary
       }}>
       <Stack.Screen
-        name="AssetsCoins"
-        component={AssetsCoins}
+        name="Assets"
+        component={Assets}
       />
       <Stack.Screen
         name="NewCoin"
@@ -40,6 +42,17 @@ export default () => {
       <Stack.Screen
         name="Coin"
         component={Coin}
+      />
+      <Stack.Screen
+        name="NewNft"
+        component={NewNft}
+        options={{
+          title: i18n.t('add_nft')
+        }}
+      />
+      <Stack.Screen
+        name="Nft"
+        component={Nft}
       />
     </Stack.Navigator>
   );

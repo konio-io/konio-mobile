@@ -1,27 +1,34 @@
 import { SheetProps } from "react-native-actions-sheet";
-import { deleteCoin, showToast } from "../actions";
-import { useCoin, useI18n } from "../hooks";
+import { deleteNft, showToast } from "../actions";
+import { useI18n, useNft } from "../hooks";
 import ActionSheet from "./ActionSheet";
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 import { AssetsNavigationProp } from "../types/navigation";
 import * as Clipboard from 'expo-clipboard';
-import { DEFAULT_COINS } from "../lib/Constants";
 
 export default (props: SheetProps) => {
 
-    const { contractId } = props.payload;
+    const { id } = props.payload;
     const i18n = useI18n();
     const navigation = useNavigation<AssetsNavigationProp>();
-    const coin = useCoin(contractId).get();
+    const nft = useNft(id).get();
 
     const _delete = () => {
         navigation.navigate('Assets');
-        deleteCoin(contractId);
+        deleteNft(id);
     };
 
     const _copyContractId = async () => {
-        await Clipboard.setStringAsync(contractId);
+        await Clipboard.setStringAsync(nft.contractId);
+        showToast({
+            type: 'info',
+            text1: i18n.t('copied_to_clipboard')
+        });
+    }
+
+    const _copyTokenId = async () => {
+        await Clipboard.setStringAsync(nft.contractId);
         showToast({
             type: 'info',
             text1: i18n.t('copied_to_clipboard')
@@ -31,20 +38,22 @@ export default (props: SheetProps) => {
     const data = [
         {
             title: i18n.t('contract_address'),
-            description: coin.contractId,
+            description: nft.contractId,
             icon: <AntDesign name="codesquareo"/>,
             onPress: () => _copyContractId()
-        }
-    ];
-
-    if (!DEFAULT_COINS.includes(coin.symbol)) {
-        data.push({
+        },
+        {
+            title: i18n.t('token_id'),
+            description: nft.tokenId,
+            icon: <AntDesign name="codesquareo"/>,
+            onPress: () => _copyTokenId()
+        },
+        {
             title: i18n.t('delete'),
-            description: '',
             icon: <AntDesign name="delete"/>,
             onPress: async () => _delete()
-        });
-    }
+        },
+    ];
 
     return (
         <ActionSheet sheetId={props.sheetId} data={data}/>

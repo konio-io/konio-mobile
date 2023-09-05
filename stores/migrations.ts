@@ -78,6 +78,15 @@ const migrations : Record<string,Function> = {
     },
     '20230802': () => {
         UserStore.addressbook.set({});
+    },
+    '20230904': () => {
+        UserStore.merge({nfts: {}});
+
+        const accounts = UserStore.accounts.get();
+        
+        for (const address of Object.keys(accounts)) {
+            UserStore.accounts[address].merge({nfts: []});
+        }
     }
 }
 

@@ -71,13 +71,13 @@ export type WcSessionsRouteProp = RouteProp<WalletConnectParamList, 'WcSessions'
 
 /** Account */
 export type AccountParamList = {
-    Assets: NavigatorScreenParams<AssetsParamList>,
+    Holdings: NavigatorScreenParams<HoldingsParamList>,
     Dapps: undefined,
     Withdraw: NavigatorScreenParams<WithdrawParamList>,
     Deposit: undefined,
 }
-export type AssetsNavigationProp = StackNavigationProp<AccountParamList, 'Assets'>;
-export type AssetsRouteProp = RouteProp<AccountParamList, 'Assets'>;
+export type HoldingsNavigationProp = StackNavigationProp<AccountParamList, 'Holdings'>;
+export type HoldingsRouteProp = RouteProp<AccountParamList, 'Holdings'>;
 export type DappsNavigationProp = StackNavigationProp<AccountParamList, 'Dapps'>;
 export type DappsRouteProp = RouteProp<AccountParamList, 'Dapps'>;
 export type WithdrawNavigationProp = StackNavigationProp<AccountParamList, 'Withdraw'>;
@@ -85,21 +85,28 @@ export type WithdrawRouteProp = RouteProp<AccountParamList, 'Withdraw'>;
 export type DepositNavigationProp = StackNavigationProp<AccountParamList, 'Deposit'>;
 export type DepositRouteProp = RouteProp<AccountParamList, 'Deposit'>;
 
-/** Assets */
-export type AssetsParamList = {
-    AssetsCoins: undefined,
+/** Holdings */
+export type HoldingsParamList = {
+    Assets: undefined,
     NewCoin: undefined,
     Coin: {
         contractId: string
-    }
+    },
+    NewNft: undefined,
+    Nft: {
+        id: string
+    },
 }
-export type AssetsCoinsNavigationProp = StackNavigationProp<AssetsParamList, 'AssetsCoins'>;
-export type AssetsCoinsRouteProp = RouteProp<AssetsParamList, 'AssetsCoins'>;
-export type NewCoinNavigationProp = StackNavigationProp<AssetsParamList, 'NewCoin'>;
-export type NewCoinRouteProp = RouteProp<AssetsParamList, 'NewCoin'>;
-export type CoinNavigationProp = StackNavigationProp<AssetsParamList, 'Coin'>;
-export type CoinRouteProp = RouteProp<AssetsParamList, 'Coin'>;
-
+export type AssetsNavigationProp = StackNavigationProp<HoldingsParamList, 'Assets'>;
+export type AssetsRouteProp = RouteProp<HoldingsParamList, 'Assets'>;
+export type NewCoinNavigationProp = StackNavigationProp<HoldingsParamList, 'NewCoin'>;
+export type NewCoinRouteProp = RouteProp<HoldingsParamList, 'NewCoin'>;
+export type CoinNavigationProp = StackNavigationProp<HoldingsParamList, 'Coin'>;
+export type CoinRouteProp = RouteProp<HoldingsParamList, 'Coin'>;
+export type NewNftNavigationProp = StackNavigationProp<HoldingsParamList, 'NewNft'>;
+export type NewNftRouteProp = RouteProp<HoldingsParamList, 'NewNft'>;
+export type NftNavigationProp = StackNavigationProp<HoldingsParamList, 'Nft'>;
+export type NftRouteProp = RouteProp<HoldingsParamList, 'Nft'>;
 
 /** Settings */
 export type SettingsParamList = {
