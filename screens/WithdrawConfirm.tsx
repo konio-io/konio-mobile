@@ -42,11 +42,11 @@ export default () => {
                         index: 1,
                         routes: [
                             {
-                                name: 'Assets',
+                                name: 'Holdings',
                                 state: {
                                     routes: [
                                         {
-                                            name: "AssetsCoins"
+                                            name: "Assets"
                                         },
                                         {
                                             name: "Coin",

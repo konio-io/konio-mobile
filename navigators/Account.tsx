@@ -3,12 +3,13 @@ import React from "react";
 import { View, TouchableOpacity } from "react-native";
 import { useI18n, useTheme } from "../hooks";
 import Unavailable from "../screens/Unavailable";
-import Assets from "./Assets";
+import Assets from "./Holdings";
 import { SheetManager } from "react-native-actions-sheet";
 import { AntDesign } from '@expo/vector-icons';
 import Withdraw from "./Withdraw";
 import Deposit from "../screens/Deposit";
 import Dapps from "../screens/Dapps";
+import Holdings from "./Holdings";
 
 const Tab = createBottomTabNavigator();
 export default () => {
@@ -47,10 +48,10 @@ export default () => {
         }}
       >
         <Tab.Screen
-          name="Assets"
-          component={Assets}
+          name="Holdings"
+          component={Holdings}
           options={{
-            title: i18n.t('assets'),
+            title: i18n.t('holdings'),
             headerShown: false,
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="wallet" size={size} color={color} />

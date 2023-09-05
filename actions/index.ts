@@ -1,12 +1,12 @@
 import { Signer, utils } from "koilib";
 import { TransactionJsonWait } from "koilib/lib/interface";
 import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, WCStore, KapStore } from "../stores";
-import { Contact, Coin, Network, Transaction, Account } from "../types/store";
+import { Contact, Coin, Network, Transaction, Account, NFT } from "../types/store";
 import { DEFAULT_COINS, TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_WITHDRAW, WC_METHODS } from "../lib/Constants";
 import HDKoinos from "../lib/HDKoinos";
 import Toast from 'react-native-toast-message';
 import { State, none } from "@hookstate/core";
-import { getCoinBalance, getContract, getProvider, getSigner, signMessage, prepareTransaction, sendTransaction, signAndSendTransaction, signHash, signTransaction, waitForTransaction, getKapProfileByAddress, getKapAddressByName, isMainnet, getSeedAddress } from "../lib/utils";
+import { getCoinBalance, getContract, getProvider, getSigner, signMessage, prepareTransaction, sendTransaction, signAndSendTransaction, signHash, signTransaction, waitForTransaction, getKapProfileByAddress, getKapAddressByName, isMainnet, getSeedAddress, convertIpfsToHttps } from "../lib/utils";
 import migrations from "../stores/migrations";
 import { SignClientTypes, SessionTypes } from "@walletconnect/types";
 import { getSdkError } from "@walletconnect/utils";
@@ -229,7 +229,8 @@ const addAddress = (address: string, name: string) => {
     const account: Account = {
         name,
         address,
-        coins
+        coins,
+        nfts: []
     };
     accounts.merge({ [account.address]: account });
 }
@@ -719,3 +720,68 @@ export const refreshKap = async (search: string) => {
     }
 }
 
+export const addNft = async (args: {
+    contractId: string,
+    tokenId: string
+}) => {
+    const { contractId, tokenId } = args;
+    const key = `${contractId}/${tokenId}`;
+    
+    const address = UserStore.currentAddress.get();
+    if (!address) {
+        throw new Error('Current address not set');
+    }
+
+    const networkId = UserStore.currentNetworkId.get();
+    const currentNfts = UserStore.accounts[address].nfts;
+    const nfts = UserStore.nfts;
+
+    if (currentNfts.get().includes(key)) {
+        return nfts[key].get();
+    }
+
+    const contract = await getContract({
+        address,
+        networkId,
+        contractId
+    });
+
+    const uriResp = await contract.functions.uri();
+    const url = convertIpfsToHttps(uriResp.result?.value);
+    
+    const dataResponse = await fetch(`${url}/${tokenId}`);
+    if (!dataResponse) {
+        throw new Error(`Unable to retrieve NFT url ${url}/${tokenId}`);
+    }
+
+    const jsonResponse = await dataResponse.json();
+    if (!jsonResponse) {
+        throw new Error(`Unable to decode NFT url ${url}/${tokenId}`);
+    }
+
+    const nft: NFT = {
+        name: jsonResponse.name ?? 'unknown',
+        description: jsonResponse.description ?? 'unknown',
+        image: jsonResponse.image ?? 'unknown',
+        contractId,
+        tokenId,
+        transactions: [],
+        networkId,
+    };
+
+    nfts.merge({ [key]: nft });
+    currentNfts.merge([key]);
+    return nfts[key].get();
+}
+
+export const deleteNft = (id: string) => {
+    const address = UserStore.currentAddress.get();
+    if (!address) {
+        throw new Error('Current address not set');
+    }
+    const nfts = UserStore.accounts[address].nfts;
+    const index = nfts.get().indexOf(id);
+    if (index > -1) {
+        nfts[index].set(none);
+    }
+}

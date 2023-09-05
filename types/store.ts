@@ -12,6 +12,7 @@ export type UserStoreState = {
     currentAddress: string|null,
     accounts: Record<string, Account>,
     coins: Record<string, Coin>,
+    nfts: Record<string, NFT>,
     transactions: Record<string, Transaction>,
     networks: Record<string, Network>,
     locale: string,
@@ -34,13 +35,24 @@ export type AccountSecure = {
 export type Account = {
     name: string,
     address: string,
-    coins: Array<string>
+    coins: Array<string>,
+    nfts: Array<string>
 }
 
 export type Coin = {
     contractId: string,
     symbol: string,
     decimal: number,
+    networkId: string,
+    transactions: Array<string>
+}
+
+export type NFT = {
+    contractId: string,
+    tokenId: string,
+    image: string,
+    name: string,
+    description?: string,
     networkId: string,
     transactions: Array<string>
 }

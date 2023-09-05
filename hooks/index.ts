@@ -203,3 +203,20 @@ export const useKapName = (name: string) => {
 
     return address;
 }
+
+/**
+ * Current account nfts
+ * @returns 
+ */
+export const useNfts = () => {
+    const currentAddress = useHookstate(UserStore.currentAddress);
+    const currentAddressOrNull: State<string> | null = currentAddress.ornull;
+    if (currentAddressOrNull) {
+        return useHookstate(UserStore.accounts[currentAddressOrNull.get()].nfts);
+    }
+    return useHookstate([]);
+}
+
+export const useNft = (id: string) => {
+    return useHookstate(UserStore.nfts[id]);
+}

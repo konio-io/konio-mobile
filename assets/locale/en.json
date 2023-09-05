@@ -233,5 +233,10 @@
     "check_connection":"Check your internet connection",
     "you_online":"You are online again",
     "faq":"FAQ",
-    "autodiscovering_coins":"Auto discovering coins"
+    "autodiscovering_coins":"Auto discovering coins",
+    "add_more_nfts":"Add NFT",
+    "add_nft":"Add NFT",
+    "token_id":"Token ID",
+    "missing_token_id":"Missing Token ID",
+    "unable_to_add_nft":"Unable to add NFT"
   }

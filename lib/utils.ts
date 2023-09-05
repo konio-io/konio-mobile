@@ -237,7 +237,7 @@ export const getContact = (search: string) => {
             addable: false
         };
     }
-    
+
     const contactByAddress = addressbook[search].get();
     if (contactByAddress) {
         return {
@@ -265,7 +265,7 @@ export const getContact = (search: string) => {
                 addable: true
             }
         }
-    
+
         const kapByName = Object.keys(kap.get()).filter(address => kap[address].get() === search);
         if (kapByName.length > 0) {
             return {
@@ -290,4 +290,15 @@ export const getContact = (search: string) => {
     }
 
     return null;
+}
+
+
+export const convertIpfsToHttps = (ipfsLink: string) => {
+    if (ipfsLink.startsWith("ipfs://")) {
+        const ipfsHash = ipfsLink.slice(7);
+        const httpsLink = `https://ipfs.io/ipfs/${ipfsHash}`;
+        return httpsLink;
+    } else {
+        return ipfsLink;
+    }
 }
