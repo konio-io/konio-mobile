@@ -75,19 +75,21 @@ export default () => {
                     secureTextEntry={true}
                 />
 
-                <View style={{...styles.directionRow, ...styles.columnGapBase}}>
-                    <View style={{flexGrow: 1}}>
-                        <Text>{i18n.t('biometric_unlock')}</Text>
-                        <Text style={styles.textSmall}>{i18n.t('enable_biometric_unlock')}</Text>
-                    </View>
-                    
-                    {biometricSupport.get() === true && fingerprint.get() === true &&
+                {biometricSupport.get() === true && fingerprint.get() === true &&
+                    <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
+                        <View style={{ flexGrow: 1 }}>
+                            <Text>{i18n.t('biometric_unlock')}</Text>
+                            <Text style={styles.textSmall}>{i18n.t('enable_biometric_unlock')}</Text>
+                        </View>
+
+
                         <Switch
                             onValueChange={() => setBiometric(!biometric.get())}
                             value={biometric.get()}
                         />
-                    }
-                </View>
+
+                    </View>
+                }
             </Wrapper>
 
             <View style={styles.paddingBase}>
