@@ -19,3 +19,7 @@ npx expo start --dev-client --clear
 ```
 eas build -p android --profile localPreview --local
 ```
+
+# expo49 update
+https://github.com/facebook/metro/issues/1064
+https://github.com/margelo/react-native-quick-crypto/issues/186
