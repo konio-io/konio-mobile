@@ -76,7 +76,7 @@ export const refreshCoinBalance = (contractId: string) => {
 
     const networkId = UserStore.currentNetworkId.get();
 
-    getCoinBalance({
+    return getCoinBalance({
         address,
         networkId,
         contractId

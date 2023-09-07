@@ -21,17 +21,14 @@ export default (props: {
             return false;
         });
 
-    const loadCoinList = () => {
+    const loadCoinList = async () => {
         refreshing.set(true);
+        await refreshMana();
+        await refreshCoinListBalance();
         refreshing.set(false);
     };
 
-    useEffect(() => {
-        refreshMana();
-        refreshCoinListBalance();
-    }, [refreshing]); //ToDo: move this autoside?
-
-    if (refreshing.get()) {
+    if (refreshing.get() === true) {
         return <ActivityIndicator />;
     }
 
