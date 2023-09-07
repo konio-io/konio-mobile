@@ -1,5 +1,5 @@
 import { View, TouchableHighlight, StyleSheet } from 'react-native';
-import { useTheme, useI18n, useNetwork, useCurrentNetworkId } from '../hooks';
+import { useTheme, useI18n } from '../hooks';
 import { useHookstate } from '@hookstate/core';
 import { ManaStore } from '../stores';
 import { useEffect, useRef } from 'react';
@@ -55,9 +55,6 @@ export default () => {
 
     const theme = useTheme();
     const styles = createStyles(theme);
-    const width = currentPercent.get().toString() + '%';
-    const currentNetworkId = useCurrentNetworkId();
-    const network = useNetwork(currentNetworkId.get());
 
     return (
         <View>
