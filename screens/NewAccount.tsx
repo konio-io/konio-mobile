@@ -1,7 +1,7 @@
 import { useHookstate } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import type { NewWalletSeedNavigationProp } from '../types/navigation';
-import { setCurrentAccount, addAccount, showToast, logError } from '../actions';
+import { setCurrentAccount, addAccount, showToast, logError, refreshCoins } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { Button, TextInput, Screen } from '../components';
 import { useI18n, useTheme } from '../hooks';

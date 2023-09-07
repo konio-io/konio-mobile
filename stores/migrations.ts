@@ -79,7 +79,7 @@ const migrations : Record<string,Function> = {
     '20230802': () => {
         UserStore.addressbook.set({});
     },
-    '20230904': () => {
+    /*'20230904': () => {
         UserStore.merge({nfts: {}});
 
         const accounts = UserStore.accounts.get();
@@ -87,6 +87,54 @@ const migrations : Record<string,Function> = {
         for (const address of Object.keys(accounts)) {
             UserStore.accounts[address].merge({nfts: []});
         }
+    },*/
+    '20230905': () => {
+
+        for (const accountId in UserStore.accounts) {
+            const account = UserStore.accounts[accountId];
+            const accountAssets = {};
+            
+            for (const contractId of account.coins.get()) {
+                const coin = UserStore.coins[contractId].get();
+                if (!coin) {
+                    continue;
+                }
+
+                if (!accountAssets[coin.networkId]) {
+                    accountAssets[coin.networkId] = {
+                        coins: {},
+                        nfts: {}
+                    };
+                }
+
+                accountAssets[coin.networkId].coins[contractId] = {
+                    contractId: contractId,
+                    symbol: coin.symbol,
+                    decimal: coin.decimal,
+                    transactions: {}
+                }
+
+                for (const transactionId of coin.transactions) {
+                    const transaction = UserStore.transactions[transactionId].get();
+                    if (!transaction) {
+                        continue;
+                    }
+
+                    accountAssets[coin.networkId].coins[contractId].transactions[transactionId] = transaction;
+                }
+
+            }
+
+            account.merge({ assets: accountAssets });
+            account.coins.set(none);
+            account.nfts.set(none);
+        }
+
+        UserStore.coins.set(none);
+        UserStore.transactions.set(none);
+    },
+    '20230906': () => {
+        UserStore.networks.set({ ...DEFAULT_NETWORKS });
     }
 }
 

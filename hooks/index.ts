@@ -1,5 +1,5 @@
 import { State, useHookstate } from "@hookstate/core";
-import { CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, WCStore, KapStore } from "../stores";
+import { UserStore, EncryptedStore, LockStore, WCStore, KapStore } from "../stores";
 import { getTheme } from "../themes";
 import { AppState, useColorScheme } from 'react-native';
 import Locales from "../lib/Locales";
@@ -33,15 +33,14 @@ export const useAccount = (address: string) => {
 }
 
 export const useCoin = (contractId: string) => {
-    return useHookstate(UserStore.coins[contractId]);
-}
+    const currentAddress = useHookstate(UserStore.currentAddress);
+    const currentAddressOrNull: State<string> | null = currentAddress.ornull;
+    if (!currentAddressOrNull) {
+        return useHookstate(null);
+    }
 
-export const useCoinBalance = (contractId: string) => {
-    return useHookstate(CoinBalanceStore[contractId]);
-}
-
-export const useCoinValue = (contractId: string) => {
-    return useHookstate(CoinValueStore[contractId]);
+    const currentNetworkId = useHookstate(UserStore.currentNetworkId);
+    return useHookstate(UserStore.accounts[currentAddressOrNull.get()].assets[currentNetworkId.get()].coins[contractId]);
 }
 
 /**
@@ -52,7 +51,8 @@ export const useCoins = () => {
     const currentAddress = useHookstate(UserStore.currentAddress);
     const currentAddressOrNull: State<string> | null = currentAddress.ornull;
     if (currentAddressOrNull) {
-        return useHookstate(UserStore.accounts[currentAddressOrNull.get()].coins);
+        const currentNetworkId = useHookstate(UserStore.currentNetworkId);
+        return useHookstate(UserStore.accounts[currentAddressOrNull.get()].assets[currentNetworkId.get()].coins);
     }
     return useHookstate([]);
 }
@@ -63,29 +63,43 @@ export const useCoins = () => {
  * @param contractId 
  * @returns 
  */
-export const useCoinTransactions = (contractId: string) => {
+export const useTransactions = (contractId: string) => {
     const currentAddress = useHookstate(UserStore.currentAddress);
-    const coinTransactions = useHookstate(UserStore.coins[contractId].transactions);
-    const transactions = useHookstate(UserStore.transactions);
+    if (!currentAddress.ornull) {
+        return useHookstate({});
+    }
 
-    const result = coinTransactions
-        .get()
-        .map(transactionId => transactions[transactionId].get())
-        .filter(transaction => transaction.from === currentAddress.get());
+    const currentNetworkId = useHookstate(UserStore.currentNetworkId);
+    const coin = UserStore.accounts
+        .nested(currentAddress.ornull.get())
+        .assets
+        .nested(currentNetworkId.get())
+        .coins
+        .nested(contractId);
 
-    return useHookstate(result);
+    return useHookstate(coin.transactions);
 }
 
-export const useTransaction = (transactionId: string) => {
-    return useHookstate(UserStore.transactions[transactionId]);
+export const useTransaction = (args: {contractId: string, transactionId: string}) => {
+    const currentAddress = useHookstate(UserStore.currentAddress);
+    if (!currentAddress.ornull) {
+        return useHookstate(null);
+    }
+
+    const currentNetworkId = useHookstate(UserStore.currentNetworkId);
+    const transactions = UserStore.accounts
+        .nested(currentAddress.ornull.get())
+        .assets
+        .nested(currentNetworkId.get())
+        .coins
+        .nested(args.contractId)
+        .transactions;
+
+    return useHookstate(transactions[args.transactionId]);
 }
 
 export const usePassword = () => {
     return useHookstate(EncryptedStore.password);
-}
-
-export const useTransactions = () => {
-    return useHookstate(UserStore.transactions);
 }
 
 export const useAddressbook = () => {
@@ -134,7 +148,7 @@ export const useBiometric = () => {
 
 export const useCurrentKoin = () => {
     const currentNetwork = useHookstate(UserStore.currentNetworkId);
-    return UserStore.networks[currentNetwork.get()].coins.KOIN.contractId;
+    return UserStore.networks[currentNetwork.get()].koinContractId;
 }
 
 export const useAutolock = () => {
@@ -178,7 +192,7 @@ export const useLock = () => {
 
 export const useKapAddress = (address: string) => {
     const store = useHookstate(KapStore);
-    const name = useHookstate<string|null>(null);
+    const name = useHookstate<string | null>(null);
     if (store[address].ornull) {
         name.set(`${store[address].get()}`);
     } else {
@@ -219,4 +233,32 @@ export const useNfts = () => {
 
 export const useNft = (id: string) => {
     return useHookstate(UserStore.nfts[id]);
+}
+
+export const useAccountValue = () => {
+    const currentAddress = useHookstate(UserStore.currentAddress);
+    const currentAddressOrNull: State<string> | null = currentAddress.ornull;
+    if (!currentAddressOrNull) {
+        return useHookstate(0);
+    }
+
+    const currentNetworkId = useHookstate(UserStore.currentNetworkId);
+    const coins = useHookstate(UserStore.accounts[currentAddressOrNull.get()].assets[currentNetworkId.get()].coins);
+    const total = useHookstate(0);
+
+    useEffect(() => {
+        total.set(0);
+        if (coins.get()) {
+            for (const contractId in coins) {
+                const balance = coins[contractId].balance.get();
+                const price = coins[contractId].price.get();
+    
+                if (balance && price) {
+                    total.set(total.get() + balance * price);
+                }
+            }
+        }
+    }, [currentAddress, currentNetworkId, coins]);
+
+    return total;
 }

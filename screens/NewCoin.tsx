@@ -6,9 +6,8 @@ import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen, Text, CoinLogo, ActivityIndicator } from '../components';
 import { useCoins, useCurrentNetworkId, useI18n } from '../hooks';
 import { ScrollView, View } from 'react-native';
-import { UserStore } from '../stores';
 import { useTheme, useCurrentAddress } from '../hooks';
-import { DEFAULT_COINS, TOKENS_URL } from '../lib/Constants';
+import { TOKENS_URL } from '../lib/Constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getCoinBalance } from '../lib/utils';
 import { useEffect } from 'react';
@@ -57,7 +56,6 @@ export default () => {
 
       <ScrollView contentContainerStyle={styles.paddingBase}>
         <SuggestList onPressCoin={(cId: string) => contractId.set(cId)} />
-        <RecentList onPressCoin={(cId: string) => contractId.set(cId)} />
       </ScrollView>
 
       <View style={styles.paddingBase}>
@@ -105,7 +103,7 @@ const SuggestList = (props: {
       const tokenMap: Array<Token> = await tokenListResponse.json();
       const tokenList = Object.values(tokenMap).filter(token => {
         return token.chainId === currentNetworkId
-          && !currentCoins.includes(token.address)
+          && !Object.keys(currentCoins).includes(token.address)
           && token.symbol !== "MANA";
       });
 
@@ -155,36 +153,6 @@ const SuggestList = (props: {
           <ActivityIndicator></ActivityIndicator>
         </View>
       }
-    </View>
-  );
-}
-
-const RecentList = (props: {
-  onPressCoin: Function
-}) => {
-  const currentNetworkId = useCurrentNetworkId()
-  const coins = useHookstate(UserStore.coins);
-  const theme = useTheme();
-  const styles = theme.styles;
-  const i18n = useI18n();
-
-  const data = Object.values(coins.get())
-    .filter(coin => coin.networkId === currentNetworkId.get() && !DEFAULT_COINS.includes(coin.symbol))
-    .slice(0, 5);
-
-  if (data.length === 0) {
-    return <></>
-  }
-
-  return (
-    <View>
-      <Text style={styles.sectionTitle}>{i18n.t('recents')}</Text>
-
-      <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
-        {data.map(coin =>
-          <ListItem key={coin.contractId} contractId={coin.contractId} symbol={coin.symbol} onPress={(cId: string) => props.onPressCoin(cId)} />
-        )}
-      </View>
     </View>
   );
 }

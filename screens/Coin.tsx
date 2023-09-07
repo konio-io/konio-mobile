@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { CoinRouteProp, AssetsNavigationProp } from '../types/navigation';
 import { Button, TransactionList, Screen, MoreVertical, Text, CoinLogo } from '../components';
-import { useCoin, useCoinBalance, useCoinValue, useI18n, useTheme } from '../hooks';
+import { useCoin, useI18n, useTheme } from '../hooks';
 import { Feather } from '@expo/vector-icons';
 import { useEffect } from 'react';
 import { SheetManager } from "react-native-actions-sheet";
@@ -10,17 +10,19 @@ import { SheetManager } from "react-native-actions-sheet";
 export default () => {
     const navigation = useNavigation<AssetsNavigationProp>();
     const route = useRoute<CoinRouteProp>();
-    const accountCoin = useCoin(route.params.contractId);
-    const coin = accountCoin.get();
+    const coin = useCoin(route.params.contractId);
+
+    if (!coin.ornull) {
+        return <></>;
+    }
+
     const theme = useTheme();
     const styles = theme.styles;
-    const coinBalance = useCoinBalance(route.params.contractId);
-    const coinValue = useCoinValue(route.params.contractId);
     const i18n = useI18n();
 
     useEffect(() => {
         navigation.setOptions({
-            title: coin.symbol,
+            title: coin.symbol.get(),
             headerRight: () => {
                 return (
                     <MoreVertical onPress={() => {
@@ -29,7 +31,7 @@ export default () => {
                 )
             }
         });
-    }, [accountCoin, navigation]);
+    }, [coin, navigation]);
 
     return (
         <Screen>
@@ -37,10 +39,18 @@ export default () => {
 
                 <View style={{ ...styles.directionRow, ...styles.alignSpaceBetweenRow, ...styles.alignCenterColumn }}>
                     <View>
-                        <View>
-                            <Text style={styles.textXlarge}>${coinValue.get() && coinValue.get().toFixed(2)}</Text>
-                            <Text style={styles.textMedium}>{coinBalance.get()} {accountCoin.symbol.get()}</Text>
-                        </View>
+                        {
+                            coin.balance.ornull && coin.balance.ornull.get() >= 0 &&
+                            <View>
+                                {coin.price.ornull &&
+                                    <Text style={styles.textXlarge}>
+                                        {(coin.balance.ornull.get() * coin.price.ornull.get()).toFixed(2)} USD
+                                    </Text>
+                                }
+
+                                <Text style={styles.textMedium}>{coin.balance.get()} {coin.symbol.get()}</Text>
+                            </View>
+                        }
                     </View>
 
                     <View style={{ ...styles.alignCenterColumn, ...styles.rowGapSmall }}>
@@ -48,7 +58,7 @@ export default () => {
                     </View>
                 </View>
 
-                {accountCoin.symbol.get() !== 'VHP' &&
+                {coin.symbol.get() !== 'VHP' &&
                     <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
                         <Button
                             style={{ flex: 1 }}
@@ -74,6 +84,7 @@ export default () => {
                 }
             </View>
 
+
             {
                 coin.transactions.length > 0 &&
                 <View style={{ ...styles.paddingBase }}>
@@ -82,6 +93,7 @@ export default () => {
             }
 
             <TransactionList contractId={route.params.contractId} />
+
         </Screen>
     );
 }

@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { State, useHookstate } from '@hookstate/core';
 import { Text, Button, Wrapper, Screen, Seed } from '../components';
-import { addSeed, setCurrentAccount, showToast } from '../actions';
+import { addSeed, logError, refreshCoins, setCurrentAccount, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
 import { NewWalletSeedConfirmRouteProp } from '../types/navigation';
@@ -49,6 +49,7 @@ export default () => {
                 setCurrentAccount(address);
             })
             .catch(e => {
+                logError(e);
                 showToast({
                     type: 'error',
                     text1: i18n.t('unable_to_add_wallet'),

@@ -14,17 +14,9 @@ export default () => {
     return <Loading />
   }
 
-  const theme = useTheme();
-  const styles = theme.styles;
-
   return (
     <Screen>
-      <View style={{ ...styles.rowGapBase }}>
-        <ManaBar />
-      </View>
-
       <CoinList renderItem={(contractId: string) => <TouchableCoinListItem contractId={contractId} />} />
-
       <Footer />
     </Screen>
   );
@@ -36,15 +28,12 @@ const TouchableCoinListItem = (props: {
   const navigation = useNavigation<AssetsNavigationProp>();
   const theme = useTheme();
   const styles = theme.styles;
-  const currentKoin = useCurrentKoin();
 
   return (
     <TouchableHighlight
       onPress={() => navigation.navigate('Coin', { contractId: props.contractId })}
       onLongPress={() => {
-        if (props.contractId !== currentKoin.get()) {
-          SheetManager.show('coin', { payload: { contractId: props.contractId } });
-        }
+        SheetManager.show('coin', { payload: { contractId: props.contractId } });
       }}
     >
       <View style={styles.listItemContainer}>

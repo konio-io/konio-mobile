@@ -18,6 +18,9 @@ export const getStyles = (themeVars : ThemeVars) => {
         textCenter: {
             textAlign: 'center'
         },
+        textRight: {
+            textAlign: 'right'
+        },
         text: {
             color: Color.baseContrast,
             fontFamily: FontFamily.sans,

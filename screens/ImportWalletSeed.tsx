@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { useHookstate } from '@hookstate/core';
 import { Button, TextInput, Wrapper, Screen, TextInputActionPaste } from '../components';
-import { addSeed, setCurrentAccount } from '../actions';
+import { addSeed, logError, refreshCoins, setCurrentAccount } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n } from '../hooks';
 import { showToast } from '../actions';
@@ -30,6 +30,7 @@ export default () => {
         setCurrentAccount(address);
       })
       .catch(e => {
+        logError(e);
         showToast({
           type: 'error',
           text1: i18n.t('unable_to_import_seed'),

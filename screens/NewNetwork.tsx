@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NewNetworkNavigationProp } from '../types/navigation';
 import { addNetwork, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
-import { TextInput, Button, Screen, Text, Wrapper } from '../components';
+import { TextInput, Button, Screen } from '../components';
 import { useI18n } from '../hooks';
 import { View, Alert } from 'react-native';
 import { UserStore } from '../stores';
@@ -22,9 +22,7 @@ export default () => {
   const name = useHookstate('');
   const rpcNode = useHookstate('');
   const explorer = useHookstate('');
-  const KOIN = useHookstate('');
-  const MANA = useHookstate('');
-  const VHP = useHookstate('');
+  const koinContractId = useHookstate('');
 
   const showAlert = () => {
     return Alert.alert(
@@ -71,11 +69,7 @@ export default () => {
       name: name.get(),
       chainId: chainId,
       rpcNodes: [rpcNode.get()],
-      coins: {
-        KOIN: { ...DEFAULT_NETWORK.coins.KOIN, contractId: KOIN.get() },
-        MANA: { ...DEFAULT_NETWORK.coins.MANA, contractId: MANA.get() },
-        VHP: { ...DEFAULT_NETWORK.coins.VHP, contractId: VHP.get() }
-      },
+      koinContractId: koinContractId.get(),
       explorer: explorer.get()
     };
 
@@ -87,9 +81,7 @@ export default () => {
     name.set(DEFAULT_NETWORK.name);
     rpcNode.set(DEFAULT_NETWORK.rpcNodes[0]);
     explorer.set(DEFAULT_NETWORK.explorer);
-    KOIN.set(DEFAULT_NETWORK.coins.KOIN.contractId);
-    MANA.set(DEFAULT_NETWORK.coins.MANA.contractId);
-    VHP.set(DEFAULT_NETWORK.coins.VHP.contractId);
+    koinContractId.set(DEFAULT_NETWORK.koinContractId);
   };
 
   return (
@@ -120,24 +112,10 @@ export default () => {
             />
 
             <TextInput
-              value={KOIN.get()}
-              onChangeText={(v: string) => KOIN.set(v)}
+              value={koinContractId.get()}
+              onChangeText={(v: string) => koinContractId.set(v)}
               placeholder={'KOIN contract ID'}
-              note={`Ex: ${DEFAULT_NETWORK.coins.KOIN.contractId}`}
-            />
-
-            <TextInput
-              value={MANA.get()}
-              onChangeText={(v: string) => MANA.set(v)}
-              placeholder={'MANA contract ID'}
-              note={`Ex: ${DEFAULT_NETWORK.coins.MANA.contractId}`}
-            />
-
-            <TextInput
-              value={VHP.get()}
-              onChangeText={(v: string) => VHP.set(v)}
-              placeholder={'VHP contract ID'}
-              note={`Ex: ${DEFAULT_NETWORK.coins.VHP.contractId}`}
+              note={`Ex: ${DEFAULT_NETWORK.koinContractId}`}
             />
 
         </ScrollView>

@@ -15,11 +15,15 @@ export default () => {
     const to = route.params.to;
     const amount = route.params.amount;
     const contractId = route.params.contractId;
-    const note = useHookstate('');
 
+    const coin = useCoin(contractId);
+    if (!coin.ornull) {
+        return <></>;
+    }
+
+    const note = useHookstate('');
     const toAccount = useAccount(to).get();
     const toContact = useContact(to).get();
-    const coin = useCoin(contractId).get();
     const theme = useTheme();
     const i18n = useI18n();
 
@@ -66,7 +70,10 @@ export default () => {
                     text1: i18n.t('transaction_committed'),
                 });
 
-                confirmTransaction(transaction).then(tsx => {
+                confirmTransaction({
+                    contractId,
+                    transaction
+                }).then(tsx => {
                     showToast({
                         type: 'success',
                         text1: i18n.t('transaction_confirmed'),
@@ -111,7 +118,7 @@ export default () => {
 
                 <View>
                     <Text style={styles.textSmall}>{i18n.t('amount')}</Text>
-                    <Text>{amount} {coin.symbol}</Text>
+                    <Text>{amount} {coin.symbol.get()}</Text>
                 </View>
 
                 <TextInput

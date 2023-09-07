@@ -10,7 +10,7 @@ import ImportAccount from "../screens/ImportAccount";
 import EditAccount from "../screens/EditAccount";
 import WalletConnect from "./WalletConnect";
 import { RootNavigationProp, RootParamList } from "../types/navigation";
-import { acceptRequest, initWC, logError, refreshCoinListBalance, refreshMana, refreshWCActiveSessions, showToast } from "../actions";
+import { acceptRequest, initWC, logError, refreshCoins, refreshMana, refreshWCActiveSessions, showToast } from "../actions";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import WcProposal from "../screens/WcProposal";
 import WcRequest from "../screens/WcRequest";
@@ -40,8 +40,6 @@ export default () => {
           type: 'success',
           text1: i18n.t('you_online')
         });
-        refreshCoinListBalance();
-        refreshMana();
         refreshWCActiveSessions();
       }
       else if (state.isConnected !== true) {

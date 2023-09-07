@@ -10,6 +10,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { UserStore } from '../stores';
 
 export default () => {
+  return <></>;
   const currentAddress = useCurrentAddress();
   const currentAddressOrNull: State<string> | null = currentAddress.ornull;
   if (!currentAddressOrNull) {

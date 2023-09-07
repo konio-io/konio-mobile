@@ -11,29 +11,7 @@ export const DEFAULT_NETWORKS: Record<string, Network> = {
             "https://api.koinosblocks.com"
         ],
         explorer: "https://koiner.app/transactions",
-        coins: {
-            KOIN: {
-                contractId: "15DJN4a8SgrbGhhGksSBASiSYjGnMU8dGL",
-                symbol: "KOIN",
-                decimal: 8,
-                networkId: "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==",
-                transactions: []
-            },
-            VHP: {
-                contractId: "18tWNU7E4yuQzz7hMVpceb9ixmaWLVyQsr",
-                symbol: "VHP",
-                decimal: 8,
-                networkId: "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==",
-                transactions: []
-            },
-            MANA: {
-                contractId: "1HGN9h47CzoFwU2bQZwe6BYoX4TM6pXc4b",
-                symbol: "MANA",
-                decimal: 8,
-                networkId: "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==",
-                transactions: []
-            }
-        }
+        koinContractId: "15DJN4a8SgrbGhhGksSBASiSYjGnMU8dGL"
     },
     "EiBncD4pKRIQWco_WRqo5Q-xnXR7JuO3PtZv983mKdKHSQ==": {
         name: "Harbinger (testnet)",
@@ -43,33 +21,9 @@ export const DEFAULT_NETWORKS: Record<string, Network> = {
             "https://testnet.koinosblocks.com",
         ],
         explorer: "https://koiner.app/transactions",
-        coins: {
-            KOIN: {
-                contractId: "1FaSvLjQJsCJKq5ybmGsMMQs8RQYyVv8ju",
-                symbol: "KOIN",
-                decimal: 8,
-                networkId: "EiBncD4pKRIQWco_WRqo5Q-xnXR7JuO3PtZv983mKdKHSQ==",
-                transactions: []
-            },
-            VHP: {
-                contractId: "17n12ktwN79sR6ia9DDgCfmw77EgpbTyBi",
-                symbol: "VHP",
-                decimal: 8,
-                networkId: "EiBncD4pKRIQWco_WRqo5Q-xnXR7JuO3PtZv983mKdKHSQ==",
-                transactions: []
-            },
-            MANA: {
-                contractId: "16X6cKyqiT8EzPEksRJxXcqMnHMMm9Vxct",
-                symbol: "MANA",
-                decimal: 8,
-                networkId: "EiBncD4pKRIQWco_WRqo5Q-xnXR7JuO3PtZv983mKdKHSQ==",
-                transactions: []
-            }
-        }
+        koinContractId: "1FaSvLjQJsCJKq5ybmGsMMQs8RQYyVv8ju"
     }
 }
-
-export const DEFAULT_COINS = ['KOIN','VHP'];
 
 export const TRANSACTION_TYPE_WITHDRAW = 'WITHDRAW';
 export const TRANSACTION_TYPE_DEPOSIT = 'DEPOSIT';

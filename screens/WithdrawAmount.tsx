@@ -1,7 +1,7 @@
 import { Button, Screen, Selector, CoinListItem, Text, TextInput } from "../components"
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { WithdrawAmountNavigationProp, WithdrawAmountRouteProp } from "../types/navigation";
-import { useCoinBalance, useTheme, useI18n, useCurrentKoin, useCoinValue } from "../hooks";
+import { useTheme, useI18n, useCurrentKoin, useCoin } from "../hooks";
 import { useHookstate } from "@hookstate/core";
 import { View, StyleSheet } from "react-native";
 import { Feather } from '@expo/vector-icons';
@@ -15,8 +15,14 @@ export default () => {
     const i18n = useI18n();
     const currentKoin = useCurrentKoin();
     const contractId = useHookstate(currentKoin.get());
-    const balance = useCoinBalance(contractId.get());
-    const value = useCoinValue(contractId.get());
+    const coin = useCoin(contractId.get());
+
+    if (!coin.ornull) {
+        return <></>;
+    }
+
+    const balance = coin.balance.get() ?? 0;
+    const value = coin.price.get() ?? 0;
 
     const amount = useHookstate('');
     const amountUsd = useHookstate('');
@@ -32,7 +38,7 @@ export default () => {
 
     useEffect(() => {
         if (amount.get()) {
-            const v = (value.get() * parseFloat(amount.get())) / parseFloat(balance.get());
+            const v = (value * parseFloat(amount.get())) / balance;
             if (!isNaN(v)) {
                 amountUsd.set(v.toString());
             }
@@ -42,8 +48,8 @@ export default () => {
     }, [amount]);
 
     const setAmauntPerc = (percent: number) => {
-        if (balance.get()) {
-            const percAmount = (parseFloat(balance.get()) * percent) / 100;
+        if (balance) {
+            const percAmount = (balance * percent) / 100;
             amount.set(percAmount.toString());
         }
     };
@@ -57,7 +63,7 @@ export default () => {
             return;
         }
 
-        if (parseFloat(amount.get()) > parseFloat(balance.get())) {
+        if (parseFloat(amount.get()) > balance) {
             return;
         }
 
@@ -68,7 +74,7 @@ export default () => {
         });
     };
 
-    const isOutAmount = parseFloat(amount.get()) > parseFloat(balance.get());
+    const isOutAmount = parseFloat(amount.get()) > balance;
     const amountStyle = isOutAmount ?
         { ...styles.amount, color: Color.error } :
         styles.amount;

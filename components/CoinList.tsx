@@ -1,40 +1,27 @@
 import { FlatList, RefreshControl } from 'react-native';
-import { useEffect } from 'react';
 import { useHookstate } from '@hookstate/core';
-import { useCoins, useCurrentNetworkId } from '../hooks';
-import { refreshCoinListBalance, refreshMana } from '../actions';
-import { UserStore } from '../stores';
-import ActivityIndicator from './ActivityIndicator';
+import { useCoins } from '../hooks';
+import { refreshCoins } from '../actions';
 
 export default (props: {
     renderItem: Function
 }) => {
     const refreshing = useHookstate(false);
-    const currentNetworkId = useCurrentNetworkId();
-    const accountCoins = useCoins();
-    const coins = accountCoins.get()
-        .filter((contractId: string) => {
-            const coin = UserStore.coins[contractId];
-            if (coin) {
-                return coin.networkId.get() === currentNetworkId.get();
-            }
-            return false;
-        });
+    const coins = useCoins();
+
+    if (!coins.ornull) {
+        return <></>;
+    }
 
     const loadCoinList = async () => {
         refreshing.set(true);
-        await refreshMana();
-        await refreshCoinListBalance();
+        await refreshCoins({balance: true, price: true});
         refreshing.set(false);
     };
 
-    if (refreshing.get() === true) {
-        return <ActivityIndicator />;
-    }
-
     return (
         <FlatList
-            data={coins}
+            data={Object.keys(coins.get())}
             renderItem={({ item }) => props.renderItem(item)}
             refreshControl={
                 <RefreshControl refreshing={refreshing.get()} onRefresh={loadCoinList} />

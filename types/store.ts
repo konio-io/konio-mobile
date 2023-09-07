@@ -11,9 +11,9 @@ export type UserStoreState = {
     currentNetworkId: string,
     currentAddress: string|null,
     accounts: Record<string, Account>,
-    coins: Record<string, Coin>,
-    nfts: Record<string, NFT>,
-    transactions: Record<string, Transaction>,
+    //coins: Record<string, Coin>,
+    //nfts: Record<string, NFT>,
+    //transactions: Record<string, Transaction>,
     networks: Record<string, Network>,
     locale: string,
     theme: string,
@@ -35,16 +35,23 @@ export type AccountSecure = {
 export type Account = {
     name: string,
     address: string,
-    coins: Array<string>,
-    nfts: Array<string>
+    assets: Record<string,Assets>
+}
+
+export type Assets = {
+    coins: Record<string, Coin>,
+    nfts: Record<string, NFT>
 }
 
 export type Coin = {
     contractId: string,
     symbol: string,
     decimal: number,
-    networkId: string,
-    transactions: Array<string>
+    name?: string,
+    balance?: number,
+    price?: number,
+    logo?: string,
+    transactions: Record<string, Transaction>,
 }
 
 export type NFT = {
@@ -53,8 +60,7 @@ export type NFT = {
     image: string,
     name: string,
     description?: string,
-    networkId: string,
-    transactions: Array<string>
+    transactions: Record<string, Transaction>,
 }
 
 export type Network = {
@@ -62,12 +68,7 @@ export type Network = {
     chainId: string,
     rpcNodes: Array<string>,
     explorer: string,
-    coins: {
-        KOIN: Coin,
-        VHP: Coin,
-        MANA: Coin,
-        KAP?: Coin
-    }
+    koinContractId: string
 }
 
 export type Transaction = {
@@ -77,7 +78,6 @@ export type Transaction = {
     to: string,
     value: string,
     timestamp: string,
-    type: "WITHDRAW"|"DEPOSIT"|"SWAP",
     blockNumber? : number
     status: "PENDING"|"SUCCESS"|"ERROR",
     note?: string

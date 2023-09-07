@@ -1,14 +1,15 @@
 import { TouchableHighlight, View } from 'react-native';
 import { State, useHookstate } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
-import { useCurrentAddress, useTheme, useI18n, useCurrentKoin, useCoinValue, useAccount } from '../hooks';
-import { Screen, DrawerToggler, MoreVertical, Text, Address, Button } from '../components';
+import { useCurrentAddress, useTheme, useI18n, useAccount, useAccountValue } from '../hooks';
+import { Screen, DrawerToggler, MoreVertical, Text, Address, ManaBar } from '../components';
 import { AssetsNavigationProp, } from '../types/navigation';
 import Loading from './Loading';
 import { SheetManager } from "react-native-actions-sheet";
 import { useEffect } from 'react';
 import AssetsCoins from '../components/AssetsCoins';
 import AssetsNfts from '../components/AssetsNfts';
+import { UserStore } from '../stores';
 
 const CATEGORY_COINS = 'coins';
 const CATEGORY_NFTS = 'nfts';
@@ -24,11 +25,10 @@ export default () => {
   const navigation = useNavigation<AssetsNavigationProp>();
   const theme = useTheme();
   const styles = theme.styles;
-  const currentKoin = useCurrentKoin();
-  const coinValue = useCoinValue(currentKoin.get());
   const i18n = useI18n();
   const account = useAccount(currentAddressOrNull.get());
   const category = useHookstate(CATEGORY_COINS);
+  const total = useAccountValue();
 
   useEffect(() => {
     navigation.setOptions({
@@ -46,7 +46,7 @@ export default () => {
       <View style={{ ...styles.rowGapBase }}>
         <View style={{ ...styles.directionRow, ...styles.paddingBase, ...styles.alignSpaceBetweenRow }}>
           <View>
-            <Text style={styles.textXlarge}>${coinValue.get() && coinValue.get().toFixed(2)}</Text>
+            <Text style={styles.textXlarge}>{total.get().toFixed(2)} USD</Text>
             <Text style={styles.textSmall}>{i18n.t('total_balance')}</Text>
           </View>
 
@@ -55,6 +55,10 @@ export default () => {
             <Address address={currentAddressOrNull.get()} copiable={true} />
           </View>
         </View>
+      </View>
+
+      <View style={{ ...styles.rowGapBase }}>
+        <ManaBar />
       </View>
 
       <Toggler selected={category} />

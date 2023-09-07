@@ -1,8 +1,7 @@
 import { FlatList, Linking, View, StyleSheet } from 'react-native';
 import { AntDesign, Feather } from '@expo/vector-icons';
-import { TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS } from '../lib/Constants';
-import { useCoinTransactions, useCurrentNetworkId, useTransaction, useTheme, useNetwork, useI18n } from '../hooks';
-import { UserStore } from '../stores';
+import { TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_DEPOSIT, TRANSACTION_TYPE_WITHDRAW } from '../lib/Constants';
+import { useTransactions, useCurrentNetworkId, useTransaction, useTheme, useNetwork, useI18n, useCoin, useCurrentAddress } from '../hooks';
 import ActivityIndicator from './ActivityIndicator';
 import Text from './Text';
 import type { Theme } from '../types/store';
@@ -14,30 +13,45 @@ export default (props: {
     contractId: string
 }) => {
 
-    const transactions = useCoinTransactions(props.contractId);
+    const transactions = useTransactions(props.contractId);
 
     return (
         <FlatList
-            data={transactions.get().map(t => t.transactionId)}
-            renderItem={({ item }) => <TransactionListItem transactionId={item} />}
+            data={Object.keys(transactions.get())}
+            renderItem={({ item }) => <TransactionListItem transactionId={item} contractId={props.contractId}/>}
         />
     );
 }
 
 export const TransactionListItem = (props: {
     transactionId: string,
+    contractId: string
 }) => {
 
-    const transaction = useTransaction(props.transactionId).get();
-    const coin = UserStore.coins[transaction.contractId].get();
+    const transaction = useTransaction(props);
+    if (!transaction.ornull) {
+        return <></>;
+    }
+
+    const currentAddress = useCurrentAddress();
+    if (!currentAddress.ornull) {
+        return <></>;
+    }
+
+    const coin = useCoin(props.contractId);
+    if (!coin.ornull) {
+        return <></>;
+    }
+
     const currentNetworkId = useCurrentNetworkId().get();
     const network = useNetwork(currentNetworkId).get();
-    const date = new Date(transaction.timestamp).toLocaleDateString();
-    const time = new Date(transaction.timestamp).toLocaleTimeString();
+    const date = new Date(transaction.timestamp.get()).toLocaleDateString();
+    const time = new Date(transaction.timestamp.get()).toLocaleTimeString();
     const theme = useTheme();
-    const { Color, Spacing } = theme.vars;
+    const { Color } = theme.vars;
     const styles = createStyles(theme);
     const i18n = useI18n();
+    const type = transaction.from.get() === currentAddress.get() ? TRANSACTION_TYPE_WITHDRAW : TRANSACTION_TYPE_DEPOSIT;
 
     const openTransactionLink = () => {
         Linking.openURL(`${network.explorer}/${props.transactionId}`);
@@ -52,45 +66,41 @@ export const TransactionListItem = (props: {
                         <View style={styles.descriptionContainer}>
 
                             <View style={styles.statusIconContainer}>
-                                {transaction.status === TRANSACTION_STATUS_PENDING &&
+                                {transaction.status.get() === TRANSACTION_STATUS_PENDING &&
                                     <ActivityIndicator />
                                 }
-                                {transaction.status === TRANSACTION_STATUS_SUCCESS &&
-                                    <TypeIcon type={transaction.type} />
+                                {transaction.status.get() === TRANSACTION_STATUS_SUCCESS &&
+                                    <TypeIcon type={type} />
                                 }
-                                {transaction.status === TRANSACTION_STATUS_ERROR &&
+                                {transaction.status.get() === TRANSACTION_STATUS_ERROR &&
                                     <AntDesign name="warning" size={24} color={Color.warning} />
                                 }
 
-                                <Text>{i18n.t(transaction.type.toLowerCase())}</Text>
+                                <Text>{i18n.t(type.toLowerCase())}</Text>
                             </View>
 
-                            <Text>{transaction.value} {coin.symbol}</Text>
+                            <Text>{transaction.get().value} {coin.symbol.get()}</Text>
                         </View>
                     </View>
                 )}
             >
                 <View style={{ ...styles.rowGapBase, ...styles.paddingHorizontalBase }}>
-                    <Copiable copy={transaction.transactionId}>
+                    <Copiable copy={transaction.transactionId.get()}>
                         <View>
                             <Text style={styles.textSmall}>TXid <Feather name="copy" size={12} /></Text>
-                            <Text>{transaction.transactionId}</Text>
+                            <Text>{transaction.transactionId.get()}</Text>
                         </View>
                     </Copiable>
                     <View>
-                        <Text style={styles.textSmall}>{i18n.t('type')}</Text>
-                        <Text>{transaction.type}</Text>
-                    </View>
-                    <View>
                         <Text style={styles.textSmall}>{i18n.t('status')}</Text>
-                        <Text>{transaction.status}</Text>
+                        <Text>{transaction.status.get()}</Text>
                     </View>
 
                     {
-                        transaction.note &&
+                        transaction.note.get() &&
                         <View>
                             <Text style={styles.textSmall}>{i18n.t('note')}</Text>
-                            <Text>{transaction.note}</Text>
+                            <Text>{transaction.note.get()}</Text>
                         </View>
                     }
 
@@ -114,11 +124,9 @@ const TypeIcon = (props: {
     const { Color } = theme.vars;
 
     switch (props.type) {
-        case 'SWAP':
-            return <AntDesign name="swap" size={24} color={Color.baseContrast} />
-        case 'DEPOSIT':
+        case TRANSACTION_TYPE_DEPOSIT:
             return <Feather name="arrow-down-right" size={24} color={Color.baseContrast} />
-        case 'WITHDRAW':
+        case TRANSACTION_TYPE_WITHDRAW:
             return <Feather name="arrow-up-right" size={24} color={Color.baseContrast} />
         default:
             return <AntDesign name="question" size={24} color={Color.baseContrast} />

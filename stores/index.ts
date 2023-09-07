@@ -19,13 +19,6 @@ export const UserStoreDefault: UserStoreState = {
     currentNetworkId: DEFAULT_NETWORK,
     currentAddress: null,
     accounts: {},
-    coins: {
-        [Object.values(DEFAULT_NETWORKS)[0].coins.KOIN.contractId] : Object.values(DEFAULT_NETWORKS)[0].coins.KOIN,
-        [Object.values(DEFAULT_NETWORKS)[0].coins.VHP.contractId] : Object.values(DEFAULT_NETWORKS)[0].coins.VHP,
-        [Object.values(DEFAULT_NETWORKS)[1].coins.KOIN.contractId] : Object.values(DEFAULT_NETWORKS)[1].coins.KOIN,
-        [Object.values(DEFAULT_NETWORKS)[1].coins.VHP.contractId] : Object.values(DEFAULT_NETWORKS)[1].coins.VHP,
-    },
-    transactions: {},
     networks: { ...DEFAULT_NETWORKS },
     locale: OS_LOCALE,
     theme: OS_THEME,
@@ -90,26 +83,10 @@ const ManaStoreDefault = {
 export const ManaStore = hookstate({...ManaStoreDefault});
 
 /**
- * Coin balance local store
- * It is used to provide global coin balance
- */
-export const CoinBalanceStoreDefault : Record<string,string> = {};
-export const CoinBalanceStore : State<Record<string,string>> = hookstate({...CoinBalanceStoreDefault});
-
-/**
- * Coin value local store
- * It is used to provide global coin value in dollars
- */
-export const CoinValueStoreDefault : Record<string,number> = {};
-export const CoinValueStore : State<Record<string,number>> = hookstate({...CoinValueStoreDefault});
-
-/**
  * Reset
  */
 export const reset = () => {
     ManaStore.set({...ManaStoreDefault});
-    CoinBalanceStore.set({...CoinBalanceStoreDefault});
-    CoinValueStore.set({...CoinValueStoreDefault});
     UserStore.set({...UserStoreDefault});
     EncryptedStore.set({...EncryptedStoreDefault});
 };

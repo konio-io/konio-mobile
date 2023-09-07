@@ -8,6 +8,8 @@ import { useEffect } from 'react';
 import { SheetManager } from "react-native-actions-sheet";
 
 export default () => {
+    return <></>
+
     const navigation = useNavigation<AssetsNavigationProp>();
     const route = useRoute<NftRouteProp>();
     const accountNft = useNft(route.params.id);

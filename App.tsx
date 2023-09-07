@@ -67,6 +67,7 @@ export default function App() {
 }
 
 const Main = () => {
+  
   const currentAddress = useCurrentAddress();
 
   if (userStoreIsLoading.get() || encryptedStoreIsLoading.get()) {

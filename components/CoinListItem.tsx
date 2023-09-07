@@ -1,10 +1,8 @@
-import { useTheme } from '../hooks';
-import CoinBalance from './CoinBalance';
+import { useCoin, useTheme } from '../hooks';
 import { View, StyleSheet } from 'react-native';
-import CoinSymbol from './CoinSymbol';
-import CoinValue from './CoinValue';
 import CoinLogo from './CoinLogo';
 import type { Theme } from '../types/store';
+import Text from './Text';
 
 export default (props: {
     contractId: string
@@ -12,6 +10,11 @@ export default (props: {
 
     const theme = useTheme();
     const styles = createStyles(theme);
+    const coin = useCoin(props.contractId);
+
+    if (!coin.ornull) {
+        return <></>;
+    }
 
     return (
         <View style={styles.container}>
@@ -19,12 +22,24 @@ export default (props: {
                 <CoinLogo contractId={props.contractId} size={48} />
 
                 <View>
-                    <CoinSymbol contractId={props.contractId} />
-                    <CoinBalance contractId={props.contractId} />
+                    <Text style={styles.symbol}>{coin.symbol.get()}</Text>
+                    <Text>{coin.name.get()}</Text>
                 </View>
             </View>
 
-            <CoinValue contractId={props.contractId} />
+            <View>
+                {coin.balance.ornull && coin.balance.ornull.get() >= 0 &&
+                    <View>
+                        {coin.price.ornull && 
+                            <Text style={{...styles.text,...styles.textRight}}>
+                                {(coin.balance.ornull.get() * coin.price.ornull.get()).toFixed(2)} USD
+                            </Text>
+                        }
+
+                        <Text style={{...styles.text, ...styles.textRight}}>{coin.balance.ornull.get()}</Text>
+                    </View>
+                }
+            </View>
         </View>
     );
 }
@@ -39,15 +54,15 @@ const createStyles = (theme: Theme) => {
             color: Color.base
         },
         container: {
-            flex: 1, 
-            flexDirection: 'row', 
-            justifyContent: 'space-between', 
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
             alignItems: 'center'
         },
         leftContainer: {
             flexDirection: 'row',
-             columnGap: Spacing.base, 
-             alignItems: 'center'
+            columnGap: Spacing.base,
+            alignItems: 'center'
         }
     });
 }

@@ -1,109 +1,45 @@
 import { Signer, utils } from "koilib";
 import { TransactionJsonWait } from "koilib/lib/interface";
-import { ManaStore, CoinBalanceStore, UserStore, EncryptedStore, LockStore, CoinValueStore, WCStore, KapStore } from "../stores";
+import { ManaStore, UserStore, EncryptedStore, LockStore, WCStore, KapStore } from "../stores";
 import { Contact, Coin, Network, Transaction, Account, NFT } from "../types/store";
-import { DEFAULT_COINS, TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_WITHDRAW, WC_METHODS } from "../lib/Constants";
+import { TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, WC_METHODS } from "../lib/Constants";
 import HDKoinos from "../lib/HDKoinos";
 import Toast from 'react-native-toast-message';
 import { State, none } from "@hookstate/core";
-import { getCoinBalance, getContract, getProvider, getSigner, signMessage, prepareTransaction, sendTransaction, signAndSendTransaction, signHash, signTransaction, waitForTransaction, getKapProfileByAddress, getKapAddressByName, isMainnet, getSeedAddress, convertIpfsToHttps } from "../lib/utils";
+import { getContract, getProvider, getSigner, signMessage, prepareTransaction, sendTransaction, signAndSendTransaction, signHash, signTransaction, waitForTransaction, getKapProfileByAddress, getKapAddressByName, isMainnet, getSeedAddress, convertIpfsToHttps, getContractInfo, getCoinPrice, getCoinBalance, getCoinContract } from "../lib/utils";
 import migrations from "../stores/migrations";
 import { SignClientTypes, SessionTypes } from "@walletconnect/types";
 import { getSdkError } from "@walletconnect/utils";
 import { formatJsonRpcError, formatJsonRpcResult } from '@json-rpc-tools/utils';
 import { initWCWallet } from "../lib/WalletConnect";
-import { DEFAULT_NETWORKS } from "../lib/Constants";
+import { Assets } from "../types/store";
 
 export const setCurrentAccount = (address: string) => {
     UserStore.currentAddress.set(address);
-    refreshCoinListBalance();
-    refreshMana();
+    refreshCoins({balance: true, price: true});
 }
 
 export const setCurrentNetwork = (networkId: string) => {
     UserStore.currentNetworkId.set(networkId);
-    refreshCoinListBalance();
-    refreshMana();
+    refreshCoins({balance: true, price: true, info: true, contract: true});
 }
 
 export const refreshMana = async () => {
+    console.log('refresh mana');
     const address = UserStore.currentAddress.get();
     if (!address) {
         throw new Error('Current address not set');
     }
 
     const networkId = UserStore.currentNetworkId.get();
-    const networks = UserStore.networks;
     const provider = getProvider(networkId);
-    const manaBalance = await provider.getAccountRc(address)
-
-    const contractId = networks[networkId].coins.KOIN.contractId.get();
-    const koinBalance = await getCoinBalance({
-        address,
-        networkId,
-        contractId
-    });
+    const manaBalance = await provider.getAccountRc(address);
+    const contractId = UserStore.networks[networkId].koinContractId.get();
 
     ManaStore.merge({
-        koin: parseFloat(koinBalance),
+        koin: UserStore.accounts[address].assets[networkId].coins[contractId].balance.get() ?? 0,
         mana: Number(manaBalance) / 1e8
     });
-}
-
-export const refreshCoinListBalance = () => {
-    const currentAddress = UserStore.currentAddress;
-    const currentAddressOrNull: State<string> | null = currentAddress.ornull;
-    if (!currentAddressOrNull) {
-        return;
-    }
-
-    const coins = UserStore.accounts[currentAddressOrNull.get()].coins.get()
-        .filter((contractId: string) => {
-            const coin = UserStore.coins[contractId];
-            return coin.networkId.get() === UserStore.currentNetworkId.get();
-        });
-
-    for (const contractId of coins) {
-        refreshCoinBalance(contractId);
-    }
-}
-
-export const refreshCoinBalance = (contractId: string) => {
-    const address = UserStore.currentAddress.get();
-    if (!address) {
-        throw new Error('Current address not set');
-    }
-
-    const networkId = UserStore.currentNetworkId.get();
-
-    return getCoinBalance({
-        address,
-        networkId,
-        contractId
-    }).then(value => {
-        CoinBalanceStore[contractId].set(value);
-        refreshCoinValue(contractId);
-    });
-}
-
-export const refreshCoinValue = (contractId: string) => {
-    const currentNetworkId = UserStore.currentNetworkId.get();
-    const currentNetwork = DEFAULT_NETWORKS[currentNetworkId];
-
-    if (currentNetwork.coins.KOIN.contractId === contractId) {
-        fetch("https://www.mexc.com/open/api/v2/market/ticker?symbol=koin_usdt")
-            .then(response => response.json())
-            .then(json => {
-                const price = Number(json.data[0].last);
-                const balanceKoin = parseFloat(CoinBalanceStore[contractId].get());
-                const value = Number(balanceKoin * price);
-                CoinValueStore[contractId].set(value);
-            })
-            .catch(e => {
-                logError(e);
-                CoinValueStore[contractId].set(0);
-            });
-    }
 }
 
 export const withdrawCoin = async (args: { contractId: string, to: string, value: string, note: string }) => {
@@ -114,8 +50,8 @@ export const withdrawCoin = async (args: { contractId: string, to: string, value
 
     const { contractId, to, value, note } = args;
     const networkId = UserStore.currentNetworkId.get();
-    const coin = UserStore.coins[contractId];
-    const transactions = UserStore.transactions;
+
+    const coin = UserStore.accounts[address].assets[networkId].coins[contractId];
     const rcLimit = UserStore.rcLimit.get();
 
     const contract = await getContract({
@@ -161,13 +97,11 @@ export const withdrawCoin = async (args: { contractId: string, to: string, value
         to,
         value,
         timestamp: new Date().toISOString(),
-        type: TRANSACTION_TYPE_WITHDRAW,
         status: TRANSACTION_STATUS_PENDING,
         note
     };
 
-    transactions.merge({ [tsx.transactionId]: tsx });
-    coin.transactions.merge([tsx.transactionId]);
+    coin.transactions.merge({ [tsx.transactionId]: tsx });
     return transaction;
 }
 
@@ -179,58 +113,67 @@ export const addCoin = async (contractId: string) => {
     }
 
     const networkId = UserStore.currentNetworkId.get();
-    const currentCoins = UserStore.accounts[address].coins;
-    const coins = UserStore.coins;
 
-    if (currentCoins.get().includes(contractId)) {
-        return coins[contractId].get();
-    }
-
-    const contract = await getContract({
+    const contract = await getCoinContract({
         address,
         networkId,
         contractId
     });
 
-    const [decimalResponse, symbolResponse] = await Promise.all([
-        contract.functions.decimals(),
-        contract.functions.symbol()
-    ]);
-
-    if (!symbolResponse.result) {
-        throw new Error("unable to retrieve coin symbol");
-    }
-
-    const coin: Coin = {
-        decimal: decimalResponse.result ? decimalResponse.result.value : 0,
-        symbol: symbolResponse.result.value,
+    const coin : Coin = {
+        decimal: contract.decimal ?? 0,
+        symbol: contract.symbol,
         contractId,
-        transactions: [],
-        networkId,
+        transactions: {}
     };
 
-    coins.merge({ [contractId]: coin });
-    currentCoins.merge([contractId]);
-    return coins[contractId].get();
+    UserStore.accounts[address].assets[networkId].coins.merge({
+        [contractId]: coin
+    });
+
+    refreshCoin({
+        contractId,
+        balance: true,
+        info: true,
+        price: true
+    });
+    
+    return coin;
 }
 
-const addAddress = (address: string, name: string) => {
-    const coins = [];
+const addAddress = async (address: string, name: string) => {
+    const assets : Record<string,Assets> = {};
     const networks = Object.values(UserStore.networks.get());
     for (const network of networks) {
-        for (const symbol of DEFAULT_COINS) {
-            if (symbol === 'KOIN' || symbol === 'VHP') {
-                coins.push(network.coins[symbol].contractId);
-            }
+        if (!Object.keys(assets).includes(network.chainId)) {
+            assets[network.chainId] = {
+                coins: {},
+                nfts: {}
+            };
         }
+
+        const contractId = network.koinContractId;
+        const coin : Coin = {
+            contractId,
+            decimal: 8,
+            symbol: 'KOIN',
+            transactions: {}
+        }
+        
+        try {
+            const info = await getContractInfo(contractId);
+            coin.name = info.name;
+            coin.logo = info.logo;
+        } catch (e) {}
+
+        assets[network.chainId].coins[contractId] = coin;
     }
 
     const accounts = UserStore.accounts;
     const account: Account = {
         name,
         address,
-        coins,
-        nfts: []
+        assets
     };
     accounts.merge({ [account.address]: account });
 }
@@ -239,13 +182,13 @@ export const addSeed = async (args: {
     seed: string,
     name: string
 }) => {
-    const accounts = EncryptedStore.accounts;
+    const secureAccounts = EncryptedStore.accounts;
     const { seed, name } = args;
     const { address, privateKey } = await HDKoinos.createWallet(seed, 0);
 
-    addAddress(address, name);
+    await addAddress(address, name);
 
-    accounts.merge({
+    secureAccounts.merge({
         [address]: {
             address,
             privateKey,
@@ -261,14 +204,14 @@ export const importAccount = async (args: {
     privateKey: string,
     name: string
 }) => {
-    const accounts = EncryptedStore.accounts;
+    const secureAccounts = EncryptedStore.accounts;
     const { privateKey, name } = args;
     const signer = Signer.fromWif(privateKey);
     const address = signer.getAddress();
 
-    addAddress(address, name);
+    await addAddress(address, name);
 
-    accounts.merge({
+    secureAccounts.merge({
         [address]: {
             address,
             privateKey,
@@ -280,8 +223,8 @@ export const importAccount = async (args: {
 }
 
 export const addAccount = async (name: string) => {
-    const accounts = EncryptedStore.accounts;
-    const account = Object.values(accounts.get()).find(w => w.seed !== undefined);
+    const secureAccounts = EncryptedStore.accounts;
+    const account = Object.values(secureAccounts.get()).find(w => w.seed !== undefined);
 
     if (!account) {
         throw new Error("Unable to find main seed account");
@@ -297,16 +240,16 @@ export const addAccount = async (name: string) => {
 
     const { address, privateKey } = await HDKoinos.createWallet(account.seed, account.accountIndex + 1);
 
-    addAddress(address, name);
+    await addAddress(address, name);
 
-    accounts.merge({
+    secureAccounts.merge({
         [address]: {
             address,
             privateKey
         }
     });
 
-    accounts[account.address].accountIndex.set(account.accountIndex + 1);
+    secureAccounts[account.address].accountIndex.set(account.accountIndex + 1);
     return address;
 }
 
@@ -336,12 +279,28 @@ export const deleteAccount = (address: string) => {
     userAccount.set(none);
 }
 
-export const confirmTransaction = async (transaction: TransactionJsonWait): Promise<Transaction> => {
+export const confirmTransaction = async (args: {
+    contractId: string,
+    transaction: TransactionJsonWait
+}) : Promise<Transaction> => {
+
+    const { contractId, transaction } = args;
+    const address = UserStore.currentAddress.get();
+    if (!address) {
+        throw new Error('Current address not set');
+    }
+
+    const networkId = UserStore.currentNetworkId.get();
+
     if (!transaction.id) {
         throw new Error("Transaction id not found");
     }
 
-    const transactionState = UserStore.transactions[transaction.id];
+    const transactionState = UserStore.accounts[address]
+        .assets[networkId]
+        .coins[contractId]
+        .transactions[transaction.id];
+
     let blockNumber = null;
     try {
         const result = await transaction.wait();
@@ -411,13 +370,10 @@ export const deleteCoin = (contractId: string) => {
     if (!address) {
         throw new Error('Current address not set');
     }
-    const coins = UserStore.accounts[address].coins;
-    const index = coins.get().indexOf(contractId);
-    if (index > -1) {
-        coins[index].set(none);
-        CoinBalanceStore[contractId].set(none);
-        CoinValueStore[contractId].set(none);
-    }
+
+    const networkId = UserStore.currentNetworkId.get();
+
+    UserStore.accounts[address].assets[networkId].coins[contractId].set(none);
 }
 
 export const setAutolock = (autolock: number) => {
@@ -662,6 +618,7 @@ export const rejectRequest = async (sessionRequest: SignClientTypes.EventArgumen
 }
 
 export const logError = (text: string) => {
+    console.log(text);
     UserStore.logs.merge([`${Date.now()}|ERROR|${text}`]);
 }
 
@@ -726,7 +683,7 @@ export const addNft = async (args: {
 }) => {
     const { contractId, tokenId } = args;
     const key = `${contractId}/${tokenId}`;
-    
+
     const address = UserStore.currentAddress.get();
     if (!address) {
         throw new Error('Current address not set');
@@ -748,7 +705,7 @@ export const addNft = async (args: {
 
     const uriResp = await contract.functions.uri();
     const url = convertIpfsToHttps(uriResp.result?.value);
-    
+
     const dataResponse = await fetch(`${url}/${tokenId}`);
     if (!dataResponse) {
         throw new Error(`Unable to retrieve NFT url ${url}/${tokenId}`);
@@ -765,8 +722,7 @@ export const addNft = async (args: {
         image: jsonResponse.image ?? 'unknown',
         contractId,
         tokenId,
-        transactions: [],
-        networkId,
+        transactions: {}
     };
 
     nfts.merge({ [key]: nft });
@@ -784,4 +740,198 @@ export const deleteNft = (id: string) => {
     if (index > -1) {
         nfts[index].set(none);
     }
+}
+
+
+export const refreshCoins = (args?: {
+    contract?: boolean,
+    info?: boolean,
+    balance?: boolean,
+    price?: boolean
+}) => {
+    const currentAddress = UserStore.currentAddress;
+    const currentAddressOrNull: State<string> | null = currentAddress.ornull;
+    if (!currentAddressOrNull) {
+        return;
+    }
+
+    const currentNetworkId = UserStore.currentNetworkId;
+
+    const coins = UserStore.accounts
+        .nested(currentAddressOrNull.get())
+        .assets
+        .nested(currentNetworkId.get())
+        .coins;
+
+    const promises = [];
+
+    for (const contractId in coins) {
+        const promise = refreshCoin({
+            ...args,
+            contractId
+        });
+
+        promises.push(promise);
+    }
+
+    return Promise.all(promises);
+}
+
+/**
+ * refresh coin data
+ */
+export const refreshCoin = async(args: {
+    contractId: string,
+    contract?: boolean,
+    info?: boolean,
+    balance?: boolean,
+    price?: boolean
+}) => {
+    const promises = [];
+
+    if (args.contract === true) {
+        await refreshCoinContract(args.contractId);
+    }
+
+    if (args.balance === true) {
+        promises.push( refreshCoinBalance(args.contractId) );
+    }
+
+    if (args.info === true) {
+        promises.push( refreshCoinInfo(args.contractId) );
+    }
+
+    if (args.price === true) {
+        promises.push( refreshCoinPrice(args.contractId) );
+    }
+
+    return Promise.all(promises);
+}
+
+export const refreshCoinContract = (contractId: string) => {
+    console.log('refresh contract', contractId);
+    const currentAddress = UserStore.currentAddress;
+    const currentAddressOrNull: State<string> | null = currentAddress.ornull;
+    if (!currentAddressOrNull) {
+        return;
+    }
+
+    const currentNetworkId = UserStore.currentNetworkId;
+    const coin = UserStore.accounts
+        .nested(currentAddressOrNull.get())
+        .assets
+        .nested(currentNetworkId.get())
+        .coins
+        .nested(contractId);
+
+    return getCoinContract({
+        contractId,
+        address: currentAddressOrNull.get(),
+        networkId: currentNetworkId.get()
+    })
+        .then(async contract => {
+            if (contract.symbol) {
+                coin.symbol.set(contract.symbol);
+            }
+            if (contract.decimal) {
+                coin.decimal.set(contract.decimal);
+            }
+        })
+        .catch(e => logError(e))
+}
+
+export const refreshCoinBalance = (contractId: string) => {
+    console.log('refresh balance', contractId);
+    const currentAddress = UserStore.currentAddress;
+    const currentAddressOrNull: State<string> | null = currentAddress.ornull;
+    if (!currentAddressOrNull) {
+        return;
+    }
+
+    const currentNetworkId = UserStore.currentNetworkId;
+
+    const coin = UserStore.accounts
+        .nested(currentAddressOrNull.get())
+        .assets
+        .nested(currentNetworkId.get())
+        .coins
+        .nested(contractId);
+
+    return getCoinBalance({
+        contractId,
+        address: currentAddressOrNull.get(),
+        networkId: currentNetworkId.get()
+    }).then(balance => {
+        if (balance) {
+            if (coin.decimal.get()) {
+                coin.balance.set( parseFloat(utils.formatUnits(balance, coin.decimal.get())) );
+            } else {
+                coin.balance.set(balance);
+            }
+        } else {
+            coin.balance.set(0);
+        }
+
+        if (contractId == UserStore.networks[currentNetworkId.get()].koinContractId.get()) {
+            refreshMana();
+        }
+    })
+    .catch(e => {
+        logError(e)
+    });
+}
+
+export const refreshCoinInfo = (contractId: string) => {
+    console.log('refresh info', contractId);
+    const currentAddress = UserStore.currentAddress;
+    const currentAddressOrNull: State<string> | null = currentAddress.ornull;
+    if (!currentAddressOrNull) {
+        return;
+    }
+
+    const currentNetworkId = UserStore.currentNetworkId;
+
+    const coin = UserStore.accounts
+        .nested(currentAddressOrNull.get())
+        .assets
+        .nested(currentNetworkId.get())
+        .coins
+        .nested(contractId);
+
+    return getContractInfo(contractId)
+        .then(info => {
+            if (info.logo) {
+                coin.logo.set(info.logo);
+            }
+            if (info.name) {
+                coin.name.set(info.name);
+            }
+        }).catch(e => {
+            //unable to retrieve info
+        })
+}
+
+export const refreshCoinPrice = async (contractId: string) => {
+    console.log('refresh price', contractId);
+    const currentAddress = UserStore.currentAddress;
+    const currentAddressOrNull: State<string> | null = currentAddress.ornull;
+    if (!currentAddressOrNull) {
+        return;
+    }
+
+    const currentNetworkId = UserStore.currentNetworkId;
+
+    const coin = UserStore.accounts
+        .nested(currentAddressOrNull.get())
+        .assets
+        .nested(currentNetworkId.get())
+        .coins
+        .nested(contractId);
+
+    return getCoinPrice(contractId)
+        .then(price => {
+            if (price) {
+                coin.price.set(price);
+            }
+        }).catch(e => logError(e));
 }

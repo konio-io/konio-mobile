@@ -72,7 +72,7 @@ export default () => {
             <TouchableHighlight onPress={() => modalState.set(true)}>
                 <View style={styles.container}>
                     <View style={styles.coinListItemContainer}>
-                        <View style={{...styles.directionRow, ...styles.columnGapBase}}>
+                        <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
                             <ManaProgressLogo
                                 size={55}
                                 strokeWidth={3}
@@ -80,15 +80,20 @@ export default () => {
                             />
                             <View>
                                 <Text style={styles.symbol}>{i18n.t('MANA')}</Text>
-                                {currentMana.get() > -1 &&
-                                    <Text style={styles.balance}>{currentMana.get()}</Text>
-                                }
-                                {currentMana.get() < 0 &&
-                                    <ActivityIndicator />
-                                }
+                                <Text>Recharge</Text>
                             </View>
                         </View>
-                        <Text style={styles.textMedium}>{currentPercent.get()}%</Text>
+
+                        <View>
+                            <Text style={{...styles.textMedium, ...styles.textRight}}>{currentPercent.get()}%</Text>
+                            {currentMana.get() > -1 &&
+                                <Text style={{...styles.balance, ...styles.textRight}}>{currentMana.get()}</Text>
+                            }
+                            {currentMana.get() < 0 &&
+                                <ActivityIndicator />
+                            }
+                        </View>
+
                     </View>
                 </View>
             </TouchableHighlight>

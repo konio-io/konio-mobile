@@ -6,14 +6,17 @@ import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 import { AssetsNavigationProp } from "../types/navigation";
 import * as Clipboard from 'expo-clipboard';
-import { DEFAULT_COINS } from "../lib/Constants";
 
 export default (props: SheetProps) => {
 
     const { contractId } = props.payload;
     const i18n = useI18n();
     const navigation = useNavigation<AssetsNavigationProp>();
-    const coin = useCoin(contractId).get();
+    const coin = useCoin(contractId);
+
+    if (!coin.ornull) {
+        return;
+    }
 
     const _delete = () => {
         navigation.navigate('Assets');
@@ -31,13 +34,13 @@ export default (props: SheetProps) => {
     const data = [
         {
             title: i18n.t('contract_address'),
-            description: coin.contractId,
+            description: coin.contractId.get(),
             icon: <AntDesign name="codesquareo"/>,
             onPress: () => _copyContractId()
         }
     ];
 
-    if (!DEFAULT_COINS.includes(coin.symbol)) {
+    if (coin.symbol.get() !== 'KOIN') {
         data.push({
             title: i18n.t('delete'),
             description: '',

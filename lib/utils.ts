@@ -1,7 +1,7 @@
 import { Contract, utils, Provider, Signer } from "koilib";
 import { UserStore, EncryptedStore, KapStore } from "../stores";
 import { Abi, SendTransactionOptions, TransactionJson, TransactionJsonWait, TransactionReceipt } from "koilib/lib/interface";
-import { DEFAULT_NETWORKS, KAP_NAMESERVICE_CID, KAP_PROFILE_CID, MAINNET } from "./Constants";
+import { DEFAULT_NETWORKS, KAP_NAMESERVICE_CID, KAP_PROFILE_CID, MAINNET, TOKENS_URL } from "./Constants";
 
 export const rgba = (color: string, opacity: number): string => {
     return color.replace('1)', opacity.toString() + ')');
@@ -39,30 +39,6 @@ export const getContract = async (args: {
     });
 
     return contract;
-}
-
-export const getCoinBalance = async (args: {
-    address: string,
-    networkId: string,
-    contractId: string
-}) => {
-    const { address, networkId, contractId } = args;
-    const contract = await getContract({
-        address,
-        networkId,
-        contractId
-    });
-    const response = await contract.functions.balance_of({ owner: address });
-    if (response.result) {
-        const decimalResponse = await contract.functions.decimals();
-        if (decimalResponse.result) {
-            return utils.formatUnits(response.result.value, decimalResponse.result.value);
-        }
-
-        return response.result.value;
-    }
-
-    return '0';
 }
 
 export const getProvider = (networkId: string): Provider => {
@@ -301,4 +277,87 @@ export const convertIpfsToHttps = (ipfsLink: string) => {
     } else {
         return ipfsLink;
     }
+}
+
+export const accessPropertyValue = (obj: Record<string, any>, path: string): any => {
+    const keys = path.split('.');
+    let currentObj: Record<string, any> | null = obj;
+
+    for (const key of keys) {
+        if (currentObj && currentObj.hasOwnProperty(key)) {
+            currentObj = currentObj[key];
+        } else {
+            return null;
+        }
+    }
+
+    return currentObj;
+}
+
+export const getContractInfo = async (contractId: string) => {
+    return fetch(`${TOKENS_URL}/${contractId}.json`)
+        .then(response => response.json());
+}
+
+export const getCoinPrice = async (contractId: string) => {
+    const response = await getContractInfo(contractId)
+    if (response.priceUrl && response.pricePath) {
+        const priceResponse = await fetch(response.priceUrl);
+        const price = await priceResponse.json();
+
+        if (price) {
+            return accessPropertyValue(price, response.pricePath);
+        }
+    }
+
+    return null;
+}
+
+export const getCoinBalance = async (args: {
+    address: string,
+    networkId: string,
+    contractId: string
+}) => {
+    const { contractId, address, networkId } = args;
+
+    const contract = await getContract({
+        contractId,
+        address,
+        networkId
+    });
+
+    const balanceResponse = await contract.functions.balance_of({ owner: address });
+
+    if (balanceResponse && balanceResponse.result?.value !== undefined) {
+        return parseFloat(balanceResponse.result?.value);
+    }
+
+    return null;
+}
+
+export const getCoinContract = async (args: {
+    address: string,
+    networkId: string,
+    contractId: string
+}) => {
+    const { contractId, address, networkId } = args;
+    const contract = await getContract({
+        contractId,
+        address,
+        networkId
+    });
+
+    const result = { ...contract, symbol: '', decimal: undefined };
+  
+    const symbolResponse = await contract.functions.symbol();
+    if (symbolResponse.result?.value) {
+        result.symbol = symbolResponse.result.value;
+    }
+
+    const decimalResponse = await contract.functions.decimals();
+    if (decimalResponse.result?.value) {
+        result.decimal = decimalResponse.result.value;
+    }
+
+    return result;
 }

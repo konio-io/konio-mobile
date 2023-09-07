@@ -63,8 +63,6 @@ export default () => {
             </View>
 
             <ScrollView>
-                <RecentList onPressItem={(addr: string) => address.set(addr)} selected={address.get()} />
-
                 <AccountList onPressItem={(addr: string) => address.set(addr)} selected={address.get()} />
 
                 <View style={styles.paddingVerticalBase}>
@@ -218,38 +216,6 @@ const To = (props: {
             }
         </View>
     )
-}
-
-const RecentList = (props: {
-    onPressItem: Function,
-    selected: string
-}) => {
-    const currentAddress = useCurrentAddress();
-    const transactions = useTransactions().get();
-    const { styles } = useTheme();
-    const i18n = useI18n();
-    const result = Object.values(transactions)
-        .filter(t => t.type === 'WITHDRAW')
-        .sort((a, b) => (a.timestamp > b.timestamp) ? 1 : ((b.timestamp > a.timestamp) ? -1 : 0))
-        .slice(0, 5)
-        .map(t => t.to)
-        .filter(to => to !== currentAddress.get());
-
-    const data = [...new Set(result)];
-
-    return (
-        <View style={styles.paddingVerticalBase}>
-            {
-                data.length > 0 &&
-                <View style={styles.paddingHorizontalBase}>
-                    <Text style={styles.sectionTitle}>{i18n.t('recents')}</Text>
-                </View>
-            }
-            {data.map(item =>
-                <ToListItem key={item} address={item} selected={props.selected === item} onPress={(address: string) => props.onPressItem(address)} />
-            )}
-        </View>
-    );
 }
 
 const AccountList = (props: {
