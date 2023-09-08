@@ -67,7 +67,6 @@
     "transaction_committed": "تم تنفيذ العملية",
     "transaction_confirmed": "تم تأكيد العملية",
     "transaction_confirm_failed": "فشل تأكيد العملية",
-    "add_more_coins": "إضافة المزيد من العملات",
     "address_copied": "تم نسخ العنوان إلى الحافظة",
     "amount": "المبلغ",
     "perc_25": "25%",
@@ -233,5 +232,15 @@
     "check_connection": "تحقق من اتصالك بالإنترنت",
     "you_online": "أنت متصل مرة أخرى",
     "faq":"FAQ",
-    "autodiscovering_coins": "اكتشاف العملات تلقائيًا"
+    "autodiscovering_coins": "اكتشاف العملات تلقائيًا",
+    "add_nft": "إضافة NFT",
+    "token_id": "معرف الرمز",
+    "missing_token_id": "معرف الرمز مفقود",
+    "unable_to_add_nft": "تعذر إضافة NFT",
+    "migration_error": "خطأ في بيانات الهجرة",
+    "migration_error_desc": "امسح بيانات التطبيق الخاصة بك وأعد تشغيل Konio",
+    "about":"About",
+    "transaction_SUCCESS": "مكتمل",
+    "transaction_PENDING": "قيد الانتظار",
+    "transaction_ERROR": "فشل"
 }

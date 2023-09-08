@@ -1,8 +1,9 @@
 import { useHookstate } from '@hookstate/core';
 import CircleLogo from './CircleLogo';
 import { View, Image } from 'react-native';
-import { useTheme } from '../hooks';
-import { TOKENS_URL } from '../lib/Constants';
+import { useCoin, useTheme } from '../hooks';
+import { useEffect } from "react";
+import { getContractInfo } from '../lib/utils';
 
 export default (props: {
     contractId: string
@@ -11,15 +12,21 @@ export default (props: {
     const logo = useHookstate('',);
     const theme = useTheme();
     const { Border } = theme.vars;
+    const coin = useCoin(props.contractId);
 
-    fetch(`${TOKENS_URL}/${props.contractId}.json`)
-        .then(response => response.json())
-        .then(json => {
-            if (json && json.logo) {
-                logo.set(json.logo);
+    useEffect(() => {
+        if (!coin.ornull) {
+            getContractInfo(props.contractId).then(info => {
+                if (info.logo) {
+                    logo.set(info.logo);
+                }
+            });
+        } else {
+            if (coin.logo.ornull) {
+                logo.set(coin.logo.ornull.get());
             }
-        })
-        .catch(() => {})
+        }
+    }, [coin]);
 
     return (
         <View style={{borderRadius: props.size, borderColor: Border.color, borderWidth: Border.width, padding: 1}}>

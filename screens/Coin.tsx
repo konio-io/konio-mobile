@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import type { CoinRouteProp, AssetsNavigationProp } from '../types/navigation';
+import type { CoinRouteProp, HoldingsNavigationProp } from '../types/navigation';
 import { Button, TransactionList, Screen, MoreVertical, Text, CoinLogo } from '../components';
 import { useCoin, useI18n, useTheme } from '../hooks';
 import { Feather } from '@expo/vector-icons';
@@ -8,14 +8,9 @@ import { useEffect } from 'react';
 import { SheetManager } from "react-native-actions-sheet";
 
 export default () => {
-    const navigation = useNavigation<AssetsNavigationProp>();
+    const navigation = useNavigation<HoldingsNavigationProp>();
     const route = useRoute<CoinRouteProp>();
     const coin = useCoin(route.params.contractId);
-
-    if (!coin.ornull) {
-        return <></>;
-    }
-
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();
@@ -84,13 +79,9 @@ export default () => {
                 }
             </View>
 
-
-            {
-                coin.transactions.length > 0 &&
-                <View style={{ ...styles.paddingBase }}>
-                    <Text style={styles.sectionTitle}>{i18n.t('transactions')}</Text>
-                </View>
-            }
+            <View style={{ ...styles.paddingBase }}>
+                <Text style={styles.sectionTitle}>{i18n.t('transactions')}</Text>
+            </View>
 
             <TransactionList contractId={route.params.contractId} />
 

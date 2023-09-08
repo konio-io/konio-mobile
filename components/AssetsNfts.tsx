@@ -1,61 +1,48 @@
 import { Image, TouchableHighlight, View } from 'react-native';
-import { State } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
-import { useCurrentAddress, useTheme, useI18n, useNfts, useNft, useCurrentNetworkId } from '../hooks';
-import { Link, Text } from '.';
+import { useTheme, useNfts, useNft } from '../hooks';
+import { ButtonCircle, Text } from '.';
 import { AssetsNavigationProp, } from '../types/navigation';
-import Loading from '../screens/Loading';
 import { SheetManager } from "react-native-actions-sheet";
 import { ScrollView } from 'react-native-gesture-handler';
-import { UserStore } from '../stores';
+import { Feather } from '@expo/vector-icons';
 
 export default () => {
-  return <></>;
-  const currentAddress = useCurrentAddress();
-  const currentAddressOrNull: State<string> | null = currentAddress.ornull;
-  if (!currentAddressOrNull) {
-    return <Loading />
-  }
-  const currentNetworkId = useCurrentNetworkId();
-
   const theme = useTheme();
   const styles = theme.styles;
-  const accountNfts = useNfts();
-  const data = accountNfts.get()
-    .filter((id: string) => {
-      const coin = UserStore.nfts[id];
-      if (coin) {
-        return coin.networkId.get() === currentNetworkId.get();
-      }
-      return false;
-    });
+  const nfts = useNfts();
+  const data = Object.keys(nfts.get());
 
   return (
-    <View style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1 }}>
 
-      <ScrollView contentContainerStyle={{
-        ...styles.directionRow,
-        ...styles.alignCenterRow,
-        ...styles.columnGapBase,
-        ...styles.rowGapBase,
-        flexWrap: 'wrap'
+      <ScrollView 
+        style={{}}
+        contentContainerStyle={{
+          ...styles.directionRow,
+          ...styles.alignCenterRow,
+          ...styles.columnGapBase,
+          ...styles.rowGapBase,
+          flexWrap: 'wrap'
       }}>
         {
           data.map(item =>
             <NftItem key={item} id={item} />
           )
         }
+        
       </ScrollView>
-
+      
       <Footer />
-    </View>
+
+    </ScrollView>
   );
 }
 
 const NftItem = (props: {
   id: string
 }) => {
-  const nft = useNft(props.id).get();
+  const nft = useNft(props.id);
   const theme = useTheme();
   const styles = theme.styles;
   const { Border, Color } = theme.vars;
@@ -79,13 +66,13 @@ const NftItem = (props: {
         padding: 1,
         maxWidth: 150
       }}>
-        <Image source={{ uri: nft.image }} resizeMode="contain" style={{
+        <Image source={{ uri: nft.image.get() }} resizeMode="contain" style={{
           width: 146,
           height: 146,
           borderRadius: Border.radius
         }} />
         <View style={{ ...styles.paddingSmall }}>
-          <Text style={styles.textSmall}>{nft.name.substring(0, 19)}</Text>
+          <Text style={styles.textSmall}>{nft.name.get().substring(0, 19)}</Text>
         </View>
 
       </View>
@@ -97,11 +84,14 @@ const Footer = () => {
   const navigation = useNavigation<AssetsNavigationProp>();
   const theme = useTheme();
   const styles = theme.styles;
-  const i18n = useI18n();
 
   return (
     <View style={{ ...styles.paddingBase, ...styles.alignCenterColumn }}>
-      <Link text={i18n.t('add_more_nfts')} onPress={() => navigation.navigate('NewNft')} />
+      <ButtonCircle 
+        onPress={() => navigation.navigate('NewNft')} 
+        icon={(<Feather name="plus" />)}
+        type='secondary'
+      />
     </View>
   );
 };

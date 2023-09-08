@@ -1,13 +1,11 @@
 import { View, TouchableHighlight, StyleSheet } from 'react-native';
-import { useTheme, useI18n } from '../hooks';
+import { useTheme, useI18n, useCurrentKoin, useCurrentAddress, useCurrentNetworkId } from '../hooks';
 import { useHookstate } from '@hookstate/core';
-import { ManaStore } from '../stores';
+import { ManaStore, UserStore } from '../stores';
 import { useEffect, useRef } from 'react';
 import ManaStat from './ManaStat';
 import Modal from './Modal';
 import type { Theme } from '../types/store';
-import Text from './Text';
-import ActivityIndicator from './ActivityIndicator';
 import ManaProgressLogo from './ManaProgressLogo';
 
 export default () => {
@@ -20,6 +18,12 @@ export default () => {
     const currentMana = useHookstate(-1);
     const timeRecharge = useHookstate(0);
 
+    const koinContractId = useCurrentKoin().get();
+    const address = useCurrentAddress().get();
+    const networkId = useCurrentNetworkId().get();
+    const koinBalanceState = useHookstate(UserStore.accounts[address].assets[networkId].coins[koinContractId].balance);
+    const koinBalance = koinBalanceState.get() ?? 0;
+
     const update = (manaBalance: number, koinBalance: number) => {
         currentMana.set(manaBalance);
         if (koinBalance > 0) {
@@ -31,7 +35,6 @@ export default () => {
     const updateInterval = () => {
         const lastUpdateMana = ManaStore.lastUpdateMana.get();
         const initialMana = ManaStore.mana.get();
-        const koinBalance = ManaStore.koin.get();
         const delta = Math.min(Date.now() - lastUpdateMana, FIVE_DAYS);
         let m = initialMana + (delta * koinBalance) / FIVE_DAYS;
         m = Math.min(m, koinBalance);
@@ -41,7 +44,7 @@ export default () => {
     }
 
     useEffect(() => {
-        update(manaState.mana.get(), manaState.koin.get());
+        update(manaState.mana.get(), koinBalance);
         intervalId.current = setInterval(() => {
             updateInterval();
         }, 3000);
@@ -51,7 +54,7 @@ export default () => {
                 clearInterval(intervalId.current);
             }
         }
-    }, [manaState]);
+    }, [manaState, koinBalanceState]);
 
     const theme = useTheme();
     const styles = createStyles(theme);
@@ -68,30 +71,11 @@ export default () => {
 
             <TouchableHighlight onPress={() => modalState.set(true)}>
                 <View style={styles.container}>
-                    <View style={styles.coinListItemContainer}>
-                        <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
-                            <ManaProgressLogo
-                                size={55}
-                                strokeWidth={3}
-                                progressPercent={currentPercent.get()}
-                            />
-                            <View>
-                                <Text style={styles.symbol}>{i18n.t('MANA')}</Text>
-                                <Text>Recharge</Text>
-                            </View>
-                        </View>
-
-                        <View>
-                            <Text style={{...styles.textMedium, ...styles.textRight}}>{currentPercent.get()}%</Text>
-                            {currentMana.get() > -1 &&
-                                <Text style={{...styles.balance, ...styles.textRight}}>{currentMana.get()}</Text>
-                            }
-                            {currentMana.get() < 0 &&
-                                <ActivityIndicator />
-                            }
-                        </View>
-
-                    </View>
+                    <ManaProgressLogo
+                        size={55}
+                        strokeWidth={3}
+                        progressPercent={currentPercent.get()}
+                    />
                 </View>
             </TouchableHighlight>
         </View>
@@ -99,22 +83,10 @@ export default () => {
 }
 
 const createStyles = (theme: Theme) => {
-    const { Spacing, FontFamily, FontSize, Color } = theme.vars;
-
+    const { Color } = theme.vars;
 
     return StyleSheet.create({
         ...theme.styles,
-        coinListItemContainer: {
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: Spacing.base
-        },
-        balance: {
-            fontFamily: FontFamily.sans,
-            fontSize: FontSize.base,
-            color: Color.baseContrast
-        },
         container: {
             backgroundColor: Color.base
         }

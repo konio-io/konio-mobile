@@ -29,20 +29,8 @@ export const TransactionListItem = (props: {
 }) => {
 
     const transaction = useTransaction(props);
-    if (!transaction.ornull) {
-        return <></>;
-    }
-
     const currentAddress = useCurrentAddress();
-    if (!currentAddress.ornull) {
-        return <></>;
-    }
-
     const coin = useCoin(props.contractId);
-    if (!coin.ornull) {
-        return <></>;
-    }
-
     const currentNetworkId = useCurrentNetworkId().get();
     const network = useNetwork(currentNetworkId).get();
     const date = new Date(transaction.timestamp.get()).toLocaleDateString();
@@ -93,7 +81,22 @@ export const TransactionListItem = (props: {
                     </Copiable>
                     <View>
                         <Text style={styles.textSmall}>{i18n.t('status')}</Text>
-                        <Text>{transaction.status.get()}</Text>
+
+                        {
+                            transaction.status.get() === TRANSACTION_STATUS_SUCCESS &&
+                            <Text style={{...styles.text, color: Color.success}}>{i18n.t(`transaction_${transaction.status.get()}`)}</Text>
+                        }
+
+                        {
+                            transaction.status.get() === TRANSACTION_STATUS_PENDING &&
+                            <Text style={{...styles.text, color: Color.warning}}>{transaction.status.get()}</Text>
+                        }
+
+                        {
+                            transaction.status.get() === TRANSACTION_STATUS_ERROR &&
+                            <Text style={{...styles.text, color: Color.error}}>{transaction.status.get()}</Text>
+                        }
+                        
                     </View>
 
                     {

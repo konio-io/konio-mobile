@@ -8,15 +8,11 @@ import { State, useHookstate } from "@hookstate/core";
 import { useEffect } from "react";
 import { checkWCMethod, checkWCNetwork, getNetworkByChainId } from "../lib/WalletConnect";
 import { Feather } from '@expo/vector-icons';
+import Loading from "./Loading";
 
 export default () => {
     const currentAddress = useCurrentAddress();
-    const currentAddressOrNull: State<string> | null = currentAddress.ornull;
-    if (!currentAddressOrNull) {
-        return <></>;
-    }
-
-    const account = useAccount(currentAddressOrNull.get()).get();
+    const account = useAccount(currentAddress.get()).get();
     const currentNetworkId = useCurrentNetworkId().get();
     const currentNetwork = useNetwork(currentNetworkId).get();
     const navigation = useNavigation<WcProposalNavigationProp>();

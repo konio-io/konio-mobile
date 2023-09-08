@@ -2,7 +2,7 @@ import { Button, Screen, TextInput, Text, AccountAvatar, Address } from '../comp
 import { useHookstate } from '@hookstate/core';
 import { useNavigation, CommonActions, useRoute } from '@react-navigation/native';
 import { WithdrawConfirmNavigationProp, WithdrawConfirmRouteProp } from '../types/navigation';
-import { withdrawCoin, confirmTransaction, showToast, logError } from '../actions'
+import { withdrawCoin, confirmTransaction, showToast, logError, askReview } from '../actions'
 import { Feather } from '@expo/vector-icons';
 import { useCoin, useTheme, useI18n, useAccount, useContact } from '../hooks';
 import { View, StyleSheet } from 'react-native';
@@ -17,10 +17,6 @@ export default () => {
     const contractId = route.params.contractId;
 
     const coin = useCoin(contractId);
-    if (!coin.ornull) {
-        return <></>;
-    }
-
     const note = useHookstate('');
     const toAccount = useAccount(to).get();
     const toContact = useContact(to).get();
@@ -78,6 +74,7 @@ export default () => {
                         type: 'success',
                         text1: i18n.t('transaction_confirmed'),
                     });
+                    askReview();
                 })
                     .catch(e => {
                         logError(e)

@@ -1,7 +1,7 @@
 import { useHookstate } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import type { NewCoinNavigationProp } from '../types/navigation';
-import { addNft, logError, showToast } from '../actions';
+import { addNft, askReview, logError, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen } from '../components';
 import { useI18n } from '../hooks';
@@ -10,8 +10,8 @@ import { useTheme } from '../hooks';
 
 export default () => {
   const navigation = useNavigation<NewCoinNavigationProp>();
-  const contractId = useHookstate('1LqAs29cya7jGcx5DFmDdpMdZBseEBzoU1');
-  const tokenId = useHookstate('0x31');
+  const contractId = useHookstate('');
+  const tokenId = useHookstate('');
   const i18n = useI18n();
   const theme = useTheme();
   const styles = theme.styles;
@@ -38,8 +38,8 @@ export default () => {
       tokenId: tokenId.get()
     })
       .then(nft => {
-        console.log(nft);
         navigation.goBack();
+        askReview();
       })
       .catch(e => {
         logError(e);

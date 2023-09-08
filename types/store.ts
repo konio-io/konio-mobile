@@ -9,11 +9,8 @@ export type EncryptedStoreState = {
 
 export type UserStoreState = {
     currentNetworkId: string,
-    currentAddress: string|null,
+    currentAddress: string,
     accounts: Record<string, Account>,
-    //coins: Record<string, Coin>,
-    //nfts: Record<string, NFT>,
-    //transactions: Record<string, Transaction>,
     networks: Record<string, Network>,
     locale: string,
     theme: string,
@@ -22,7 +19,8 @@ export type UserStoreState = {
     addressbook: Record<string,Contact>,
     rcLimit: string,
     version: string,
-    logs: Array<string>
+    logs: Array<string>,
+    askReview: boolean
 }
 
 export type AccountSecure = {

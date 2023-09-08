@@ -3,7 +3,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { NewCoinNavigationProp, NewContactRouteProp } from '../types/navigation';
 import { addContact, refreshKap, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
-import { TextInput, Button, Screen, Text } from '../components';
+import { TextInput, Button, Screen } from '../components';
 import { useI18n, useKapAddress, useKapName } from '../hooks';
 import { Alert, View } from 'react-native';
 import { useTheme } from '../hooks';

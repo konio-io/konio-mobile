@@ -2,16 +2,14 @@ import { FlatList, RefreshControl } from 'react-native';
 import { useHookstate } from '@hookstate/core';
 import { useCoins } from '../hooks';
 import { refreshCoins } from '../actions';
+import { ReactElement } from 'react';
 
 export default (props: {
     renderItem: Function
+    footerComponent?: ReactElement
 }) => {
     const refreshing = useHookstate(false);
     const coins = useCoins();
-
-    if (!coins.ornull) {
-        return <></>;
-    }
 
     const loadCoinList = async () => {
         refreshing.set(true);
@@ -26,6 +24,7 @@ export default (props: {
             refreshControl={
                 <RefreshControl refreshing={refreshing.get()} onRefresh={loadCoinList} />
             }
+            ListFooterComponent={props.footerComponent ?? <></>}
         />
     );
 }

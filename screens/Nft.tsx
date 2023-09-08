@@ -1,15 +1,12 @@
 import { View, Image } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NftRouteProp, AssetsNavigationProp } from '../types/navigation';
-import { Button, TransactionList, Screen, MoreVertical, Text, CoinLogo, Wrapper } from '../components';
-import { useNft, useCoinBalance, useCoinValue, useI18n, useTheme } from '../hooks';
-import { Feather } from '@expo/vector-icons';
+import { Screen, MoreVertical, Text, Wrapper } from '../components';
+import { useNft, useTheme } from '../hooks';
 import { useEffect } from 'react';
 import { SheetManager } from "react-native-actions-sheet";
 
 export default () => {
-    return <></>
-
     const navigation = useNavigation<AssetsNavigationProp>();
     const route = useRoute<NftRouteProp>();
     const accountNft = useNft(route.params.id);
@@ -17,7 +14,6 @@ export default () => {
     const theme = useTheme();
     const styles = theme.styles;
     const { Border } = theme.vars;
-    const i18n = useI18n();
 
     useEffect(() => {
         navigation.setOptions({
@@ -46,8 +42,6 @@ export default () => {
                         <Text style={styles.textSmall}>{nft.description}</Text>
                     </View>
                 </View>
-                
-
             </Wrapper>
         </Screen>
     );

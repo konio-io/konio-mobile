@@ -1,13 +1,14 @@
 import { FlatList, View } from 'react-native';
-import { useNetworks, useCurrentNetworkId, useTheme, useI18n } from '../hooks';
+import { useNetworks, useCurrentNetworkId, useTheme } from '../hooks';
 import { setCurrentNetwork } from '../actions';
-import { ListItemSelected, Separator, Text, Screen, Link } from '../components';
+import { ListItemSelected, Text, Screen, ButtonCircle } from '../components';
 import { SheetManager } from 'react-native-actions-sheet';
 import { useNavigation } from '@react-navigation/native';
 import { ChangeNetworkNavigationProp } from '../types/navigation';
 import { DEFAULT_NETWORKS } from '../lib/Constants';
 import { ImmutableObject } from '@hookstate/core';
 import { Network } from '../types/store';
+import { Feather } from '@expo/vector-icons';
 
 export default () => {
   const networks = useNetworks();
@@ -17,8 +18,8 @@ export default () => {
       <FlatList
         data={Object.values(networks.get())}
         renderItem={({ item }) => <ListItem network={item} />}
+        ListFooterComponent={(<Footer />)}
       />
-      <Footer />
     </Screen>
   );
 }
@@ -57,11 +58,14 @@ const Footer = () => {
   const navigation = useNavigation<ChangeNetworkNavigationProp>();
   const theme = useTheme();
   const styles = theme.styles;
-  const i18n = useI18n();
 
   return (
     <View style={{ ...styles.paddingBase, ...styles.alignCenterColumn }}>
-      <Link text={i18n.t('add_network')} onPress={() => navigation.navigate('NewNetwork')} />
+      <ButtonCircle 
+        onPress={() => navigation.navigate('NewNetwork')} 
+        icon={(<Feather name="plus" />)}
+        type='secondary'
+      />
     </View>
   );
 };

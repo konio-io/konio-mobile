@@ -68,7 +68,6 @@
     "transaction_confirmed": "İşlem onaylandı",
     "transaction_confirm_failed": "İşlem onayı başarısız oldu",
     "transaction_commit_failed": "İşlem gerçekleştirme başarısız oldu",
-    "add_more_coins": "Daha fazla kripto ekle",
     "address_copied": "Adres panoya kopyalandı",
     "amount": "Miktar",
     "perc_25": "25%",
@@ -234,5 +233,15 @@
     "check_connection": "İnternet bağlantınızı kontrol edin",
     "you_online": "Yeniden çevrimiçisiniz",
     "faq":"FAQ",
-    "autodiscovering_coins": "Otomatik madeni para keşfi"
+    "autodiscovering_coins": "Otomatik madeni para keşfi",
+    "add_nft": "NFT Ekle",
+    "token_id": "Token Kimliği",
+    "missing_token_id": "Eksik Token Kimliği",
+    "unable_to_add_nft": "NFT eklenemiyor",
+    "migration_error": "Veri Göçü Hatası",
+    "migration_error_desc": "Uygulama verilerinizi silin ve Konio'yu yeniden başlatın",
+    "about":"About",
+    "transaction_SUCCESS": "Tamamlandı",
+    "transaction_PENDING": "Beklemede",
+    "transaction_ERROR": "Başarısız"
 }

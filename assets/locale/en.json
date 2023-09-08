@@ -68,7 +68,6 @@
     "transaction_confirmed": "Transaction confirmed",
     "transaction_confirm_failed": "Transaction confirm failed",
     "transaction_commit_failed": "Transaction commit failed",
-    "add_more_coins": "Add more coins",
     "address_copied": "Address copied to clipboard",
     "amount": "Amount",
     "perc_25": "25%",
@@ -234,9 +233,14 @@
     "you_online":"You are online again",
     "faq":"FAQ",
     "autodiscovering_coins":"Auto discovering coins",
-    "add_more_nfts":"Add NFT",
     "add_nft":"Add NFT",
     "token_id":"Token ID",
     "missing_token_id":"Missing Token ID",
-    "unable_to_add_nft":"Unable to add NFT"
+    "unable_to_add_nft":"Unable to add NFT",
+    "migration_error":"Migration data error",
+    "migration_error_desc":"Wipe your application data and restart Konio",
+    "about":"About",
+    "transaction_SUCCESS":"Completed",
+    "transaction_PENDING":"Pending",
+    "transaction_ERROR":"Failed"
   }

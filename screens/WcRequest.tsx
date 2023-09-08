@@ -4,7 +4,7 @@ import Loading from "./Loading";
 import { View, Image } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { WcRequestNavigationProp, WcRequestRouteProp } from "../types/navigation";
-import { acceptRequest, logError, rejectRequest, showToast, unsetWCPendingRequest } from "../actions";
+import { acceptRequest, askReview, logError, rejectRequest, showToast, unsetWCPendingRequest } from "../actions";
 import { checkWCMethod, checkWCNetwork, getNetworkByChainId } from "../lib/WalletConnect";
 import { useHookstate } from "@hookstate/core";
 import { useEffect } from "react";
@@ -15,11 +15,11 @@ import { WC_METHODS } from "../lib/Constants";
 
 export default () => {
     const wallet = useWC().wallet.get();
-    const currentAddress = useCurrentAddress().get();
-    if (!currentAddress || !wallet) {
+    if (!wallet) {
         return <Loading />
     }
 
+    const currentAddress = useCurrentAddress().get();
     const currentNetworkId = useCurrentNetworkId().get();
     const currentNetwork = useNetwork(currentNetworkId).get();
     const navigation = useNavigation<WcRequestNavigationProp>();
@@ -71,6 +71,7 @@ export default () => {
                     type: 'success',
                     text1: i18n.t('dapp_request_success')
                 });
+                askReview();
             })
             .catch(e => {
                 logError(e);
@@ -249,10 +250,6 @@ const SendTransactionDetail = (props: {
     transaction: any
 }) => {
     const currentAddress = useCurrentAddress().get();
-    if (!currentAddress) {
-        return <Loading />
-    }
-
     const currentNetworkId = useCurrentNetworkId().get();
     const i18n = useI18n();
     const theme = useTheme();

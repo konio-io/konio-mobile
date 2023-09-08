@@ -10,7 +10,7 @@ import ImportAccount from "../screens/ImportAccount";
 import EditAccount from "../screens/EditAccount";
 import WalletConnect from "./WalletConnect";
 import { RootNavigationProp, RootParamList } from "../types/navigation";
-import { acceptRequest, initWC, logError, refreshCoins, refreshMana, refreshWCActiveSessions, showToast } from "../actions";
+import { acceptRequest, initWC, logError, refreshWCActiveSessions, showToast } from "../actions";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import WcProposal from "../screens/WcProposal";
 import WcRequest from "../screens/WcRequest";
@@ -18,6 +18,7 @@ import { WC_SECURE_METHODS } from "../lib/Constants";
 import { useHookstate } from "@hookstate/core";
 import NetInfo from '@react-native-community/netinfo';
 import Faq from "../screens/Faq";
+import About from "../screens/About";
 
 const Stack = createStackNavigator<RootParamList>();
 
@@ -226,6 +227,13 @@ export default () => {
         component={Faq}
         options={{
           title: i18n.t('faq')
+        }}
+      />
+      <Stack.Screen
+        name="About"
+        component={About}
+        options={{
+          title: i18n.t('about')
         }}
       />
     </Stack.Navigator>

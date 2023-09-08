@@ -15,14 +15,14 @@ import { SessionTypes } from "@walletconnect/types";
 export default () => {
     const wc = useWC();
     const wallet = wc.wallet.get();
+    if (!wallet) {
+        return <Loading />;
+    }
+
     const activeSessions = wc.activeSessions.get();
     const i18n = useI18n();
     const { styles } = useTheme();
     const navigation = useNavigation<WcSessionsNavigationProp>();
-
-    if (!wallet) {
-        return <Loading />;
-    }
 
     const disconnect = async (topic: string) => {
         await wallet.disconnectSession({

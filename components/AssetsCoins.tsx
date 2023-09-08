@@ -1,24 +1,17 @@
 import { TouchableHighlight, View } from 'react-native';
-import { State } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
-import { useCurrentAddress, useTheme, useI18n, useCurrentKoin } from '../hooks';
-import { CoinList, ManaBar, CoinListItem, Screen, Link } from '.';
+import { useTheme } from '../hooks';
+import { CoinList, CoinListItem, ButtonCircle } from '.';
 import { AssetsNavigationProp, } from '../types/navigation';
-import Loading from '../screens/Loading';
 import { SheetManager } from "react-native-actions-sheet";
+import { Feather } from '@expo/vector-icons';
 
 export default () => {
-  const currentAddress = useCurrentAddress();
-  const currentAddressOrNull: State<string> | null = currentAddress.ornull;
-  if (!currentAddressOrNull) {
-    return <Loading />
-  }
-
   return (
-    <Screen>
-      <CoinList renderItem={(contractId: string) => <TouchableCoinListItem contractId={contractId} />} />
-      <Footer />
-    </Screen>
+    <CoinList
+      renderItem={(contractId: string) => <TouchableCoinListItem contractId={contractId} />}
+      footerComponent={<Footer />}
+    />
   );
 }
 
@@ -47,11 +40,14 @@ const Footer = () => {
   const navigation = useNavigation<AssetsNavigationProp>();
   const theme = useTheme();
   const styles = theme.styles;
-  const i18n = useI18n();
 
   return (
-    <View style={{ ...styles.paddingBase, ...styles.alignCenterColumn }}>
-      <Link text={i18n.t('add_more_coins')} onPress={() => navigation.navigate('NewCoin')} />
+    <View style={{ ...styles.alignCenterColumn, ...styles.paddingSmall }}>
+      <ButtonCircle
+        onPress={() => navigation.navigate('NewCoin')}
+        icon={(<Feather name="plus" />)}
+        type='secondary'
+      />
     </View>
   );
 };

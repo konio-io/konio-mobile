@@ -12,10 +12,6 @@ export default (props: {
     const styles = createStyles(theme);
     const coin = useCoin(props.contractId);
 
-    if (!coin.ornull) {
-        return <></>;
-    }
-
     return (
         <View style={styles.container}>
             <View style={styles.leftContainer}>
@@ -36,7 +32,7 @@ export default (props: {
                             </Text>
                         }
 
-                        <Text style={{...styles.text, ...styles.textRight}}>{coin.balance.ornull.get()}</Text>
+                        <Text style={{...styles.text, ...styles.textRight}}>{coin.balance.ornull.get().toFixed(2)}</Text>
                     </View>
                 }
             </View>

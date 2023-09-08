@@ -1,7 +1,7 @@
 import { useHookstate } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import type { NewCoinNavigationProp } from '../types/navigation';
-import { addCoin, logError, showToast } from '../actions';
+import { addCoin, askReview, logError, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen, Text, CoinLogo, ActivityIndicator } from '../components';
 import { useCoins, useCurrentNetworkId, useI18n } from '../hooks';
@@ -31,6 +31,7 @@ export default () => {
     addCoin(contractId.get())
       .then(coin => {
         navigation.goBack();
+        askReview();
       })
       .catch(e => {
         logError(e);
@@ -113,16 +114,15 @@ const SuggestList = (props: {
           networkId: currentNetworkId,
           contractId: token.address
         });
-        if (value !== '0') {
+        if (value && value > 0) {
           coinList.merge([{
             contractId: token.address,
             symbol: token.symbol
           }])
         }
       }
-
     } catch (e) {
-      logError(e);
+      logError(String(e));
     }
     searching.set(false);
   }
@@ -135,7 +135,6 @@ const SuggestList = (props: {
 
   return (
     <View>
-      {coinList.get().length > 0 &&
         <View>
           <Text style={styles.sectionTitle}>{i18n.t('auto_discovered')}</Text>
 
@@ -143,16 +142,13 @@ const SuggestList = (props: {
             {data.map(coin =>
               <ListItem key={coin.contractId} contractId={coin.contractId} symbol={coin.symbol} onPress={(cId: string) => props.onPressCoin(cId)} />
             )}
+            {searching.get() === true &&
+              <View style={{...styles.alignCenterRow, height: 65, width: 40 }}>
+                <ActivityIndicator></ActivityIndicator>
+              </View>
+            }
           </View>
         </View>
-      }
-
-      {searching.get() === true &&
-        <View style={styles.alignCenterColumn}>
-          <Text style={styles.sectionTitle}>{i18n.t('autodiscovering_coins')}</Text>
-          <ActivityIndicator></ActivityIndicator>
-        </View>
-      }
     </View>
   );
 }

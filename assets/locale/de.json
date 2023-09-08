@@ -68,7 +68,6 @@
   "transaction_confirmed": "Transaktion bestätigt",
   "transaction_confirm_failed": "Transaktionsbestätigung fehlgeschlagen",
   "transaction_commit_failed": "Transaktionsbestätigung fehlgeschlagen",
-  "add_more_coins": "Weitere Münzen hinzufügen",
   "address_copied": "Adresse in Zwischenablage kopiert",
   "amount": "Betrag",
   "perc_25": "25%",
@@ -233,6 +232,16 @@
   "you_offline": "Du bist offline",
   "check_connection": "Überprüfe deine Internetverbindung",
   "you_online": "Du bist wieder online",
-  "faq":"FAQ",
-  "autodiscovering_coins": "Automatische Entdeckung von Münzen"
+  "faq": "FAQ",
+  "autodiscovering_coins": "Automatische Entdeckung von Münzen",
+  "add_nft": "NFT hinzufügen",
+  "token_id": "Token-ID",
+  "missing_token_id": "Fehlende Token-ID",
+  "unable_to_add_nft": "NFT kann nicht hinzugefügt werden",
+  "migration_error": "Migrationsdatenfehler",
+  "migration_error_desc": "Löschen Sie Ihre Anwendungsdaten und starten Sie Konio neu",
+  "about": "About",
+  "transaction_SUCCESS": "Abgeschlossen",
+  "transaction_PENDING": "Ausstehend",
+  "transaction_ERROR": "Fehlgeschlagen"
 }

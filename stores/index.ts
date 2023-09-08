@@ -17,7 +17,7 @@ export const encryptedStoreIsLoading = hookstate(true);
  */
 export const UserStoreDefault: UserStoreState = {
     currentNetworkId: DEFAULT_NETWORK,
-    currentAddress: null,
+    currentAddress: '',
     accounts: {},
     networks: { ...DEFAULT_NETWORKS },
     locale: OS_LOCALE,
@@ -26,8 +26,9 @@ export const UserStoreDefault: UserStoreState = {
     autolock: -1,
     addressbook: {},
     rcLimit: '95',
-    version: '20230705',
-    logs: []
+    version: '20230908',
+    logs: [],
+    askReview: false
 };
 export const UserStore = hookstate(
     {... UserStoreDefault}, localstored({
@@ -77,7 +78,6 @@ export const EncryptedStore = hookstate(
  */
 const ManaStoreDefault = {
     mana: 0,
-    koin: 0,
     lastUpdateMana: new Date().getTime()
 };
 export const ManaStore = hookstate({...ManaStoreDefault});

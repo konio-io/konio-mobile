@@ -12,15 +12,19 @@ export default (props: SheetProps) => {
     const { id } = props.payload;
     const i18n = useI18n();
     const navigation = useNavigation<AssetsNavigationProp>();
-    const nft = useNft(id).get();
+    const nft = useNft(id);
 
+    if (!nft.ornull) {
+        return <></>;
+    }
+    
     const _delete = () => {
         navigation.navigate('Assets');
         deleteNft(id);
     };
 
     const _copyContractId = async () => {
-        await Clipboard.setStringAsync(nft.contractId);
+        await Clipboard.setStringAsync(nft.contractId.get());
         showToast({
             type: 'info',
             text1: i18n.t('copied_to_clipboard')
@@ -28,7 +32,7 @@ export default (props: SheetProps) => {
     }
 
     const _copyTokenId = async () => {
-        await Clipboard.setStringAsync(nft.contractId);
+        await Clipboard.setStringAsync(nft.tokenId.get());
         showToast({
             type: 'info',
             text1: i18n.t('copied_to_clipboard')
@@ -38,13 +42,13 @@ export default (props: SheetProps) => {
     const data = [
         {
             title: i18n.t('contract_address'),
-            description: nft.contractId,
+            description: nft.contractId.get(),
             icon: <AntDesign name="codesquareo"/>,
             onPress: () => _copyContractId()
         },
         {
             title: i18n.t('token_id'),
-            description: nft.tokenId,
+            description: nft.tokenId.get(),
             icon: <AntDesign name="codesquareo"/>,
             onPress: () => _copyTokenId()
         },

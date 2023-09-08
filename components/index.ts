@@ -12,7 +12,6 @@ import Address from './Address';
 import TransactionList from './TransactionList';
 import ActivityIndicator from './ActivityIndicator';
 import Wrapper from './Wrapper';
-import CoinBalance from './CoinBalance';
 import CoinListItem from './CoinListItem';
 import CoinSymbol from './CoinSymbol';
 import ListItemSelected from './ListItemSelected';
@@ -40,6 +39,7 @@ import ManaProgressLogo from './ManaProgressLogo';
 import Accordion from './Accordion';
 import Badge from './Badge';
 import WcLogo from './Wclogo';
+import ButtonCircle from './ButtonCircle';
 
 export {
     ActivityIndicator,
@@ -48,6 +48,7 @@ export {
     Logo,
     Toast,
     Button,
+    ButtonCircle,
     AccountAvatar,
     ManaBar,
     ManaStat,
@@ -56,7 +57,6 @@ export {
     Address,
     TransactionList,
     Wrapper,
-    CoinBalance,
     CoinListItem,
     CoinSymbol,
     ListItemSelected,

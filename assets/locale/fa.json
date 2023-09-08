@@ -68,7 +68,6 @@
   "transaction_confirmed": "تراکنش تأیید شد",
   "transaction_confirm_failed": "تأیید تراکنش ناموفق بود",
   "transaction_commit_failed": "تأیید تراکنش ناموفق بود",
-  "add_more_coins": "افزودن سکه های بیشتر",
   "address_copied": "آدرس کپی شده به کلیپبورد",
   "amount": "مقدار",
   "perc_25": "25٪",
@@ -233,6 +232,16 @@
   "you_offline": "شما آفلاین هستید",
   "check_connection": "اتصال اینترنت خود را بررسی کنید",
   "you_online": "شما دوباره آنلاین هستید",
-  "faq":"FAQ",
-  "autodiscovering_coins": "کشف خودکار سکه‌ها"
+  "faq": "FAQ",
+  "autodiscovering_coins": "کشف خودکار سکه‌ها",
+  "add_nft": "افزودن NFT",
+  "token_id": "شناسه توکن",
+  "missing_token_id": "شناسه توکن گم‌شده",
+  "unable_to_add_nft": "افزودن NFT امکان‌پذیر نیست",
+  "migration_error": "خطای مهاجرت داده",
+  "migration_error_desc": "داده‌های برنامه را پاک کنید و Konio را دوباره راه‌اندازی کنید",
+  "about": "About",
+  "transaction_SUCCESS": "کامل شده",
+  "transaction_PENDING": "در انتظار",
+  "transaction_ERROR": "ناموفق"
 }

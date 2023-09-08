@@ -24,7 +24,7 @@ export const useCurrentNetworkId = () => {
     return useHookstate(UserStore.currentNetworkId);
 }
 
-export const useCurrentAddress = (): State<string | null> => {
+export const useCurrentAddress = () => {
     return useHookstate(UserStore.currentAddress);
 }
 
@@ -33,14 +33,9 @@ export const useAccount = (address: string) => {
 }
 
 export const useCoin = (contractId: string) => {
-    const currentAddress = useHookstate(UserStore.currentAddress);
-    const currentAddressOrNull: State<string> | null = currentAddress.ornull;
-    if (!currentAddressOrNull) {
-        return useHookstate(null);
-    }
-
-    const currentNetworkId = useHookstate(UserStore.currentNetworkId);
-    return useHookstate(UserStore.accounts[currentAddressOrNull.get()].assets[currentNetworkId.get()].coins[contractId]);
+    const currentAddress = useHookstate(UserStore.currentAddress).get();
+    const currentNetworkId = useHookstate(UserStore.currentNetworkId).get();
+    return useHookstate(UserStore.accounts[currentAddress].assets[currentNetworkId].coins[contractId]);
 }
 
 /**
@@ -48,13 +43,9 @@ export const useCoin = (contractId: string) => {
  * @returns 
  */
 export const useCoins = () => {
-    const currentAddress = useHookstate(UserStore.currentAddress);
-    const currentAddressOrNull: State<string> | null = currentAddress.ornull;
-    if (currentAddressOrNull) {
-        const currentNetworkId = useHookstate(UserStore.currentNetworkId);
-        return useHookstate(UserStore.accounts[currentAddressOrNull.get()].assets[currentNetworkId.get()].coins);
-    }
-    return useHookstate([]);
+    const currentAddress = useHookstate(UserStore.currentAddress).get();
+    const currentNetworkId = useHookstate(UserStore.currentNetworkId).get();
+    return useHookstate(UserStore.accounts[currentAddress].assets[currentNetworkId].coins);
 }
 
 
@@ -64,16 +55,12 @@ export const useCoins = () => {
  * @returns 
  */
 export const useTransactions = (contractId: string) => {
-    const currentAddress = useHookstate(UserStore.currentAddress);
-    if (!currentAddress.ornull) {
-        return useHookstate({});
-    }
-
-    const currentNetworkId = useHookstate(UserStore.currentNetworkId);
+    const currentAddress = useHookstate(UserStore.currentAddress).get();
+    const currentNetworkId = useHookstate(UserStore.currentNetworkId).get();
     const coin = UserStore.accounts
-        .nested(currentAddress.ornull.get())
+        .nested(currentAddress)
         .assets
-        .nested(currentNetworkId.get())
+        .nested(currentNetworkId)
         .coins
         .nested(contractId);
 
@@ -81,16 +68,12 @@ export const useTransactions = (contractId: string) => {
 }
 
 export const useTransaction = (args: {contractId: string, transactionId: string}) => {
-    const currentAddress = useHookstate(UserStore.currentAddress);
-    if (!currentAddress.ornull) {
-        return useHookstate(null);
-    }
-
-    const currentNetworkId = useHookstate(UserStore.currentNetworkId);
+    const currentAddress = useHookstate(UserStore.currentAddress).get();
+    const currentNetworkId = useHookstate(UserStore.currentNetworkId).get();
     const transactions = UserStore.accounts
-        .nested(currentAddress.ornull.get())
+        .nested(currentAddress)
         .assets
-        .nested(currentNetworkId.get())
+        .nested(currentNetworkId)
         .coins
         .nested(args.contractId)
         .transactions;
@@ -218,32 +201,28 @@ export const useKapName = (name: string) => {
     return address;
 }
 
+
 /**
  * Current account nfts
  * @returns 
  */
 export const useNfts = () => {
-    const currentAddress = useHookstate(UserStore.currentAddress);
-    const currentAddressOrNull: State<string> | null = currentAddress.ornull;
-    if (currentAddressOrNull) {
-        return useHookstate(UserStore.accounts[currentAddressOrNull.get()].nfts);
-    }
-    return useHookstate([]);
+    const currentAddress = useHookstate(UserStore.currentAddress).get();
+    const currentNetworkId = useCurrentNetworkId().get();
+
+    return useHookstate(UserStore.accounts[currentAddress].assets[currentNetworkId].nfts);
 }
 
 export const useNft = (id: string) => {
-    return useHookstate(UserStore.nfts[id]);
+    const currentAddress = useHookstate(UserStore.currentAddress).get();
+    const currentNetworkId = useHookstate(UserStore.currentNetworkId).get();
+    return useHookstate(UserStore.accounts[currentAddress].assets[currentNetworkId].nfts[id]);
 }
 
 export const useAccountValue = () => {
-    const currentAddress = useHookstate(UserStore.currentAddress);
-    const currentAddressOrNull: State<string> | null = currentAddress.ornull;
-    if (!currentAddressOrNull) {
-        return useHookstate(0);
-    }
-
-    const currentNetworkId = useHookstate(UserStore.currentNetworkId);
-    const coins = useHookstate(UserStore.accounts[currentAddressOrNull.get()].assets[currentNetworkId.get()].coins);
+    const currentAddress = useHookstate(UserStore.currentAddress).get();
+    const currentNetworkId = useHookstate(UserStore.currentNetworkId).get();
+    const coins = useHookstate(UserStore.accounts[currentAddress].assets[currentNetworkId].coins);
     const total = useHookstate(0);
 
     useEffect(() => {

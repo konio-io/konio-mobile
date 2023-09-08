@@ -4,12 +4,10 @@ import { useNavigation } from '@react-navigation/native';
 import { useCurrentAddress, useTheme, useI18n, useAccount, useAccountValue } from '../hooks';
 import { Screen, DrawerToggler, MoreVertical, Text, Address, ManaBar } from '../components';
 import { AssetsNavigationProp, } from '../types/navigation';
-import Loading from './Loading';
 import { SheetManager } from "react-native-actions-sheet";
 import { useEffect } from 'react';
 import AssetsCoins from '../components/AssetsCoins';
 import AssetsNfts from '../components/AssetsNfts';
-import { UserStore } from '../stores';
 
 const CATEGORY_COINS = 'coins';
 const CATEGORY_NFTS = 'nfts';
@@ -17,16 +15,11 @@ const CATEGORY_NFTS = 'nfts';
 export default () => {
 
   const currentAddress = useCurrentAddress();
-  const currentAddressOrNull: State<string> | null = currentAddress.ornull;
-  if (!currentAddressOrNull) {
-    return <Loading />
-  }
-
   const navigation = useNavigation<AssetsNavigationProp>();
   const theme = useTheme();
   const styles = theme.styles;
   const i18n = useI18n();
-  const account = useAccount(currentAddressOrNull.get());
+  const account = useAccount(currentAddress.get());
   const category = useHookstate(CATEGORY_COINS);
   const total = useAccountValue();
 
@@ -37,7 +30,12 @@ export default () => {
       headerTitleAlign: 'center',
       headerLeft: () => (<DrawerToggler />),
       headerRight: () => (<MoreVertical onPress={() => SheetManager.show('account', { payload: { address: currentAddress.get() } })} />),
-      headerTitle: () => (<></>)
+      headerTitle: () => (
+        <View style={styles.alignCenterColumn}>
+          <Text style={styles.textMedium}>{account.name.get()}</Text>
+          <Address address={currentAddress.get()} copiable={true} />
+        </View>
+      )
     });
   }, [navigation]);
 
@@ -50,15 +48,10 @@ export default () => {
             <Text style={styles.textSmall}>{i18n.t('total_balance')}</Text>
           </View>
 
-          <View style={styles.alignCenterColumn}>
-            <Text style={styles.textMedium}>{account.name.get()}</Text>
-            <Address address={currentAddressOrNull.get()} copiable={true} />
+          <View>
+            <ManaBar />
           </View>
         </View>
-      </View>
-
-      <View style={{ ...styles.rowGapBase }}>
-        <ManaBar />
       </View>
 
       <Toggler selected={category} />

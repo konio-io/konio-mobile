@@ -13,6 +13,7 @@ import { executeMigrations } from './actions';
 import Loading from './screens/Loading';
 import Intro from './navigators/Intro';
 import { userStoreIsLoading, encryptedStoreIsLoading } from './stores';
+import ErrorMigration from './screens/ErrorMigration';
 
 export default function App() {
   useFonts({
@@ -67,17 +68,21 @@ export default function App() {
 }
 
 const Main = () => {
-  
+
   const currentAddress = useCurrentAddress();
 
   if (userStoreIsLoading.get() || encryptedStoreIsLoading.get()) {
     return <Loading />;
   }
 
-  executeMigrations();
-
-  if (!currentAddress.get()) {
+  if (currentAddress.get() === '') {
     return <Intro />;
+  }
+
+  try {
+    executeMigrations();
+  } catch (e) {
+    return <ErrorMigration/>;
   }
 
   return <Drawer />;

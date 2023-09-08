@@ -15,7 +15,7 @@ export default (props: SheetProps) => {
     const coin = useCoin(contractId);
 
     if (!coin.ornull) {
-        return;
+        return <></>;
     }
 
     const _delete = () => {

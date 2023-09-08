@@ -16,11 +16,6 @@ export default () => {
     const currentKoin = useCurrentKoin();
     const contractId = useHookstate(currentKoin.get());
     const coin = useCoin(contractId.get());
-
-    if (!coin.ornull) {
-        return <></>;
-    }
-
     const balance = coin.balance.get() ?? 0;
     const value = coin.price.get() ?? 0;
 

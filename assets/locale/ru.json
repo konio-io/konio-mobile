@@ -68,7 +68,6 @@
   "transaction_confirmed": "Транзакция подтверждена",
   "transaction_confirm_failed": "Не удалось подтвердить транзакцию",
   "transaction_commit_failed": "Не удалось подтвердить транзакцию",
-  "add_more_coins": "Добавить больше монет",
   "address_copied": "Адрес скопирован в буфер обмена",
   "amount": "Сумма",
   "perc_25": "25%",
@@ -233,6 +232,16 @@
   "you_offline": "Вы офлайн",
   "check_connection": "Проверьте ваше интернет-соединение",
   "you_online": "Вы снова в сети",
-  "faq":"FAQ",
-  "autodiscovering_coins": "Автоматическое обнаружение монет"
+  "faq": "FAQ",
+  "autodiscovering_coins": "Автоматическое обнаружение монет",
+  "add_nft": "Добавить NFT",
+  "token_id": "Идентификатор токена",
+  "missing_token_id": "Отсутствует идентификатор токена",
+  "unable_to_add_nft": "Невозможно добавить NFT",
+  "migration_error": "Ошибка миграции данных",
+  "migration_error_desc": "Удалите данные приложения и перезапустите Konio",
+  "about": "About",
+  "transaction_SUCCESS": "Завершено",
+  "transaction_PENDING": "В ожидании",
+  "transaction_ERROR": "Не выполнено"
 }

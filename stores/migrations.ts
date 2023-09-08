@@ -1,6 +1,7 @@
 import { none } from "@hookstate/core";
 import { UserStore, UserStoreDefault } from ".";
 import { DEFAULT_NETWORK, DEFAULT_NETWORKS, DONATION_ADDRESS } from "../lib/Constants";
+import { refreshCoins } from '../actions/index';
 
 const migrations : Record<string,Function> = {
     '20230701': () => {},
@@ -77,10 +78,9 @@ const migrations : Record<string,Function> = {
         UserStore.logs.set([]);
     },
     '20230802': () => {
-        UserStore.addressbook.set({});
+        UserStore.addressbook.set({}); 
     },
     '20230904': () => {
-
         for (const accountId in UserStore.accounts) {
             const account = UserStore.accounts[accountId];
             const accountAssets = {};
@@ -119,13 +119,17 @@ const migrations : Record<string,Function> = {
             account.merge({ assets: accountAssets });
             account.coins.set(none);
             account.nfts.set(none);
+            refreshCoins({info: true});
         }
 
         UserStore.coins.set(none);
         UserStore.transactions.set(none);
     },
-    '20230906': () => {
+    '20230908': () => {
         UserStore.networks.set({ ...DEFAULT_NETWORKS });
+    },
+    '20230910': () => {
+        UserStore.merge({askReview: false});
     }
 }
 

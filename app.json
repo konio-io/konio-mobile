@@ -2,7 +2,7 @@
   "expo": {
     "name": "Konio",
     "slug": "konio",
-    "version": "1.9.1",
+    "version": "1.10.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -26,6 +26,7 @@
           "backgroundColor": "#000000"
         }
       },
+      "appStoreUrl": "https://apps.apple.com/app/konio/id6453561342",
       "buildNumber": "10"
     },
     "android": {
@@ -70,6 +71,7 @@
           "backgroundColor": "#000000"
         }
       },
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=konio.io",
       "versionCode": 10
     },
     "web": {

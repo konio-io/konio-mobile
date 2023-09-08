@@ -68,7 +68,6 @@
   "transaction_confirmed": "交易已确认",
   "transaction_confirm_failed": "无法确认交易",
   "transaction_commit_failed": "无法提交交易",
-  "add_more_coins": "添加更多币种",
   "address_copied": "地址已复制到剪贴板",
   "amount": "金额",
   "perc_25": "25%",
@@ -233,6 +232,16 @@
   "you_offline": "您处于离线状态",
   "check_connection": "请检查您的互联网连接",
   "you_online": "您已重新上线",
-  "faq":"FAQ",
-  "autodiscovering_coins": "自动发现硬币"
+  "faq": "FAQ",
+  "autodiscovering_coins": "自动发现硬币",
+  "add_nft": "添加NFT",
+  "token_id": "令牌ID",
+  "missing_token_id": "缺少令牌ID",
+  "unable_to_add_nft": "无法添加NFT",
+  "migration_error": "迁移数据错误",
+  "migration_error_desc": "清除应用程序数据并重新启动Konio",
+  "about": "About",
+  "transaction_SUCCESS": "完成",
+  "transaction_PENDING": "待处理",
+  "transaction_ERROR": "失败"
 }

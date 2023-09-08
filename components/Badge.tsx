@@ -20,7 +20,7 @@ export default (props: {
                 props.onPress();
             }
         }}>
-            <View style={{ backgroundColor: props.backgroundColor, borderRadius: Border.radius, ...styles.paddingSmall }}>
+            <View style={{ backgroundColor: props.backgroundColor, borderRadius: Border.radius, ...styles.paddingSmall, width: 'auto' }}>
                 <Text style={{ ...styles.textSmall, color: props.color }}>{props.label}</Text>
             </View>
         </TouchableHighlight>
