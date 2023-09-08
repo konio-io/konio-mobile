@@ -13,14 +13,12 @@ export default (props: SheetProps) => {
     const i18n = useI18n();
     const navigation = useNavigation<AssetsNavigationProp>();
     const coin = useCoin(contractId);
-
-    if (!coin.ornull) {
-        return <></>;
-    }
-
+    
     const _delete = () => {
         navigation.navigate('Assets');
-        deleteCoin(contractId);
+        setTimeout(() => {
+            deleteCoin(contractId);
+        }, 1000)
     };
 
     const _copyContractId = async () => {

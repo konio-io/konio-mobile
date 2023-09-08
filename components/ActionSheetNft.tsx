@@ -13,14 +13,12 @@ export default (props: SheetProps) => {
     const i18n = useI18n();
     const navigation = useNavigation<AssetsNavigationProp>();
     const nft = useNft(id);
-
-    if (!nft.ornull) {
-        return <></>;
-    }
     
     const _delete = () => {
         navigation.navigate('Assets');
-        deleteNft(id);
+        setTimeout(() => {
+            deleteNft(id);
+        }, 1000)
     };
 
     const _copyContractId = async () => {
