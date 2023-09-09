@@ -2,6 +2,7 @@ import { none } from "@hookstate/core";
 import { UserStore, UserStoreDefault } from ".";
 import { DEFAULT_NETWORK, DEFAULT_NETWORKS, DONATION_ADDRESS } from "../lib/Constants";
 import { refreshCoins } from '../actions/index';
+import { getContractInfo } from "../lib/utils";
 
 const migrations : Record<string,Function> = {
     '20230701': () => {},
@@ -81,6 +82,12 @@ const migrations : Record<string,Function> = {
         UserStore.addressbook.set({}); 
     },
     '20230904': () => {
+        type itemC = {
+            contractId: string,
+            networkId: string,
+            address: string
+        }
+        const coinToRefresh : Array<itemC> = [];
         for (const accountId in UserStore.accounts) {
             const account = UserStore.accounts[accountId];
             const accountAssets = {};
@@ -105,21 +112,40 @@ const migrations : Record<string,Function> = {
                     transactions: {}
                 }
 
-                for (const transactionId of coin.transactions) {
+                /*for (const transactionId of coin.transactions) {
                     const transaction = UserStore.transactions[transactionId].get();
                     if (!transaction) {
                         continue;
                     }
 
                     accountAssets[coin.networkId].coins[contractId].transactions[transactionId] = transaction;
-                }
+                }*/
 
+                coinToRefresh.push({
+                    contractId,
+                    networkId: coin.networkId,
+                    address: accountId
+                })
             }
 
             account.merge({ assets: accountAssets });
             account.coins.set(none);
             account.nfts.set(none);
-            refreshCoins({info: true});
+        }
+
+        for (const item of coinToRefresh) {
+            getContractInfo(item.contractId).then(info => {
+                if (info.logo) {
+                    UserStore.accounts[item.address].assets[item.networkId].coins[item.contractId].merge({
+                        logo: info.logo
+                    });
+                }
+                if (info.name) {
+                    UserStore.accounts[item.address].assets[item.networkId].coins[item.contractId].merge({
+                        name: info.name
+                    });
+                }
+            });
         }
 
         UserStore.coins.set(none);
