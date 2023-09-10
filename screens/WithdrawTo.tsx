@@ -57,7 +57,7 @@ export default () => {
     };
 
     return (
-        <Screen>
+        <Screen keyboardDismiss={true}>
             <View style={styles.paddingBase}>
                 <To value={address.get()} onChange={(v: string) => address.set(v)} />
             </View>

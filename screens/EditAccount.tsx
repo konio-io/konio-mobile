@@ -22,7 +22,7 @@ export default () => {
     }
 
     return (
-        <Screen>
+        <Screen keyboardDismiss={true}>
             <View style={{...styles.flex1, ...styles.paddingBase, ...styles.rowGapSmall}}>
                 <TextInput
                     autoFocus={true}

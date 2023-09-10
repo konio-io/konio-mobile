@@ -51,7 +51,7 @@ export default () => {
     }
 
     return (
-        <Screen>
+        <Screen keyboardDismiss={true}>
             <Wrapper>
 
                 <Text>{i18n.t('write_current_seed')}</Text>

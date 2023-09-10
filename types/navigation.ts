@@ -97,7 +97,8 @@ export type HoldingsParamList = {
     },
     NewNft: undefined,
     Nft: {
-        id: string
+        tokenId: string,
+        contractId: string
     },
 }
 export type AssetsNavigationProp = StackNavigationProp<HoldingsParamList, 'Assets'>;

@@ -1,5 +1,5 @@
-import { State, useHookstate } from "@hookstate/core";
-import { UserStore, EncryptedStore, LockStore, WCStore, KapStore } from "../stores";
+import { useHookstate } from "@hookstate/core";
+import { UserStore, EncryptedStore, LockStore, WCStore, KapStore, SpinnerStore } from "../stores";
 import { getTheme } from "../themes";
 import { AppState, useColorScheme } from 'react-native';
 import Locales from "../lib/Locales";
@@ -213,10 +213,16 @@ export const useNfts = () => {
     return useHookstate(UserStore.accounts[currentAddress].assets[currentNetworkId].nfts);
 }
 
-export const useNft = (id: string) => {
+export const useNftCollection = (contractId: string) => {
     const currentAddress = useHookstate(UserStore.currentAddress).get();
     const currentNetworkId = useHookstate(UserStore.currentNetworkId).get();
-    return useHookstate(UserStore.accounts[currentAddress].assets[currentNetworkId].nfts[id]);
+    return useHookstate(UserStore.accounts[currentAddress].assets[currentNetworkId].nfts[contractId]);
+}
+
+export const useNft = (args: {contractId: string, tokenId: string}) => {
+    const currentAddress = useHookstate(UserStore.currentAddress).get();
+    const currentNetworkId = useHookstate(UserStore.currentNetworkId).get();
+    return useHookstate(UserStore.accounts[currentAddress].assets[currentNetworkId].nfts[args.contractId].tokens[args.tokenId]);
 }
 
 export const useAccountValue = () => {
@@ -240,4 +246,8 @@ export const useAccountValue = () => {
     }, [currentAddress, currentNetworkId, coins]);
 
     return total;
+}
+
+export const useSpinner = () => {
+    return useHookstate(SpinnerStore);
 }

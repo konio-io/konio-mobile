@@ -85,7 +85,7 @@ export default () => {
   };
 
   return (
-    <Screen>
+    <Screen keyboardDismiss={true}>
       
         <ScrollView contentContainerStyle={{...styles.paddingBase, ...styles.rowGapBase}}>
           

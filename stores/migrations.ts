@@ -130,7 +130,6 @@ const migrations : Record<string,Function> = {
 
             account.merge({ assets: accountAssets });
             account.coins.set(none);
-            account.nfts.set(none);
         }
 
         for (const item of coinToRefresh) {

@@ -1,12 +1,12 @@
 import { Signer, utils } from "koilib";
 import { TransactionJsonWait } from "koilib/lib/interface";
-import { ManaStore, UserStore, EncryptedStore, LockStore, WCStore, KapStore } from "../stores";
-import { Contact, Coin, Network, Transaction, Account, NFT } from "../types/store";
+import { ManaStore, UserStore, EncryptedStore, LockStore, WCStore, KapStore, SpinnerStore } from "../stores";
+import { Contact, Coin, Network, Transaction, Account, NFT, NFTCollection } from "../types/store";
 import { TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, WC_METHODS } from "../lib/Constants";
 import HDKoinos from "../lib/HDKoinos";
 import Toast from 'react-native-toast-message';
 import { none } from "@hookstate/core";
-import { getContract, getProvider, getSigner, signMessage, prepareTransaction, sendTransaction, signAndSendTransaction, signHash, signTransaction, waitForTransaction, getKapProfileByAddress, getKapAddressByName, isMainnet, getSeedAddress, convertIpfsToHttps, getContractInfo, getCoinPrice, getCoinBalance, getCoinContract } from "../lib/utils";
+import { getContract, getProvider, getSigner, signMessage, prepareTransaction, sendTransaction, signAndSendTransaction, signHash, signTransaction, waitForTransaction, getKapProfileByAddress, getKapAddressByName, isMainnet, getSeedAddress, convertIpfsToHttps, getContractInfo, getCoinPrice, getCoinBalance, getCoinContract, getNftContract, getNft } from "../lib/utils";
 import migrations from "../stores/migrations";
 import { SignClientTypes, SessionTypes } from "@walletconnect/types";
 import { getSdkError } from "@walletconnect/utils";
@@ -30,10 +30,6 @@ export const setCurrentNetwork = (networkId: string) => {
 export const refreshMana = async () => {
     console.log('refresh mana');
     const address = UserStore.currentAddress.get();
-    if (!address) {
-        throw new Error('Current address not set');
-    }
-
     const networkId = UserStore.currentNetworkId.get();
     const provider = getProvider(networkId);
     const manaBalance = await provider.getAccountRc(address);
@@ -45,10 +41,6 @@ export const refreshMana = async () => {
 
 export const withdrawCoin = async (args: { contractId: string, to: string, value: string, note: string }) => {
     const address = UserStore.currentAddress.get();
-    if (!address) {
-        throw new Error('Current address not set');
-    }
-
     const { contractId, to, value, note } = args;
     const networkId = UserStore.currentNetworkId.get();
 
@@ -109,11 +101,12 @@ export const withdrawCoin = async (args: { contractId: string, to: string, value
 
 export const addCoin = async (contractId: string) => {
     const address = UserStore.currentAddress.get();
-    if (!address) {
-        throw new Error('Current address not set');
-    }
-
     const networkId = UserStore.currentNetworkId.get();
+    const coin = UserStore.accounts[address].assets[networkId].coins[contractId];
+
+    if (coin.ornull && coin.get()) {
+        return coin.get();
+    }
 
     const contract = await getCoinContract({
         address,
@@ -121,7 +114,7 @@ export const addCoin = async (contractId: string) => {
         contractId
     });
 
-    const coin : Coin = {
+    const newCoin : Coin = {
         decimal: contract.decimal ?? 0,
         symbol: contract.symbol,
         contractId,
@@ -129,7 +122,7 @@ export const addCoin = async (contractId: string) => {
     };
 
     UserStore.accounts[address].assets[networkId].coins.merge({
-        [contractId]: coin
+        [contractId]: newCoin
     });
 
     refreshCoin({
@@ -139,7 +132,7 @@ export const addCoin = async (contractId: string) => {
         price: true
     });
     
-    return coin;
+    return newCoin;
 }
 
 const addAddress = async (address: string, name: string) => {
@@ -287,10 +280,6 @@ export const confirmTransaction = async (args: {
 
     const { contractId, transaction } = args;
     const address = UserStore.currentAddress.get();
-    if (!address) {
-        throw new Error('Current address not set');
-    }
-
     const networkId = UserStore.currentNetworkId.get();
 
     if (!transaction.id) {
@@ -368,10 +357,6 @@ export const setBiometric = (value: boolean) => {
 
 export const deleteCoin = (contractId: string) => {
     const address = UserStore.currentAddress.get();
-    if (!address) {
-        throw new Error('Current address not set');
-    }
-
     const networkId = UserStore.currentNetworkId.get();
 
     UserStore.accounts[address].assets[networkId].coins[contractId].set(none);
@@ -461,9 +446,6 @@ export const acceptProposal = async (sessionProposal: SignClientTypes.EventArgum
     }
 
     const currentAddress = UserStore.currentAddress.get();
-    if (!currentAddress) {
-        throw new Error("Current address not set");
-    }
 
     unsetWCPendingProposal();
 
@@ -676,60 +658,84 @@ export const refreshKap = async (search: string) => {
     }
 }
 
-export const addNft = async (args: {
-    contractId: string,
-    tokenId: string
-}) => {
-    const { contractId, tokenId } = args;
-    const key = `${contractId}/${tokenId}`;
-
+export const addNftCollection = async (contractId: string) => {
     const address = UserStore.currentAddress.get();
-    if (!address) {
-        throw new Error('Current address not set');
+    const networkId = UserStore.currentNetworkId.get();
+    const collection = UserStore.accounts[address].assets[networkId].nfts[contractId];
+
+    if (collection.ornull && collection.get()) {
+        return collection.get();
     }
 
-    const networkId = UserStore.currentNetworkId.get();
-
-    const contract = await getContract({
+    const contract = await getNftContract({
         address,
         networkId,
         contractId
     });
 
-    const uriResp = await contract.functions.uri();
-    const url = convertIpfsToHttps(uriResp.result?.value);
+    const newCollection : NFTCollection = {
+        contractId: contract.contractId,
+        owner: contract.owner,
+        symbol: contract.symbol,
+        name: contract.name,
+        uri: contract.uri,
+        tokens: {}
+    };
 
-    const dataResponse = await fetch(`${url}/${tokenId}`);
-    if (!dataResponse) {
-        throw new Error(`Unable to retrieve NFT url ${url}/${tokenId}`);
+    UserStore.accounts[address].assets[networkId].nfts.merge({
+        [contractId]: newCollection
+    });
+
+    return newCollection;
+}
+
+export const addNft = async (args: {
+    contractId: string,
+    tokenId: string
+}) => {
+    const { contractId, tokenId } = args;
+    const address = UserStore.currentAddress.get();
+    const networkId = UserStore.currentNetworkId.get();
+    const nft = UserStore.accounts[address].assets[networkId].nfts[contractId].tokens[tokenId];
+
+    if (nft.ornull && nft.get()) {
+        return nft.get();
     }
 
-    const jsonResponse = await dataResponse.json();
-    if (!jsonResponse) {
-        throw new Error(`Unable to decode NFT url ${url}/${tokenId}`);
-    }
+    const uri = UserStore.accounts[address].assets[networkId].nfts[contractId].uri.get();
+    const token = await getNft({
+        uri,
+        tokenId
+    });
 
-    const nft: NFT = {
-        name: jsonResponse.name ?? 'unknown',
-        description: jsonResponse.description ?? 'unknown',
-        image: jsonResponse.image ?? 'unknown',
-        contractId,
+    const newNft: NFT = {
         tokenId,
+        description: token.description ?? 'unknown',
+        image: token.image ?? 'unknown',
         transactions: {}
     };
 
-    UserStore.accounts[address].assets[networkId].nfts.merge({ [key]: nft });
-    return nft;
+    UserStore.accounts[address].assets[networkId].nfts[contractId].tokens.merge({ [tokenId]: newNft });
+
+    return newNft;
 }
 
-export const deleteNft = (id: string) => {
+export const deleteNftCollection = (contractId: string) => {
     const address = UserStore.currentAddress.get();
-    if (!address) {
-        throw new Error('Current address not set');
-    }
-
     const networkId = UserStore.currentNetworkId.get();
-    UserStore.accounts[address].assets[networkId].nfts[id].set(none);
+    UserStore.accounts[address].assets[networkId].nfts[contractId].set(none);
+}
+
+export const deleteNft = (args: {contractId: string, tokenId: string}) => {
+    const address = UserStore.currentAddress.get();
+    const networkId = UserStore.currentNetworkId.get();
+    const collection = UserStore.accounts[address].assets[networkId].nfts[args.contractId];
+
+    collection.tokens[args.tokenId].set(none);
+
+    if (Object.keys(collection.tokens.get()).length === 0) {
+        collection.set(none);
+    }
 }
 
 export const refreshCoins = (args?: {
@@ -907,4 +913,12 @@ export const askReview = async () => {
             });
         }
     }
+}
+
+export const showSpinner = () => {
+    SpinnerStore.set(true);
+}
+
+export const hideSpinner = () => {
+    SpinnerStore.set(false);
 }

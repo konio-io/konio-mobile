@@ -9,7 +9,7 @@ export default () => {
     const rcLimit = useRcLimit();
 
     return (
-        <Screen>
+        <Screen keyboardDismiss={true}>
             <View style={styles.listItemContainer}>
                 <View>
                     <Text style={styles.textMedium}>{i18n.t('rc_limit')}</Text>

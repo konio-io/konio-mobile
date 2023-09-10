@@ -2,10 +2,10 @@ import { Button, Screen, TextInput, Text, AccountAvatar, Address } from '../comp
 import { useHookstate } from '@hookstate/core';
 import { useNavigation, CommonActions, useRoute } from '@react-navigation/native';
 import { WithdrawConfirmNavigationProp, WithdrawConfirmRouteProp } from '../types/navigation';
-import { withdrawCoin, confirmTransaction, showToast, logError, askReview } from '../actions'
+import { withdrawCoin, confirmTransaction, showToast, logError, askReview, showSpinner, hideSpinner } from '../actions'
 import { Feather } from '@expo/vector-icons';
 import { useCoin, useTheme, useI18n, useAccount, useContact } from '../hooks';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Keyboard } from 'react-native';
 import type { Theme } from '../types/store';
 
 export default () => {
@@ -26,9 +26,13 @@ export default () => {
     const styles = createStyles(theme);
 
     const send = () => {
+        Keyboard.dismiss();
+
         if (!to) {
             return;
         }
+
+        showSpinner();
 
         withdrawCoin({
             to,
@@ -37,6 +41,8 @@ export default () => {
             note: note.get()
         })
             .then(transaction => {
+                hideSpinner();
+
                 navigation.dispatch(
                     CommonActions.reset({
                         index: 1,
@@ -96,7 +102,7 @@ export default () => {
     };
 
     return (
-        <Screen>
+        <Screen keyboardDismiss={true}>
             <View style={{ ...styles.flex1, ...styles.paddingBase, ...styles.rowGapMedium }}>
                 <View style={styles.rowGapSmall}>
                     <Text style={styles.textSmall}>{i18n.t('recipient')}</Text>

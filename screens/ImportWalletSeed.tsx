@@ -1,7 +1,7 @@
-import { View } from 'react-native';
+import { Keyboard, View } from 'react-native';
 import { useHookstate } from '@hookstate/core';
 import { Button, TextInput, Wrapper, Screen, TextInputActionPaste } from '../components';
-import { addSeed, logError, refreshCoins, setCurrentAccount } from '../actions';
+import { addSeed, hideSpinner, logError, refreshCoins, setCurrentAccount, showSpinner } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n } from '../hooks';
 import { showToast } from '../actions';
@@ -14,6 +14,8 @@ export default () => {
   const styles = theme.styles;
 
   const importWallet = () => {
+    Keyboard.dismiss();
+
     if (!name.get()) {
       showToast({
         type: 'error',
@@ -22,14 +24,18 @@ export default () => {
       return;
     }
 
+    showSpinner();
+
     addSeed({
       name: name.get().trim(),
       seed: seed.get().toLowerCase().trim()
     })
       .then(address => {
+        hideSpinner();
         setCurrentAccount(address);
       })
       .catch(e => {
+        hideSpinner();
         logError(e);
         showToast({
           type: 'error',
@@ -40,7 +46,7 @@ export default () => {
   };
 
   return (
-    <Screen>
+    <Screen keyboardDismiss={true}>
       <Wrapper>
         <TextInput
           autoFocus={true}

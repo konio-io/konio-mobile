@@ -1,11 +1,11 @@
 import { useHookstate } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import type { NewCoinNavigationProp } from '../types/navigation';
-import { addNft, askReview, logError, showToast } from '../actions';
+import { addNft, addNftCollection, askReview, logError, showSpinner, hideSpinner, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen } from '../components';
 import { useI18n } from '../hooks';
-import { View } from 'react-native';
+import { View, Keyboard } from 'react-native';
 import { useTheme } from '../hooks';
 
 export default () => {
@@ -17,6 +17,8 @@ export default () => {
   const styles = theme.styles;
 
   const add = () => {
+    Keyboard.dismiss();
+
     if (!contractId.get()) {
       showToast({
         type: 'error',
@@ -33,27 +35,34 @@ export default () => {
       return;
     }
 
-    addNft({
-      contractId: contractId.get(),
-      tokenId: tokenId.get()
-    })
-      .then(nft => {
-        navigation.goBack();
-        askReview();
-      })
-      .catch(e => {
-        logError(e);
-        showToast({
-          type: 'error',
-          text1: i18n.t('unable_to_add_nft'),
-          text2: i18n.t('check_contract')
+    showSpinner();
+
+    addNftCollection(contractId.get())
+    .then(nftCollection => {
+        addNft({
+          contractId: contractId.get(),
+          tokenId: tokenId.get()
+        })
+        .then(nft => {
+          hideSpinner();
+          navigation.goBack();
+          askReview();
         });
+    })
+    .catch(e => {
+      hideSpinner();
+      logError(e);
+      showToast({
+        type: 'error',
+        text1: i18n.t('unable_to_add_nft'),
+        text2: i18n.t('check_contract')
       });
+    });
   };
 
   return (
-    <Screen>
-      <View style={{ ...styles.paddingBase }}>
+    <Screen keyboardDismiss={true}>
+      <View style={{ ...styles.paddingBase, ...styles.rowGapBase }}>
         <TextInput
           multiline={true}
           autoFocus={true}

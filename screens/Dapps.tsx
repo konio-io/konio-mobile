@@ -1,8 +1,8 @@
-import { View, Image, FlatList, Linking, StyleSheet, TouchableHighlight } from "react-native";
+import { View, Image, FlatList, Linking, StyleSheet } from "react-native";
 import { DAPPS_URL } from "../lib/Constants";
 import { ImmutableArray, ImmutableObject, useHookstate } from "@hookstate/core";
 import { Dapp, Theme } from "../types/store";
-import { Text, Screen, Link, Accordion, DrawerToggler } from "../components";
+import { Text, Screen, DrawerToggler } from "../components";
 import { useTheme } from "../hooks";
 import { useEffect } from "react";
 import { rgba } from "../lib/utils";
@@ -40,12 +40,12 @@ export default () => {
 
     useEffect(() => {
         navigation.setOptions({
-          headerShadowVisible: false,
-          headerTitleAlign: 'center',
-          headerLeft: () => (<DrawerToggler />),
-          headerRight: () => (<ScanButton/>)
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => (<DrawerToggler />),
+            headerRight: () => (<ScanButton />)
         });
-      }, [navigation]);
+    }, [navigation]);
 
     let filteredData = data.get();
     if (selectedTag.get() !== 'all') {
@@ -53,7 +53,7 @@ export default () => {
     }
 
     if (isLoading.get() === true) {
-        return <Loading/>
+        return <Loading />
     }
 
     return (
@@ -83,8 +83,8 @@ const ScanButton = () => {
 
     return (
         <TouchableOpacity onPress={() => openScan()}>
-            <View style={{marginRight: Spacing.base}}>
-                <AntDesign name='scan1' size={28} color={Color.baseContrast}/>
+            <View style={{ marginRight: Spacing.base }}>
+                <AntDesign name='scan1' size={28} color={Color.baseContrast} />
             </View>
         </TouchableOpacity>
     );
@@ -131,7 +131,7 @@ const Tag = (props: {
     const theme = useTheme();
     const styles = createStyles(theme);
     const style = selected ? styles.tagSelected : styles.tag;
-    
+
     return (
         <TouchableOpacity key={name} onPress={() => props.onPress(name)}>
             <Text style={style}>{name}({count})</Text>
@@ -148,27 +148,17 @@ const Item = (props: {
 
     return (
         <View style={styles.paddingVerticalSmall}>
-            <Accordion
-                header={(
-                    <View style={{ ...styles.directionRow, ...styles.columnGapBase, ...styles.paddingHorizontalBase }}>
-                        <TouchableWithoutFeedback onPress={() => Linking.openURL(props.item.url)}>
-                            <Image style={styles.itemIcon} source={{ uri: props.item.icon }} />
-                        </TouchableWithoutFeedback>
+            <View style={{ ...styles.directionRow, ...styles.columnGapBase, ...styles.paddingHorizontalBase }}>
+                <TouchableWithoutFeedback onPress={() => Linking.openURL(props.item.url)}>
+                    <Image style={styles.itemIcon} source={{ uri: props.item.icon }} />
+                </TouchableWithoutFeedback>
 
-                        <View style={styles.itemRightContainer}>
-                            <Text style={styles.textMedium}>{props.item.name}</Text>
-                            <Text style={styles.textSmall}>{props.item.summary}</Text>
-                        </View>
-                    </View>
-                )}
-            >
-                <View style={{ marginLeft: styles.itemIcon.width + 15, ...styles.paddingHorizontalBase }}>
-                    <Text style={styles.itemDescription}>{props.item.description}</Text>
-                    <Link text={props.item.url} onPress={() => Linking.openURL(props.item.url)} />
+                <View>
+                    <Text style={styles.textMedium}>{props.item.name}</Text>
+                    <Text style={styles.textSmall}>{props.item.summary}</Text>
                 </View>
-            </Accordion>
+            </View>
         </View>
-
     )
 }
 
@@ -179,9 +169,12 @@ const createStyles = (theme: Theme) => {
     return StyleSheet.create({
         ...theme.styles,
         itemIcon: {
-            width: 50,
-            height: 50,
-            borderRadius: 50
+            padding: 1,
+            width: 70,
+            height: 70,
+            borderRadius: Border.radius,
+            borderWidth: Border.width,
+            borderColor: Border.color
         },
         itemRightContainer: {
             flexGrow: 1

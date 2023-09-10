@@ -1,11 +1,11 @@
 import { useHookstate } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import type { NewCoinNavigationProp } from '../types/navigation';
-import { addCoin, askReview, logError, showToast } from '../actions';
+import { addCoin, askReview, logError, showSpinner, hideSpinner, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen, Text, CoinLogo, ActivityIndicator } from '../components';
 import { useCoins, useCurrentNetworkId, useI18n } from '../hooks';
-import { ScrollView, View } from 'react-native';
+import { Keyboard, ScrollView, View } from 'react-native';
 import { useTheme, useCurrentAddress } from '../hooks';
 import { TOKENS_URL } from '../lib/Constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -20,6 +20,8 @@ export default () => {
   const styles = theme.styles;
 
   const add = () => {
+    Keyboard.dismiss();
+
     if (!contractId.get()) {
       showToast({
         type: 'error',
@@ -28,12 +30,16 @@ export default () => {
       return;
     }
 
+    showSpinner();
+
     addCoin(contractId.get())
       .then(coin => {
+        hideSpinner();
         navigation.goBack();
         askReview();
       })
       .catch(e => {
+        hideSpinner();
         logError(e);
         showToast({
           type: 'error',
@@ -44,7 +50,7 @@ export default () => {
   };
 
   return (
-    <Screen>
+    <Screen keyboardDismiss={true}>
       <View style={{ ...styles.paddingBase }}>
         <TextInput
           multiline={true}

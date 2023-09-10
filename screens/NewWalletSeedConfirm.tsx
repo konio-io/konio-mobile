@@ -1,7 +1,7 @@
-import { View } from 'react-native';
+import { Keyboard, View } from 'react-native';
 import { State, useHookstate } from '@hookstate/core';
 import { Text, Button, Wrapper, Screen, Seed } from '../components';
-import { addSeed, logError, refreshCoins, setCurrentAccount, showToast } from '../actions';
+import { addSeed, hideSpinner, logError, refreshCoins, setCurrentAccount, showSpinner, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
 import { NewWalletSeedConfirmRouteProp } from '../types/navigation';
@@ -33,6 +33,8 @@ export default () => {
     };
 
     const addWallet = () => {
+        Keyboard.dismiss();
+
         if (seed !== sortedWords.get().join(' ')) {
             showToast({
                 type: 'error',
@@ -41,14 +43,18 @@ export default () => {
             return;
         }
 
+        showSpinner();
+
         addSeed({
             name: name,
             seed: seed
         })
             .then(address => {
+                hideSpinner();
                 setCurrentAccount(address);
             })
             .catch(e => {
+                hideSpinner();
                 logError(e);
                 showToast({
                     type: 'error',
@@ -66,7 +72,7 @@ export default () => {
     const sortedWords = useHookstate(sortedWordsDefault);
 
     return (
-        <Screen>
+        <Screen keyboardDismiss={true}>
             <Wrapper>
                 <Text>{i18n.t('confirm_wallet_seed')}</Text>
 

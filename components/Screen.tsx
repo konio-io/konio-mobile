@@ -5,29 +5,34 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default (props: {
     children: any,
-    insets?: boolean
+    insets?: boolean,
+    keyboardDismiss?: boolean
 }) => {
     const theme = useTheme();
     const styles = createStyles(theme);
     const insets = useSafeAreaInsets();
     
-    if (props.insets === true) {
+    const component = (props.insets === true) ?
+        (
+            <View style={{
+                ...styles.wrapperFull,
+                paddingTop: insets.top,
+                paddingBottom: insets.bottom,
+            }}>{props.children}</View>
+        ) :
+        (
+            <View style={styles.wrapperFull}>{props.children}</View>
+        );
+
+    if (props.keyboardDismiss === true) {
         return (
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-                <View style={{
-                    ...styles.wrapperFull,
-                    paddingTop: insets.top,
-                    paddingBottom: insets.bottom,
-                }}>{props.children}</View>
+                {component}
             </TouchableWithoutFeedback>
         );
     }
 
-    return (
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-            <View style={styles.wrapperFull}>{props.children}</View>
-        </TouchableWithoutFeedback>
-    );
+    return component;
 }
 
 const createStyles = (theme : Theme) => {

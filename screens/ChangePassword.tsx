@@ -46,7 +46,7 @@ export default () => {
     }
 
     return (
-        <Screen>
+        <Screen keyboardDismiss={true}>
             <Wrapper>
                 <TextInput
                     autoFocus={true}

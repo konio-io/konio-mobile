@@ -14,7 +14,7 @@ export default () => {
     const i18n = useI18n();
 
     return (
-        <Screen>
+        <Screen keyboardDismiss={true}>
 
             <View style={{...styles.paddingBase, ...styles.rowGapBase}}>
                 <TextInput

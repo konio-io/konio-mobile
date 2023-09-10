@@ -111,3 +111,8 @@ export const WCStore = hookstate(WCStoreDefault);
  * Kap store
  */
 export const KapStore = hookstate<Record<string,string>>({});
+
+/**
+ * Loading store
+ */
+export const SpinnerStore = hookstate(false);

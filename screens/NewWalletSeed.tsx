@@ -1,13 +1,12 @@
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { useHookstate } from '@hookstate/core';
-import { Text, Button, TextInput, Wrapper, Screen, Copiable, Seed, TextInputActionCopy } from '../components';
+import { Text, Button, TextInput, Wrapper, Screen, Seed, TextInputActionCopy } from '../components';
 import { generateSeed, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n } from '../hooks';
 import { useNavigation } from '@react-navigation/native';
 import type { NewWalletSeedNavigationProp } from '../types/navigation';
 import { useEffect } from 'react';
-import { Theme } from '../types/store';
 import TextInputAction from '../components/TextInputAction';
 
 export default () => {
@@ -34,7 +33,7 @@ export default () => {
     }, []);
 
     return (
-        <Screen>
+        <Screen keyboardDismiss={true}>
             <Wrapper>
                 <Text>{i18n.t('choose_account_name')}</Text>
 

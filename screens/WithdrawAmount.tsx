@@ -79,7 +79,7 @@ export default () => {
         styles.text;
 
     return (
-        <Screen>
+        <Screen keyboardDismiss={true}>
             <View style={{ ...styles.flex1, ...styles.paddingBase, ...styles.alignCenterRow, ...styles.rowGapSmall }}>
 
                 <Selector onPress={() => navigation.navigate('WithdrawSelectCoin', {

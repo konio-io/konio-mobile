@@ -14,6 +14,7 @@ import Loading from './screens/Loading';
 import Intro from './navigators/Intro';
 import { userStoreIsLoading, encryptedStoreIsLoading } from './stores';
 import ErrorMigration from './screens/ErrorMigration';
+import Spinner from './components/Spinner';
 
 export default function App() {
   useFonts({
@@ -63,6 +64,7 @@ export default function App() {
 
       <StatusBar style={theme.statusBarStyle} />
       <Toast />
+      <Spinner />
     </NavigationContainer>
   );
 }
@@ -82,7 +84,7 @@ const Main = () => {
   try {
     executeMigrations();
   } catch (e) {
-    return <ErrorMigration/>;
+    return <ErrorMigration />;
   }
 
   return <Drawer />;

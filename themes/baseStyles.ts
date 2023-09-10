@@ -81,6 +81,9 @@ export const getStyles = (themeVars : ThemeVars) => {
             fontFamily: FontFamily.sans,
             color: Color.baseContrast
         },
+        textBold: {
+            fontFamily: FontFamily.sans+'_bold'
+        },
         inputContainer: {
             rowGap: Spacing.mini
         },

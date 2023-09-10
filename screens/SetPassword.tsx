@@ -55,7 +55,7 @@ export default () => {
     }
 
     return (
-        <Screen>
+        <Screen keyboardDismiss={true}>
 
             <Wrapper>
                 <Text>{i18n.t('choose_password_desc')}</Text>

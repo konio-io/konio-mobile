@@ -13,7 +13,7 @@ export default (props: {
 
     const loadCoinList = async () => {
         refreshing.set(true);
-        await refreshCoins({balance: true, price: true});
+        await refreshCoins({balance: true, price: true, info: true});
         refreshing.set(false);
     };
 

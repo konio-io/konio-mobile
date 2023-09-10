@@ -361,3 +361,62 @@ export const getCoinContract = async (args: {
 
     return result;
 }
+
+export const getNftContract = async (args: {
+    address: string,
+    networkId: string,
+    contractId: string
+}) => {
+    const { contractId, address, networkId } = args;
+    const contract = await getContract({
+        address,
+        networkId,
+        contractId
+    });
+
+    const uriResponse = await contract.functions.uri();
+    if (!uriResponse || !uriResponse.result?.value) {
+        throw new Error(`Unable to retrieve uri for NFT collection ${contractId}`);
+    }
+    const uri = uriResponse.result?.value;
+
+    const nameResponse = await contract.functions.name();
+    if (!nameResponse || !nameResponse.result?.value) {
+        throw new Error(`Unable to retrieve name for NFT collection ${contractId}`);
+    }
+    const name = nameResponse.result?.value;
+
+    const symbolResponse = await contract.functions.symbol();
+    if (!symbolResponse || !symbolResponse.result?.value) {
+        throw new Error(`Unable to retrieve symbol for NFT collection ${contractId}`);
+    }
+    const symbol = symbolResponse.result?.value;
+
+    const ownerResponse = await contract.functions.owner();
+    if (!ownerResponse || !ownerResponse.result?.value) {
+        throw new Error(`Unable to retrieve owner for NFT collection ${contractId}`);
+    }
+    const owner = ownerResponse.result?.value;
+
+    return { contractId, name, symbol, uri, owner };
+}
+
+export const getNft = async (args: {
+    uri: string,
+    tokenId: string
+}) => {
+    const { uri, tokenId } = args;
+    const url = convertIpfsToHttps(uri);
+
+    const dataResponse = await fetch(`${url}/${tokenId}`);
+    if (!dataResponse) {
+        throw new Error(`Unable to retrieve NFT url ${url}/${tokenId}`);
+    }
+
+    const response = await dataResponse.json();
+    if (!response) {
+        throw new Error(`Unable to decode NFT url ${url}/${tokenId}`);
+    }
+
+    return response;
+}

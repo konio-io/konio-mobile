@@ -38,7 +38,7 @@ export type Account = {
 
 export type Assets = {
     coins: Record<string, Coin>,
-    nfts: Record<string, NFT>
+    nfts: Record<string, NFTCollection>
 }
 
 export type Coin = {
@@ -52,13 +52,20 @@ export type Coin = {
     transactions: Record<string, Transaction>,
 }
 
-export type NFT = {
+export type NFTCollection = {
     contractId: string,
+    symbol: string,
+    name?: string,
+    uri: string,
+    owner: string,
+    tokens: Record<string,NFT>
+}
+
+export type NFT = {
     tokenId: string,
     image: string,
-    name: string,
     description?: string,
-    transactions: Record<string, Transaction>,
+    transactions: Record<string, Transaction>
 }
 
 export type Network = {

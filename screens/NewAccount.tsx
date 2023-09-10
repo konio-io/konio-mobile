@@ -1,11 +1,11 @@
 import { useHookstate } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import type { NewWalletSeedNavigationProp } from '../types/navigation';
-import { setCurrentAccount, addAccount, showToast, logError, askReview } from '../actions';
+import { setCurrentAccount, addAccount, showToast, logError, askReview, showSpinner, hideSpinner } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { Button, TextInput, Screen } from '../components';
 import { useI18n, useTheme } from '../hooks';
-import { View } from 'react-native';
+import { Keyboard, View } from 'react-native';
 import { EncryptedStore } from '../stores';
 import { MAX_ACCOUNT } from '../lib/Constants';
 
@@ -18,6 +18,8 @@ export default () => {
     const accounts = EncryptedStore.accounts;
 
     const add = () => {
+        Keyboard.dismiss();
+
         if (Object.keys(accounts).length >= MAX_ACCOUNT) {
             showToast({
                 type: 'error',
@@ -34,13 +36,17 @@ export default () => {
             return;
         }
 
+        showSpinner();
+
         addAccount(name.get().trim())
             .then(address => {
+                hideSpinner();
                 setCurrentAccount(address);
                 navigation.goBack();
                 askReview();
             })
             .catch(e => {
+                hideSpinner();
                 logError(e);
                 showToast({
                     type: 'error',
@@ -52,7 +58,7 @@ export default () => {
     };
 
     return (
-        <Screen>
+        <Screen keyboardDismiss={true}>
             <View style={{...styles.flex1, ...styles.paddingBase, ...styles.rowGapSmall}}>
                 <TextInput
                     autoFocus={true}

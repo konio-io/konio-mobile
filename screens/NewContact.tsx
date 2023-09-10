@@ -87,7 +87,7 @@ export default () => {
     };
 
     return (
-        <Screen>
+        <Screen keyboardDismiss={true}>
             <View style={{ ...styles.flex1, ...styles.paddingBase, ...styles.rowGapMedium }}>
 
                 <View style={styles.rowGapSmall}>
