@@ -4,26 +4,179 @@ import {
     createDrawerNavigator,
     DrawerItem,
 } from '@react-navigation/drawer';
-import { useCurrentAddress, useI18n, useTheme, useAccounts, useWalletConnectHandler } from '../hooks';
+import { useCurrentAddress, useI18n, useTheme, useAccounts, useLock, useAppState, useAutolock, useWC } from '../hooks';
 import { AccountAvatar, Logo, Separator, Link, Address, WcLogo } from '../components';
-import { refreshCoins, refreshMana, setCurrentAccount, walletConnectInit } from '../actions';
+import { logError, refreshCoins, refreshMana, refreshWCActiveSessions, setCurrentAccount, setWCPendingProposal, setWCPendingRequest, showToast, walletConnectAcceptRequest, walletConnectInit, walletConnectPair } from '../actions';
 import Root from './Root';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import type { Theme } from '../types/store';
 import Constants from 'expo-constants';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useEffect } from 'react';
+import { useHookstate } from '@hookstate/core';
+import { SheetManager } from 'react-native-actions-sheet';
+import { WC_SECURE_METHODS } from '../lib/Constants';
+import NetInfo from '@react-native-community/netinfo';
+import { SignClientTypes } from "@walletconnect/types";
 
 const Drawer = createDrawerNavigator();
 export default () => {
 
-    //Init
+    const i18n = useI18n();
+    const lock = useLock();
+    const nextAppState = useAppState();
+    const dateLock = useHookstate(0);
+    const autoLock = useAutolock();
+    const WC = useWC();
+    const connectionAvailable = useHookstate(true);
+  
+    //Refresh coins and mana on init
     useEffect(() => {
         refreshCoins({ balance: true, price: true });
         refreshMana();
     }, [])
 
-    useWalletConnectHandler();
+    //intercept network state change on init
+    useEffect(() => {
+      const unsubscribe = NetInfo.addEventListener(state => {
+        if (connectionAvailable.get() === false && state.isConnected === true) {
+          showToast({
+            type: 'success',
+            text1: i18n.t('you_online')
+          });
+          refreshWCActiveSessions();
+        }
+        else if (state.isConnected !== true) {
+          showToast({
+            type: 'error',
+            text1: i18n.t('you_offline'),
+            text2: i18n.t('check_connection')
+          });
+        }
+    
+        connectionAvailable.set(state.isConnected === true ? true : false);
+      });
+  
+      return unsubscribe;
+    }, []);
+  
+    //intercept lock
+    useEffect(() => {
+      if (lock.get() === true) {
+        dateLock.set(0); //ios
+        setTimeout(() => {
+          SheetManager.show('unlock');
+        }, 100);
+      }
+    }, [lock]);
+    
+    //intercept autolock
+    useEffect(() => {
+      if (autoLock.get() > -1) {
+        if (nextAppState.get() === 'background') {
+          dateLock.set(Date.now() + autoLock.get() + 1000);
+        }
+        else if (nextAppState.get() === 'active') {
+          if (dateLock.get() > 0 && Date.now() > dateLock.get()) {
+            lock.set(true);
+          }
+        }
+      }
+    }, [nextAppState, autoLock]);
+    
+    //intercept wc_proposal
+    useEffect(() => {
+      if (lock.get() === true) {
+        return;
+      }
+  
+      const pendingProposal = WC.pendingProposal.get({noproxy: true});
+      if (!pendingProposal) {
+        return;
+      }
+  
+      const proposal = Object.assign({}, pendingProposal);
+  
+      SheetManager.show('wc_proposal', { payload: {proposal} });
+    }, [lock, WC.pendingProposal]);
+  
+    //intercept wc_request
+    useEffect(() => {
+      if (lock.get() === true) {
+        return;
+      }
+  
+      const pendingRequest = WC.pendingRequest.get({noproxy: true});
+      if (!pendingRequest) {
+        return;
+      }
+  
+      const request = Object.assign({}, pendingRequest);
+  
+      const method = request.params.request.method;
+      if (!WC_SECURE_METHODS.includes(method)) {
+          walletConnectAcceptRequest(request)
+              .catch(e => {
+                  logError(e);
+                  showToast({
+                      type: 'error',
+                      text1: i18n.t('dapp_request_error', { method }),
+                      text2: i18n.t('check_logs')
+                  })
+              });
+          return;
+      }
+  
+      SheetManager.show('wc_request', { payload: {request} });
+    }, [lock, WC.pendingRequest]);
+
+    //intercept walletconnect wallet/uri set
+    useEffect(() => {
+        if (WC.wallet.ornull && WC.uri.ornull) {
+            const WCUri = WC.uri.ornull.get({noproxy: true});
+                walletConnectPair(WCUri)
+                .then(() => {
+                    console.log('wc_pair: paired');
+                })
+                .catch(e => {
+                    logError(e);
+                    showToast({
+                        type: 'error',
+                        text1: i18n.t('pairing_error'),
+                        text2: i18n.t('check_logs')
+                    });
+                });
+        }
+    }, [WC.uri, WC.wallet]);
+
+    //intercept walletconnect set and subscribe events
+    useEffect(() => {
+        const wallet = WC.wallet.get();
+        if (wallet) {
+            console.log('wc_register_events');
+
+            const onSessionProposal = (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
+                console.log('wc_proposal', proposal);
+                setWCPendingProposal(proposal);
+            }
+        
+            const onSessionRequest = async (request: SignClientTypes.EventArguments["session_request"]) => {
+                console.log('wc_request', request);
+                setWCPendingRequest(request);
+            }
+
+            wallet.on("session_proposal", onSessionProposal);
+            wallet.on("session_request", onSessionRequest);
+            wallet.on("session_delete", () => {
+                refreshWCActiveSessions();
+            });
+        }
+    }, [WC.wallet]);
+
+    //init walletconnect on init
+    useEffect(() => {
+        walletConnectInit();
+    }, []);
 
     return (
         <Drawer.Navigator
@@ -42,7 +195,6 @@ const DrawerContent = (props: any) => {
     const accounts = useAccounts().get();
     const i18n = useI18n();
     const theme = useTheme();
-    const { Border, Color } = theme.vars;
     const styles = createStyles(theme);
     const currentAddress = useCurrentAddress();
     const insets = useSafeAreaInsets();
