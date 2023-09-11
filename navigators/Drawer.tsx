@@ -4,9 +4,9 @@ import {
     createDrawerNavigator,
     DrawerItem,
 } from '@react-navigation/drawer';
-import { useCurrentAddress, useI18n, useTheme, useAccounts } from '../hooks';
+import { useCurrentAddress, useI18n, useTheme, useAccounts, useWalletConnectHandler } from '../hooks';
 import { AccountAvatar, Logo, Separator, Link, Address, WcLogo } from '../components';
-import { refreshCoins, refreshMana, setCurrentAccount } from '../actions';
+import { refreshCoins, refreshMana, setCurrentAccount, walletConnectInit } from '../actions';
 import Root from './Root';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import type { Theme } from '../types/store';
@@ -22,6 +22,8 @@ export default () => {
         refreshCoins({ balance: true, price: true });
         refreshMana();
     }, [])
+
+    useWalletConnectHandler();
 
     return (
         <Drawer.Navigator

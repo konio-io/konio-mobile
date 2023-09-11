@@ -410,36 +410,30 @@ export const executeMigrations = () => {
     }
 }
 
-export const initWC = async () => {
-    if (WCStore.wallet.get()) {
-        return;
-    }
-
-    const onSessionProposal = (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
-        setWCPendingProposal(proposal);
-    }
-
-    const onSessionRequest = async (request: SignClientTypes.EventArguments["session_request"]) => {
-        setWCPendingRequest(request);
-    }
-
-    const wallet = await initWCWallet();
-    wallet.on("session_proposal", onSessionProposal);
-    wallet.on("session_request", onSessionRequest);
-    wallet.on("session_delete", () => {
-        refreshWCActiveSessions();
-    });
-    WCStore.wallet.set(wallet);
+export const walletConnectInit = async () => {
+    console.log('wc_init');
+    initWCWallet()
+        .then(wallet => {
+            console.log('wc_init: connected')
+            WCStore.wallet.set(wallet);
+        })
+        .catch(e => {
+            logError(e);
+        });
 }
 
-export const pair = async (CURI: string) => {
+export const walletConnectSetUri = (uri: string) => {
+    WCStore.uri.set(uri);
+}
+
+export const walletConnectPair = async (CURI: string) => {
     const wallet = WCStore.wallet.get();
     if (wallet) {
         await wallet.core.pairing.pair({ uri: CURI });
     }
 }
 
-export const acceptProposal = async (sessionProposal: SignClientTypes.EventArguments["session_proposal"]) => {
+export const walletConnectAcceptProposal = async (sessionProposal: SignClientTypes.EventArguments["session_proposal"]) => {
     const wallet = WCStore.wallet.get();
     if (!wallet) {
         throw new Error("WalletConnect wallet not initialized");
@@ -476,7 +470,7 @@ export const acceptProposal = async (sessionProposal: SignClientTypes.EventArgum
     refreshWCActiveSessions();
 }
 
-export const rejectProposal = async (sessionProposal: SignClientTypes.EventArguments["session_proposal"]) => {
+export const walletConnectRejectProposal = async (sessionProposal: SignClientTypes.EventArguments["session_proposal"]) => {
     const wallet = WCStore.wallet.get();
     if (!wallet) {
         throw new Error("W3 Wallet not available");
@@ -491,7 +485,7 @@ export const rejectProposal = async (sessionProposal: SignClientTypes.EventArgum
     });
 }
 
-export const acceptRequest = async (sessionRequest: SignClientTypes.EventArguments["session_request"]) => {
+export const walletConnectAcceptRequest = async (sessionRequest: SignClientTypes.EventArguments["session_request"]) => {
     const wallet = WCStore.wallet.get();
     if (!wallet) {
         throw new Error("W3 Wallet not available");
@@ -582,7 +576,7 @@ export const acceptRequest = async (sessionRequest: SignClientTypes.EventArgumen
     }
 }
 
-export const rejectRequest = async (sessionRequest: SignClientTypes.EventArguments["session_request"]) => {
+export const walletConnectRejectRequest = async (sessionRequest: SignClientTypes.EventArguments["session_request"]) => {
     const wallet = WCStore.wallet.get();
     if (!wallet) {
         throw new Error("W3 Wallet not available");

@@ -1,25 +1,22 @@
-import { Screen, Button, Text, AccountAvatar } from "../components"
-import { ScrollView, View, Image } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { WcProposalNavigationProp, WcProposalRouteProp } from "../types/navigation";
-import { acceptProposal, logError, rejectProposal, showToast } from "../actions";
+import { Button, Text, AccountAvatar } from "../components"
+import { ScrollView, View, Image, StyleSheet } from "react-native";
+import { walletConnectAcceptProposal, logError, walletConnectRejectProposal, showToast } from "../actions";
 import { useAccount, useCurrentAddress, useCurrentNetworkId, useI18n, useNetwork, useTheme } from "../hooks";
-import { State, useHookstate } from "@hookstate/core";
+import { useHookstate } from "@hookstate/core";
 import { useEffect } from "react";
 import { checkWCMethod, checkWCNetwork, getNetworkByChainId } from "../lib/WalletConnect";
 import { Feather } from '@expo/vector-icons';
-import Loading from "./Loading";
+import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-sheet";
+import type { Theme } from "../types/store";
 
-export default () => {
+export default (props: SheetProps) => {
     const currentAddress = useCurrentAddress();
     const account = useAccount(currentAddress.get()).get();
     const currentNetworkId = useCurrentNetworkId().get();
     const currentNetwork = useNetwork(currentNetworkId).get();
-    const navigation = useNavigation<WcProposalNavigationProp>();
-    const route = useRoute<WcProposalRouteProp>();
-    const proposal = route.params.proposal;
+    const proposal = props.payload.proposal;
     const theme = useTheme();
-    const styles = theme.styles;
+    const styles = createStyles(theme);
     const { Color } = theme.vars;
     const i18n = useI18n();
     const checkMethods = useHookstate(true);
@@ -50,12 +47,13 @@ export default () => {
     }
 
     const accept = () => {
-        acceptProposal(proposal)
+        walletConnectAcceptProposal(proposal)
             .then(() => {
                 showToast({
                     type: 'success',
                     text1: i18n.t('dapp_proposal_success')
                 });
+                SheetManager.hide('wc_proposal');
             })
             .catch(e => {
                 logError(e);
@@ -63,26 +61,25 @@ export default () => {
                     type: 'error',
                     text1: i18n.t('dapp_proposal_error')
                 });
+                SheetManager.hide('wc_proposal');
             });
-        navigation.goBack();
     }
 
     const reject = () => {
-        rejectProposal(proposal)
+        walletConnectRejectProposal(proposal)
             .catch(e => logError(e));
 
-        navigation.goBack();
+        SheetManager.hide('wc_proposal');
     }
 
     useEffect(() => {
         _checkMethods();
         _checkNetwork();
-    }, [route.params.proposal]);
+    }, [proposal]);
 
     return (
-        <Screen insets={true}>
+        <ActionSheet id={props.sheetId} containerStyle={styles.container} closeOnTouchBackdrop={false}>
             <ScrollView contentContainerStyle={{ ...styles.paddingMedium, ...styles.rowGapMedium }}>
-
 
                 <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
                     <AccountAvatar size={24} address={account.address} />
@@ -130,7 +127,7 @@ export default () => {
                     methods &&
                     <View>
                         <Text style={styles.textSmall}>{i18n.t('dapp_method')}</Text>
-                        {methods.map(method =>
+                        {methods.map((method : string) =>
                             <View key={method}>
                                 {
                                     checkWCMethod(method) &&
@@ -180,7 +177,20 @@ export default () => {
                 }
             </View>
 
-        </Screen>
+        </ActionSheet>
     )
 }
 
+const createStyles = (theme: Theme) => {
+    const { Color } = theme.vars;
+    const styles = theme.styles;
+
+    return StyleSheet.create({
+        ...styles,
+        container: {
+            backgroundColor: Color.base,
+            ...styles.alignCenterRow,
+            ...styles.paddingBase
+        }
+    });
+}

@@ -5,12 +5,11 @@ import { addNetwork, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen } from '../components';
 import { useI18n } from '../hooks';
-import { View, Alert } from 'react-native';
+import { View, Alert, ScrollView } from 'react-native';
 import { UserStore } from '../stores';
 import { useTheme } from '../hooks';
 import type { Network } from '../types/store';
 import { DEFAULT_NETWORKS } from '../lib/Constants';
-import { ScrollView } from 'react-native-gesture-handler';
 import { Provider } from 'koilib';
 
 export default () => {

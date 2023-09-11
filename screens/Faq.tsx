@@ -1,7 +1,6 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import { Accordion, Screen, Text } from "../components"
 import { useI18n, useTheme } from "../hooks";
-import { ScrollView } from "react-native-gesture-handler";
 import { useEffect } from "react";
 import { useHookstate } from "@hookstate/core";
 import { FAQ_URL } from "../lib/Constants";

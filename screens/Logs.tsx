@@ -1,7 +1,6 @@
-import { View, Share } from "react-native";
+import { View, Share, ScrollView } from "react-native";
 import { Button, Screen, Text } from "../components"
 import { useI18n, useLogs, useTheme } from "../hooks";
-import { ScrollView } from "react-native-gesture-handler";
 import { logReset } from "../actions";
 
 export default () => {

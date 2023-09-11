@@ -1,19 +1,18 @@
-import { Button, Screen, Text, Accordion, AccountAvatar } from "../components"
+import { Button, Text, Accordion, AccountAvatar } from "../components"
 import { useCurrentAddress, useI18n, useTheme, useWC, useAccount, useCurrentNetworkId, useNetwork } from "../hooks";
-import Loading from "./Loading";
-import { View, Image } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { WcRequestNavigationProp, WcRequestRouteProp } from "../types/navigation";
-import { acceptRequest, askReview, logError, rejectRequest, showToast, unsetWCPendingRequest } from "../actions";
+import { View, Image, StyleSheet, ScrollView  } from "react-native";
+import { walletConnectAcceptRequest, askReview, logError, walletConnectRejectRequest, showToast } from "../actions";
 import { checkWCMethod, checkWCNetwork, getNetworkByChainId } from "../lib/WalletConnect";
 import { useHookstate } from "@hookstate/core";
 import { useEffect } from "react";
 import { Feather } from '@expo/vector-icons';
 import { getContract } from "../lib/utils";
-import { ScrollView } from "react-native-gesture-handler";
 import { WC_METHODS } from "../lib/Constants";
+import Loading from "../screens/Loading";
+import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-sheet";
+import type { Theme } from "../types/store";
 
-export default () => {
+export default (props: SheetProps) => {
     const wallet = useWC().wallet.get();
     if (!wallet) {
         return <Loading />
@@ -22,11 +21,9 @@ export default () => {
     const currentAddress = useCurrentAddress().get();
     const currentNetworkId = useCurrentNetworkId().get();
     const currentNetwork = useNetwork(currentNetworkId).get();
-    const navigation = useNavigation<WcRequestNavigationProp>();
-    const route = useRoute<WcRequestRouteProp>();
-    const request = route.params.request;
+    const request = props.payload.request;
     const theme = useTheme();
-    const styles = theme.styles;
+    const styles = createStyles(theme);
     const { Color } = theme.vars;
     const i18n = useI18n();
     const checkMethod = useHookstate(true);
@@ -39,7 +36,7 @@ export default () => {
     //const description = data?.peer?.metadata?.description;
     const url = data?.peer?.metadata?.url;
     const method = request.params.request.method;
-    const chainId = route.params.request.params.chainId;
+    const chainId = request.params.chainId;
     const requiredNetwork = getNetworkByChainId(chainId);
     const requiredNetworkName = requiredNetwork ? requiredNetwork.name : i18n.t('unknown');
     const requiredAddress = data.namespaces.koinos?.accounts[0]?.split(':')[2];
@@ -65,8 +62,9 @@ export default () => {
     }
 
     const accept = async () => {
-        acceptRequest(request)
+        walletConnectAcceptRequest(request)
             .then(() => {
+                SheetManager.hide('wc_request');
                 showToast({
                     type: 'success',
                     text1: i18n.t('dapp_request_success')
@@ -74,6 +72,7 @@ export default () => {
                 askReview();
             })
             .catch(e => {
+                SheetManager.hide('wc_request');
                 logError(e);
                 showToast({
                     type: 'error',
@@ -81,24 +80,23 @@ export default () => {
                     text2: i18n.t('check_logs')
                 })
             });
-
-        navigation.goBack();
     }
 
     const reject = async () => {
-        rejectRequest(request)
+        walletConnectRejectRequest(request)
             .catch(e => logError(e))
-        navigation.goBack();
+        
+        SheetManager.hide('wc_request');
     }
 
     useEffect(() => {
         _checkMethod();
         _checkNetwork();
         _checkAddress();
-    }, [route.params.request]);
+    }, [request]);
 
     return (
-        <Screen insets={true}>
+        <ActionSheet id={props.sheetId} containerStyle={styles.container} closeOnTouchBackdrop={false}>
             <ScrollView contentContainerStyle={{ ...styles.paddingMedium, ...styles.rowGapMedium }}>
 
                 {
@@ -156,7 +154,7 @@ export default () => {
 
                 {
                     method === WC_METHODS.SIGN_MESSAGE &&
-                    <SignMessageDetail message={route.params.request.params.request.params.message} />
+                    <SignMessageDetail message={request.params.request.params.message} />
                 }
 
                 {
@@ -165,7 +163,7 @@ export default () => {
                         WC_METHODS.SEND_TRANSACTION,
                         WC_METHODS.SIGN_AND_SEND_TRANSACTION
                     ].includes(method) &&
-                    <SendTransactionDetail transaction={route.params.request.params.request.params.transaction} />
+                    <SendTransactionDetail transaction={request.params.request.params.transaction} />
                 }
 
             </ScrollView>
@@ -199,7 +197,7 @@ export default () => {
                 <View style={{ ...styles.paddingBase }}>
                     <Button
                         type="secondary"
-                        onPress={() => navigation.goBack()}
+                        onPress={() => SheetManager.hide('wc_request')}
                         title={i18n.t('cancel')}
                         icon={(<Feather name="x" />)}
                     />
@@ -227,7 +225,7 @@ export default () => {
                 </View>
             }
 
-        </Screen>
+        </ActionSheet>
     )
 }
 
@@ -322,4 +320,18 @@ const SendTransactionDetail = (props: {
             }
         </View>
     )
+}
+
+const createStyles = (theme: Theme) => {
+    const { Color } = theme.vars;
+    const styles = theme.styles;
+
+    return StyleSheet.create({
+        ...styles,
+        container: {
+            backgroundColor: Color.base,
+            ...styles.alignCenterRow,
+            ...styles.paddingBase
+        }
+    });
 }

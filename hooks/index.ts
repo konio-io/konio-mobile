@@ -7,6 +7,8 @@ import { I18n } from 'i18n-js';
 import { getLocales } from 'expo-localization';
 import { FALLBACK_LOCALE, FALLBACK_THEME, OS_LOCALE, OS_THEME } from "../lib/Constants";
 import { useEffect } from "react";
+import { logError, refreshWCActiveSessions, setWCPendingProposal, setWCPendingRequest, showToast, walletConnectInit, walletConnectPair } from "../actions";
+import { SignClientTypes } from "@walletconnect/types";
 
 export const useNetworks = () => {
     return useHookstate(UserStore.networks);
@@ -250,4 +252,59 @@ export const useAccountValue = () => {
 
 export const useSpinner = () => {
     return useHookstate(SpinnerStore);
+}
+
+
+export const useWalletConnectHandler = async () => {
+    const WC = useHookstate(WCStore);
+
+    const registerEvents = () => {
+        const wallet = WC.wallet.get();
+        if (wallet) {
+            console.log('wc_register_events');
+
+            const onSessionProposal = (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
+                setWCPendingProposal(proposal);
+            }
+        
+            const onSessionRequest = async (request: SignClientTypes.EventArguments["session_request"]) => {
+                console.log(request);
+                setWCPendingRequest(request);
+            }
+
+            wallet.on("session_proposal", onSessionProposal);
+            wallet.on("session_request", onSessionRequest);
+            wallet.on("session_delete", () => {
+                refreshWCActiveSessions();
+            });
+        }
+    }
+
+    useEffect(() => {
+        if (WC.wallet.ornull && WC.uri.ornull) {
+            const WCUri = WC.uri.ornull.get({noproxy: true});
+            console.log(`wc_pair: ${WCUri}`);
+                walletConnectPair(WCUri)
+                .then(() => {
+                    console.log('wc_pair: paired');
+                    registerEvents();
+                })
+                .catch(e => {
+                    logError(e);
+                    showToast({
+                        type: 'error',
+                        text1: i18n.t('pairing_error'),
+                        text2: i18n.t('check_logs')
+                    });
+                });
+        }
+    }, [WC.uri, WC.wallet]);
+
+    //useEffect(() => {
+    //    registerEvents();
+    //}, [WC.wallet]);
+
+    useEffect(() => {
+        walletConnectInit();
+    }, []);
 }

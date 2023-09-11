@@ -1,4 +1,4 @@
-import { TouchableWithoutFeedback, StyleSheet, View } from "react-native";
+import { TouchableWithoutFeedback, StyleSheet, View, ScrollView } from "react-native";
 import { Theme } from "../types/store";
 import { AntDesign } from '@expo/vector-icons';
 import { ReactElement, useState } from "react";
@@ -10,7 +10,6 @@ import Animated, {
     withTiming,
     Easing,
 } from 'react-native-reanimated';
-import { ScrollView } from "react-native-gesture-handler";
 
 export default (props: {
     header: ReactElement,

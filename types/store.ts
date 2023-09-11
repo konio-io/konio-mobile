@@ -150,4 +150,5 @@ export type WCStoreState = {
     activeSessions: Record<string, SessionTypes.Struct>,
     pendingProposal: SignClientTypes.EventArguments["session_proposal"]|null,
     pendingRequest: SignClientTypes.EventArguments["session_request"]|null
+    uri: string|null
 }

@@ -1,6 +1,5 @@
 import type { RouteProp, NavigatorScreenParams } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
-import { SignClientTypes } from "@walletconnect/types";
 
 /** Drawer */
 export type DrawerParamList = {
@@ -13,18 +12,11 @@ export type RootRouteProp = RouteProp<DrawerParamList, 'Root'>;
 export type RootParamList = {
     Account: NavigatorScreenParams<AccountParamList>
     Settings: NavigatorScreenParams<SettingsParamList>
-    Unlock: undefined,
     ResetPassword: undefined,
     NewAccount: undefined,
     ImportAccount: undefined,
     EditAccount: {
         address: string
-    },
-    WcProposal: {
-        proposal: SignClientTypes.EventArguments["session_proposal"]
-    },
-    WcRequest: {
-        request:  SignClientTypes.EventArguments["session_request"]
     },
     WalletConnect: NavigatorScreenParams<WalletConnectParamList>,
     Faq: undefined,
@@ -32,8 +24,6 @@ export type RootParamList = {
 }
 export type AccountNavigationProp = StackNavigationProp<RootParamList, 'Account'>;
 export type AccountRouteProp = RouteProp<RootParamList, 'Account'>;
-export type UnlockNavigationProp = StackNavigationProp<RootParamList, 'Unlock'>;
-export type UnlockRouteProp = RouteProp<RootParamList, 'Unlock'>;
 export type ResetPasswordNavigationProp = StackNavigationProp<RootParamList, 'ResetPassword'>;
 export type ResetPasswordRouteProp = RouteProp<RootParamList, 'ResetPassword'>;
 export type SettingsNavigationProp = StackNavigationProp<RootParamList, 'Settings'>;
@@ -44,10 +34,6 @@ export type ImportAccountNavigationProps = StackNavigationProp<RootParamList, 'I
 export type ImportAccountRouteProp = RouteProp<RootParamList, 'ImportAccount'>;
 export type EditAccountNavigationProps = StackNavigationProp<RootParamList, 'EditAccount'>;
 export type EditAccountRouteProp = RouteProp<RootParamList, 'EditAccount'>;
-export type WcProposalNavigationProp = StackNavigationProp<RootParamList, 'WcProposal'>;
-export type WcProposalRouteProp = RouteProp<RootParamList, 'WcProposal'>;
-export type WcRequestNavigationProp = StackNavigationProp<RootParamList, 'WcRequest'>;
-export type WcRequestRouteProp = RouteProp<RootParamList, 'WcRequest'>;
 export type FaqNavigationProp = StackNavigationProp<RootParamList, 'Faq'>;
 export type FaqRouteProp = RouteProp<RootParamList, 'Faq'>;
 export type AboutNavigationProp = StackNavigationProp<RootParamList, 'About'>;
@@ -55,15 +41,10 @@ export type AboutRouteProp = RouteProp<RootParamList, 'About'>;
 
 /** WalletConnect */
 export type WalletConnectParamList = {
-    WcPair: {
-        uri: string
-    },
     WcPairInput: undefined,
     WcPairScan: undefined,
     WcSessions: undefined
 }
-export type WcPairNavigationProp = StackNavigationProp<WalletConnectParamList, 'WcPair'>;
-export type WcPairRouteProp = RouteProp<WalletConnectParamList, 'WcPair'>;
 export type WcPairInputNavigationProp = StackNavigationProp<WalletConnectParamList, 'WcPairInput'>;
 export type WcPairInputRouteProp = RouteProp<WalletConnectParamList, 'WcPairInput'>;
 export type WcPairScanNavigationProp = StackNavigationProp<WalletConnectParamList, 'WcPairScan'>;

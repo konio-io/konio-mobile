@@ -2,8 +2,7 @@ import { Screen, Text, Separator, Button, ActivityIndicator, Accordion, AccountA
 import { useCallback, useEffect } from "react";
 import { getSdkError } from "@walletconnect/utils";
 import { ImmutableObject, none, useHookstate } from "@hookstate/core";
-import { FlatList } from "react-native-gesture-handler";
-import { View } from "react-native";
+import { View, FlatList } from "react-native";
 import { useI18n, useTheme, useWC, useAccount } from "../hooks";
 import Loading from "./Loading";
 import { useNavigation } from "@react-navigation/native";

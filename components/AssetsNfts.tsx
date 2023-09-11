@@ -1,10 +1,9 @@
-import { Image, TouchableHighlight, View } from 'react-native';
+import { Image, TouchableHighlight, View, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme, useNfts, useNft, useNftCollection } from '../hooks';
 import { ButtonCircle, Text } from '.';
 import { AssetsNavigationProp, } from '../types/navigation';
 import { SheetManager } from "react-native-actions-sheet";
-import { ScrollView } from 'react-native-gesture-handler';
 import { Feather } from '@expo/vector-icons';
 
 export default () => {

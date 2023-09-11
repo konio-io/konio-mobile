@@ -9,7 +9,7 @@ import { DarkTheme, DefaultTheme, NavigationContainer, getStateFromPath } from "
 import { useCurrentAddress, useTheme } from './hooks';
 import { SheetProvider } from "react-native-actions-sheet";
 import Drawer from './navigators/Drawer';
-import { executeMigrations } from './actions';
+import { executeMigrations, walletConnectSetUri } from './actions';
 import Loading from './screens/Loading';
 import Intro from './navigators/Intro';
 import { userStoreIsLoading, encryptedStoreIsLoading } from './stores';
@@ -34,20 +34,14 @@ export default function App() {
           initialRouteName: 'Account',
           screens: {
             Account: 'account',
-            Settings: 'settings',
-            WalletConnect: {
-              screens: {
-                WcPair: 'pair/:uri'
-              }
-            }
+            Settings: 'settings'
           }
         }
       }
     },
     getStateFromPath: (path: string, options: any) => {
       if (path.includes('@2') && !path.includes('requestId')) {
-        const newPath = `pair/${btoa(`wc:${path}`)}`;
-        return getStateFromPath(newPath, options);
+        walletConnectSetUri(`wc:${path}`);
       }
 
       return getStateFromPath(path, options);

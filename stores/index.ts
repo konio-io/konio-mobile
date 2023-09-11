@@ -103,7 +103,8 @@ export const WCStoreDefault : WCStoreState = {
     wallet: null,
     activeSessions: {},
     pendingProposal: null,
-    pendingRequest: null
+    pendingRequest: null,
+    uri: null
 }
 export const WCStore = hookstate(WCStoreDefault);
 

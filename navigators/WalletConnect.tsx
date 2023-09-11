@@ -2,7 +2,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { WalletConnectParamList } from '../types/navigation'
 import { useTheme, useI18n } from '../hooks';
 import WcSessions from '../screens/WcSessions';
-import WcPair from '../screens/WcPair';
 import WcPairScan from '../screens/WcPairScan';
 import WcPairInput from '../screens/WcPairInput';
 
@@ -26,13 +25,6 @@ export default () => {
             },
             headerTintColor: Color.primary
         }}>
-            <Stack.Screen
-                name="WcPair"
-                component={WcPair}
-                options={{
-                    title: i18n.t('new_connection'),
-                }}
-            />
             <Stack.Screen
                 name="WcPairScan"
                 component={WcPairScan}

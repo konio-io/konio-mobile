@@ -2,7 +2,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React, { useEffect } from "react";
 import { useAppState, useAutolock, useI18n, useLock, useTheme, useWC } from "../hooks";
 import ResetPassword from "../screens/ResetPassword";
-import Unlock from "../screens/Unlock";
 import Account from "./Account";
 import Settings from "./Settings";
 import NewAccount from "../screens/NewAccount";
@@ -10,15 +9,14 @@ import ImportAccount from "../screens/ImportAccount";
 import EditAccount from "../screens/EditAccount";
 import WalletConnect from "./WalletConnect";
 import { RootNavigationProp, RootParamList } from "../types/navigation";
-import { acceptRequest, initWC, logError, refreshWCActiveSessions, showToast } from "../actions";
-import { StackActions, useNavigation } from "@react-navigation/native";
-import WcProposal from "../screens/WcProposal";
-import WcRequest from "../screens/WcRequest";
+import { walletConnectAcceptRequest, logError, refreshWCActiveSessions, showToast } from "../actions";
+import { useNavigation } from "@react-navigation/native";
 import { WC_SECURE_METHODS } from "../lib/Constants";
 import { useHookstate } from "@hookstate/core";
 import NetInfo from '@react-native-community/netinfo';
 import Faq from "../screens/Faq";
 import About from "../screens/About";
+import { SheetManager } from "react-native-actions-sheet";
 
 const Stack = createStackNavigator<RootParamList>();
 
@@ -26,7 +24,6 @@ export default () => {
   const i18n = useI18n();
   const theme = useTheme();
   const { Color, Border, FontFamily } = theme.vars;
-  const navigation = useNavigation<RootNavigationProp>();
   const lock = useLock();
   const nextAppState = useAppState();
   const dateLock = useHookstate(0);
@@ -57,22 +54,17 @@ export default () => {
     return unsubscribe;
   }, []);
 
+  //lock sheet
   useEffect(() => {
     if (lock.get() === true) {
       dateLock.set(0); //ios
-      navigation.navigate('Unlock');
-      return;
+      setTimeout(() => {
+        SheetManager.show('unlock');
+      }, 100);
     }
-    
-    if (navigation.getState()) {
-      const popAction = StackActions.pop(1);
-      navigation.dispatch(popAction);
-      return;
-    }
-
-    navigation.navigate('Root');
   }, [lock]);
-
+  
+  //autolock
   useEffect(() => {
     if (autoLock.get() > -1) {
       if (nextAppState.get() === 'background') {
@@ -85,7 +77,7 @@ export default () => {
       }
     }
   }, [nextAppState, autoLock]);
-
+  
   useEffect(() => {
     if (lock.get() === true) {
       return;
@@ -98,7 +90,7 @@ export default () => {
 
     const proposal = Object.assign({}, pendingProposal);
 
-    navigation.navigate('WcProposal', { proposal });
+    SheetManager.show('wc_proposal', { payload: {proposal} });
   }, [lock, WC.pendingProposal]);
 
   useEffect(() => {
@@ -115,7 +107,7 @@ export default () => {
 
     const method = request.params.request.method;
     if (!WC_SECURE_METHODS.includes(method)) {
-        acceptRequest(request)
+        walletConnectAcceptRequest(request)
             .catch(e => {
                 logError(e);
                 showToast({
@@ -127,12 +119,8 @@ export default () => {
         return;
     }
 
-    navigation.navigate('WcRequest', { request });
+    SheetManager.show('wc_request', { payload: {request} });
   }, [lock, WC.pendingRequest]);
-
-  useEffect(() => {
-    initWC();
-  }, []);
 
   return (
     <Stack.Navigator screenOptions={{
@@ -183,14 +171,6 @@ export default () => {
         }}
       />
       <Stack.Screen
-        name="Unlock"
-        component={Unlock}
-        options={{
-          presentation: 'modal',
-          headerShown: false
-        }}
-      />
-      <Stack.Screen
         name="ResetPassword"
         component={ResetPassword}
         options={{
@@ -201,24 +181,6 @@ export default () => {
         name="WalletConnect"
         component={WalletConnect}
         options={{
-          headerShown: false
-        }}
-      />
-      <Stack.Screen
-        name="WcProposal"
-        component={WcProposal}
-        options={{
-          title: i18n.t('wc_proposal'),
-          presentation: 'modal',
-          headerShown: false
-        }}
-      />
-      <Stack.Screen
-        name="WcRequest"
-        component={WcRequest}
-        options={{
-          title: i18n.t('wc_request'),
-          presentation: 'modal',
           headerShown: false
         }}
       />
