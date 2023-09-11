@@ -63,7 +63,7 @@ export default (props: SheetProps) => {
 
     return (
         <ActionSheet id={props.sheetId} containerStyle={styles.container} closeOnTouchBackdrop={false}>
-            <View style={styles.alignCenterColumn}>
+            <View style={{...styles.alignCenterColumn, paddingVertical: 30}}>
                 <Logo />
             </View>
 
@@ -99,7 +99,8 @@ const createStyles = (theme: Theme) => {
         container: {
             backgroundColor: Color.base,
             ...styles.alignCenterRow,
-            ...styles.paddingBase
+            ...styles.paddingBase,
+            ...styles.rowGapBase
         }
     });
 }
