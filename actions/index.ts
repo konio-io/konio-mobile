@@ -411,7 +411,6 @@ export const executeMigrations = () => {
 }
 
 export const walletConnectInit = async () => {
-    console.log('wc_init');
     initWCWallet()
         .then(wallet => {
             console.log('wc_init: connected')

@@ -264,11 +264,12 @@ export const useWalletConnectHandler = async () => {
             console.log('wc_register_events');
 
             const onSessionProposal = (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
+                console.log('wc_proposal', proposal);
                 setWCPendingProposal(proposal);
             }
         
             const onSessionRequest = async (request: SignClientTypes.EventArguments["session_request"]) => {
-                console.log(request);
+                console.log('wc_request', request);
                 setWCPendingRequest(request);
             }
 
@@ -283,11 +284,9 @@ export const useWalletConnectHandler = async () => {
     useEffect(() => {
         if (WC.wallet.ornull && WC.uri.ornull) {
             const WCUri = WC.uri.ornull.get({noproxy: true});
-            console.log(`wc_pair: ${WCUri}`);
                 walletConnectPair(WCUri)
                 .then(() => {
                     console.log('wc_pair: paired');
-                    registerEvents();
                 })
                 .catch(e => {
                     logError(e);
@@ -300,9 +299,9 @@ export const useWalletConnectHandler = async () => {
         }
     }, [WC.uri, WC.wallet]);
 
-    //useEffect(() => {
-    //    registerEvents();
-    //}, [WC.wallet]);
+    useEffect(() => {
+        registerEvents();
+    }, [WC.wallet]);
 
     useEffect(() => {
         walletConnectInit();

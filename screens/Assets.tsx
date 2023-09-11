@@ -37,7 +37,7 @@ export default () => {
         </View>
       )
     });
-  }, [navigation]);
+  }, [navigation, currentAddress]);
 
   return (
     <Screen>
