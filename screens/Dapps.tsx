@@ -170,8 +170,8 @@ const createStyles = (theme: Theme) => {
         ...theme.styles,
         itemIcon: {
             padding: 1,
-            width: 70,
-            height: 70,
+            width: 60,
+            height: 60,
             borderRadius: Border.radius,
             borderWidth: Border.width,
             borderColor: Border.color
