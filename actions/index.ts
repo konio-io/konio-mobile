@@ -701,6 +701,8 @@ export const addNft = async (args: {
         tokenId
     });
 
+    //to do check owner_of
+
     const newNft: NFT = {
         tokenId,
         description: token.description ?? 'unknown',
@@ -914,4 +916,26 @@ export const showSpinner = () => {
 
 export const hideSpinner = () => {
     SpinnerStore.set(false);
+}
+
+export const transferNFT = async (args: {
+    contractId: string,
+    tokenId: string,
+    to: string
+}) => {
+    const { contractId, tokenId, to } = args;
+    const address = UserStore.currentAddress.get();
+    const networkId = UserStore.currentNetworkId.get();
+
+    const contract = await getContract({
+        contractId,
+        address,
+        networkId
+    });
+
+    return contract.functions.transfer({
+        from: address,
+        to,
+        token_id: tokenId
+    });
 }

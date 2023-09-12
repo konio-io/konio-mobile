@@ -1,7 +1,7 @@
-import { Screen, Text, Separator, Button, ActivityIndicator, Accordion, AccountAvatar, Link } from "../components"
-import { useCallback, useEffect } from "react";
+import { Screen, Text, Separator, Button, Accordion, AccountAvatar, ButtonCircle } from "../components"
+import { useEffect } from "react";
 import { getSdkError } from "@walletconnect/utils";
-import { ImmutableObject, none, useHookstate } from "@hookstate/core";
+import { ImmutableObject } from "@hookstate/core";
 import { View, FlatList } from "react-native";
 import { useI18n, useTheme, useWC, useAccount } from "../hooks";
 import Loading from "./Loading";
@@ -10,6 +10,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { WcSessionsNavigationProp } from "../types/navigation";
 import { refreshWCActiveSessions } from "../actions";
 import { SessionTypes } from "@walletconnect/types";
+import { Feather } from '@expo/vector-icons';
 
 export default () => {
     const wc = useWC();
@@ -19,7 +20,6 @@ export default () => {
     }
 
     const activeSessions = wc.activeSessions.get();
-    const i18n = useI18n();
     const { styles } = useTheme();
     const navigation = useNavigation<WcSessionsNavigationProp>();
 
@@ -47,7 +47,11 @@ export default () => {
             />
 
             <View style={{ ...styles.paddingBase, ...styles.alignCenterColumn }}>
-                <Link text={i18n.t('new_connection')} onPress={() => navigation.navigate('WcPairScan')} />
+                <ButtonCircle
+                    onPress={() => navigation.navigate('WcPairScan')}
+                    icon={(<Feather name="plus" />)}
+                    type='secondary'
+                />
             </View>
         </Screen>
     );
@@ -69,47 +73,47 @@ const DappSession = (props: {
     const account = props.item?.namespaces.koinos?.accounts[0]?.split(':')[2];
 
     return (
-        
-            <Accordion header={(<ItemHeader address={account} name={name} />)}>
-                <View style={{ ...styles.rowGapBase, ...styles.flex1, ...styles.paddingBase, paddingTop: 0 }}>
-                    {
-                        name &&
-                        <View>
-                            <Text style={styles.textSmall}>{i18n.t('dapp_name')}</Text>
-                            <Text>{name}</Text>
-                        </View>
-                    }
 
-                    {
-                        description &&
-                        <View>
-                            <Text style={styles.textSmall}>{i18n.t('dapp_description')}</Text>
-                            <Text>{description}</Text>
-                        </View>
-                    }
-
-                    {
-                        url &&
-                        <View>
-                            <Text style={styles.textSmall}>{i18n.t('dapp_URL')}</Text>
-                            <Text>{url}</Text>
-                        </View>
-                    }
-
+        <Accordion header={(<ItemHeader address={account} name={name} />)}>
+            <View style={{ ...styles.rowGapBase, ...styles.flex1, ...styles.paddingBase, paddingTop: 0 }}>
+                {
+                    name &&
                     <View>
-                        <Text style={styles.textSmall}>{i18n.t('dapp_connection_expiry')}</Text>
-                        <Text>{expiry}</Text>
+                        <Text style={styles.textSmall}>{i18n.t('dapp_name')}</Text>
+                        <Text>{name}</Text>
                     </View>
+                }
 
-                    <Button
-                        icon={(<AntDesign name="disconnect" />)}
-                        type="secondary"
-                        title={i18n.t('disconnect')}
-                        onPress={() => props.onPress(props.item.topic)}
-                    />
+                {
+                    description &&
+                    <View>
+                        <Text style={styles.textSmall}>{i18n.t('dapp_description')}</Text>
+                        <Text>{description}</Text>
+                    </View>
+                }
+
+                {
+                    url &&
+                    <View>
+                        <Text style={styles.textSmall}>{i18n.t('dapp_URL')}</Text>
+                        <Text>{url}</Text>
+                    </View>
+                }
+
+                <View>
+                    <Text style={styles.textSmall}>{i18n.t('dapp_connection_expiry')}</Text>
+                    <Text>{expiry}</Text>
                 </View>
-            </Accordion>
-        
+
+                <Button
+                    icon={(<AntDesign name="disconnect" />)}
+                    type="secondary"
+                    title={i18n.t('disconnect')}
+                    onPress={() => props.onPress(props.item.topic)}
+                />
+            </View>
+        </Accordion>
+
     );
 }
 

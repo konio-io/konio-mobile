@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import Button from './Button';
@@ -9,6 +9,7 @@ import Loading from '../screens/Loading';
 import { AntDesign, Feather } from '@expo/vector-icons';
 
 export default (props: {
+    body: ReactElement
     onScan: Function,
     onClose: Function
 }) => {
@@ -27,9 +28,9 @@ export default (props: {
         getBarCodeScannerPermissions();
     }, []);
 
-    const handleBarCodeScanned = ({ data }) => {
+    const handleBarCodeScanned = (result: any) => {
         scanned.set(true);
-        props.onScan(data);
+        props.onScan(result.data);
     };
 
     if (hasPermission.get() === null) {
@@ -47,31 +48,35 @@ export default (props: {
     }
 
     return (
-        <View style={styles.flex1}>
-            <View style={styles.flex1}>
-                <BarCodeScanner
-                    barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
-                    onBarCodeScanned={scanned.get() ? undefined : handleBarCodeScanned}
-                    style={StyleSheet.absoluteFillObject}
-                />
-            </View>
+        <View style={StyleSheet.absoluteFillObject}>
 
-            <View style={{ ...styles.paddingBase, ...styles.directionRow, ...styles.columnGapBase }}>
-                <Button
-                    style={styles.flex1}
-                    type="secondary"
-                    icon={(<Feather name="x" />)}
-                    title={i18n.t('cancel')}
-                    onPress={() => props.onClose()}
-                />
-                <Button
-                    style={styles.flex1}
-                    icon={(<AntDesign name="scan1" />)}
-                    title={i18n.t('scan_again')}
-                    onPress={() => scanned.set(false)}
-                />
-            </View>
+            <BarCodeScanner
+                barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
+                onBarCodeScanned={scanned.get() ? undefined : handleBarCodeScanned}
+                style={StyleSheet.absoluteFillObject}
+            />
 
+            <View style={{ backgroundColor: 'white', position: 'absolute', bottom: 0, left: 0, right: 0, height: '35%' }}>
+                <View>
+                    {props.body}
+                    
+                    <View style={{ ...styles.paddingBase, ...styles.directionRow, ...styles.columnGapBase }}>
+                        <Button
+                            style={styles.flex1}
+                            type="secondary"
+                            icon={(<Feather name="x" />)}
+                            title={i18n.t('cancel')}
+                            onPress={() => props.onClose()}
+                        />
+                        <Button
+                            style={styles.flex1}
+                            icon={(<AntDesign name="scan1" />)}
+                            title={i18n.t('scan_again')}
+                            onPress={() => scanned.set(false)}
+                        />
+                    </View>
+                </View>
+            </View>
         </View>
     );
 }

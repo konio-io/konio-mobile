@@ -28,7 +28,6 @@ const createStyles = (theme: Theme) => {
             rowGap: Spacing.medium
         },
         wrapperCentered: {
-            flex: 1, 
             alignItems: 'center', 
             justifyContent: 'center',
             backgroundColor: Color.base

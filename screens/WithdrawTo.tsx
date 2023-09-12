@@ -1,5 +1,5 @@
 import { Alert, View, ScrollView } from 'react-native';
-import { Screen, Button, Text, AccountAvatar, ListItemSelected, DrawerToggler, AddressListItem, Link, TextInputActionPaste, TextInputAction, TextInput } from '../components';
+import { Screen, Button, Text, AccountAvatar, ListItemSelected, DrawerToggler, AddressListItem, TextInputActionPaste, TextInputAction, TextInput, ButtonCircle } from '../components';
 import { useTheme, useI18n, useAccounts, useAccount, useAddressbook, useContact, useCurrentAddress } from '../hooks';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { WithdrawToNavigationProp, WithdrawToRouteProp } from '../types/navigation';
@@ -251,7 +251,6 @@ const Addressbook = (props: {
     onPressItem: Function,
     selected: string
 }) => {
-    const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
     const navigation = useNavigation<WithdrawToNavigationProp>();
@@ -271,7 +270,11 @@ const Addressbook = (props: {
             )}
 
             <View style={{ ...styles.paddingBase, ...styles.alignCenterColumn }}>
-                <Link text={i18n.t('new_contact')} onPress={() => navigation.navigate('NewContact', {})} />
+                <ButtonCircle
+                    onPress={() => navigation.navigate('NewContact', {})}
+                    icon={(<Feather name="plus" />)}
+                    type='secondary'
+                />
             </View>
         </View>
     );

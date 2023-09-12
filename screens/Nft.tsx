@@ -35,9 +35,9 @@ export default () => {
     return (
         <Screen>
             <Wrapper>
-                <View style={{...styles.alignCenterColumn, ...styles.rowGapBase}}>
+                <View style={{...styles.alignCenterColumn, ...styles.rowGapBase, ...styles.paddingVerticalBase}}>
                     <Image source={{ uri: nft.image }} resizeMode="contain" style={{
-                        width: '100%',
+                        width: 300,
                         height: 300,
                         borderRadius: Border.radius
                     }} />

@@ -1,4 +1,4 @@
-import { Screen, Text } from "../components"
+import { Text } from "../components"
 import { useNavigation } from "@react-navigation/native";
 import { WithdrawToNavigationProp } from "../types/navigation";
 import { useI18n, useTheme } from "../hooks";
@@ -12,14 +12,14 @@ export default () => {
     const i18n = useI18n();
 
     return (
-        <Screen>
-            <View style={{ ...styles.alignCenterColumn, ...styles.aligncenterRow, ...styles.paddingBase }}>
-                <Text>{i18n.t('scan_to_code')}</Text>
-            </View>
-            <CodeScanner 
-                onScan={(to: string) => navigation.navigate('WithdrawTo', { to })} 
-                onClose={() => navigation.goBack()}
-            />
-        </Screen>
+        <CodeScanner
+            body={(
+                <View style={{ ...styles.alignCenterColumn, ...styles.aligncenterRow, ...styles.paddingMedium }}>
+                    <Text>{i18n.t('scan_to_code')}</Text>
+                </View>
+            )}
+            onScan={(to: string) => navigation.navigate('WithdrawTo', { to })}
+            onClose={() => navigation.goBack()}
+        />
     );
 }
