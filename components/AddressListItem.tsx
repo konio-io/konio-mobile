@@ -14,7 +14,7 @@ export default (props: {
 
     return (
         <View style={{...styles.directionRow, ...styles.columnGapBase, ...styles.alignCenterColumn}}>
-            <AccountAvatar size={36} address={props.address} />
+            <AccountAvatar size={48} address={props.address} />
             <View>
                 {props.name &&
                     <Text>{props.name}</Text>

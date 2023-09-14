@@ -120,12 +120,12 @@ const SuggestList = (props: {
           networkId: currentNetworkId,
           contractId: token.address
         });
-        if (value && value > 0) {
+        //if (value && value > 0) {
           coinList.merge([{
             contractId: token.address,
             symbol: token.symbol
           }])
-        }
+        //}
       }
     } catch (e) {
       logError(String(e));

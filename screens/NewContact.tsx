@@ -1,6 +1,6 @@
 import { useHookstate } from '@hookstate/core';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { NewCoinNavigationProp, NewContactRouteProp } from '../types/navigation';
+import { NewContactNavigationProp, NewContactRouteProp } from '../types/navigation';
 import { addContact, refreshKap, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen } from '../components';
@@ -11,7 +11,7 @@ import { utils } from 'koilib';
 import { isASCIIString } from '../lib/utils';
 
 export default () => {
-    const navigation = useNavigation<NewCoinNavigationProp>();
+    const navigation = useNavigation<NewContactNavigationProp>();
     const route = useRoute<NewContactRouteProp>();
     const address = useHookstate(route.params.address ?? '');
     const name = useHookstate('');
@@ -61,7 +61,9 @@ export default () => {
             name: name.get()
         });
 
-        navigation.goBack();
+        navigation.navigate("WithdrawAsset", {
+            to: addr.get()
+        })
     };
 
     const onAddressStopWriting = () => {

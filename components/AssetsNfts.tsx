@@ -1,10 +1,12 @@
-import { Image, TouchableHighlight, View, ScrollView } from 'react-native';
+import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useTheme, useNfts, useNft, useNftCollection } from '../hooks';
-import { ButtonCircle, Text } from '.';
+import { useTheme, useNfts } from '../hooks';
+import { ButtonCircle } from '.';
 import { AssetsNavigationProp, } from '../types/navigation';
-import { SheetManager } from "react-native-actions-sheet";
 import { Feather } from '@expo/vector-icons';
+import NftCollectionListItem from './NftCollectionListItem';
+import NftListItem from './NftListItem';
+import { SheetManager } from 'react-native-actions-sheet';
 
 export default () => {
   const theme = useTheme();
@@ -20,8 +22,12 @@ export default () => {
           ...styles.alignCenterColumn
         }}>
         {
-          data.map(item =>
-            <NftCollection key={item} contractId={item} />
+          data.map(contractId =>
+            <NftCollectionListItem
+              key={contractId}
+              contractId={contractId}
+              renderItem={(tokenId: string) => <TouchableNftListItem key={tokenId} contractId={contractId} tokenId={tokenId} />}
+            />
           )
         }
 
@@ -33,72 +39,22 @@ export default () => {
   );
 }
 
-const NftCollection = (props: {
-  contractId: string
-}) => {
-  const theme = useTheme();
-  const styles = theme.styles;
-  const collection = useNftCollection(props.contractId);
-  if (!collection.ornull) {
-    return <></>;
-  }
-
-  return (
-    <View style={{
-      width: 330,
-      ...styles.rowGapSmall
-    }}>
-      <Text style={{...styles.textMedium, ...styles.textBold}}>
-        {collection.name.get()}
-      </Text>
-
-      <View style={{
-        ...styles.directionRow,
-        ...styles.columnGapBase,
-        ...styles.rowGapBase,
-        flexWrap: 'wrap'
-      }}>
-        {
-          Object.keys(collection.tokens.get()).map(item =>
-            <Nft key={item} tokenId={item} contractId={props.contractId} />
-          )
-        }
-      </View>
-    </View>
-  )
-}
-
-const Nft = (props: {
+const TouchableNftListItem = (props: {
   contractId: string,
   tokenId: string
 }) => {
   const { tokenId, contractId } = props;
-  const nft = useNft({ tokenId, contractId });
-  const theme = useTheme();
-  const { Border, Color } = theme.vars;
   const navigation = useNavigation<AssetsNavigationProp>();
 
   return (
-    <TouchableHighlight
+    <TouchableOpacity
       onPress={() => navigation.navigate('Nft', { tokenId, contractId })}
       onLongPress={() => {
-        SheetManager.show('nft', { payload: { tokenId: props.tokenId, contractId: props.contractId } });
-      }}
-      style={{
-        borderRadius: Border.radius
+        SheetManager.show('nft', { payload: { tokenId, contractId } });
       }}
     >
-      
-        <Image source={{ uri: nft.image.get() }} resizeMode="contain" style={{
-          width: 100,
-          height: 100,
-          borderRadius: Border.radius,
-          borderWidth: Border.width,
-          borderColor: Border.color,
-          backgroundColor: Color.base,
-        }} />
-      
-    </TouchableHighlight>
+      <NftListItem tokenId={tokenId} contractId={contractId} />
+    </TouchableOpacity>
   )
 }
 

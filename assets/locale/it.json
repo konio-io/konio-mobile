@@ -243,5 +243,6 @@
   "about":"About",
   "transaction_SUCCESS":"Completata",
   "transaction_PENDING":"Pendente",
-  "transaction_ERROR":"Fallita"
+  "transaction_ERROR":"Fallita",
+  "no_assets":"Non ci sono assets"
 }

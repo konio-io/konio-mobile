@@ -1,12 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import type { WithdrawParamList } from '../types/navigation'
 import { useTheme, useI18n } from '../hooks';
-import WithdrawTo from '../screens/WithdrawTo';
-import WithdrawAmount from '../screens/WithdrawAmount';
-import WithdrawConfirm from '../screens/WithdrawConfirm';
-import WithdrawSelectCoin from '../screens/WithdrawSelectCoin';
 import NewContact from '../screens/NewContact';
-import WithdrawToScan from '../screens/WithdrawToScan';
+import WithdrawAsset from '../screens/WithdrawAsset';
 
 const Stack = createStackNavigator<WithdrawParamList>();
 
@@ -29,42 +25,12 @@ export default () => {
       headerTintColor: Color.primary
     }}>
       <Stack.Screen
-        name="WithdrawTo"
-        component={WithdrawTo}
+        name="WithdrawAsset"
+        component={WithdrawAsset}
         options={{
           title: i18n.t('send'),
         }}
         initialParams={{}}
-      />
-      <Stack.Screen
-        name="WithdrawToScan"
-        component={WithdrawToScan}
-        options={{
-          title: i18n.t('send'),
-          headerShown: false
-        }}
-      />
-      <Stack.Screen
-        name="WithdrawAmount"
-        component={WithdrawAmount}
-        options={{
-          title: i18n.t('select_amount'),
-        }}
-      />
-      <Stack.Screen
-        name="WithdrawConfirm"
-        component={WithdrawConfirm}
-        options={{
-          title: i18n.t('confirm_withdraw')
-        }}
-      />
-      <Stack.Screen
-        name="WithdrawSelectCoin"
-        component={WithdrawSelectCoin}
-        options={{
-          title: i18n.t('select_coin'),
-          presentation: 'modal'
-        }}
       />
       <Stack.Screen
         name="NewContact"

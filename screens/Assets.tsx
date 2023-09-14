@@ -1,5 +1,5 @@
-import { TouchableHighlight, View } from 'react-native';
-import { State, useHookstate } from '@hookstate/core';
+import { View } from 'react-native';
+import { useHookstate } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import { useCurrentAddress, useTheme, useI18n, useAccount, useAccountValue } from '../hooks';
 import { Screen, DrawerToggler, MoreVertical, Text, Address, ManaBar } from '../components';
@@ -8,9 +8,8 @@ import { SheetManager } from "react-native-actions-sheet";
 import { useEffect } from 'react';
 import AssetsCoins from '../components/AssetsCoins';
 import AssetsNfts from '../components/AssetsNfts';
-
-const CATEGORY_COINS = 'coins';
-const CATEGORY_NFTS = 'nfts';
+import { CATEGORY_COINS, CATEGORY_NFTS } from '../lib/Constants';
+import AssetToggler from '../components/AssetToggler';
 
 export default () => {
 
@@ -54,7 +53,7 @@ export default () => {
         </View>
       </View>
 
-      <Toggler selected={category} />
+      <AssetToggler selected={category} />
 
       {
         category.get() === CATEGORY_COINS &&
@@ -70,55 +69,3 @@ export default () => {
   );
 }
 
-const Toggler = (props: {
-  selected: State<string>
-}) => {
-
-  const theme = useTheme();
-  const styles = theme.styles;
-  const { Color, Border } = theme.vars;
-
-  return (
-    <View style={{ ...styles.directionRow, ...styles.paddingBase, ...styles.alignCenterRow }}>
-
-      <TouchableHighlight onPress={() => props.selected.set(CATEGORY_COINS)} style={{
-        borderTopLeftRadius: Border.radius,
-        borderBottomLeftRadius: Border.radius,
-        width: 100
-      }}>
-        <View style={{
-          ...styles.paddingSmall,
-          ...styles.alignCenterColumn,
-          borderTopLeftRadius: Border.radius,
-          borderBottomLeftRadius: Border.radius,
-          backgroundColor: props.selected.get() === CATEGORY_COINS ? Color.primary : Border.color,
-        }}>
-          <Text style={{
-            ...styles.text,
-            color: props.selected.get() === CATEGORY_COINS ? Color.primaryContrast : Color.baseContrast,
-          }}>COINS</Text>
-        </View>
-      </TouchableHighlight>
-
-      <TouchableHighlight onPress={() => props.selected.set(CATEGORY_NFTS)} style={{
-        borderTopRightRadius: Border.radius,
-        borderBottomRightRadius: Border.radius,
-        width: 100,
-      }}>
-        <View style={{
-          ...styles.paddingSmall,
-          ...styles.alignCenterColumn,
-          backgroundColor: props.selected.get() === CATEGORY_NFTS ? Color.primary : Border.color,
-          borderTopRightRadius: Border.radius,
-          borderBottomRightRadius: Border.radius
-        }}>
-          <Text style={{
-            ...styles.text,
-            color: props.selected.get() === CATEGORY_NFTS ? Color.primaryContrast : Color.baseContrast,
-          }}>NFTs</Text>
-        </View>
-      </TouchableHighlight>
-
-    </View>
-  );
-}

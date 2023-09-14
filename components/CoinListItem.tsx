@@ -3,14 +3,24 @@ import { View, StyleSheet } from 'react-native';
 import CoinLogo from './CoinLogo';
 import type { Theme } from '../types/store';
 import Text from './Text';
+import { Feather } from '@expo/vector-icons';
+import { useHookstate } from '@hookstate/core';
+import { useEffect } from 'react';
 
 export default (props: {
     contractId: string
+    selected?: boolean
 }) => {
 
     const theme = useTheme();
     const styles = createStyles(theme);
+    const { Color } = theme.vars;
     const coin = useCoin(props.contractId);
+
+    const selected = useHookstate<boolean|undefined>(undefined);
+    useEffect(() => {
+        selected.set(props.selected);
+    }, [props.selected])
 
     return (
         <View style={styles.container}>
@@ -23,19 +33,34 @@ export default (props: {
                 </View>
             </View>
 
-            <View>
-                {coin.balance.ornull && coin.balance.ornull.get() >= 0 &&
-                    <View>
-                        {coin.price.ornull && 
-                            <Text style={{...styles.text,...styles.textRight}}>
-                                {(coin.balance.ornull.get() * coin.price.ornull.get()).toFixed(2)} USD
-                            </Text>
-                        }
+            {
+                selected.ornull &&
+                <View>
+                    {
+                        selected.get() === true && <Feather name="check-circle" size={20} color={Color.primary}/>
+                    }
+                    {
+                        selected.get() === false && <Feather name="circle" size={20} color={Color.primary}/>
+                    }
+                </View>
+            }
+            {
+                !selected.ornull &&
+                <View>
+                    {coin.balance.ornull && coin.balance.ornull.get() >= 0 &&
+                        <View>
+                            {coin.price.ornull &&
+                                <Text style={{ ...styles.text, ...styles.textRight }}>
+                                    {(coin.balance.ornull.get() * coin.price.ornull.get()).toFixed(2)} USD
+                                </Text>
+                            }
 
-                        <Text style={{...styles.text, ...styles.textRight}}>{coin.balance.ornull.get().toFixed(2)}</Text>
-                    </View>
-                }
-            </View>
+                            <Text style={{ ...styles.text, ...styles.textRight }}>{coin.balance.ornull.get().toFixed(2)}</Text>
+                        </View>
+                    }
+                </View>
+            }
+
         </View>
     );
 }

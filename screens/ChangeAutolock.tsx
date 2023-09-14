@@ -1,7 +1,7 @@
 import { FlatList, View } from 'react-native';
 import { useI18n, useAutolock } from '../hooks';
 import { setAutolock } from '../actions';
-import { ListItemSelected, Separator, Text, Screen } from '../components';
+import { ListItemSelected, Text, Screen } from '../components';
 
 export default () => {
 

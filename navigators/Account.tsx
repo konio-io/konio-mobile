@@ -3,13 +3,12 @@ import React from "react";
 import { View, TouchableOpacity } from "react-native";
 import { useI18n, useTheme } from "../hooks";
 import Unavailable from "../screens/Unavailable";
-import Assets from "./Holdings";
 import { SheetManager } from "react-native-actions-sheet";
 import { AntDesign } from '@expo/vector-icons';
-import Withdraw from "./Withdraw";
 import Deposit from "../screens/Deposit";
 import Dapps from "../screens/Dapps";
 import Holdings from "./Holdings";
+import Withdraw from "./Withdraw";
 
 const Tab = createBottomTabNavigator();
 export default () => {

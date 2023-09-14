@@ -918,7 +918,7 @@ export const hideSpinner = () => {
     SpinnerStore.set(false);
 }
 
-export const transferNFT = async (args: {
+export const withdrawNft = async (args: {
     contractId: string,
     tokenId: string,
     to: string

@@ -2,13 +2,30 @@ import { TextInput, View } from 'react-native';
 import { useTheme } from '../hooks';
 import { rgba } from '../lib/utils';
 import { Feather } from '@expo/vector-icons';
-import React, { useEffect } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import { useHookstate } from '@hookstate/core';
-import Text from './Text';
 import TextInputAction from './TextInputAction';
-import ActivityIndicator from './ActivityIndicator';
+import TextInputContainer from './TextInputContainer';
 
-export default (props: any) => {
+export default (props: {
+    style?: Object,
+    containerStyle?: Object,
+    loading?: boolean,
+    actionX?: ReactElement
+    actions?: ReactElement
+    note?: string,
+    editable?: boolean
+    value?: any,
+    multiline?: boolean
+    onChangeText?: Function
+    onStopWriting?: Function,
+    textVerticalAlign?: string,
+    autoFocus?: boolean
+    keyboardType?: any
+    placeholder?: string
+    textAlign?: any
+    secureTextEntry?: boolean
+}) => {
 
     const value = useHookstate('');
     useEffect(() => {
@@ -19,73 +36,59 @@ export default (props: any) => {
     const { Color } = theme.vars;
     const styles = theme.styles;
 
-    const defaultProps = {
-        style: {
-            ...styles.flex1,
-            ...styles.textInputText
-        },
-        placeholderTextColor: rgba(Color.baseContrast, 0.3),
-    };
-
-    const wprops = {
-        ...defaultProps,
-        ...props,
-        style: {
-            ...defaultProps.style,
-            ...props.style
-        },
-        textAlignVertical: "top", //android multiline vertical align issue
-        value: value.get(),
-        onChangeText: (v: string) => {
-            value.set(v)
-            props.onChangeText(v)
-        }
-    };
-
-    if (wprops.onStopWriting) {
+    if (props.onStopWriting) {
         useEffect(() => {
             const delayDebounceFn = setTimeout(() => {
-                wprops.onStopWriting();
+                if (props.onStopWriting) {
+                    props.onStopWriting();
+                }
             }, 1000)
-    
+
             return () => clearTimeout(delayDebounceFn)
         }, [value])
     }
 
     return (
-
-        <View style={{ ...styles.textInputContainer, ...props.styleContainer }}>
-            <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
-                <View style={{ marginTop: 2 }}>
-                    <Feather size={18} name="chevron-right" color={rgba(Color.baseContrast, 0.5)} />
+        <TextInputContainer style={props.containerStyle}
+            actionX={(
+                <View>
+                    {props.value && props.editable !== true &&
+                        <TextInputAction
+                            onPress={() => {
+                                if (props.onChangeText) {
+                                    props.onChangeText('');
+                                }
+                            }}
+                            icon={(<Feather name="x" />)}
+                        />
+                    }
                 </View>
-
-                <TextInput {...wprops} />
-
-                {wprops.loading &&
-                    <ActivityIndicator/>
-                }
-
-                {wprops.value && wprops.editable !== true &&
-                    <TextInputAction
-                        onPress={() => wprops.onChangeText('')}
-                        icon={(<Feather name="x" />)}
-                    />
-                }
-
-            </View>
-            {wprops.actions &&
-                <View style={styles.alignEndColumn}>
-                    {wprops.actions}
-                </View>
-            }
-
-            {wprops.note &&
-                <View style={{ paddingLeft: 25 }}>
-                    <Text style={styles.textSmall}>{wprops.note}</Text>
-                </View>
-            }
-        </View>
-
+            )}
+            actions={props.actions}
+            note={props.note}
+        >
+            <TextInput
+                style={{
+                    ...styles.flex1,
+                    ...styles.textInputText,
+                    ...props.style
+                }}
+                placeholderTextColor={rgba(Color.baseContrast, 0.3)}
+                value={value.get()}
+                textAlignVertical="top"
+                onChangeText={(v: string) => {
+                    value.set(v);
+                    if (props.onChangeText) {
+                        props.onChangeText(v)
+                    }
+                }}
+                autoFocus={props.autoFocus}
+                keyboardType={props.keyboardType}
+                placeholder={props.placeholder}
+                textAlign={props.textAlign}
+                secureTextEntry={props.secureTextEntry}
+                multiline={props.multiline}
+            />
+        </TextInputContainer>
     );
 }

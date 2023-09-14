@@ -8,6 +8,9 @@ import ActionSheetNft from './ActionSheetNft';
 import ActionSheetUnlock from './ActionSheetUnlock';
 import ActionSheetWcProposal from './ActionSheetWcProposal';
 import ActionSheetWcRequest from './ActionSheetWcRequest';
+import ActionSheetRecipient from './ActionSheetRecipient';
+import ActionSheetAssetCoin from './ActionSheetAssetCoin';
+import ActionSheetAssetNft from './ActionSheetAssetNft';
  
 registerSheet("coin", ActionSheetCoin);
 registerSheet("account",ActionSheetAccount);
@@ -18,5 +21,8 @@ registerSheet("nft", ActionSheetNft);
 registerSheet("unlock", ActionSheetUnlock);
 registerSheet("wc_proposal", ActionSheetWcProposal);
 registerSheet("wc_request", ActionSheetWcRequest);
+registerSheet("recipient", ActionSheetRecipient);
+registerSheet("asset_coin", ActionSheetAssetCoin);
+registerSheet("asset_nft", ActionSheetAssetNft);
 
 export {};

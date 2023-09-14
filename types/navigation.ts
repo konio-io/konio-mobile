@@ -57,8 +57,13 @@ export type WcSessionsRouteProp = RouteProp<WalletConnectParamList, 'WcSessions'
 export type AccountParamList = {
     Holdings: NavigatorScreenParams<HoldingsParamList>,
     Dapps: undefined,
-    Withdraw: NavigatorScreenParams<WithdrawParamList>,
-    Deposit: undefined,
+    Withdraw: {
+        to?: string,
+        contractId?: string
+        amount?: number,
+        tokenId?: string
+    },
+    Deposit: undefined
 }
 export type HoldingsNavigationProp = StackNavigationProp<AccountParamList, 'Holdings'>;
 export type HoldingsRouteProp = RouteProp<AccountParamList, 'Holdings'>;
@@ -154,37 +159,19 @@ export type ImportWalletSeedRouteProp = RouteProp<IntroParamList, 'ImportWalletS
 
 /** Withdraw */
 export type WithdrawParamList = {
-    WithdrawTo: {
+    WithdrawAsset: {
         to?: string,
         contractId?: string
-    },
-    WithdrawToScan: undefined,
-    WithdrawAmount: {
-        to: string,
-        contractId?: string
-    },
-    WithdrawConfirm: {
-        to: string,
-        contractId: string,
-        amount: string
-    },
-    WithdrawSelectCoin: {
-        to: string,
-        selected?: string
+        amount?: number,
+        tokenId?: string
     },
     NewContact: {
         address?: string
     }
 }
-export type WithdrawToNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawTo'>;
-export type WithdrawToRouteProp = RouteProp<WithdrawParamList, 'WithdrawTo'>;
-export type WithdrawToScanNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawToScan'>;
-export type WithdrawToScanRouteProp = RouteProp<WithdrawParamList, 'WithdrawToScan'>;
-export type WithdrawAmountNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawAmount'>;
-export type WithdrawAmountRouteProp = RouteProp<WithdrawParamList, 'WithdrawAmount'>;
-export type WithdrawConfirmNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawConfirm'>;
-export type WithdrawConfirmRouteProp = RouteProp<WithdrawParamList, 'WithdrawConfirm'>;
-export type WithdrawSelectCoinNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawSelectCoin'>;
-export type WithdrawSelectCoinRouteProp = RouteProp<WithdrawParamList, 'WithdrawSelectCoin'>;
+export type WithdrawAssetNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawAsset'>;
+export type WithdrawAssetRouteProp = RouteProp<WithdrawParamList, 'WithdrawAsset'>;
+//export type WithdrawToScanNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawToScan'>;
+//export type WithdrawToScanRouteProp = RouteProp<WithdrawParamList, 'WithdrawToScan'>;
 export type NewContactNavigationProp = StackNavigationProp<WithdrawParamList, 'NewContact'>;
 export type NewContactRouteProp = RouteProp<WithdrawParamList, 'NewContact'>;

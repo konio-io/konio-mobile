@@ -242,5 +242,7 @@
     "about":"About",
     "transaction_SUCCESS":"Completed",
     "transaction_PENDING":"Pending",
-    "transaction_ERROR":"Failed"
+    "transaction_ERROR":"Failed",
+    "no_assets":"There are no assets",
+    "nft_transfer_failed":"NFT transfer failed"
   }

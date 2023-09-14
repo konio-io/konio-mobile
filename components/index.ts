@@ -6,7 +6,6 @@ import Button from './Button';
 import AccountAvatar from './AccountAvatar';
 import ManaBar from './ManaBar';
 import CircularProgress from './CircularProgress';
-import CoinList from './CoinList';
 import ManaStat from './ManaStat';
 import Address from './Address';
 import TransactionList from './TransactionList';
@@ -53,7 +52,6 @@ export {
     ManaBar,
     ManaStat,
     CircularProgress,
-    CoinList,
     Address,
     TransactionList,
     Wrapper,
