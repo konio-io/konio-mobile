@@ -273,7 +273,7 @@ export const deleteAccount = (address: string) => {
     userAccount.set(none);
 }
 
-export const confirmTransaction = async (args: {
+export const withdrawCoinConfirm = async (args: {
     contractId: string,
     transaction: TransactionJsonWait
 }) : Promise<Transaction> => {
@@ -938,4 +938,61 @@ export const withdrawNft = async (args: {
         to,
         token_id: tokenId
     });
+}
+
+export const withdrawNftConfirm = async (args: {
+    to: string,
+    contractId: string,
+    tokenId: string
+}) => {
+    const { contractId, tokenId, to } = args;
+    const address = UserStore.currentAddress.get();
+    const networkId = UserStore.currentNetworkId.get();
+    const fromCollection = UserStore.accounts[address].assets[networkId].nfts[contractId];
+
+    if (UserStore.accounts[to].ornull) {
+        const uri = fromCollection.uri.get();
+        const token = await getNft({
+            uri,
+            tokenId
+        });
+    
+        const contract = await getNftContract({
+            address,
+            networkId,
+            contractId
+        });
+    
+        const newCollection : NFTCollection = {
+            contractId: contract.contractId,
+            owner: contract.owner,
+            symbol: contract.symbol,
+            name: contract.name,
+            uri: contract.uri,
+            tokens: {}
+        };
+        
+        const toNfts = UserStore.accounts[to].assets[networkId].nfts;
+    
+        toNfts.merge({
+            [contractId]: newCollection
+        });
+
+        const newNft: NFT = {
+            tokenId,
+            description: token.description ?? 'unknown',
+            image: token.image ?? 'unknown',
+            transactions: {}
+        };
+    
+        toNfts[contractId].tokens.merge({ [tokenId]: newNft });
+    }
+
+    
+    fromCollection.tokens[tokenId].set(none);
+    if (Object.keys(fromCollection.tokens.get()).length === 0) {
+        fromCollection.set(none);
+    }
+
+    return true;
 }

@@ -84,8 +84,10 @@ const Nft = (props: {
     }
 }) => {
     const { contractId, tokenId } = props.nft;
-    const collection = useNftCollection(contractId);
+    //const collection = useNftCollection(contractId);
     const nft = useNft({ contractId, tokenId });
+    return <Text>{nft.get()?.image}</Text>
+    /*
     const theme = useTheme();
     const styles = theme.styles;
     const { Border } = theme.vars;
@@ -115,4 +117,5 @@ const Nft = (props: {
             
         </View>
     );
+    */
 }

@@ -1,4 +1,4 @@
-import { Screen, Text, Link, WcLogo } from "../components"
+import { Text, Link, WcLogo } from "../components"
 import { useNavigation } from "@react-navigation/native";
 import { WcPairScanNavigationProp } from "../types/navigation";
 import { useI18n, useTheme } from "../hooks";
@@ -44,14 +44,3 @@ export default () => {
         />
     );
 }
-
-/*
-
-        <Screen insets={true}>
-            <View style={{ ...styles.alignCenterColumn, ...styles.aligncenterRow, ...styles.paddingBase }}>
-                <Text>{i18n.t('scan_wc_code_or')}</Text>
-                <Link text={i18n.t('enter_code_manually')} onPress={() => navigation.navigate('WcPairInput')}/>
-            </View>
-            
-        </Screen>
-        */

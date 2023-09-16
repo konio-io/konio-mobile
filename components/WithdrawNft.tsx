@@ -1,15 +1,19 @@
 import { useHookstate } from '@hookstate/core';
 import { Button} from '../components';
 import { ScrollView, View } from "react-native";
-import { useI18n, useLock, useTheme } from '../hooks';
+import { useCurrentAddress, useCurrentNetworkId, useI18n, useLock, useTheme } from '../hooks';
 import RecipientInput from '../components/RecipientInput';
 import { Feather } from '@expo/vector-icons';
 import AssetNftInput from '../components/AssetNftInput';
-import { askReview, hideSpinner, lock, logError, showSpinner, showToast, withdrawNft } from '../actions';
+import { askReview, hideSpinner, lock, logError, showSpinner, showToast, withdrawNft, withdrawNftConfirm } from '../actions';
 import { useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { WithdrawAssetNavigationProp } from '../types/navigation';
 
 export default (props: {
     to?: string,
+    from: string,
+    networkId: string,
     contractId?: string,
     tokenId?: string
 }) => {
@@ -22,12 +26,28 @@ export default (props: {
     });
     const lockState = useLock();
     const sendRequest = useHookstate(false);
+    const navigation = useNavigation<WithdrawAssetNavigationProp>();
+    
+    /*const currentAddress = useCurrentAddress();
+    const currentNetworkId = useCurrentNetworkId();
+
+    useEffect(() => {
+        _reset();
+    }, [currentAddress, currentNetworkId]);*/
 
     useEffect(() => {
         if (lockState.get() === false && sendRequest.get() === true) {
             _send();
         }
     }, [lockState]);
+
+    const _reset = () => {
+        to.set('');
+        nft.set({
+            tokenId: '',
+            contractId: ''
+        });
+    }
 
     const _confirm = () => {
         lock();
@@ -43,12 +63,30 @@ export default (props: {
             to: to.get()
         })
         .then(() => {
-            hideSpinner();
-            showToast({
-                type: 'success',
-                text1: i18n.t('transaction_confirmed'),
+            //withdraw confirmation
+            withdrawNftConfirm({
+                contractId: nft.contractId.get(),
+                tokenId: nft.tokenId.get(),
+                to: to.get()
+            }).then(() => {
+                hideSpinner();
+                navigation.goBack();
+
+                showToast({
+                    type: 'success',
+                    text1: i18n.t('transaction_confirmed'),
+                });
+                askReview();
+            })
+            .catch(e => {
+                hideSpinner();
+                logError(e);
+                showToast({
+                    type: 'error',
+                    text1: i18n.t('nft_transfer_failed'),
+                    text2: i18n.t('check_logs')
+                });
             });
-            askReview();
         })
         .catch(e => {
             hideSpinner();
@@ -58,8 +96,7 @@ export default (props: {
                 text1: i18n.t('nft_transfer_failed'),
                 text2: i18n.t('check_logs')
             });  
-        })
-        console.log('sending nft');
+        });
     }
 
     return (

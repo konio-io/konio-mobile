@@ -3,6 +3,7 @@ import type { WithdrawParamList } from '../types/navigation'
 import { useTheme, useI18n } from '../hooks';
 import NewContact from '../screens/NewContact';
 import WithdrawAsset from '../screens/WithdrawAsset';
+import WithdrawToScan from '../screens/WithdrawToScan';
 
 const Stack = createStackNavigator<WithdrawParamList>();
 
@@ -38,6 +39,14 @@ export default () => {
         options={{
           title: i18n.t('new_contact'),
           presentation: 'modal'
+        }}
+      />
+      <Stack.Screen
+        name="WithdrawToScan"
+        component={WithdrawToScan}
+        options={{
+          title: i18n.t('send'),
+          headerShown: false
         }}
       />
     </Stack.Navigator>

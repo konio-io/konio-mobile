@@ -60,7 +60,7 @@ export default () => {
                             title="Send"
                             onPress={() => {
                                 navigation.navigate('Withdraw', {
-                                    screen: 'WithdrawTo',
+                                    screen: 'WithdrawAsset',
                                     params: {
                                         contractId: route.params.contractId
                                     }

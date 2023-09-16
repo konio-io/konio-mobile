@@ -2,18 +2,22 @@ import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-shee
 import Button from "./Button";
 import Text from "./Text";
 import { FlatList, TouchableOpacity, View } from "react-native";
-import { useCoins, useI18n, useTheme } from "../hooks";
+import { useI18n, useTheme } from "../hooks";
 import { useHookstate } from "@hookstate/core";
 import CoinListItem from "./CoinListItem";
+import { getCoins } from "../getters";
 
-export default (props: SheetProps<{ contractId: string }>) => {
+export default (props: SheetProps<{ contractId: string, address: string, networkId: string }>) => {
     const contractId = useHookstate(props.payload?.contractId ?? '');
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
-    const coins = useCoins();
+    const coins = getCoins({
+        address: props.payload.address,
+        networkId: props.payload.networkId
+    });
     const { Spacing } = theme.vars;
-    const data = Object.keys(coins.get());
+    const data = Object.values(coins.get());
 
     const _close = () => {
         SheetManager.hide(props.sheetId);
@@ -46,10 +50,10 @@ export default (props: SheetProps<{ contractId: string }>) => {
                 <FlatList
                     data={data}
                     renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => contractId.set(item)}>
+                        <TouchableOpacity onPress={() => contractId.set(item.contractId)}>
                             <CoinListItem
-                                contractId={item}
-                                selected={item === contractId.get()}
+                                coin={item}
+                                selected={item.contractId === contractId.get()}
                             />
                         </TouchableOpacity>
                     )}

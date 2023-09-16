@@ -57,12 +57,7 @@ export type WcSessionsRouteProp = RouteProp<WalletConnectParamList, 'WcSessions'
 export type AccountParamList = {
     Holdings: NavigatorScreenParams<HoldingsParamList>,
     Dapps: undefined,
-    Withdraw: {
-        to?: string,
-        contractId?: string
-        amount?: number,
-        tokenId?: string
-    },
+    Withdraw: NavigatorScreenParams<WithdrawParamList>,
     Deposit: undefined
 }
 export type HoldingsNavigationProp = StackNavigationProp<AccountParamList, 'Holdings'>;
@@ -167,11 +162,12 @@ export type WithdrawParamList = {
     },
     NewContact: {
         address?: string
-    }
+    },
+    WithdrawToScan: undefined
 }
 export type WithdrawAssetNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawAsset'>;
 export type WithdrawAssetRouteProp = RouteProp<WithdrawParamList, 'WithdrawAsset'>;
-//export type WithdrawToScanNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawToScan'>;
-//export type WithdrawToScanRouteProp = RouteProp<WithdrawParamList, 'WithdrawToScan'>;
+export type WithdrawToScanNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawToScan'>;
+export type WithdrawToScanRouteProp = RouteProp<WithdrawParamList, 'WithdrawToScan'>;
 export type NewContactNavigationProp = StackNavigationProp<WithdrawParamList, 'NewContact'>;
 export type NewContactRouteProp = RouteProp<WithdrawParamList, 'NewContact'>;
