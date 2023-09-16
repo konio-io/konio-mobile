@@ -5,25 +5,26 @@ import { CoinListItem, ButtonCircle } from '.';
 import { AssetsNavigationProp, } from '../types/navigation';
 import { SheetManager } from "react-native-actions-sheet";
 import { Feather } from '@expo/vector-icons';
-import { useHookstate } from '@hookstate/core';
 import { refreshCoins } from '../actions';
+import { useState } from 'react';
+import { Coin } from '../types/store';
 
 export default () => {
-  const refreshing = useHookstate(false);
+  const [refreshing, setRefreshing] = useState(false)
   const coins = useCoins();
 
-  const loadCoinList = async () => {
-      refreshing.set(true);
+  const _loadCoinList = async () => {
+      setRefreshing(true);
       await refreshCoins({balance: true, price: true, info: true});
-      refreshing.set(false);
+      setRefreshing(false);
   };
 
   return (
       <FlatList
-          data={Object.keys(coins.get())}
-          renderItem={({ item }) => <TouchableCoinListItem contractId={item} />}
+          data={coins}
+          renderItem={({ item }) => <TouchableCoinListItem coin={item} />}
           refreshControl={
-              <RefreshControl refreshing={refreshing.get()} onRefresh={loadCoinList} />
+              <RefreshControl refreshing={refreshing} onRefresh={_loadCoinList} />
           }
           ListFooterComponent={<Footer />}
       />
@@ -31,7 +32,7 @@ export default () => {
 }
 
 const TouchableCoinListItem = (props: {
-  contractId: string,
+  coin: Coin,
 }) => {
   const navigation = useNavigation<AssetsNavigationProp>();
   const theme = useTheme();
@@ -39,13 +40,13 @@ const TouchableCoinListItem = (props: {
 
   return (
     <TouchableHighlight
-      onPress={() => navigation.navigate('Coin', { contractId: props.contractId })}
+      onPress={() => navigation.navigate('Coin', { contractId: props.coin.contractId })}
       onLongPress={() => {
-        SheetManager.show('coin', { payload: { contractId: props.contractId } });
+        SheetManager.show('coin', { payload: { contractId: props.coin.contractId } });
       }}
     >
       <View style={styles.listItemContainer}>
-        <CoinListItem contractId={props.contractId} />
+        <CoinListItem contractId={props.coin.contractId} />
       </View>
     </TouchableHighlight>
   );

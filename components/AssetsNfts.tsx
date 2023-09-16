@@ -1,6 +1,6 @@
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useTheme, useNfts } from '../hooks';
+import { useTheme, useNftCollections } from '../hooks';
 import { ButtonCircle } from '.';
 import { AssetsNavigationProp, } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
@@ -11,8 +11,7 @@ import { SheetManager } from 'react-native-actions-sheet';
 export default () => {
   const theme = useTheme();
   const styles = theme.styles;
-  const nfts = useNfts();
-  const data = Object.keys(nfts.get());
+  const data = useNftCollections();
 
   return (
     <ScrollView style={{ flex: 1 }}>
@@ -22,15 +21,16 @@ export default () => {
           ...styles.alignCenterColumn
         }}>
         {
-          data.map(contractId =>
+          data.map(collection =>
             <NftCollectionListItem
-              key={contractId}
-              contractId={contractId}
-              renderItem={(tokenId: string) => <TouchableNftListItem key={tokenId} contractId={contractId} tokenId={tokenId} />}
+              key={collection.contractId}
+              contractId={collection.contractId}
+              renderItem={(tokenId: string) => 
+                <TouchableNftListItem key={tokenId} contractId={collection.contractId} tokenId={tokenId} />
+              }
             />
           )
         }
-
       </ScrollView>
 
       <Footer />

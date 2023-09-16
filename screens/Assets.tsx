@@ -1,11 +1,10 @@
 import { View } from 'react-native';
-import { useHookstate } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import { useCurrentAddress, useTheme, useI18n, useAccount, useAccountValue } from '../hooks';
 import { Screen, DrawerToggler, MoreVertical, Text, Address, ManaBar } from '../components';
 import { AssetsNavigationProp, } from '../types/navigation';
 import { SheetManager } from "react-native-actions-sheet";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import AssetsCoins from '../components/AssetsCoins';
 import AssetsNfts from '../components/AssetsNfts';
 import { CATEGORY_COINS, CATEGORY_NFTS } from '../lib/Constants';
@@ -18,20 +17,20 @@ export default () => {
   const theme = useTheme();
   const styles = theme.styles;
   const i18n = useI18n();
+  const [category, setCategory] = useState(CATEGORY_COINS);
   const account = useAccount(currentAddress.get());
-  const category = useHookstate(CATEGORY_COINS);
   const total = useAccountValue();
 
   useEffect(() => {
     navigation.setOptions({
-      title: account.name.get(),
+      title: account.name,
       headerShadowVisible: false,
       headerTitleAlign: 'center',
       headerLeft: () => (<DrawerToggler />),
       headerRight: () => (<MoreVertical onPress={() => SheetManager.show('account', { payload: { address: currentAddress.get() } })} />),
       headerTitle: () => (
         <View style={styles.alignCenterColumn}>
-          <Text style={styles.textMedium}>{account.name.get()}</Text>
+          <Text style={styles.textMedium}>{account.name}</Text>
           <Address address={currentAddress.get()} copiable={true} />
         </View>
       )
@@ -53,15 +52,15 @@ export default () => {
         </View>
       </View>
 
-      <AssetToggler selected={category} />
+      <AssetToggler selected={category} onChange={(value: string) => setCategory(value)}/>
 
       {
-        category.get() === CATEGORY_COINS &&
+        category === CATEGORY_COINS &&
         <AssetsCoins></AssetsCoins>
       }
 
       {
-        category.get() === CATEGORY_NFTS &&
+        category === CATEGORY_NFTS &&
         <AssetsNfts></AssetsNfts>
       }
 

@@ -1,4 +1,3 @@
-import { useHookstate } from "@hookstate/core";
 import { useNft, useNftCollection, useTheme } from "../hooks";
 import Text from './Text';
 import { SheetManager } from "react-native-actions-sheet";
@@ -8,56 +7,28 @@ import TextInputContainer from "./TextInputContainer";
 import { Image, View } from 'react-native';
 
 export default (props: {
-    nft: {
+    value?: {
         contractId: string,
         tokenId: string,
     },
     onChange?: Function
     opened?: boolean
 }) => {
-
-    const opened = useHookstate(false);
-    const nft = useHookstate({
-        tokenId: '',
-        contractId: ''
-    });
-
     useEffect(() => {
-        opened.set(props.opened ?? false);
-    }, [props.opened])
-
-    useEffect(() => {
-        nft.set({
-            tokenId: props.nft.tokenId,
-            contractId: props.nft.contractId
-        });
-    }, [props.nft]);
-
-    useEffect(() => {
-        if (opened.get() == true) {
-            _select().then(() => {
-                opened.set(false);
-            });
+        if (props.opened == true) {
+            _select();
         }
-    }, [opened])
+    }, [props.opened])
 
     const _select = async () => {
         const value: any = await SheetManager.show("asset_nft", {
-            payload: nft.get(),
+            payload: props.value,
         });
 
-        if (value) {
-            nft.set({
-                contractId: value.contractId,
-                tokenId: value.tokenId
-            });
-            _onChange();
-        }
-    }
-
-    const _onChange = () => {
-        if (props.onChange) {
-            props.onChange(nft.get());
+        if (value?.tokenId && value?.contractId) {
+            if (props.onChange) {
+                props.onChange(value);
+            }
         }
     }
 
@@ -69,8 +40,8 @@ export default (props: {
                 containerStyle={{ flexGrow: 1 }}
             >
                 {
-                    nft.contractId.get() && nft.tokenId.get() &&
-                    <Nft nft={nft.get()} />
+                    props.value &&
+                    <Nft nft={props.value} />
                 }
             </TouchableWithoutFeedback>
         </TextInputContainer>
@@ -84,25 +55,23 @@ const Nft = (props: {
     }
 }) => {
     const { contractId, tokenId } = props.nft;
-    //const collection = useNftCollection(contractId);
+    const collection = useNftCollection(contractId);
     const nft = useNft({ contractId, tokenId });
-    return <Text>{nft.get()?.image}</Text>
-    /*
     const theme = useTheme();
     const styles = theme.styles;
     const { Border } = theme.vars;
 
-    if (!collection.ornull || !collection.ornull.get()) {
+    if (!collection) {
         return <></>;
     }
 
-    if (!nft.ornull || !nft.ornull.get()) {
+    if (!nft) {
         return <></>;
     }
 
     return (
         <View style={{...styles.directionRow, ...styles.columnGapBase}}>
-            <Image source={{ uri: nft.image.get() }} resizeMode="contain" style={{
+            <Image source={{ uri: nft.image }} resizeMode="contain" style={{
                 width: 100,
                 height: 100,
                 borderRadius: Border.radius,
@@ -111,11 +80,10 @@ const Nft = (props: {
             }} />
 
             <View>
-                <Text>{collection.name.get()}</Text>
-                <Text>{nft.tokenId.get()}</Text>
+                <Text>{collection.name}</Text>
+                <Text>{nft.tokenId}</Text>
             </View>
             
         </View>
     );
-    */
 }

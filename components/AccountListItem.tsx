@@ -9,7 +9,7 @@ export default (props: {
     address: string
 }) => {
 
-    const account = useAccount(props.address).get();
+    const account = useAccount(props.address);
     const theme = useTheme();
     const styles = createStyles(theme);
 

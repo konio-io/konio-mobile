@@ -11,7 +11,7 @@ import type { Theme } from "../types/store";
 
 export default (props: SheetProps) => {
     const currentAddress = useCurrentAddress();
-    const account = useAccount(currentAddress.get()).get();
+    const account = useAccount(currentAddress.get());
     const currentNetworkId = useCurrentNetworkId().get();
     const currentNetwork = useNetwork(currentNetworkId).get();
     const proposal = props.payload.proposal;

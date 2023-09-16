@@ -121,7 +121,7 @@ const ItemHeader = (props: {
     address: string,
     name: string
 }) => {
-    const account = useAccount(props.address).get();
+    const account = useAccount(props.address);
     const theme = useTheme();
     const styles = theme.styles;
 

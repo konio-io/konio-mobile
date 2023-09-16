@@ -12,7 +12,7 @@ export default () => {
     const navigation = useNavigation<EditAccountNavigationProps>();
 
     const account = useAccount(route.params.address);
-    const name = useHookstate(account.name.get());
+    const name = useHookstate(account.name);
     const theme = useTheme();
     const styles = theme.styles;
 

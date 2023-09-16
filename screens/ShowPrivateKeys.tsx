@@ -33,7 +33,7 @@ const PrivateKey = (props: {
     address: string,
     privateKey: string
 }) => {
-    const account = useAccount(props.address).get();
+    const account = useAccount(props.address);
     const theme = useTheme();
     const styles = theme.styles;
 

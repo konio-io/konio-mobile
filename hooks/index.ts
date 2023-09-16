@@ -6,7 +6,8 @@ import Locales from "../lib/Locales";
 import { I18n } from 'i18n-js';
 import { getLocales } from 'expo-localization';
 import { FALLBACK_LOCALE, FALLBACK_THEME, OS_LOCALE, OS_THEME } from "../lib/Constants";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Coin, NFT, NFTCollection } from "../types/store";
 
 export const useNetworks = () => {
     return useHookstate(UserStore.networks);
@@ -29,13 +30,29 @@ export const useCurrentAddress = () => {
 }
 
 export const useAccount = (address: string) => {
-    return useHookstate(UserStore.accounts[address]);
+    return UserStore.accounts[address]?.get();
 }
 
 export const useCoin = (contractId: string) => {
-    const currentAddress = useHookstate(UserStore.currentAddress).get();
-    const currentNetworkId = useHookstate(UserStore.currentNetworkId).get();
-    return useHookstate(UserStore.accounts[currentAddress].assets[currentNetworkId].coins[contractId]);
+    const currentAddress = useHookstate(UserStore.currentAddress);
+    const currentNetworkId = useHookstate(UserStore.currentNetworkId);
+    const [coin, setCoin] = useState<Coin|null>(null);
+
+    useEffect(() => {
+        const store = UserStore.accounts
+            ?.nested(currentAddress.get())
+            ?.assets
+            ?.nested(currentNetworkId.get())
+            ?.coins
+            ?.nested(contractId);
+
+        if (store?.get()) {
+            setCoin(store.get());
+        }
+
+    }, [currentAddress, currentNetworkId]);
+
+    return coin;
 }
 
 /**
@@ -43,9 +60,24 @@ export const useCoin = (contractId: string) => {
  * @returns 
  */
 export const useCoins = () => {
-    const currentAddress = useHookstate(UserStore.currentAddress).get();
-    const currentNetworkId = useHookstate(UserStore.currentNetworkId).get();
-    return useHookstate(UserStore.accounts[currentAddress].assets[currentNetworkId].coins);
+    const currentAddress = useHookstate(UserStore.currentAddress);
+    const currentNetworkId = useHookstate(UserStore.currentNetworkId);
+    const [coins, setCoins] = useState<Array<Coin>>([]);
+
+    useEffect(() => {
+        const store = UserStore.accounts
+            ?.nested(currentAddress.get())
+            ?.assets
+            ?.nested(currentNetworkId.get())
+            ?.coins;
+
+        if (store?.get()) {
+            setCoins(Object.values(store.get()));
+        }
+
+    }, [currentAddress, currentNetworkId]);
+
+    return coins;
 }
 
 
@@ -206,23 +238,70 @@ export const useKapName = (name: string) => {
  * Current account nfts
  * @returns 
  */
-export const useNfts = () => {
-    const currentAddress = useHookstate(UserStore.currentAddress).get();
-    const currentNetworkId = useCurrentNetworkId().get();
+export const useNftCollections = () => {
+    const currentAddress = useHookstate(UserStore.currentAddress);
+    const currentNetworkId = useHookstate(UserStore.currentNetworkId);
+    const [nftCollections, setNftCollections] = useState<Array<NFTCollection>>([]);
 
-    return useHookstate(UserStore.accounts[currentAddress].assets[currentNetworkId].nfts);
+    useEffect(() => {
+        const store = UserStore.accounts
+            ?.nested(currentAddress.get())
+            ?.assets
+            ?.nested(currentNetworkId.get())
+            ?.nfts;
+
+        if (store?.get()) {
+            setNftCollections(Object.values(store.get()));
+        }
+
+    }, [currentAddress, currentNetworkId]);
+
+    return nftCollections;
 }
 
 export const useNftCollection = (contractId: string) => {
-    const currentAddress = useHookstate(UserStore.currentAddress).get();
-    const currentNetworkId = useHookstate(UserStore.currentNetworkId).get();
-    return useHookstate(UserStore.accounts[currentAddress].assets[currentNetworkId].nfts[contractId]);
+    const currentAddress = useHookstate(UserStore.currentAddress);
+    const currentNetworkId = useHookstate(UserStore.currentNetworkId);
+    const [collection, setCollection] = useState<NFTCollection|null>(null);
+
+    useEffect(() => {
+        const store = UserStore.accounts
+            ?.nested(currentAddress.get())
+            ?.assets
+            ?.nested(currentNetworkId.get())
+            ?.nfts
+            ?.nested(contractId);
+
+        if (store?.get()) {
+            setCollection(store.get());
+        }
+    }, [currentAddress, currentNetworkId, contractId]);
+
+    return collection;
 }
 
 export const useNft = (args: {contractId: string, tokenId: string}) => {
-    const currentAddress = useHookstate(UserStore.currentAddress).get();
-    const currentNetworkId = useHookstate(UserStore.currentNetworkId).get();
-    return useHookstate(UserStore.accounts[currentAddress].assets[currentNetworkId].nfts[args.contractId].tokens[args.tokenId]);
+    const { contractId, tokenId } = args;
+    const currentAddress = useHookstate(UserStore.currentAddress);
+    const currentNetworkId = useHookstate(UserStore.currentNetworkId);
+    const [nft, setNft] = useState<NFT|null>(null);
+
+    useEffect(() => {
+        const store = UserStore.accounts
+            ?.nested(currentAddress.get())
+            ?.assets
+            ?.nested(currentNetworkId.get())
+            ?.nfts
+            ?.nested(contractId)
+            ?.tokens
+            ?.nested(tokenId);
+        
+        if (store?.get()) {
+            setNft(store.get());
+        }
+    }, [currentAddress, currentNetworkId, contractId, tokenId]);
+
+    return nft;
 }
 
 export const useAccountValue = () => {

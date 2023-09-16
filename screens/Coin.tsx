@@ -6,6 +6,7 @@ import { useCoin, useI18n, useTheme } from '../hooks';
 import { Feather } from '@expo/vector-icons';
 import { useEffect } from 'react';
 import { SheetManager } from "react-native-actions-sheet";
+import Loading from './Loading';
 
 export default () => {
     const navigation = useNavigation<HoldingsNavigationProp>();
@@ -16,17 +17,23 @@ export default () => {
     const i18n = useI18n();
 
     useEffect(() => {
-        navigation.setOptions({
-            title: coin.symbol.get(),
-            headerRight: () => {
-                return (
-                    <MoreVertical onPress={() => {
-                        SheetManager.show('coin', { payload: { contractId: route.params.contractId } });
-                    }} />
-                )
-            }
-        });
+        if (coin) {
+            navigation.setOptions({
+                title: coin.symbol,
+                headerRight: () => {
+                    return (
+                        <MoreVertical onPress={() => {
+                            SheetManager.show('coin', { payload: { contractId: route.params.contractId } });
+                        }} />
+                    )
+                }
+            });
+        }
     }, [coin, navigation]);
+
+    if (!coin) {
+        return <Loading/>
+    }
 
     return (
         <Screen>
@@ -35,15 +42,15 @@ export default () => {
                 <View style={{ ...styles.directionRow, ...styles.alignSpaceBetweenRow, ...styles.alignCenterColumn }}>
                     <View>
                         {
-                            coin.balance.ornull && coin.balance.ornull.get() >= 0 &&
+                            coin.balance !== undefined && coin.balance >= 0 &&
                             <View>
-                                {coin.price.ornull &&
+                                {coin.price !== undefined &&
                                     <Text style={styles.textXlarge}>
-                                        {(coin.balance.ornull.get() * coin.price.ornull.get()).toFixed(2)} USD
+                                        {(coin.balance * coin.price).toFixed(2)} USD
                                     </Text>
                                 }
 
-                                <Text style={styles.textMedium}>{coin.balance.get()} {coin.symbol.get()}</Text>
+                                <Text style={styles.textMedium}>{coin.balance} {coin.symbol}</Text>
                             </View>
                         }
                     </View>
@@ -53,7 +60,7 @@ export default () => {
                     </View>
                 </View>
 
-                {coin.symbol.get() !== 'VHP' &&
+                {coin.symbol !== 'VHP' &&
                     <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
                         <Button
                             style={{ flex: 1 }}

@@ -15,16 +15,14 @@ export default (props: {
     const coin = useCoin(props.contractId);
 
     useEffect(() => {
-        if (!coin.ornull) {
+        if (!coin || !coin.logo) {
             getContractInfo(props.contractId).then(info => {
                 if (info.logo) {
                     logo.set(info.logo);
                 }
             });
         } else {
-            if (coin.logo.ornull) {
-                logo.set(coin.logo.ornull.get());
-            }
+            logo.set(coin.logo);
         }
     }, [coin]);
 

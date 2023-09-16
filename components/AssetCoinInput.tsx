@@ -1,4 +1,3 @@
-import { useHookstate } from "@hookstate/core";
 import { useCoin, useI18n, useTheme } from "../hooks";
 import { View } from "react-native";
 import Text from './Text';
@@ -9,47 +8,28 @@ import CoinLogo from "./CoinLogo";
 import TextInputContainer from "./TextInputContainer";
 
 export default (props: {
-    contractId: string
+    value?: string
     onChange?: Function
     opened?: boolean
 }) => {
 
-    const opened = useHookstate(false);
-    const contractId = useHookstate('');
     const i18n = useI18n();
 
     useEffect(() => {
-        contractId.set(props.contractId);
-    }, [props.contractId]);
-
-    useEffect(() => {
-        opened.set(props.opened ?? false);
-    }, [props.opened])
-
-    useEffect(() => {
-        if (opened.get() == true) {
-            _select().then(() => {
-                opened.set(false);
-            });
+        if (props.opened == true) {
+            _select();
         }
-    }, [opened])
+    }, [props.opened])
 
     const _select = async () => {
         const data: any = await SheetManager.show("asset_coin", {
             payload: {
-                contractId: contractId.get()
+                contractId: props.value
             },
         });
 
-        if (data && data.contractId) {
-            contractId.set(data.contractId);
-            _onChange();
-        }
-    }
-
-    const _onChange = () => {
-        if (props.onChange) {
-            props.onChange(contractId.get());
+        if (data?.contractId && props.onChange) {
+            props.onChange(data.contractId);
         }
     }
 
@@ -60,9 +40,12 @@ export default (props: {
                 style={{ minHeight: 60 }}
                 containerStyle={{ flexGrow: 1 }}
             >
-                <Coin contractId={contractId.get()} />
+                {
+                    props.value !== undefined &&
+                    <Coin contractId={props.value} />
+                }
             </TouchableWithoutFeedback>
-        </TextInputContainer>    
+        </TextInputContainer>
     );
 }
 
@@ -72,7 +55,7 @@ const Coin = (props: {
     const theme = useTheme();
     const styles = theme.styles;
     const coin = useCoin(props.contractId);
-    if (!coin.get()) {
+    if (!coin) {
         return <></>;
     }
 
@@ -81,8 +64,8 @@ const Coin = (props: {
             <CoinLogo contractId={props.contractId} size={48} />
 
             <View>
-                <Text style={styles.symbol}>{coin.symbol.get()}</Text>
-                <Text>{coin.name.get()}</Text>
+                <Text style={styles.symbol}>{coin.symbol}</Text>
+                <Text>{coin.name}</Text>
             </View>
         </View>
     );

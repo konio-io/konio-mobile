@@ -2,7 +2,7 @@ import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-shee
 import Button from "./Button";
 import Text from "./Text";
 import { ScrollView, TouchableOpacity, View } from "react-native";
-import { useI18n, useNfts, useTheme } from "../hooks";
+import { useI18n, useNftCollections, useTheme } from "../hooks";
 import { useHookstate } from "@hookstate/core";
 import NftCollectionListItem from "./NftCollectionListItem";
 import NftListItem from "./NftListItem";
@@ -13,8 +13,7 @@ export default (props: SheetProps<{ contractId: string, tokenId?: string }>) => 
     const theme = useTheme();
     const i18n = useI18n();
     const styles = theme.styles;
-    const nfts = useNfts();
-    const data = Object.keys(nfts.get());
+    const data = useNftCollections();
 
     const _select = (data: any) => {
         contractId.set(data.contractId);
@@ -53,18 +52,18 @@ export default (props: SheetProps<{ contractId: string, tokenId?: string }>) => 
                 data.length > 0 &&
                 <ScrollView>
                     {
-                        data.map(cId =>
+                        data.map(collection =>
 
                             <NftCollectionListItem
-                                key={cId}
-                                contractId={cId}
+                                key={collection.contractId}
+                                contractId={collection.contractId}
                                 renderItem={
                                     (tId: string) =>
-                                        <TouchableOpacity key={tId} onPress={() => _select({ contractId: cId, tokenId: tId })}>
+                                        <TouchableOpacity key={tId} onPress={() => _select({ contractId: collection.contractId, tokenId: tId })}>
                                             <NftListItem
-                                                contractId={cId}
+                                                contractId={collection.contractId}
                                                 tokenId={tId}
-                                                selected={tId === tokenId.get() && cId === contractId.get()}
+                                                selected={tId === tokenId.get() && collection.contractId === contractId.get()}
                                             />
                                         </TouchableOpacity>
                                 }

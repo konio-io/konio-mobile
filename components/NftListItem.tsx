@@ -1,17 +1,15 @@
 import { useHookstate } from "@hookstate/core";
 import { useNft, useTheme } from "../hooks";
-import { Image, View, Text } from 'react-native';
+import { Image, View } from 'react-native';
 import { useEffect } from "react";
 import { rgba } from "../lib/utils";
 import { Feather } from '@expo/vector-icons';
-import Loading from "../screens/Loading";
 
 export default (props: {
     contractId: string,
     tokenId: string,
     selected?: boolean
 }) => {
-    console.log('rendered')
     const { tokenId, contractId } = props;
     const nft = useNft({ tokenId, contractId });
     const theme = useTheme();
@@ -23,8 +21,8 @@ export default (props: {
         selected.set(props.selected);
     }, [props.selected])
 
-    if (!nft.ornull) {
-        return <Loading></Loading>
+    if (!nft) {
+        return <></>
     }
 
     return (
@@ -34,7 +32,7 @@ export default (props: {
                 borderRadius: Border.radius
             }}
         >
-            <Image source={{ uri: nft.ornull.get().image }} resizeMode="contain" style={{
+            <Image source={{ uri: nft.image }} resizeMode="contain" style={{
                 width: 100,
                 height: 100,
                 borderRadius: Border.radius,

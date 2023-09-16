@@ -1,4 +1,3 @@
-import { useHookstate } from "@hookstate/core";
 import { useI18n, useTheme } from "../hooks";
 import { getContact } from "../lib/utils";
 import AccountAvatar from "./AccountAvatar";
@@ -6,37 +5,27 @@ import { View } from "react-native";
 import Text from './Text';
 import { SheetManager } from "react-native-actions-sheet";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { useEffect } from "react";
 import TextInputContainer from "./TextInputContainer";
 import Address from "./Address";
 
 export default (props: {
-    address: string,
+    value?: string,
     onChange?: Function
 }) => {
     const theme = useTheme();
     const styles = theme.styles;
-    const address = useHookstate('');
-    const contact = getContact(address.get());
+    const contact = props.value ? getContact(props.value) : undefined;
     const i18n = useI18n();
 
-    useEffect(() => {
-        address.set(props.address);
-    }, [props.address])
-
     const _select = async () => {
-        const value: string = await SheetManager.show("recipient", {
+        const value: any = await SheetManager.show("recipient", {
             payload: {
-                selected: address.get()
+                selected: props.value
             },
         });
 
-        if (value) {
-            address.set(value);
-
-            if (props.onChange) {
-                props.onChange(address.get());
-            }
+        if (value?.address && props.onChange) {
+            props.onChange(value.address);
         }
     }
 
@@ -49,20 +38,19 @@ export default (props: {
                 <View style={{ ...styles.directionRow, ...styles.columnGapSmall, minHeight: 60 }}>
 
                     {
-                        address.get() &&
-                        <AccountAvatar size={48} address={address.get()} />
+                        props.value &&
+                        <AccountAvatar size={48} address={props.value} />
                     }
                     {
-                        address.get() &&
+                        props.value &&
                         <View>
                             {
                                 contact?.name &&
                                 <Text>{contact.name}</Text>
                             }
-                            <Address address={address.get()}></Address>
+                            <Address address={props.value}></Address>
                         </View>
                     }
-
                 </View>
 
             </TouchableWithoutFeedback>

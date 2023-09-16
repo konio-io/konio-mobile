@@ -1,7 +1,6 @@
 import { useNftCollection, useTheme } from "../hooks";
-import { View, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import Text from "./Text";
-import NftListItem from "./NftListItem";
 
 export default (props: {
   contractId: string
@@ -10,7 +9,7 @@ export default (props: {
   const theme = useTheme();
   const styles = theme.styles;
   const collection = useNftCollection(props.contractId);
-  if (!collection.ornull) {
+  if (!collection) {
     return <></>;
   }
 
@@ -20,7 +19,7 @@ export default (props: {
       ...styles.rowGapSmall
     }}>
       <Text style={{ ...styles.textMedium, ...styles.textBold }}>
-        {collection.name.get()}
+        {collection.name}
       </Text>
 
       <View style={{
@@ -30,7 +29,7 @@ export default (props: {
         flexWrap: 'wrap'
       }}>
         {
-          Object.keys(collection.tokens.get()).map(item => props.renderItem(item))
+          Object.keys(collection.tokens).map(item => props.renderItem(item))
         }
       </View>
     </View>

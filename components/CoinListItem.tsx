@@ -16,11 +16,14 @@ export default (props: {
     const styles = createStyles(theme);
     const { Color } = theme.vars;
     const coin = useCoin(props.contractId);
-
     const selected = useHookstate<boolean|undefined>(undefined);
     useEffect(() => {
         selected.set(props.selected);
     }, [props.selected])
+
+    if (!coin) {
+        return <></>;
+    }
 
     return (
         <View style={styles.container}>
@@ -28,8 +31,8 @@ export default (props: {
                 <CoinLogo contractId={props.contractId} size={48} />
 
                 <View>
-                    <Text style={styles.symbol}>{coin.symbol.get()}</Text>
-                    <Text>{coin.name.get()}</Text>
+                    <Text style={styles.symbol}>{coin.symbol}</Text>
+                    <Text>{coin.name}</Text>
                 </View>
             </View>
 
@@ -47,15 +50,15 @@ export default (props: {
             {
                 !selected.ornull &&
                 <View>
-                    {coin.balance.ornull && coin.balance.ornull.get() >= 0 &&
+                    {coin.balance !== undefined && coin.balance >= 0 &&
                         <View>
-                            {coin.price.ornull &&
+                            {coin.price !== undefined &&
                                 <Text style={{ ...styles.text, ...styles.textRight }}>
-                                    {(coin.balance.ornull.get() * coin.price.ornull.get()).toFixed(2)} USD
+                                    {(coin.balance * coin.price).toFixed(2)} USD
                                 </Text>
                             }
 
-                            <Text style={{ ...styles.text, ...styles.textRight }}>{coin.balance.ornull.get().toFixed(2)}</Text>
+                            <Text style={{ ...styles.text, ...styles.textRight }}>{coin.balance.toFixed(2)}</Text>
                         </View>
                     }
                 </View>

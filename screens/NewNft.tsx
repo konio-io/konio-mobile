@@ -1,4 +1,3 @@
-import { useHookstate } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import type { NewCoinNavigationProp } from '../types/navigation';
 import { addNft, addNftCollection, askReview, logError, showSpinner, hideSpinner, showToast } from '../actions';
@@ -7,11 +6,12 @@ import { TextInput, Button, Screen } from '../components';
 import { useI18n } from '../hooks';
 import { View, Keyboard } from 'react-native';
 import { useTheme } from '../hooks';
+import { useState } from 'react';
 
 export default () => {
   const navigation = useNavigation<NewCoinNavigationProp>();
-  const contractId = useHookstate('');
-  const tokenId = useHookstate('');
+  const [contractId, setContractId] = useState('');
+  const [tokenId, setTokenId] = useState('');
   const i18n = useI18n();
   const theme = useTheme();
   const styles = theme.styles;
@@ -19,7 +19,7 @@ export default () => {
   const add = () => {
     Keyboard.dismiss();
 
-    if (!contractId.get()) {
+    if (!contractId) {
       showToast({
         type: 'error',
         text1: i18n.t('missing_contract_address')
@@ -27,7 +27,7 @@ export default () => {
       return;
     }
 
-    if (!tokenId.get()) {
+    if (!tokenId) {
       showToast({
         type: 'error',
         text1: i18n.t('missing_token_id')
@@ -37,11 +37,11 @@ export default () => {
 
     showSpinner();
 
-    addNftCollection(contractId.get())
+    addNftCollection(contractId)
     .then(nftCollection => {
         addNft({
-          contractId: contractId.get(),
-          tokenId: tokenId.get()
+          contractId: contractId,
+          tokenId: tokenId
         })
         .then(nft => {
           hideSpinner();
@@ -66,13 +66,13 @@ export default () => {
         <TextInput
           multiline={true}
           autoFocus={true}
-          value={contractId.get()}
-          onChangeText={(v: string) => contractId.set(v.trim())}
+          value={contractId}
+          onChangeText={(v: string) => setContractId(v.trim())}
           placeholder={i18n.t('contract_address')}
         />
         <TextInput
-          value={tokenId.get()}
-          onChangeText={(v: string) => tokenId.set(v.trim())}
+          value={tokenId}
+          onChangeText={(v: string) => setTokenId(v.trim())}
           placeholder={i18n.t('token_id')}
         />
       </View>

@@ -27,7 +27,9 @@ export default (props: SheetProps<{ selected: string }>) => {
     const _confirm = () => {
         if (address.get()) {
             SheetManager.hide(props.sheetId, {
-                payload: address.get(),
+                payload: {
+                    address: address.get()
+                }
             });
         }
     }
@@ -144,8 +146,8 @@ const ToListItem = (props: {
     const contact = useContact(props.address);
     let name = '';
 
-    if (account.get()) {
-        name = account.name.get();
+    if (account) {
+        name = account.name;
     }
     else if (contact.get()) {
         name = contact.name.get();

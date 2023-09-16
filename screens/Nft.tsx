@@ -32,6 +32,10 @@ export default () => {
         });
     }, [accountNft, navigation]);
 
+    if (!collection) {
+        return <></>;
+    }
+
     return (
         <Screen>
             <Wrapper>
@@ -42,7 +46,7 @@ export default () => {
                         borderRadius: Border.radius
                     }} />
                     <View>
-                        <Text style={{...styles.textMedium, ...styles.textBold}}>{collection.name.get()}</Text>
+                        <Text style={{...styles.textMedium, ...styles.textBold}}>{collection.name}</Text>
                         <Text>{nft.description}</Text>
                     </View>
                 </View>

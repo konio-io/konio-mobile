@@ -1,47 +1,62 @@
-import { useHookstate } from '@hookstate/core';
 import { Button } from '../components';
 import { ScrollView, View } from "react-native";
-import { useI18n, useLock, useTheme } from '../hooks';
+import { useCurrentAddress, useCurrentNetworkId, useI18n, useLock, useTheme } from '../hooks';
 import RecipientInput from '../components/RecipientInput';
 import AmountInput from '../components/AmountInput';
 import { Feather } from '@expo/vector-icons';
 import AssetCoinInput from '../components/AssetCoinInput';
-import { askReview, confirmTransaction, hideSpinner, lock, logError, showSpinner, showToast, withdrawCoin } from '../actions';
+import { askReview, withdrawCoinConfirm, hideSpinner, lock, logError, showSpinner, showToast, withdrawCoin } from '../actions';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 import { WithdrawNavigationProp } from '../types/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default (props: {
     to?: string,
     contractId?: string
 }) => {
-    const to = useHookstate(props.to ?? '');
-    const contractId = useHookstate(props.contractId ?? '');
-    const amount = useHookstate(0);
+    const currentAddress = useCurrentAddress();
+    const currentNetworkId = useCurrentNetworkId();
+    const [to, setTo] = useState(props.to);
+    const [contractId, setContractId] = useState(props.contractId);
+    const [amount, setAmount] = useState(0);
+    const [sendRequest, setSendRequest] = useState(false);
     const i18n = useI18n();
     const theme = useTheme();
     const navigation = useNavigation<WithdrawNavigationProp>();
     const lockState = useLock();
-    const sendRequest = useHookstate(false);
 
     useEffect(() => {
-        if (lockState.get() === false && sendRequest.get() === true) {
+        _reset();
+    }, [currentAddress, currentNetworkId]);
+
+    useEffect(() => {
+        if (lockState.get() === false && sendRequest === true) {
             _send();
         }
     }, [lockState]);
 
+    const _reset = () => {
+        //setAmount(undefined);
+        setContractId(undefined);
+        setTo(undefined);
+    };
+
     const _confirm = () => {
         lock();
-        sendRequest.set(true);
+        setSendRequest(true);
     };
 
     const _send = () => {
+        if (!to || !contractId || !amount) {
+            return;
+        }
+
         showSpinner();
 
         withdrawCoin({
-            to: to.get(),
-            contractId: contractId.get(),
-            value: amount.get().toString(),
+            to,
+            contractId,
+            value: amount.toString(),
             note: ''
         })
             .then(transaction => {
@@ -61,7 +76,7 @@ export default (props: {
                                         {
                                             name: "Coin",
                                             params: {
-                                                contractId: contractId.get()
+                                                contractId
                                             }
                                         }
                                     ]
@@ -76,8 +91,8 @@ export default (props: {
                     text1: i18n.t('transaction_committed'),
                 });
 
-                confirmTransaction({
-                    contractId: contractId.get(),
+                withdrawCoinConfirm({
+                    contractId,
                     transaction
                 }).then(tsx => {
                     showToast({
@@ -111,32 +126,36 @@ export default (props: {
             <ScrollView contentContainerStyle={theme.styles.rowGapBase}>
 
                 <RecipientInput
-                    address={to.get()}
-                    onChange={(address: string) => to.set(address)}
+                    value={to}
+                    onChange={(value: string) => setTo(value)}
                 />
 
                 {
-                    to.get() &&
+                    to &&
                     <AssetCoinInput
-                        contractId={contractId.get()}
-                        onChange={(value: string) => contractId.set(value)}
-                        opened={!contractId.get()}
+                        value={contractId}
+                        onChange={(value: string) => setContractId(value)}
+                        opened={true}
                     />
                 }
 
                 {
-                    contractId.get() &&
+                    contractId &&
                     <AmountInput
-                        contractId={contractId.get()}
-                        value={amount.get()}
-                        onChange={(value: number) => amount.set(value)}
-                        opened={!amount.get()}
+                        contractId={contractId}
+                        value={amount}
+                        onChange={(value: number) => setAmount(value)}
+                        opened={true}
                     />
                 }
+
             </ScrollView>
 
             {
-                to.get() && contractId.get() && amount.get() > 0 &&
+                to !== undefined && 
+                contractId !== undefined && 
+                amount !== undefined && 
+                amount > 0 &&
                 <Button
                     title={i18n.t('send')}
                     onPress={() => _confirm()}

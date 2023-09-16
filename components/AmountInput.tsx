@@ -14,58 +14,35 @@ export default (props: {
     onChange?: Function,
     opened?: boolean
 }) => {
-
-    const value = useHookstate(0);
-    const contractId = useHookstate('');
-    const coin = useCoin(contractId.get());
+    const coin = useCoin(props.contractId);
     const usd = useHookstate(0)
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();
-    const opened = useHookstate(false);
 
     useEffect(() => {
-        value.set(props.value ?? 0);
-    }, [props.value]);
-
-    useEffect(() => {
-        contractId.set(props.contractId);
-    }, [props.contractId]);
-
-    useEffect(() => {
-        const price = coin.price?.get() ?? 0;
-        usd.set(value.get() * price);
-    }, [value, coin.price])
-
-    useEffect(() => {
-        opened.set(props.opened ?? false);
-    }, [props.opened])
-
-    useEffect(() => {
-        if (opened.get() == true) {
-            _select().then(() => {
-                opened.set(false);
-            });
+        if (coin?.price && props.value) {
+            const price = coin.price ?? 0;
+            usd.set(props.value * price);
         }
-    }, [opened])
+    }, [props.value, coin]);
+
+    useEffect(() => {
+        if (props.opened === true) {
+            //_select();
+        }
+    }, [props.opened])
 
     const _select = async () => {
         const data: any = await SheetManager.show("amount", {
             payload: {
-                amount: value.get(),
-                contractId: contractId.get()
+                amount: props.value,
+                contractId: props.contractId
             }
         });
 
-        if (data) {
-            value.set(data.amount);
-            _onChange();
-        }
-    }
-
-    const _onChange = () => {
-        if (props.onChange) {
-            props.onChange(value.get());
+        if (data?.amount && props.onChange) {
+            props.onChange(data.amount);
         }
     }
 
@@ -77,7 +54,7 @@ export default (props: {
                 containerStyle={{ flexGrow: 1 }}
             >
                 <View>
-                    <Text style={{...styles.textMedium, ...styles.textBold}}>{value.get()}</Text>
+                    <Text style={{...styles.textMedium, ...styles.textBold}}>{props.value}</Text>
                     <Text>~ {usd.get().toFixed(2)} USD</Text>
                 </View>
             </TouchableWithoutFeedback>
