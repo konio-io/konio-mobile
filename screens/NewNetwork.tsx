@@ -1,4 +1,3 @@
-import { useHookstate } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import type { NewNetworkNavigationProp } from '../types/navigation';
 import { addNetwork, showToast } from '../actions';
@@ -11,6 +10,7 @@ import { useTheme } from '../hooks';
 import type { Network } from '../types/store';
 import { DEFAULT_NETWORKS } from '../lib/Constants';
 import { Provider } from 'koilib';
+import { useState } from 'react';
 
 export default () => {
   const DEFAULT_NETWORK = Object.values(DEFAULT_NETWORKS)[0];
@@ -18,10 +18,10 @@ export default () => {
   const i18n = useI18n();
   const theme = useTheme();
   const styles = theme.styles;
-  const name = useHookstate('');
-  const rpcNode = useHookstate('');
-  const explorer = useHookstate('');
-  const koinContractId = useHookstate('');
+  const [name, setName] = useState('');
+  const [rpcNode, setRpcNode] = useState('');
+  const [explorer, setExplorer] = useState('');
+  const [koinContractId, setKoinContractId] = useState('');
 
   const showAlert = () => {
     return Alert.alert(
@@ -40,7 +40,7 @@ export default () => {
   };
 
   const add = async (replace = false) => {
-    if (!name.get() || !rpcNode.get() || !explorer.get()) {
+    if (!name || !rpcNode || !explorer) {
       showToast({
         type: 'error',
         text1: i18n.t('missing_data')
@@ -48,7 +48,7 @@ export default () => {
       return;
     }
 
-    const provider = new Provider([rpcNode.get()]);
+    const provider = new Provider([rpcNode]);
     const chainId = await provider.getChainId();
 
     if (!chainId) {
@@ -59,17 +59,17 @@ export default () => {
       return;
     }
 
-    if (UserStore.networks[chainId].get() && replace === false) {
+    if (UserStore.networks[chainId] && replace === false) {
       showAlert();
       return;
     }
 
     const network: Network = {
-      name: name.get(),
+      name: name,
       chainId: chainId,
-      rpcNodes: [rpcNode.get()],
-      koinContractId: koinContractId.get(),
-      explorer: explorer.get()
+      rpcNodes: [rpcNode],
+      koinContractId: koinContractId,
+      explorer: explorer
     };
 
     addNetwork(network);
@@ -77,10 +77,10 @@ export default () => {
   };
 
   const reset = () => {
-    name.set(DEFAULT_NETWORK.name);
-    rpcNode.set(DEFAULT_NETWORK.rpcNodes[0]);
-    explorer.set(DEFAULT_NETWORK.explorer);
-    koinContractId.set(DEFAULT_NETWORK.koinContractId);
+    setName(DEFAULT_NETWORK.name);
+    setRpcNode(DEFAULT_NETWORK.rpcNodes[0]);
+    setExplorer(DEFAULT_NETWORK.explorer);
+    setKoinContractId(DEFAULT_NETWORK.koinContractId);
   };
 
   return (
@@ -90,29 +90,29 @@ export default () => {
           
             <TextInput
               autoFocus={true}
-              value={name.get()}
-              onChangeText={(v: string) => name.set(v)}
+              value={name}
+              onChangeText={(v: string) => setName(v)}
               placeholder={i18n.t('name')}
               note={`Ex: ${DEFAULT_NETWORK.name}`}
             />
           
             <TextInput
-              value={rpcNode.get()}
-              onChangeText={(v: string) => rpcNode.set(v)}
+              value={rpcNode}
+              onChangeText={(v: string) => setRpcNode(v)}
               placeholder={'rpc node'}
               note={`Ex: ${DEFAULT_NETWORK.rpcNodes[0]}`}
             />
 
             <TextInput
-              value={explorer.get()}
-              onChangeText={(v: string) => explorer.set(v)}
+              value={explorer}
+              onChangeText={(v: string) => setExplorer(v)}
               placeholder={'explorer'}
               note={`Ex: ${DEFAULT_NETWORK.explorer}`}
             />
 
             <TextInput
-              value={koinContractId.get()}
-              onChangeText={(v: string) => koinContractId.set(v)}
+              value={koinContractId}
+              onChangeText={(v: string) => setKoinContractId(v)}
               placeholder={'KOIN contract ID'}
               note={`Ex: ${DEFAULT_NETWORK.koinContractId}`}
             />

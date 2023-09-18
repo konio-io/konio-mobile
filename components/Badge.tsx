@@ -1,5 +1,4 @@
-import { View } from "react-native"
-import { TouchableHighlight } from "react-native-gesture-handler"
+import { View, TouchableOpacity } from "react-native"
 import Text from "./Text"
 import { useTheme } from "../hooks"
 
@@ -15,7 +14,7 @@ export default (props: {
     const { Border } = theme.vars;
 
     return (
-        <TouchableHighlight onPress={() => {
+        <TouchableOpacity onPress={() => {
             if (props.onPress) {
                 props.onPress();
             }
@@ -23,6 +22,6 @@ export default (props: {
             <View style={{ backgroundColor: props.backgroundColor, borderRadius: Border.radius, ...styles.paddingSmall, width: 'auto' }}>
                 <Text style={{ ...styles.textSmall, color: props.color }}>{props.label}</Text>
             </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
     )
 }

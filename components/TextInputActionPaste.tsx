@@ -1,14 +1,13 @@
 import TextInputAction from "./TextInputAction"
 import * as Clipboard from 'expo-clipboard';
 import { Octicons } from '@expo/vector-icons';
-import { State } from "@hookstate/core";
 
 export default (props: {
-    state: State<string>
+    onPaste: Function
 }) => {
     return (
         <TextInputAction
-            onPress={() => Clipboard.getStringAsync().then(content => props.state.set(content))}
+            onPress={() => Clipboard.getStringAsync().then(content => props.onPaste(content))}
             icon={(<Octicons name="paste" />)}
         />
     )

@@ -8,7 +8,7 @@ export default () => {
     const { Border } = theme.vars;
     const spinner = useSpinner();
 
-    if (spinner.get() === true) {
+    if (spinner === true) {
         return (
             <View style={{ 
                 position: 'absolute', 

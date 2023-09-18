@@ -1,6 +1,6 @@
 import { ScrollView, View } from "react-native";
 import { Screen, TextInputActionCopy, Text, AddressListItem } from "../components"
-import { useAccount, useLock, useTheme } from "../hooks"
+import { useAccount, useLockState, useTheme } from "../hooks"
 import React, { useEffect } from "react";
 import { lock } from "../actions";
 import { EncryptedStore } from "../stores";
@@ -9,7 +9,7 @@ export default () => {
     const encryptedStore = EncryptedStore;
     const theme = useTheme();
     const styles = theme.styles;
-    const lockState = useLock();
+    const lockState = useLockState();
 
     useEffect(() => {
         lock();

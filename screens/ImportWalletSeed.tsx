@@ -1,14 +1,14 @@
 import { Keyboard, View } from 'react-native';
-import { useHookstate } from '@hookstate/core';
 import { Button, TextInput, Wrapper, Screen, TextInputActionPaste } from '../components';
-import { addSeed, hideSpinner, logError, refreshCoins, setCurrentAccount, showSpinner } from '../actions';
+import { addSeed, hideSpinner, logError, setCurrentAccount, showSpinner } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n } from '../hooks';
 import { showToast } from '../actions';
+import { useState } from 'react';
 
 export default () => {
-  const seed = useHookstate('');
-  const name = useHookstate('');
+  const [seed, setSeed] = useState('');
+  const [name, setName] = useState('');
   const i18n = useI18n();
   const theme = useTheme();
   const styles = theme.styles;
@@ -16,7 +16,7 @@ export default () => {
   const importWallet = () => {
     Keyboard.dismiss();
 
-    if (!name.get()) {
+    if (!name) {
       showToast({
         type: 'error',
         text1: i18n.t('missing_account_name')
@@ -27,8 +27,8 @@ export default () => {
     showSpinner();
 
     addSeed({
-      name: name.get().trim(),
-      seed: seed.get().toLowerCase().trim()
+      name: name.trim(),
+      seed: seed.toLowerCase().trim()
     })
       .then(address => {
         hideSpinner();
@@ -50,18 +50,18 @@ export default () => {
       <Wrapper>
         <TextInput
           autoFocus={true}
-          value={name.get()}
+          value={name}
           placeholder={i18n.t('account_name')}
-          onChangeText={(text: string) => name.set(text)} />
+          onChangeText={(text: string) => setName(text)} />
 
         <TextInput
           multiline={true}
           numberOfLines={4}
-          value={seed.get()}
+          value={seed}
           placeholder={i18n.t('seed_phrase')}
-          onChangeText={(text: string) => seed.set(text)}
+          onChangeText={(text: string) => setSeed(text)}
           actions={(
-            <TextInputActionPaste state={seed} />
+            <TextInputActionPaste onPaste={(value: string) => setSeed(value)} />
           )}
         />
       </Wrapper>

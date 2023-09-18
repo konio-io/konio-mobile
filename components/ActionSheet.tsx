@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 import { useTheme } from "../hooks";
-import { FlatList, TouchableHighlight, View, StyleSheet } from "react-native";
+import { FlatList, TouchableOpacity, View, StyleSheet } from "react-native";
 import Text from "./Text";
 import React from "react";
 import ActionSheet, { SheetManager } from "react-native-actions-sheet";
@@ -41,7 +41,7 @@ const Item = (props: {
     const { Color } = theme.vars;
 
     return (
-        <TouchableHighlight onPress={() => {
+        <TouchableOpacity onPress={() => {
             props.onPress();
             SheetManager.hide(props.sheetId);
         }}>
@@ -61,7 +61,7 @@ const Item = (props: {
                 </View>
 
             </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
     )
 }
 

@@ -1,8 +1,7 @@
 import { View, StyleSheet, ScrollView } from "react-native";
 import { Accordion, Screen, Text } from "../components"
 import { useI18n, useTheme } from "../hooks";
-import { useEffect } from "react";
-import { useHookstate } from "@hookstate/core";
+import { useEffect, useState } from "react";
 import { FAQ_URL } from "../lib/Constants";
 import { Theme } from "../types/store";
 
@@ -10,7 +9,7 @@ export default () => {
     const theme = useTheme();
     const styles = createStyles(theme);
     const { Spacing } = theme.vars;
-    const data = useHookstate<Array<FaqItem>>([]);
+    const [data, setData] = useState<Array<FaqItem>>([]);
     const i18n = useI18n();
 
     type FaqItem = {
@@ -23,7 +22,7 @@ export default () => {
         fetch(`${FAQ_URL}${i18n.locale}.json`)
             .then(response => response.json())
             .then(jsonResponse => {
-                data.set(jsonResponse);
+                setData(jsonResponse);
             })
     }, []);
 
@@ -31,7 +30,7 @@ export default () => {
         <Screen>
             <ScrollView style={styles.paddingBase}>
                 {
-                    data.get().map((item, index) =>
+                    data.map((item, index) =>
                         <View key={index} style={styles.paddingVerticalSmall}>
                             <Accordion
                                 header={(

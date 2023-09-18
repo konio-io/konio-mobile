@@ -1,20 +1,18 @@
-import { useHookstate } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import type { NewCoinNavigationProp } from '../types/navigation';
 import { addCoin, askReview, logError, showSpinner, hideSpinner, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen, Text, CoinLogo, ActivityIndicator } from '../components';
 import { useCoins, useCurrentNetworkId, useI18n } from '../hooks';
-import { Keyboard, ScrollView, View } from 'react-native';
+import { Keyboard, ScrollView, View, TouchableOpacity } from 'react-native';
 import { useTheme, useCurrentAddress } from '../hooks';
 import { TOKENS_URL } from '../lib/Constants';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getCoinBalance } from '../lib/utils';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default () => {
   const navigation = useNavigation<NewCoinNavigationProp>();
-  const contractId = useHookstate('');
+  const [contractId, setContractId] = useState('');
   const i18n = useI18n();
   const theme = useTheme();
   const styles = theme.styles;
@@ -22,7 +20,7 @@ export default () => {
   const add = () => {
     Keyboard.dismiss();
 
-    if (!contractId.get()) {
+    if (!contractId) {
       showToast({
         type: 'error',
         text1: i18n.t('missing_contract_address')
@@ -32,7 +30,7 @@ export default () => {
 
     showSpinner();
 
-    addCoin(contractId.get())
+    addCoin(contractId)
       .then(coin => {
         hideSpinner();
         navigation.goBack();
@@ -55,14 +53,14 @@ export default () => {
         <TextInput
           multiline={true}
           autoFocus={true}
-          value={contractId.get()}
-          onChangeText={(v: string) => contractId.set(v.trim())}
+          value={contractId}
+          onChangeText={(v: string) => setContractId(v.trim())}
           placeholder={i18n.t('contract_address')}
         />
       </View>
 
       <ScrollView contentContainerStyle={styles.paddingBase}>
-        <SuggestList onPressCoin={(cId: string) => contractId.set(cId)} />
+        <SuggestList onPressCoin={(cId: string) => setContractId(cId)} />
       </ScrollView>
 
       <View style={styles.paddingBase}>
@@ -90,21 +88,21 @@ const SuggestList = (props: {
     chainId: string
   }
 
-  const currentNetworkId = useCurrentNetworkId().get();
-  const currentAddress = useCurrentAddress().get();
-  const currentCoins = useCoins().get();
-  const coinList = useHookstate<Array<Item>>([]);
+  const currentNetworkId = useCurrentNetworkId();
+  const currentAddress = useCurrentAddress();
+  const currentCoins = useCoins();
+  const [coinList, setCoinList] = useState<Array<Item>>([]);
   const i18n = useI18n();
   const theme = useTheme();
   const styles = theme.styles;
-  const searching = useHookstate(false);
+  const [searching, setSearching] = useState(false);
 
   if (!currentAddress) {
     return <View></View>
   }
 
   const refreshList = async () => {
-    searching.set(true);
+    setSearching(true);
     try {
       const tokenListResponse = await fetch(`${TOKENS_URL}/index.json`);
       const tokenMap: Array<Token> = await tokenListResponse.json();
@@ -120,24 +118,29 @@ const SuggestList = (props: {
           networkId: currentNetworkId,
           contractId: token.address
         });
+        
         //if (value && value > 0) {
-          coinList.merge([{
-            contractId: token.address,
-            symbol: token.symbol
-          }])
+          setCoinList(current => [
+            ...current,
+            {
+              contractId: token.address,
+              symbol: token.symbol,
+              ...coinList
+            }
+          ])
         //}
       }
     } catch (e) {
       logError(String(e));
     }
-    searching.set(false);
+    setSearching(false);
   }
 
   useEffect(() => {
     refreshList();
   }, [currentNetworkId, currentAddress]);
 
-  const data = coinList.get().slice(0, 5);
+  const data = coinList.slice(0, 5);
 
   return (
     <View>
@@ -148,7 +151,7 @@ const SuggestList = (props: {
             {data.map(coin =>
               <ListItem key={coin.contractId} contractId={coin.contractId} symbol={coin.symbol} onPress={(cId: string) => props.onPressCoin(cId)} />
             )}
-            {searching.get() === true &&
+            {searching === true &&
               <View style={{...styles.alignCenterRow, height: 65, width: 40 }}>
                 <ActivityIndicator></ActivityIndicator>
               </View>

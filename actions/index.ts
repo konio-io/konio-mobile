@@ -996,3 +996,7 @@ export const withdrawNftConfirm = async (args: {
 
     return true;
 }
+
+export const setRcLimit = (value: string) => {
+    UserStore.rcLimit.set(value);
+}

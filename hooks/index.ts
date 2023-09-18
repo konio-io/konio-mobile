@@ -1,5 +1,5 @@
 import { useHookstate } from "@hookstate/core";
-import { UserStore, EncryptedStore, LockStore, WCStore, KapStore, SpinnerStore } from "../stores";
+import { UserStore, EncryptedStore, LockStore, WCStore, KapStore, SpinnerStore, ManaStore } from "../stores";
 import { getTheme } from "../themes";
 import { AppState, useColorScheme } from 'react-native';
 import Locales from "../lib/Locales";
@@ -7,52 +7,50 @@ import { I18n } from 'i18n-js';
 import { getLocales } from 'expo-localization';
 import { FALLBACK_LOCALE, FALLBACK_THEME, OS_LOCALE, OS_THEME } from "../lib/Constants";
 import { useEffect, useState } from "react";
-import { Coin, NFT, NFTCollection } from "../types/store";
+import { selectAccount, selectAccounts, selectAddressBook, selectCoin, selectCoinTransaction, selectCoinTransactions, selectCoins, selectContact, selectCurrentAddress, selectCurrentNetworkId, selectKap, selectNetwork, selectNetworks, selectNft, selectNftCollection, selectNfts } from "../selectors";
+import { NFT } from "../types/store";
 
-export const useNetworks = () => {
-    return useHookstate(UserStore.networks);
+
+export const useCurrentNetworkIdState = () => {
+    return useHookstate( selectCurrentNetworkId() );
 }
 
-export const useAccounts = () => {
-    return useHookstate(UserStore.accounts);
-}
-
-export const useNetwork = (networkId: string) => {
-    return useHookstate(UserStore.networks[networkId]);
+export const useCurrentAddressState = () => {
+    return useHookstate( selectCurrentAddress() );
 }
 
 export const useCurrentNetworkId = () => {
-    return useHookstate(UserStore.currentNetworkId);
+    return useHookstate( selectCurrentNetworkId() ).get();
 }
 
 export const useCurrentAddress = () => {
-    return useHookstate(UserStore.currentAddress);
+    return useHookstate( selectCurrentAddress() ).get();
+}
+
+/**
+ * Networks
+ */
+export const useNetworks = () => {
+    const networks = useHookstate( selectNetworks() );
+    return networks?.ornull ? Object.values(networks.get()) : [];
+}
+
+export const useNetwork = (networkId: string) => {
+    const network = useHookstate( selectNetwork(networkId) );
+    return network?.ornull ? network.get() : undefined;
+}
+
+/**
+ * Accounts
+ */
+export const useAccounts = () => {
+    const accounts = useHookstate( selectAccounts() );
+    return accounts?.ornull ? Object.values(accounts.get()) : [];
 }
 
 export const useAccount = (address: string) => {
-    return UserStore.accounts[address]?.get();
-}
-
-export const useCoin = (contractId: string) => {
-    const currentAddress = useHookstate(UserStore.currentAddress);
-    const currentNetworkId = useHookstate(UserStore.currentNetworkId);
-    const [coin, setCoin] = useState<Coin|null>(null);
-
-    useEffect(() => {
-        const store = UserStore.accounts
-            ?.nested(currentAddress.get())
-            ?.assets
-            ?.nested(currentNetworkId.get())
-            ?.coins
-            ?.nested(contractId);
-
-        if (store?.get()) {
-            setCoin(store.get());
-        }
-
-    }, [currentAddress, currentNetworkId]);
-
-    return coin;
+    const account = useHookstate( selectAccount(address) );
+    return account?.ornull ? account.get() : undefined;
 }
 
 /**
@@ -60,26 +58,45 @@ export const useCoin = (contractId: string) => {
  * @returns 
  */
 export const useCoins = () => {
-    const currentAddress = useHookstate(UserStore.currentAddress);
-    const currentNetworkId = useHookstate(UserStore.currentNetworkId);
-    const [coins, setCoins] = useState<Array<Coin>>([]);
+    const currentAddress = useHookstate( selectCurrentAddress() );
+    const currentNetworkId = useHookstate( selectCurrentNetworkId() );
+    const coins = useHookstate(
+        selectCoins({
+            address: currentAddress.get(),
+            networkId: currentNetworkId.get()
+        })
+    );
 
-    useEffect(() => {
-        const store = UserStore.accounts
-            ?.nested(currentAddress.get())
-            ?.assets
-            ?.nested(currentNetworkId.get())
-            ?.coins;
-
-        if (store?.get()) {
-            setCoins(Object.values(store.get()));
-        }
-
-    }, [currentAddress, currentNetworkId]);
-
-    return coins;
+    return coins?.ornull ? Object.values(coins.get()) : [];
 }
 
+export const useCoin = (contractId: string) => {
+    const currentAddress = useHookstate( selectCurrentAddress() );
+    const currentNetworkId = useHookstate ( selectCurrentNetworkId() );
+    const coin = useHookstate(
+        selectCoin({
+            address: currentAddress.get(),
+            networkId: currentNetworkId.get(),
+            contractId
+        })
+    );
+
+    return coin?.ornull ? coin.get() : undefined;
+}
+
+export const useCoinBalance = (contractId: string) => {
+    const currentAddress = useHookstate( selectCurrentAddress() );
+    const currentNetworkId = useHookstate ( selectCurrentNetworkId() );
+    const balance = useHookstate(
+        selectCoin({
+            address: currentAddress.get(),
+            networkId: currentNetworkId.get(),
+            contractId
+        }).balance
+    );
+
+    return balance?.ornull ? balance.get() : undefined;
+}
 
 /**
  * Current account/network/coin transactions
@@ -87,42 +104,99 @@ export const useCoins = () => {
  * @returns 
  */
 export const useTransactions = (contractId: string) => {
-    const currentAddress = useHookstate(UserStore.currentAddress).get();
-    const currentNetworkId = useHookstate(UserStore.currentNetworkId).get();
-    const coin = UserStore.accounts
-        .nested(currentAddress)
-        .assets
-        .nested(currentNetworkId)
-        .coins
-        .nested(contractId);
+    const currentAddress = useHookstate( selectCurrentAddress() );
+    const currentNetworkId = useHookstate ( selectCurrentNetworkId() );
+    const transactions = useHookstate(
+        selectCoinTransactions({
+            address: currentAddress.get(),
+            networkId: currentNetworkId.get(),
+            contractId
+        })
+    );
 
-    return useHookstate(coin.transactions);
+    return transactions?.ornull ? Object.values(transactions.get()) : [];
 }
 
 export const useTransaction = (args: {contractId: string, transactionId: string}) => {
-    const currentAddress = useHookstate(UserStore.currentAddress).get();
-    const currentNetworkId = useHookstate(UserStore.currentNetworkId).get();
-    const transactions = UserStore.accounts
-        .nested(currentAddress)
-        .assets
-        .nested(currentNetworkId)
-        .coins
-        .nested(args.contractId)
-        .transactions;
+    const currentAddress = useHookstate( selectCurrentAddress() );
+    const currentNetworkId = useHookstate ( selectCurrentNetworkId() );
+    const transaction = useHookstate(
+        selectCoinTransaction({
+            address: currentAddress.get(),
+            networkId: currentNetworkId.get(),
+            contractId: args.contractId,
+            transactionId: args.transactionId
+        })
+    );
 
-    return useHookstate(transactions[args.transactionId]);
+    return transaction?.ornull ? transaction.get() : undefined;
 }
 
-export const usePassword = () => {
-    return useHookstate(EncryptedStore.password);
+/**
+ * Current account nfts
+ * @returns 
+ */
+export const useNftCollections = () => {
+    const currentAddress = useHookstate( selectCurrentAddress() );
+    const currentNetworkId = useHookstate( selectCurrentNetworkId() );
+    const nftCollections = useHookstate(
+        selectNfts({
+            address: currentAddress.get(),
+            networkId: currentNetworkId.get()
+        })
+    );
+
+    return nftCollections?.ornull ? Object.values(nftCollections.get()) : [];
+}
+
+export const useNftCollection = (contractId: string) => {
+    const currentAddress = useHookstate( selectCurrentAddress() );
+    const currentNetworkId = useHookstate( selectCurrentNetworkId() );
+    const nftCollection = useHookstate(
+        selectNftCollection({
+            address: currentAddress.get(),
+            networkId: currentNetworkId.get(),
+            contractId
+        })
+    );
+
+    return nftCollection?.ornull ? nftCollection.get() : undefined;
+}
+
+export const useNft = (args: {contractId: string, tokenId: string}) => {
+    const { contractId, tokenId } = args;
+    const currentAddress = useHookstate( selectCurrentAddress() );
+    const currentNetworkId = useHookstate( selectCurrentNetworkId() );
+    const nft = useHookstate(
+        selectNft({
+            address: currentAddress.get(),
+            networkId: currentNetworkId.get(),
+            contractId,
+            tokenId
+        })
+    )
+
+    const [value, setValue] = useState<NFT|undefined>(undefined);
+
+    useEffect(() => {
+        if (nft) {
+            setValue(nft.get())
+        } else {
+            setValue(undefined);
+        }
+    }, [currentAddress, currentNetworkId, nft])
+
+    return value;
 }
 
 export const useAddressbook = () => {
-    return useHookstate(UserStore.addressbook);
+    const addressbook = useHookstate( selectAddressBook() );
+    return addressbook?.ornull ? Object.values(addressbook.get()) : [];
 }
 
 export const useContact = (address: string) => {
-    return useHookstate(UserStore.addressbook[address]);
+    const contact = useHookstate( selectContact(address) );
+    return contact?.ornull ? contact.get() : undefined;
 }
 
 export const useTheme = () => {
@@ -137,7 +211,7 @@ export const useTheme = () => {
 }
 
 export const useCurrentSeed = () => {
-    return Object.values(EncryptedStore.accounts).filter(w => w.seed.get() !== undefined)[0].seed;
+    return Object.values(EncryptedStore.accounts).filter(w => w.seed.get() !== undefined)[0].seed.get();
 }
 
 const i18n = new I18n(Locales);
@@ -158,20 +232,20 @@ export const useI18n = () => {
 }
 
 export const useBiometric = () => {
-    return useHookstate(UserStore.biometric);
+    return useHookstate(UserStore.biometric).get();
 }
 
 export const useCurrentKoin = () => {
     const currentNetwork = useHookstate(UserStore.currentNetworkId);
-    return UserStore.networks[currentNetwork.get()].koinContractId;
+    return UserStore.networks[currentNetwork.get()].koinContractId.get();
 }
 
 export const useAutolock = () => {
-    return useHookstate(UserStore.autolock);
+    return useHookstate(UserStore.autolock).get();
 }
 
 export const useRcLimit = () => {
-    return useHookstate(UserStore.rcLimit);
+    return useHookstate(UserStore.rcLimit).get();
 }
 
 export const useAppState = () => {
@@ -190,31 +264,24 @@ export const useAppState = () => {
         };
     }, []);
 
-    return appState;
+    return appState.get();
 }
 
 export const useWC = () => {
-    return useHookstate(WCStore);
+    return useHookstate(WCStore).get();
 }
 
 export const useLogs = () => {
-    return useHookstate(UserStore.logs);
+    return useHookstate(UserStore.logs).get();
 }
 
-export const useLock = () => {
+export const useLockState = () => {
     return useHookstate(LockStore);
 }
 
 export const useKapAddress = (address: string) => {
-    const store = useHookstate(KapStore);
-    const name = useHookstate<string | null>(null);
-    if (store[address].ornull) {
-        name.set(`${store[address].get()}`);
-    } else {
-        name.set(null);
-    }
-
-    return name;
+    const name = useHookstate(selectKap(address));
+    return name?.ornull ? name.get() : undefined;
 }
 
 export const useKapName = (name: string) => {
@@ -230,79 +297,9 @@ export const useKapName = (name: string) => {
     }
     address.set(foundAddress);
 
-    return address;
+    return address?.ornull ? address.get() : undefined;
 }
 
-
-/**
- * Current account nfts
- * @returns 
- */
-export const useNftCollections = () => {
-    const currentAddress = useHookstate(UserStore.currentAddress);
-    const currentNetworkId = useHookstate(UserStore.currentNetworkId);
-    const [nftCollections, setNftCollections] = useState<Array<NFTCollection>>([]);
-
-    useEffect(() => {
-        const store = UserStore.accounts
-            ?.nested(currentAddress.get())
-            ?.assets
-            ?.nested(currentNetworkId.get())
-            ?.nfts;
-
-        if (store?.get()) {
-            setNftCollections(Object.values(store.get()));
-        }
-
-    }, [currentAddress, currentNetworkId]);
-
-    return nftCollections;
-}
-
-export const useNftCollection = (contractId: string) => {
-    const currentAddress = useHookstate(UserStore.currentAddress);
-    const currentNetworkId = useHookstate(UserStore.currentNetworkId);
-    const [collection, setCollection] = useState<NFTCollection|null>(null);
-
-    useEffect(() => {
-        const store = UserStore.accounts
-            ?.nested(currentAddress.get())
-            ?.assets
-            ?.nested(currentNetworkId.get())
-            ?.nfts
-            ?.nested(contractId);
-
-        if (store?.get()) {
-            setCollection(store.get());
-        }
-    }, [currentAddress, currentNetworkId, contractId]);
-
-    return collection;
-}
-
-export const useNft = (args: {contractId: string, tokenId: string}) => {
-    const { contractId, tokenId } = args;
-    const currentAddress = useHookstate(UserStore.currentAddress);
-    const currentNetworkId = useHookstate(UserStore.currentNetworkId);
-    const [nft, setNft] = useState<NFT|null>(null);
-
-    useEffect(() => {
-        const store = UserStore.accounts
-            ?.nested(currentAddress.get())
-            ?.assets
-            ?.nested(currentNetworkId.get())
-            ?.nfts
-            ?.nested(contractId)
-            ?.tokens
-            ?.nested(tokenId);
-        
-        if (store?.get()) {
-            setNft(store.get());
-        }
-    }, [currentAddress, currentNetworkId, contractId, tokenId]);
-
-    return nft;
-}
 
 export const useAccountValue = () => {
     const currentAddress = useHookstate(UserStore.currentAddress).get();
@@ -324,9 +321,17 @@ export const useAccountValue = () => {
         }
     }, [currentAddress, currentNetworkId, coins]);
 
-    return total;
+    return total.get();
 }
 
 export const useSpinner = () => {
-    return useHookstate(SpinnerStore);
+    return useHookstate(SpinnerStore).get();
+}
+
+export const useLocale = () => {
+    return useHookstate(UserStore.locale).get();
+}
+
+export const useMana = () => {
+    return useHookstate(ManaStore).get();
 }

@@ -4,7 +4,7 @@ import { useI18n, useLogs, useTheme } from "../hooks";
 import { logReset } from "../actions";
 
 export default () => {
-    const logs = useLogs().get();
+    const logs = useLogs();
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();

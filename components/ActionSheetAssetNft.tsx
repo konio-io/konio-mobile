@@ -3,21 +3,21 @@ import Button from "./Button";
 import Text from "./Text";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { useI18n, useNftCollections, useTheme } from "../hooks";
-import { useHookstate } from "@hookstate/core";
 import NftCollectionListItem from "./NftCollectionListItem";
 import NftListItem from "./NftListItem";
+import { useState } from "react";
 
 export default (props: SheetProps<{ contractId: string, tokenId?: string }>) => {
-    const contractId = useHookstate(props.payload?.contractId ?? '');
-    const tokenId = useHookstate(props.payload?.tokenId ?? '');
+    const [contractId, setContractId] = useState(props.payload?.contractId ?? '');
+    const [tokenId, setTokenId] = useState(props.payload?.tokenId ?? '');
     const theme = useTheme();
     const i18n = useI18n();
     const styles = theme.styles;
     const data = useNftCollections();
 
     const _select = (data: any) => {
-        contractId.set(data.contractId);
-        tokenId.set(data.tokenId);
+        setContractId(data.contractId);
+        setTokenId(data.tokenId);
     }
 
     const _close = () => {
@@ -25,10 +25,10 @@ export default (props: SheetProps<{ contractId: string, tokenId?: string }>) => 
     }
 
     const _confirm = () => {
-        if (contractId.get() && tokenId.get()) {
+        if (contractId && tokenId) {
             const payload = {
-                contractId: contractId.get(),
-                tokenId: tokenId.get()
+                contractId,
+                tokenId
             };
             SheetManager.hide(props.sheetId, { payload });
         }
@@ -63,7 +63,7 @@ export default (props: SheetProps<{ contractId: string, tokenId?: string }>) => 
                                             <NftListItem
                                                 contractId={collection.contractId}
                                                 tokenId={tId}
-                                                selected={tId === tokenId.get() && collection.contractId === contractId.get()}
+                                                selected={tId === tokenId && collection.contractId === contractId}
                                             />
                                         </TouchableOpacity>
                                 }

@@ -1,4 +1,4 @@
-import { TouchableHighlight, View, StyleSheet } from 'react-native';
+import { TouchableOpacity, View, StyleSheet } from 'react-native';
 import React, { ReactElement } from 'react';
 import { useTheme } from '../hooks';
 import type { Theme } from '../types/store';
@@ -19,7 +19,7 @@ export default (props: {
     const iconColor = props.type ? styles[`${props.type}Text`].color : styles.primaryText.color;
 
     return (
-        <TouchableHighlight onPress={() => props.onPress()} style={{
+        <TouchableOpacity onPress={() => props.onPress()} style={{
             height: props.size ?? DEFAULT_SIZE, 
             width: props.size ?? DEFAULT_SIZE, 
             borderRadius: props.size ?? DEFAULT_SIZE,
@@ -37,7 +37,7 @@ export default (props: {
                 </View>
 
             </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
     );
 }
 

@@ -12,15 +12,12 @@ import TransactionList from './TransactionList';
 import ActivityIndicator from './ActivityIndicator';
 import Wrapper from './Wrapper';
 import CoinListItem from './CoinListItem';
-import CoinSymbol from './CoinSymbol';
 import ListItemSelected from './ListItemSelected';
-import Modal from './Modal';
 import ListItem from './ListItem';
 import Selector from './Selector';
 import Copiable from './Copiable';
 import Seed from './Seed';
 import Switch from './Switch';
-import CoinValue from './CoinValue';
 import Separator from './Separator';
 import AccountListItem from './AccountListItem';
 import CoinLogo from './CoinLogo';
@@ -56,15 +53,12 @@ export {
     TransactionList,
     Wrapper,
     CoinListItem,
-    CoinSymbol,
     ListItemSelected,
-    Modal,
     ListItem,
     Selector,
     Copiable,
     Seed,
     Switch,
-    CoinValue,
     Separator,
     AccountListItem,
     CoinLogo,

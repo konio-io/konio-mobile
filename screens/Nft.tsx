@@ -9,15 +9,14 @@ import { SheetManager } from "react-native-actions-sheet";
 export default () => {
     const navigation = useNavigation<AssetsNavigationProp>();
     const route = useRoute<NftRouteProp>();
-    const accountNft = useNft({
-        tokenId: route.params.tokenId,
-        contractId: route.params.contractId
-    });
-    const nft = accountNft.get();
     const theme = useTheme();
     const styles = theme.styles;
     const { Border } = theme.vars;
     const collection = useNftCollection(route.params.contractId);
+    const nft = useNft({
+        tokenId: route.params.tokenId,
+        contractId: route.params.contractId
+    });
 
     useEffect(() => {
         navigation.setOptions({
@@ -30,9 +29,9 @@ export default () => {
                 )
             }
         });
-    }, [accountNft, navigation]);
+    }, [navigation]);
 
-    if (!collection) {
+    if (!collection || !nft) {
         return <></>;
     }
 

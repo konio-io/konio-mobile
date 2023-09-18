@@ -14,7 +14,7 @@ export default () => {
   const data = useNftCollections();
 
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView>
 
       <ScrollView
         contentContainerStyle={{

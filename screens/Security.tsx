@@ -4,8 +4,7 @@ import { useI18n, useBiometric } from '../hooks';
 import { Screen, Switch } from '../components';
 import ListItem from '../components/ListItem';
 import { setBiometric } from '../actions';
-import { useEffect } from 'react';
-import { useHookstate } from '@hookstate/core';
+import { useEffect, useState } from 'react';
 import * as LocalAuthentication from "expo-local-authentication";
 import { Feather, Ionicons } from '@expo/vector-icons';
 
@@ -14,16 +13,16 @@ export default () => {
     const i18n = useI18n();
     const biometric = useBiometric();
 
-    const biometricSupport = useHookstate(false);
-    const fingerprint = useHookstate(false);
+    const [biometricSupport, setBiometricSupport] = useState(false);
+    const [fingerprint, setFingerprint] = useState(false);
 
     useEffect(() => {
         (async () => {
             const compatible = await LocalAuthentication.hasHardwareAsync();
-            biometricSupport.set(compatible);
+            setBiometricSupport(compatible);
             const enroll = await LocalAuthentication.isEnrolledAsync();
             if (enroll) {
-                fingerprint.set(true);
+                setFingerprint(true);
             }
         })();
     }, []);
@@ -62,7 +61,7 @@ export default () => {
                 icon={(<Feather name="lock" />)}
             />
 
-            {biometricSupport.get() === true && fingerprint.get() === true &&
+            {biometricSupport === true && fingerprint === true &&
                 <ListItem
                     content={i18n.t('biometric_unlock')}
                     name={i18n.t('enable_biometric_unlock')}
@@ -71,8 +70,8 @@ export default () => {
                     icon={(<Ionicons name="ios-finger-print-outline" />)}
                     right={(
                         <Switch
-                            onValueChange={() => setBiometric(!biometric.get())}
-                            value={biometric.get()}
+                            onValueChange={() => setBiometric(!biometric)}
+                            value={biometric}
                         />
                     )}
                 />

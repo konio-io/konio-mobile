@@ -2,9 +2,8 @@ import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-shee
 import Button from "./Button";
 import Text from "./Text";
 import { FlatList, TouchableOpacity, View } from "react-native";
-import { useI18n, useTheme } from "../hooks";
+import { useCoins, useI18n, useTheme } from "../hooks";
 import CoinListItem from "./CoinListItem";
-import { getCoins } from "../getters";
 import { useState } from "react";
 
 export default (props: SheetProps<{ 
@@ -14,7 +13,7 @@ export default (props: SheetProps<{
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
-    const coins = getCoins();
+    const coins = useCoins();
     const { Spacing } = theme.vars;
 
     const _close = () => {

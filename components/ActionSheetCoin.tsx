@@ -32,13 +32,13 @@ export default (props: SheetProps) => {
     const data = [
         {
             title: i18n.t('contract_address'),
-            description: coin.contractId.get(),
+            description: coin?.contractId,
             icon: <AntDesign name="codesquareo"/>,
             onPress: () => _copyContractId()
         }
     ];
 
-    if (coin.symbol.get() !== 'KOIN') {
+    if (coin?.symbol !== 'KOIN') {
         data.push({
             title: i18n.t('delete'),
             description: '',

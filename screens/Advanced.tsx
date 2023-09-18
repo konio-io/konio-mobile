@@ -1,6 +1,7 @@
 import { View, TextInput } from 'react-native';
 import { useTheme, useI18n, useRcLimit } from '../hooks';
 import { Screen, Text } from '../components';
+import { setRcLimit } from '../actions';
 
 export default () => {
     const i18n = useI18n();
@@ -20,8 +21,8 @@ export default () => {
                     <TextInput
                         style={{ ...styles.textInputText, textAlign: 'center', width: 50}}
                         keyboardType='numeric'
-                        value={rcLimit.get()}
-                        onChangeText={(v: string) => rcLimit.set(v)}
+                        value={rcLimit}
+                        onChangeText={(v: string) => setRcLimit(v)}
                     />
                 </View>
             </View>

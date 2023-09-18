@@ -1,10 +1,10 @@
 import { FlatList, Linking, View, StyleSheet } from 'react-native';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_DEPOSIT, TRANSACTION_TYPE_WITHDRAW } from '../lib/Constants';
-import { useTransactions, useCurrentNetworkId, useTransaction, useTheme, useNetwork, useI18n, useCoin, useCurrentAddress } from '../hooks';
+import { useTransactions, useCurrentNetworkId, useTransaction, useTheme, useNetwork, useI18n, useCurrentAddress, useCoin } from '../hooks';
 import ActivityIndicator from './ActivityIndicator';
 import Text from './Text';
-import type { Theme } from '../types/store';
+import type { Theme, Transaction } from '../types/store';
 import Button from './Button';
 import Copiable from './Copiable';
 import Accordion from './Accordion';
@@ -17,32 +17,31 @@ export default (props: {
 
     return (
         <FlatList
-            data={Object.keys(transactions.get())}
-            renderItem={({ item }) => <TransactionListItem transactionId={item} contractId={props.contractId}/>}
+            data={transactions}
+            renderItem={({ item }) => <TransactionListItem transaction={item}/>}
         />
     );
 }
 
 export const TransactionListItem = (props: {
-    transactionId: string,
-    contractId: string
+    transaction: Transaction
 }) => {
 
-    const transaction = useTransaction(props);
+    const transaction = props.transaction;
     const currentAddress = useCurrentAddress();
-    const coin = useCoin(props.contractId);
-    const currentNetworkId = useCurrentNetworkId().get();
-    const network = useNetwork(currentNetworkId).get();
-    const date = new Date(transaction.timestamp.get()).toLocaleDateString();
-    const time = new Date(transaction.timestamp.get()).toLocaleTimeString();
+    const coin = useCoin(props.transaction.contractId);
+    const currentNetworkId = useCurrentNetworkId();
+    const network = useNetwork(currentNetworkId);
+    const date = new Date(transaction.timestamp).toLocaleDateString();
+    const time = new Date(transaction.timestamp).toLocaleTimeString();
     const theme = useTheme();
     const { Color } = theme.vars;
     const styles = createStyles(theme);
     const i18n = useI18n();
-    const type = transaction.from.get() === currentAddress.get() ? TRANSACTION_TYPE_WITHDRAW : TRANSACTION_TYPE_DEPOSIT;
+    const type = transaction.from === currentAddress ? TRANSACTION_TYPE_WITHDRAW : TRANSACTION_TYPE_DEPOSIT;
 
     const openTransactionLink = () => {
-        Linking.openURL(`${network.explorer}/${props.transactionId}`);
+        Linking.openURL(`${network?.explorer}/${props.transaction.transactionId}`);
     };
 
     return (
@@ -54,56 +53,56 @@ export const TransactionListItem = (props: {
                         <View style={styles.descriptionContainer}>
 
                             <View style={styles.statusIconContainer}>
-                                {transaction.status.get() === TRANSACTION_STATUS_PENDING &&
+                                {transaction.status === TRANSACTION_STATUS_PENDING &&
                                     <ActivityIndicator />
                                 }
-                                {transaction.status.get() === TRANSACTION_STATUS_SUCCESS &&
+                                {transaction.status === TRANSACTION_STATUS_SUCCESS &&
                                     <TypeIcon type={type} />
                                 }
-                                {transaction.status.get() === TRANSACTION_STATUS_ERROR &&
+                                {transaction.status === TRANSACTION_STATUS_ERROR &&
                                     <AntDesign name="warning" size={24} color={Color.warning} />
                                 }
 
                                 <Text>{i18n.t(type.toLowerCase())}</Text>
                             </View>
 
-                            <Text>{transaction.get().value} {coin.symbol.get()}</Text>
+                            <Text>{transaction.value} {coin?.symbol}</Text>
                         </View>
                     </View>
                 )}
             >
                 <View style={{ ...styles.rowGapBase, ...styles.paddingHorizontalBase }}>
-                    <Copiable copy={transaction.transactionId.get()}>
+                    <Copiable copy={transaction.transactionId}>
                         <View>
                             <Text style={styles.textSmall}>TXid <Feather name="copy" size={12} /></Text>
-                            <Text>{transaction.transactionId.get()}</Text>
+                            <Text>{transaction.transactionId}</Text>
                         </View>
                     </Copiable>
                     <View>
                         <Text style={styles.textSmall}>{i18n.t('status')}</Text>
 
                         {
-                            transaction.status.get() === TRANSACTION_STATUS_SUCCESS &&
-                            <Text style={{...styles.text, color: Color.success}}>{i18n.t(`transaction_${transaction.status.get()}`)}</Text>
+                            transaction.status === TRANSACTION_STATUS_SUCCESS &&
+                            <Text style={{...styles.text, color: Color.success}}>{i18n.t(`transaction_${transaction.status}`)}</Text>
                         }
 
                         {
-                            transaction.status.get() === TRANSACTION_STATUS_PENDING &&
-                            <Text style={{...styles.text, color: Color.warning}}>{transaction.status.get()}</Text>
+                            transaction.status === TRANSACTION_STATUS_PENDING &&
+                            <Text style={{...styles.text, color: Color.warning}}>{transaction.status}</Text>
                         }
 
                         {
-                            transaction.status.get() === TRANSACTION_STATUS_ERROR &&
-                            <Text style={{...styles.text, color: Color.error}}>{transaction.status.get()}</Text>
+                            transaction.status === TRANSACTION_STATUS_ERROR &&
+                            <Text style={{...styles.text, color: Color.error}}>{transaction.status}</Text>
                         }
                         
                     </View>
 
                     {
-                        transaction.note.get() &&
+                        transaction.note &&
                         <View>
                             <Text style={styles.textSmall}>{i18n.t('note')}</Text>
-                            <Text>{transaction.note.get()}</Text>
+                            <Text>{transaction.note}</Text>
                         </View>
                     }
 

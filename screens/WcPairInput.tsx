@@ -1,15 +1,15 @@
 import { Screen, TextInput, Button, TextInputActionPaste } from "../components"
 import { useI18n, useTheme } from "../hooks";
-import { useHookstate } from "@hookstate/core";
 import { useNavigation } from "@react-navigation/native";
 import { WcPairInputNavigationProp } from "../types/navigation";
 import { View } from "react-native";
 import { Feather } from '@expo/vector-icons';
 import { logError, showToast, walletConnectPair } from "../actions";
+import { useState } from "react";
 
 export default () => {
     const navigation = useNavigation<WcPairInputNavigationProp>();
-    const uri = useHookstate('');
+    const [uri, setUri] = useState('');
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();
@@ -36,16 +36,16 @@ export default () => {
                 <TextInput
                     autoFocus={true}
                     multiline={true}
-                    value={uri.get()}
-                    onChangeText={(v: string) => uri.set(v)}
+                    value={uri}
+                    onChangeText={(v: string) => setUri(v)}
                     actions={(
-                        <TextInputActionPaste state={uri} />
+                        <TextInputActionPaste onPaste={(value:string) => setUri(value)} />
                     )}
                 />
                 <Button 
                     icon={(<Feather name="link" />)}
                     title={i18n.t('pair')}
-                    onPress={() => _pair(uri.get())} 
+                    onPress={() => _pair(uri)} 
                 />
             </View>
 

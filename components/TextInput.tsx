@@ -2,8 +2,7 @@ import { TextInput, View } from 'react-native';
 import { useTheme } from '../hooks';
 import { rgba } from '../lib/utils';
 import { Feather } from '@expo/vector-icons';
-import React, { ReactElement, useEffect } from 'react';
-import { useHookstate } from '@hookstate/core';
+import React, { ReactElement, useEffect, useState } from 'react';
 import TextInputAction from './TextInputAction';
 import TextInputContainer from './TextInputContainer';
 
@@ -24,12 +23,13 @@ export default (props: {
     keyboardType?: any
     placeholder?: string
     textAlign?: any
-    secureTextEntry?: boolean
+    secureTextEntry?: boolean,
+    numberOfLines?: number
 }) => {
 
-    const value = useHookstate('');
+    const [value, setValue] = useState('');
     useEffect(() => {
-        value.set(props.value)
+        setValue(props.value)
     }, [props.value])
 
     const theme = useTheme();
@@ -74,10 +74,9 @@ export default (props: {
                     ...props.style
                 }}
                 placeholderTextColor={rgba(Color.baseContrast, 0.3)}
-                value={value.get()}
+                value={value}
                 textAlignVertical="top"
                 onChangeText={(v: string) => {
-                    value.set(v);
                     if (props.onChangeText) {
                         props.onChangeText(v)
                     }
@@ -88,6 +87,7 @@ export default (props: {
                 textAlign={props.textAlign}
                 secureTextEntry={props.secureTextEntry}
                 multiline={props.multiline}
+                numberOfLines={props.numberOfLines}
             />
         </TextInputContainer>
     );

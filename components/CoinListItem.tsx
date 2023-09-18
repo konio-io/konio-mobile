@@ -4,21 +4,20 @@ import CoinLogo from './CoinLogo';
 import type { Theme } from '../types/store';
 import Text from './Text';
 import { Feather } from '@expo/vector-icons';
-import { useHookstate } from '@hookstate/core';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default (props: {
     contractId: string
     selected?: boolean
 }) => {
-
     const theme = useTheme();
     const styles = createStyles(theme);
     const { Color } = theme.vars;
     const coin = useCoin(props.contractId);
-    const selected = useHookstate<boolean|undefined>(undefined);
+
+    const [selected, setSelected] = useState<boolean|undefined>(undefined);
     useEffect(() => {
-        selected.set(props.selected);
+        setSelected(props.selected);
     }, [props.selected])
 
     if (!coin) {
@@ -37,18 +36,18 @@ export default (props: {
             </View>
 
             {
-                selected.ornull &&
+                selected !== undefined &&
                 <View>
                     {
-                        selected.get() === true && <Feather name="check-circle" size={20} color={Color.primary}/>
+                        selected === true && <Feather name="check-circle" size={20} color={Color.primary}/>
                     }
                     {
-                        selected.get() === false && <Feather name="circle" size={20} color={Color.primary}/>
+                        selected === false && <Feather name="circle" size={20} color={Color.primary}/>
                     }
                 </View>
             }
             {
-                !selected.ornull &&
+                selected === undefined &&
                 <View>
                     {coin.balance !== undefined && coin.balance >= 0 &&
                         <View>

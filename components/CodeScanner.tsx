@@ -1,10 +1,9 @@
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import Button from './Button';
 import Text from './Text';
 import { useI18n, useTheme } from '../hooks';
-import { useHookstate } from '@hookstate/core';
 import Loading from '../screens/Loading';
 import { AntDesign, Feather } from '@expo/vector-icons';
 
@@ -13,8 +12,8 @@ export default (props: {
     onScan: Function,
     onClose: Function
 }) => {
-    const hasPermission = useHookstate<boolean | null>(null);
-    const scanned = useHookstate(false);
+    const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+    const [scanned, setScanned] = useState(false);
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();
@@ -22,24 +21,24 @@ export default (props: {
     useEffect(() => {
         const getBarCodeScannerPermissions = async () => {
             const { status } = await BarCodeScanner.requestPermissionsAsync();
-            hasPermission.set(status === 'granted');
+            setHasPermission(status === 'granted');
         };
 
         getBarCodeScannerPermissions();
     }, []);
 
     const handleBarCodeScanned = (result: any) => {
-        scanned.set(true);
+        setScanned(true);
         props.onScan(result.data);
     };
 
-    if (hasPermission.get() === null) {
+    if (hasPermission === null) {
         return (
             <Loading />
         )
     }
 
-    if (hasPermission.get() === false) {
+    if (hasPermission === false) {
         return (
             <View style={{ ...styles.flex1, ...styles.alignCenterColumn, ...styles.alignCenterRow }}>
                 <Text>{i18n.t('no_access_camera')}</Text>
@@ -52,7 +51,7 @@ export default (props: {
 
             <BarCodeScanner
                 barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
-                onBarCodeScanned={scanned.get() ? undefined : handleBarCodeScanned}
+                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                 style={StyleSheet.absoluteFillObject}
             />
 
@@ -72,7 +71,7 @@ export default (props: {
                             style={styles.flex1}
                             icon={(<AntDesign name="scan1" />)}
                             title={i18n.t('scan_again')}
-                            onPress={() => scanned.set(false)}
+                            onPress={() => setScanned(false)}
                         />
                     </View>
                 </View>

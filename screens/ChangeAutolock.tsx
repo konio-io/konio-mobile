@@ -33,7 +33,7 @@ export const ListItem = (props: {
 }) => {
 
   const i18n = useI18n();
-  const autolock = useAutolock().get();
+  const autolock = useAutolock();
 
   const convertMils = (ms: number): string => {
     if (ms === -1) {

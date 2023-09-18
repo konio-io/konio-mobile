@@ -79,12 +79,6 @@ const createStyles = (theme: Theme) => {
             rowGap: Spacing.base,
             padding: Spacing.base
         },
-        modalContent: {
-            alignItems: 'center',
-            justifyContent: 'center',
-            rowGap: Spacing.base,
-            padding: Spacing.base
-        },
         title: {
             fontFamily: FontFamily.sans,
             fontWeight: 'bold',

@@ -1,26 +1,25 @@
 import type { Theme } from "../types/store";
 import { Pressable, View, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { useHookstate } from '@hookstate/core';
 import { checkPassword, showToast, unlock } from '../actions';
 import { useTheme, useI18n, useBiometric } from '../hooks';
 import { Button, TextInput, Logo, Text } from '../components';
 import { useNavigation } from '@react-navigation/native';
 import { UnlockNavigationProp } from '../types/navigation';
 import * as LocalAuthentication from 'expo-local-authentication';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-sheet";
 
 export default (props: SheetProps) => {
     const navigation = useNavigation<UnlockNavigationProp>();
     const i18n = useI18n();
-    const password = useHookstate('');
+    const [password, setPwd] = useState('');
     const biometric = useBiometric();
     const theme = useTheme();
     const styles = createStyles(theme);
 
     const unlockPassword = () => {
-        if (!checkPassword(password.get())) {
+        if (!checkPassword(password)) {
             showToast({
                 type: 'error',
                 text1: i18n.t('wrong_password')
@@ -51,12 +50,12 @@ export default (props: SheetProps) => {
 
     const unlockWallet = () => {
         unlock();
-        password.set('');
+        setPwd('');
         SheetManager.hide('unlock');
     }
 
     useEffect(() => {
-        if (biometric.get()) {
+        if (biometric) {
             unlockBiometric();
         }
     }, [biometric]);
@@ -68,8 +67,8 @@ export default (props: SheetProps) => {
             </View>
 
             <TextInput
-                value={password.get()}
-                onChangeText={(v: string) => password.set(v)}
+                value={password}
+                onChangeText={(v: string) => setPwd(v)}
                 placeholder={i18n.t('password')}
                 secureTextEntry={true}
             />

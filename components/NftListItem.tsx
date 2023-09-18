@@ -1,7 +1,6 @@
-import { useHookstate } from "@hookstate/core";
 import { useNft, useTheme } from "../hooks";
 import { Image, View } from 'react-native';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { rgba } from "../lib/utils";
 import { Feather } from '@expo/vector-icons';
 
@@ -16,9 +15,9 @@ export default (props: {
     const styles = theme.styles;
     const { Border, Color } = theme.vars;
 
-    const selected = useHookstate<boolean|undefined>(undefined);
+    const [selected, setSelected] = useState<boolean|undefined>(undefined);
     useEffect(() => {
-        selected.set(props.selected);
+        setSelected(props.selected);
     }, [props.selected])
 
     if (!nft) {
@@ -42,7 +41,7 @@ export default (props: {
             }} />
 
             {
-                selected.ornull && selected.get() === true &&
+                selected === true &&
                 <View style={{
                     position: 'absolute',
                     width: 100,

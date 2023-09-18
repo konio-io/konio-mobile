@@ -1,10 +1,9 @@
 import { Button, Text, Accordion, AccountAvatar } from "../components"
 import { useCurrentAddress, useI18n, useTheme, useWC, useAccount, useCurrentNetworkId, useNetwork } from "../hooks";
-import { View, Image, StyleSheet, ScrollView  } from "react-native";
+import { View, Image, StyleSheet, ScrollView } from "react-native";
 import { walletConnectAcceptRequest, askReview, logError, walletConnectRejectRequest, showToast } from "../actions";
 import { checkWCMethod, checkWCNetwork, getNetworkByChainId } from "../lib/WalletConnect";
-import { useHookstate } from "@hookstate/core";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Feather } from '@expo/vector-icons';
 import { getContract } from "../lib/utils";
 import { WC_METHODS } from "../lib/Constants";
@@ -13,22 +12,22 @@ import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-shee
 import type { Theme } from "../types/store";
 
 export default (props: SheetProps) => {
-    const wallet = useWC().wallet.get();
+    const wallet = useWC().wallet;
     if (!wallet) {
         return <Loading />
     }
 
-    const currentAddress = useCurrentAddress().get();
-    const currentNetworkId = useCurrentNetworkId().get();
-    const currentNetwork = useNetwork(currentNetworkId).get();
+    const currentAddress = useCurrentAddress();
+    const currentNetworkId = useCurrentNetworkId();
+    const currentNetwork = useNetwork(currentNetworkId);
     const request = props.payload.request;
     const theme = useTheme();
     const styles = createStyles(theme);
     const { Color } = theme.vars;
     const i18n = useI18n();
-    const checkMethod = useHookstate(true);
-    const checkNetwork = useHookstate(true);
-    const checkAddress = useHookstate(true);
+    const [checkMethod, setCheckMethod] = useState(true);
+    const [checkNetwork, setCheckNetwork] = useState(true);
+    const [checkAddress, setCheckAddress] = useState(true);
 
     //data
     const data = wallet.engine.signClient.session.get(request.topic);
@@ -42,22 +41,22 @@ export default (props: SheetProps) => {
     const requiredAddress = data.namespaces.koinos?.accounts[0]?.split(':')[2];
     const account = useAccount(requiredAddress);
     const icons = data?.peer?.metadata?.icons;
-    
+
     const _checkAddress = () => {
         if (currentAddress !== requiredAddress) {
-            checkAddress.set(false);
+            setCheckAddress(false);
         }
     }
 
     const _checkMethod = () => {
         if (!checkWCMethod(method)) {
-            checkMethod.set(false);
+            setCheckMethod(false);
         }
     }
 
     const _checkNetwork = () => {
         if (!checkWCNetwork(chainId)) {
-            checkNetwork.set(false);
+            setCheckNetwork(false);
         }
     }
 
@@ -85,7 +84,7 @@ export default (props: SheetProps) => {
     const reject = async () => {
         walletConnectRejectRequest(request)
             .catch(e => logError(e))
-        
+
         SheetManager.hide('wc_request');
     }
 
@@ -100,10 +99,10 @@ export default (props: SheetProps) => {
             <ScrollView contentContainerStyle={{ ...styles.paddingMedium, ...styles.rowGapMedium }}>
 
                 {
-                    account.ornull &&
+                    account &&
                     <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
-                        <AccountAvatar size={24} address={account.address.get()} />
-                        <Text>{account.name.get()}</Text>
+                        <AccountAvatar size={24} address={account.address} />
+                        <Text>{account.name}</Text>
                     </View>
                 }
 
@@ -140,12 +139,12 @@ export default (props: SheetProps) => {
                     <View>
                         <Text style={styles.textSmall}>{i18n.t('dapp_method')}</Text>
                         {
-                            checkMethod.get() === true &&
+                            checkMethod === true &&
                             <Text style={styles.textSuccess}><Feather name="check-circle" size={16} color={Color.success} /> {i18n.t(method.replace('koinos_', ''))}</Text>
                         }
 
                         {
-                            checkMethod.get() === false &&
+                            checkMethod === false &&
                             <Text style={styles.textError}><Feather name="x-circle" size={16} color={Color.error} /> {i18n.t(method.replace('koinos_', ''))}</Text>
                         }
                     </View>
@@ -169,30 +168,30 @@ export default (props: SheetProps) => {
             </ScrollView>
 
             {
-                checkMethod.get() === false &&
+                checkMethod === false &&
                 <View style={{ ...styles.paddingBase, ...styles.columnGapBase, ...styles.alignCenterColumn }}>
                     <Text style={{ ...styles.textError, ...styles.textCenter }}>{i18n.t('unsupported_methods')}</Text>
                 </View>
             }
 
             {
-                checkNetwork.get() === false &&
+                checkNetwork === false &&
                 <View style={{ ...styles.paddingBase, ...styles.columnGapBase, ...styles.alignCenterColumn }}>
-                    <Text style={{ ...styles.textError, ...styles.textCenter }}>{i18n.t('misaligned_network', { currentNetwork: currentNetwork.name, requiredNetwork: requiredNetworkName })}</Text>
+                    <Text style={{ ...styles.textError, ...styles.textCenter }}>{i18n.t('misaligned_network', { currentNetwork: currentNetwork?.name, requiredNetwork: requiredNetworkName })}</Text>
                 </View>
             }
 
             {
-                checkAddress.get() === false &&
+                checkAddress === false &&
                 <View style={{ ...styles.paddingBase, ...styles.columnGapBase, ...styles.alignCenterColumn }}>
                     <Text style={{ ...styles.textError, ...styles.textCenter }}>{i18n.t('misaligned_address', { currentAddress: currentAddress, requiredAddress: requiredAddress })}</Text>
                 </View>
             }
 
             {
-                (checkMethod.get() === false ||
-                    checkNetwork.get() === false ||
-                    checkAddress.get() === false) &&
+                (checkMethod === false ||
+                    checkNetwork === false ||
+                    checkAddress === false) &&
 
                 <View style={{ ...styles.paddingBase }}>
                     <Button
@@ -205,9 +204,9 @@ export default (props: SheetProps) => {
             }
 
             {
-                checkMethod.get() === true &&
-                checkNetwork.get() === true &&
-                checkAddress.get() === true &&
+                checkMethod === true &&
+                checkNetwork === true &&
+                checkAddress === true &&
                 <View style={{ ...styles.directionRow, ...styles.paddingBase, ...styles.columnGapBase }}>
                     <Button
                         type="secondary"
@@ -247,42 +246,40 @@ const SignMessageDetail = (props: {
 const SendTransactionDetail = (props: {
     transaction: any
 }) => {
-    const currentAddress = useCurrentAddress().get();
-    const currentNetworkId = useCurrentNetworkId().get();
+    const currentAddress = useCurrentAddress();
+    const currentNetworkId = useCurrentNetworkId();
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
-    const operations = useHookstate<Array<any>>([]);
+    const [operations, setOperations] = useState<Array<any>>([]);
 
-    const _loadDetails = () => {
+    const _loadDetails = async () => {
         for (const operation of props.transaction.operations) {
             const contractId = operation.call_contract.contract_id;
-            getContract({
-                address: currentAddress,
-                networkId: currentNetworkId,
-                contractId
-            }).then(async contract => {
+
+            try {
+                const contract = await getContract({
+                    address: currentAddress,
+                    networkId: currentNetworkId,
+                    contractId
+                });
+
                 if (contract.abi) {
-                    contract.decodeOperation(operation)
-                        .then(decodedOperation => {
-                            const { name, args } = decodedOperation;
-                            operations.merge([
-                                {
-                                name,
-                                description: contract.abi?.methods[name].description,
-                                args: JSON.stringify(args)
-                                }
-                            ]);
-                        })
-                        .catch(e => {
-                            console.error(e);
-                            logError(e);
-                        });
+                    const decodedOperation = await contract.decodeOperation(operation)
+                    const { name, args } = decodedOperation;
+                    setOperations(current => [
+                        ...current,
+                        {
+                            name,
+                            description: contract.abi?.methods[name].description,
+                            args: JSON.stringify(args)
+                        }
+                    ]);
                 }
-            }).catch(e => {
+            } catch (e) {
                 console.error(e);
-                logError(e);
-            });
+                logError(String(e));
+            }
         }
     }
 
@@ -294,12 +291,11 @@ const SendTransactionDetail = (props: {
         <View>
             <Text style={styles.textSmall}>{i18n.t('operations')}</Text>
             {
-                operations.get().map((operation,index) =>
-
+                operations.map((operation, index) =>
                     <Accordion
                         key={index}
                         header={(
-                            <View style={{...styles.paddingVerticalSmall}}>
+                            <View style={{ ...styles.paddingVerticalSmall }}>
                                 <Text>{operation.name}</Text>
                             </View>
                         )}

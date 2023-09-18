@@ -1,11 +1,9 @@
-import { useHookstate } from '@hookstate/core';
 import { Button, Text, TextInput } from '../components';
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { useCoin, useI18n, useTheme } from '../hooks';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Theme } from '../types/store';
 import TextInputContainer from './TextInputContainer';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import ActionSheet, { SheetManager, SheetProps, registerSheet } from 'react-native-actions-sheet';
 
 export default (props: {
@@ -15,7 +13,7 @@ export default (props: {
     opened?: boolean
 }) => {
     const coin = useCoin(props.contractId);
-    const usd = useHookstate(0)
+    const [usd, setUsd] = useState(0)
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();
@@ -23,7 +21,7 @@ export default (props: {
     useEffect(() => {
         if (coin?.price && props.value) {
             const price = coin.price ?? 0;
-            usd.set(props.value * price);
+            setUsd(props.value * price);
         }
     }, [props.value, coin]);
 
@@ -55,7 +53,7 @@ export default (props: {
             >
                 <View>
                     <Text style={{...styles.textMedium, ...styles.textBold}}>{props.value}</Text>
-                    <Text>~ {usd.get().toFixed(2)} USD</Text>
+                    <Text>~ {usd.toFixed(2)} USD</Text>
                 </View>
             </TouchableWithoutFeedback>
         </TextInputContainer>
@@ -96,23 +94,27 @@ const ActionSheetAmount = (props: SheetProps<{ amount: number, contractId: strin
     const styles = createStyles(theme);
     const { Color } = theme.vars;
     const coin = useCoin(props.payload?.contractId ?? '');
-    const balance = coin.balance.get() ?? 0;
-    const price = coin.price.get() ?? 0;
-    const amount = useHookstate(props.payload?.amount.toString() ?? '');
-    const amountUsd = useHookstate('');
+    const [amount, setAmount] = useState(props.payload?.amount.toString() ?? '');
+    const [amountUsd, setAmountUsd] = useState('');
 
     useEffect(() => {
-        if (amount.get()) {
-            const v = (price * parseFloat(amount.get()));
+        if (amount) {
+            const v = (price * parseFloat(amount));
             if (!isNaN(v)) {
-                amountUsd.set(v.toString());
+                setAmountUsd(v.toString());
             }
         } else {
-            amountUsd.set('');
+            setAmountUsd('');
         }
     }, [amount]);
 
-    const isOutAmount = parseFloat(amount.get()) > balance;
+    if (!coin) {
+        return <></>;
+    }
+
+    const balance = coin.balance ?? 0;
+    const price = coin.price ?? 0;
+    const isOutAmount = parseFloat(amount) > balance;
     const amountStyle = isOutAmount ?
         { ...styles.amount, color: Color.error } :
         styles.amount;
@@ -124,13 +126,13 @@ const ActionSheetAmount = (props: SheetProps<{ amount: number, contractId: strin
     const _setAmauntPerc = (percent: number) => {
         if (balance) {
             const percAmount = (balance * percent) / 100;
-            amount.set(percAmount.toString());
+            setAmount(percAmount.toString());
         }
     };
 
     const _confirm = () => {
-        if (!isOutAmount && amount.get()) {
-            const payload = { amount: parseFloat(amount.get()) }
+        if (!isOutAmount && amount) {
+            const payload = { amount: parseFloat(amount) }
             SheetManager.hide(props.sheetId, { payload });
         }
     }
@@ -149,9 +151,9 @@ const ActionSheetAmount = (props: SheetProps<{ amount: number, contractId: strin
                 <TextInput
                     autoFocus={true}
                     keyboardType='numeric'
-                    value={amount.get().toString()}
+                    value={amount.toString()}
                     placeholder={i18n.t('amount')}
-                    onChangeText={(v: string) => amount.set(v)}
+                    onChangeText={(v: string) => setAmount(v)}
                     textAlign={'center'}
                     style={amountStyle}
                     actions={(
@@ -170,8 +172,8 @@ const ActionSheetAmount = (props: SheetProps<{ amount: number, contractId: strin
                 />
 
                 <View style={{ ...styles.alignCenterColumn, height: 20 }}>
-                    {amountUsd.get() &&
-                        <Text style={amountUsdStyle}>{amountUsd.get()} USD</Text>
+                    {amountUsd &&
+                        <Text style={amountUsdStyle}>{amountUsd} USD</Text>
                     }
                 </View>
             </View>

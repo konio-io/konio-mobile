@@ -1,6 +1,6 @@
 import { Button } from '../components';
 import { ScrollView, View } from "react-native";
-import { useCurrentAddress, useCurrentNetworkId, useI18n, useLock, useTheme } from '../hooks';
+import { useCurrentAddress, useCurrentNetworkId, useI18n, useLockState, useTheme } from '../hooks';
 import RecipientInput from '../components/RecipientInput';
 import AmountInput from '../components/AmountInput';
 import { Feather } from '@expo/vector-icons';
@@ -11,19 +11,18 @@ import { WithdrawNavigationProp } from '../types/navigation';
 import { useEffect, useState } from 'react';
 
 export default (props: {
-    to?: string,
     contractId?: string
 }) => {
     const currentAddress = useCurrentAddress();
     const currentNetworkId = useCurrentNetworkId();
-    const [to, setTo] = useState(props.to);
+    const [to, setTo] = useState<string|undefined>(undefined);
     const [contractId, setContractId] = useState(props.contractId);
     const [amount, setAmount] = useState(0);
     const [sendRequest, setSendRequest] = useState(false);
     const i18n = useI18n();
     const theme = useTheme();
     const navigation = useNavigation<WithdrawNavigationProp>();
-    const lockState = useLock();
+    const lockState = useLockState();
 
     useEffect(() => {
         _reset();
@@ -120,7 +119,7 @@ export default (props: {
                 });
             });
     };
-
+    
     return (
         <View style={{ flex: 1, ...theme.styles.paddingBase }}>
             <ScrollView contentContainerStyle={theme.styles.rowGapBase}>
@@ -135,7 +134,7 @@ export default (props: {
                     <AssetCoinInput
                         value={contractId}
                         onChange={(value: string) => setContractId(value)}
-                        opened={true}
+                        opened={to ? true : false}
                     />
                 }
 
@@ -145,17 +144,14 @@ export default (props: {
                         contractId={contractId}
                         value={amount}
                         onChange={(value: number) => setAmount(value)}
-                        opened={true}
+                        opened={contractId ? true : false}
                     />
                 }
 
             </ScrollView>
 
             {
-                to !== undefined && 
-                contractId !== undefined && 
-                amount !== undefined && 
-                amount > 0 &&
+                to && contractId && amount !== undefined && amount > 0 &&
                 <Button
                     title={i18n.t('send')}
                     onPress={() => _confirm()}

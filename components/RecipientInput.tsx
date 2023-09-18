@@ -1,10 +1,9 @@
 import { useI18n, useTheme } from "../hooks";
 import { getContact } from "../lib/utils";
 import AccountAvatar from "./AccountAvatar";
-import { View } from "react-native";
+import { View, TouchableWithoutFeedback } from "react-native";
 import Text from './Text';
 import { SheetManager } from "react-native-actions-sheet";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import TextInputContainer from "./TextInputContainer";
 import Address from "./Address";
 
@@ -30,30 +29,30 @@ export default (props: {
     }
 
     return (
-        <TextInputContainer note={i18n.t('recipient')}>
-            <TouchableWithoutFeedback
-                onPress={() => _select()}
-                containerStyle={{ flexGrow: 1 }}
-            >
-                <View style={{ ...styles.directionRow, ...styles.columnGapSmall, minHeight: 60 }}>
+        <TouchableWithoutFeedback onPress={() => _select()}>
+            <View>
+                <TextInputContainer note={i18n.t('recipient')}>
 
-                    {
-                        props.value &&
-                        <AccountAvatar size={48} address={props.value} />
-                    }
-                    {
-                        props.value &&
-                        <View>
-                            {
-                                contact?.name &&
-                                <Text>{contact.name}</Text>
-                            }
-                            <Address address={props.value}></Address>
-                        </View>
-                    }
-                </View>
+                    <View style={{ ...styles.directionRow, ...styles.columnGapSmall, minHeight: 60 }}>
 
-            </TouchableWithoutFeedback>
-        </TextInputContainer>
+                        {
+                            props.value &&
+                            <AccountAvatar size={48} address={props.value} />
+                        }
+                        {
+                            props.value &&
+                            <View>
+                                {
+                                    contact?.name &&
+                                    <Text>{contact.name}</Text>
+                                }
+                                <Address address={props.value}></Address>
+                            </View>
+                        }
+                    </View>
+
+                </TextInputContainer>
+            </View>
+        </TouchableWithoutFeedback>
     );
 }

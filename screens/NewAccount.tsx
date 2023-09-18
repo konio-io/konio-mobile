@@ -1,4 +1,3 @@
-import { useHookstate } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import type { NewWalletSeedNavigationProp } from '../types/navigation';
 import { setCurrentAccount, addAccount, showToast, logError, askReview, showSpinner, hideSpinner } from '../actions';
@@ -8,10 +7,11 @@ import { useI18n, useTheme } from '../hooks';
 import { Keyboard, View } from 'react-native';
 import { EncryptedStore } from '../stores';
 import { MAX_ACCOUNT } from '../lib/Constants';
+import { useState } from 'react';
 
 export default () => {
     const navigation = useNavigation<NewWalletSeedNavigationProp>();
-    const name = useHookstate('');
+    const [name, setName] = useState('');
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
@@ -28,7 +28,7 @@ export default () => {
             return;
         }
 
-        if (!name.get()) {
+        if (!name) {
             showToast({
                 type: 'error',
                 text1: i18n.t('missing_account_name')
@@ -38,7 +38,7 @@ export default () => {
 
         showSpinner();
 
-        addAccount(name.get().trim())
+        addAccount(name.trim())
             .then(address => {
                 hideSpinner();
                 setCurrentAccount(address);
@@ -62,9 +62,9 @@ export default () => {
             <View style={{...styles.flex1, ...styles.paddingBase, ...styles.rowGapSmall}}>
                 <TextInput
                     autoFocus={true}
-                    value={name.get()}
+                    value={name}
                     placeholder={i18n.t('account_name')}
-                    onChangeText={(text: string) => name.set(text)}
+                    onChangeText={(text: string) => setName(text)}
                 />
             </View>
 

@@ -1,10 +1,8 @@
 import { FlatList, View } from 'react-native';
-import { useI18n } from '../hooks';
-import { UserStore } from '../stores';
+import { useI18n, useTheme } from '../hooks';
 import { setTheme } from '../actions';
-import { ListItemSelected, Separator, Text, Screen } from '../components';
+import { ListItemSelected, Text, Screen } from '../components';
 import { Themes } from '../themes';
-import { useHookstate } from '@hookstate/core';
 import { OS_THEME } from '../lib/Constants';
 
 export default () => {
@@ -27,8 +25,8 @@ export const ListItem = (props: {
 }) => {
 
   const i18n = useI18n();
-  const theme = useHookstate(UserStore.theme).get();
-  const selected = (theme === props.name);
+  const theme = useTheme();
+  const selected = (theme.name === props.name);
 
   const changeTheme = () => {
     setTheme(props.name);

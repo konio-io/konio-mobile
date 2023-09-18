@@ -14,12 +14,12 @@ import { Feather } from '@expo/vector-icons';
 
 export default () => {
     const wc = useWC();
-    const wallet = wc.wallet.get();
+    const wallet = wc.wallet;
     if (!wallet) {
         return <Loading />;
     }
 
-    const activeSessions = wc.activeSessions.get();
+    const activeSessions = wc.activeSessions;
     const { styles } = useTheme();
     const navigation = useNavigation<WcSessionsNavigationProp>();
 

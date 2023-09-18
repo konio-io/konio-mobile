@@ -1,6 +1,6 @@
 import { Button} from '../components';
 import { ScrollView, View } from "react-native";
-import { useCurrentAddress, useCurrentNetworkId, useI18n, useLock, useTheme } from '../hooks';
+import { useCurrentAddress, useCurrentNetworkId, useI18n, useLockState, useTheme } from '../hooks';
 import RecipientInput from '../components/RecipientInput';
 import { Feather } from '@expo/vector-icons';
 import AssetNftInput from '../components/AssetNftInput';
@@ -10,7 +10,6 @@ import { useNavigation } from '@react-navigation/native';
 import { WithdrawAssetNavigationProp } from '../types/navigation';
 
 export default (props: {
-    to?: string,
     nft?: {
         contractId: string,
         tokenId: string
@@ -21,9 +20,9 @@ export default (props: {
     const currentNetworkId = useCurrentNetworkId();
     const i18n = useI18n();
     const theme = useTheme();
-    const [to, setTo] = useState(props.to);
+    const [to, setTo] = useState<string|undefined>();
     const [nft, setNft] = useState(props.nft);
-    const lockState = useLock();
+    const lockState = useLockState();
     const [sendRequest, setSendRequest] = useState(false);
 
     useEffect(() => {
@@ -37,11 +36,8 @@ export default (props: {
     }, [lockState]);
 
     const _reset = () => {
-        setTo('');
-        setNft({
-            tokenId: '',
-            contractId: ''
-        });
+        setTo(undefined);
+        //setNft(undefined);
     }
 
     const _confirm = () => {
@@ -106,8 +102,7 @@ export default (props: {
                     value={to}
                     onChange={(address: string) => setTo(address)}
                 />
-                {
-                    to &&
+         
                     <AssetNftInput
                         value={nft}
                         onChange={(value: any) => setNft({
@@ -116,8 +111,13 @@ export default (props: {
                         })}
                         opened={!nft}
                     />
-                }
+                
             </ScrollView>
+
+            <Button title="test" onPress={() => setNft({
+                tokenId: '0x31',
+                contractId: '1LqAs29cya7jGcx5DFmDdpMdZBseEBzoU1'
+            })}/>
 
             {
                 to && nft &&

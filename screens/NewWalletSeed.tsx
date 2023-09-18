@@ -1,35 +1,34 @@
 import { View } from 'react-native';
-import { useHookstate } from '@hookstate/core';
 import { Text, Button, TextInput, Wrapper, Screen, Seed, TextInputActionCopy } from '../components';
 import { generateSeed, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n } from '../hooks';
 import { useNavigation } from '@react-navigation/native';
 import type { NewWalletSeedNavigationProp } from '../types/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import TextInputAction from '../components/TextInputAction';
 
 export default () => {
     const navigation = useNavigation<NewWalletSeedNavigationProp>();
-    const seed = useHookstate('');
-    const name = useHookstate('');
+    const [seed, setSeed] = useState('');
+    const [name, setName] = useState('');
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
 
     const next = () => {
-        if (!name.get()) {
+        if (!name) {
             showToast({
                 type: 'error',
                 text1: i18n.t('missing_account_name'),
             });
         } else {
-            navigation.navigate('NewWalletSeedConfirm', { seed: seed.get(), name: name.get() })
+            navigation.navigate('NewWalletSeedConfirm', { seed: seed, name: name })
         }
     }
 
     useEffect(() => {
-        seed.set(generateSeed());
+        setSeed(generateSeed());
     }, []);
 
     return (
@@ -39,21 +38,21 @@ export default () => {
 
                 <TextInput
                     autoFocus={true}
-                    value={name.get()}
+                    value={name}
                     placeholder={i18n.t('account_name')}
-                    onChangeText={(text: string) => name.set(text)} />
+                    onChangeText={(text: string) => setName(text)} />
 
                 <Text>{i18n.t('save_seed')}</Text>
 
                 <View style={styles.textInputContainer}>
-                    <Seed phrase={seed.get()} />
+                    <Seed phrase={seed} />
                     <View style={{ ...styles.alignEndColumn }}>
                         <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
                             <TextInputAction
-                                onPress={() => seed.set(generateSeed())}
+                                onPress={() => setSeed(generateSeed())}
                                 icon={(<Feather name="refresh-cw" />)}
                             />
-                            <TextInputActionCopy copy={seed.get()}/>
+                            <TextInputActionCopy copy={seed}/>
                         </View>
                     </View>
                 </View>

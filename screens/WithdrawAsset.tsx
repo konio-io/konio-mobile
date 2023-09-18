@@ -1,6 +1,6 @@
 import { DrawerToggler, Screen } from '../components';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { WithdrawAssetNavigationProp, WithdrawAssetRouteProp } from '../types/navigation';
+import { useNavigation } from '@react-navigation/native';
+import { WithdrawAssetNavigationProp } from '../types/navigation';
 import { View } from 'react-native';
 import { CATEGORY_COINS, CATEGORY_NFTS } from '../lib/Constants';
 import AssetToggler from '../components/AssetToggler';
@@ -9,10 +9,8 @@ import WithdrawCoin from '../components/WithdrawCoin';
 import WithdrawNft from '../components/WithdrawNft';
 
 export default () => {
-    const route = useRoute<WithdrawAssetRouteProp>();
     const navigation = useNavigation<WithdrawAssetNavigationProp>();
     const [category, setCategory] = useState(CATEGORY_COINS);
-    const [to, setTo] = useState('');
 
     useEffect(() => {
         navigation.setOptions({
@@ -22,12 +20,6 @@ export default () => {
         });
     }, [navigation]);
 
-    useEffect(() => {
-        if (route.params.to) {
-            setTo(route.params.to);
-        }
-    }, [route]);
-
     return (
         <Screen insets={true}>
             <View>
@@ -36,11 +28,11 @@ export default () => {
 
             {
                 category === CATEGORY_COINS &&
-                <WithdrawCoin to={to}/>
+                <WithdrawCoin/>
             }
             {
                 category === CATEGORY_NFTS &&
-                <WithdrawNft to={to}/>
+                <WithdrawNft/>
             }
         </Screen>
     );

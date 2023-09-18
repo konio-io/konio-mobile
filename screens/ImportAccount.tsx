@@ -1,4 +1,3 @@
-import { useHookstate } from '@hookstate/core';
 import { useNavigation } from '@react-navigation/native';
 import type { NewWalletSeedNavigationProp } from '../types/navigation';
 import { setCurrentAccount, showToast, logError, importAccount, showSpinner, hideSpinner } from '../actions';
@@ -8,11 +7,12 @@ import { useI18n, useTheme } from '../hooks';
 import { Keyboard, View } from 'react-native';
 import { EncryptedStore } from '../stores';
 import { MAX_ACCOUNT } from '../lib/Constants';
+import { useState } from 'react';
 
 export default () => {
     const navigation = useNavigation<NewWalletSeedNavigationProp>();
-    const name = useHookstate('');
-    const privateKey = useHookstate('');
+    const [name, setName] = useState('');
+    const [privateKey, setPrivateKey] = useState('');
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
@@ -29,7 +29,7 @@ export default () => {
             return;
         }
 
-        if (!name.get()) {
+        if (!name) {
             showToast({
                 type: 'error',
                 text1: i18n.t('missing_account_name')
@@ -40,8 +40,8 @@ export default () => {
         showSpinner();
 
         importAccount({
-            name: name.get().trim(),
-            privateKey: privateKey.get().trim()
+            name: name.trim(),
+            privateKey: privateKey.trim()
         })
             .then(address => {
                 hideSpinner();
@@ -65,18 +65,18 @@ export default () => {
             <View style={{...styles.flex1, ...styles.paddingBase, ...styles.rowGapSmall}}>
                 <TextInput
                     autoFocus={true}
-                    value={name.get()}
+                    value={name}
                     placeholder={i18n.t('account_name')}
-                    onChangeText={(text: string) => name.set(text)}
+                    onChangeText={(text: string) => setName(text)}
                 />
                  <TextInput
                     multiline={true}
-                    value={privateKey.get()}
+                    value={privateKey}
                     numberOfLines={4}
                     placeholder={i18n.t('private_key')}
-                    onChangeText={(text: string) => privateKey.set(text)}
+                    onChangeText={(text: string) => setPrivateKey(text)}
                     actions={(
-                        <TextInputActionPaste state={privateKey} />
+                        <TextInputActionPaste onPaste={(value: string) => setPrivateKey(value)} />
                     )}
                 />
             </View>

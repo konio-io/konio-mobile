@@ -1,4 +1,4 @@
-import { TouchableHighlight, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import Text from "./Text";
 import { useTheme } from "../hooks";
 import React, { ReactElement, } from "react";
@@ -18,7 +18,7 @@ export default (props: {
 
     if (props.onPress || props.onLongPress) {
         return (
-            <TouchableHighlight
+            <TouchableOpacity
                 onPress={() => {
                     if (props.onPress) {
                         props.onPress(props.name)
@@ -32,7 +32,7 @@ export default (props: {
                 <View style={{ backgroundColor: Color.base }}>
                     <ItemContent {...props} />
                 </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
         )
     }
 

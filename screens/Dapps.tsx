@@ -1,37 +1,32 @@
 import { View, Image, FlatList, Linking, StyleSheet } from "react-native";
 import { DAPPS_URL } from "../lib/Constants";
-import { ImmutableArray, ImmutableObject, useHookstate } from "@hookstate/core";
 import { Dapp, Theme } from "../types/store";
 import { Text, Screen, DrawerToggler } from "../components";
 import { useTheme } from "../hooks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { rgba } from "../lib/utils";
-import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { DappsNavigationProp, RootNavigationProp } from "../types/navigation";
 import { AntDesign } from '@expo/vector-icons';
 import { logError } from "../actions";
 import Loading from "./Loading";
+import { TouchableOpacity, TouchableWithoutFeedback  } from "react-native";
 
 export default () => {
     const navigation = useNavigation<DappsNavigationProp>();
-    const data = useHookstate<Array<Dapp>>([]);
-    const selectedTag = useHookstate('all');
-    const isLoading = useHookstate(true);
+    const [data, setData] = useState<Array<Dapp>>([]);
+    const [selectedTag, setSelectedTag] = useState('all');
+    const [isLoading, setIsLoading] = useState(true);
 
     const load = () => {
         fetch(`${DAPPS_URL}/index.json`)
             .then(response => response.json())
             .then(json => {
                 const list: Array<Dapp> = Object.values(json);
-                data.set(list);
-                isLoading.set(false);
+                setData(list);
+                setIsLoading(false);
             })
             .catch(e => logError(e));
-    }
-
-    const selectTag = (tag: string) => {
-        selectedTag.set(tag);
     }
 
     useEffect(() => {
@@ -47,18 +42,18 @@ export default () => {
         });
     }, [navigation]);
 
-    let filteredData = data.get();
-    if (selectedTag.get() !== 'all') {
-        filteredData = data.get().filter(item => item.tags.includes(selectedTag.get()));
+    let filteredData = data;
+    if (selectedTag !== 'all') {
+        filteredData = data.filter(item => item.tags.includes(selectedTag));
     }
 
-    if (isLoading.get() === true) {
+    if (isLoading === true) {
         return <Loading />
     }
 
     return (
         <Screen>
-            <Tagsbar data={data.get()} selected={selectedTag.get()} onSelect={(tag: string) => selectTag(tag)} />
+            <Tagsbar data={data} selected={selectedTag} onSelect={(tag: string) => setSelectedTag(tag)} />
             <FlatList
                 data={filteredData}
                 renderItem={({ item }) => <Item key={item.name} item={item} />}
@@ -91,7 +86,7 @@ const ScanButton = () => {
 }
 
 const Tagsbar = (props: {
-    data: ImmutableArray<Dapp>
+    data: Array<Dapp>
     selected: string,
     onSelect: Function
 }) => {
@@ -140,7 +135,7 @@ const Tag = (props: {
 }
 
 const Item = (props: {
-    item: ImmutableObject<Dapp>
+    item: Dapp
 }) => {
 
     const theme = useTheme();

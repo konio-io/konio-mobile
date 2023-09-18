@@ -1,6 +1,6 @@
-import { FlatList, RefreshControl, TouchableHighlight, View } from 'react-native';
+import { FlatList, RefreshControl, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useCoins, useTheme } from '../hooks';
+import {  useCoins, useTheme } from '../hooks';
 import { CoinListItem, ButtonCircle } from '.';
 import { AssetsNavigationProp, } from '../types/navigation';
 import { SheetManager } from "react-native-actions-sheet";
@@ -39,7 +39,7 @@ const TouchableCoinListItem = (props: {
   const styles = theme.styles;
 
   return (
-    <TouchableHighlight
+    <TouchableOpacity
       onPress={() => navigation.navigate('Coin', { contractId: props.coin.contractId })}
       onLongPress={() => {
         SheetManager.show('coin', { payload: { contractId: props.coin.contractId } });
@@ -48,7 +48,7 @@ const TouchableCoinListItem = (props: {
       <View style={styles.listItemContainer}>
         <CoinListItem contractId={props.coin.contractId} />
       </View>
-    </TouchableHighlight>
+    </TouchableOpacity>
   );
 }
 

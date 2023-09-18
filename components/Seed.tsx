@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableHighlight } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '../hooks';
 import type { Theme } from '../types/store';
 import { ReactElement } from 'react';
@@ -43,13 +43,13 @@ const WordTag = (props: {
     const styles = createStyles(theme);
 
     return (
-        <TouchableHighlight onPress={() => props.onClick(props.word)}>
+        <TouchableOpacity onPress={() => props.onClick(props.word)}>
             <View style={styles.wordTagContainer}>
                 <View style={styles.wordContainer}>
                     <Text>{props.word}</Text>
                 </View>
             </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
     );
 }
 

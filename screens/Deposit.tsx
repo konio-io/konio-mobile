@@ -11,7 +11,7 @@ import { useEffect } from 'react';
 export default () => {
     const i18n = useI18n();
     const navigation = useNavigation<DepositNavigationProp>();
-    const address = useCurrentAddress().get();
+    const address = useCurrentAddress();
 
     const shareAddress = async () => {
         await Share.share({

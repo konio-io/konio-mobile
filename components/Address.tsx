@@ -48,11 +48,11 @@ const Container = (props: {
     return (
         <View style={styles.addressContainer}>
             <Text style={styles.addressText}>
-                { kapName.ornull && 
-                    `${kapName.get()}`
+                { kapName !== undefined && 
+                    `${kapName}`
                 }
 
-                { !kapName.ornull && 
+                { kapName === undefined && 
                     `${props.address.substring(0, length)} ... ${props.address.substring(props.address.length - length, props.address.length)}`
                 }
             </Text>

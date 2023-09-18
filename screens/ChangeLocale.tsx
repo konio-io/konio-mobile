@@ -1,10 +1,9 @@
 import { FlatList, View } from 'react-native';
-import { UserStore } from '../stores';
 import { setLocale } from '../actions';
-import { ListItemSelected, Separator, Text, Screen } from '../components';
-import { useHookstate } from '@hookstate/core';
+import { ListItemSelected, Text, Screen } from '../components';
 import { OS_LOCALE } from '../lib/Constants';
 import { LocaleIndex } from '../lib/Locales';
+import { useLocale } from '../hooks';
 
 export default () => {
   const data: Array<{ code: string, label: string }> = [
@@ -30,7 +29,7 @@ export const ListItem = (props: {
   label: string
 }) => {
 
-  const locale = useHookstate(UserStore.locale).get();
+  const locale = useLocale();
   const selected = (locale === props.code);
 
   const changeLocale = () => {

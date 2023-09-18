@@ -2,39 +2,38 @@ import { Text, TextInput, Button, Wrapper, Screen, Switch } from '../components'
 import { useNavigation } from '@react-navigation/native';
 import type { IntroNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
-import { useHookstate } from '@hookstate/core';
 import { setBiometric, setPassword, showToast } from '../actions';
 import { useBiometric, useI18n, useTheme } from '../hooks';
 import { View } from 'react-native';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import * as LocalAuthentication from "expo-local-authentication";
 
 export default () => {
     const navigation = useNavigation<IntroNavigationProp>();
-    const password = useHookstate('');
-    const passwordConfirm = useHookstate('');
+    const [password, setPwd] = useState('');
+    const [passwordConfirm, setPwdConfirm] = useState('');
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
 
     const biometric = useBiometric();
 
-    const biometricSupport = useHookstate(false);
-    const fingerprint = useHookstate(false);
+    const [biometricSupport, setBiometricSupport] = useState(false);
+    const [fingerprint, setFingerprint] = useState(false);
 
     useEffect(() => {
         (async () => {
             const compatible = await LocalAuthentication.hasHardwareAsync();
-            biometricSupport.set(compatible);
+            setBiometricSupport(compatible);
             const enroll = await LocalAuthentication.isEnrolledAsync();
             if (enroll) {
-                fingerprint.set(true);
+                setFingerprint(true);
             }
         })();
     }, []);
 
     const savePassword = () => {
-        if (!password.get()) {
+        if (!password) {
             showToast({
                 type: 'error',
                 text1: i18n.t('missing_password'),
@@ -42,7 +41,7 @@ export default () => {
             return;
         }
 
-        if ((password.get() !== passwordConfirm.get())) {
+        if ((password !== passwordConfirm)) {
             showToast({
                 type: 'error',
                 text1: i18n.t('password_not_match'),
@@ -50,7 +49,7 @@ export default () => {
             return;
         }
 
-        setPassword(password.get());
+        setPassword(password);
         navigation.navigate("NewWallet");
     }
 
@@ -62,20 +61,20 @@ export default () => {
 
                 <TextInput
                     autoFocus={true}
-                    value={password.get()}
-                    onChangeText={(v: string) => password.set(v.trim())}
+                    value={password}
+                    onChangeText={(v: string) => setPwd(v.trim())}
                     placeholder={i18n.t('password')}
                     secureTextEntry={true}
                 />
 
                 <TextInput
-                    value={passwordConfirm.get()}
-                    onChangeText={(v: string) => passwordConfirm.set(v.trim())}
+                    value={passwordConfirm}
+                    onChangeText={(v: string) => setPwdConfirm(v.trim())}
                     placeholder={i18n.t('confirm_password')}
                     secureTextEntry={true}
                 />
 
-                {biometricSupport.get() === true && fingerprint.get() === true &&
+                {biometricSupport === true && fingerprint === true &&
                     <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
                         <View style={{ flexGrow: 1 }}>
                             <Text>{i18n.t('biometric_unlock')}</Text>
@@ -84,8 +83,8 @@ export default () => {
 
 
                         <Switch
-                            onValueChange={() => setBiometric(!biometric.get())}
-                            value={biometric.get()}
+                            onValueChange={() => setBiometric(!biometric)}
+                            value={biometric}
                         />
 
                     </View>

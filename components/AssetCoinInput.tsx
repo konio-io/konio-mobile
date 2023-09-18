@@ -1,8 +1,7 @@
 import { useCoin, useI18n, useTheme } from "../hooks";
-import { View } from "react-native";
+import { View, TouchableWithoutFeedback } from "react-native";
 import Text from './Text';
 import { SheetManager } from "react-native-actions-sheet";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useEffect } from "react";
 import CoinLogo from "./CoinLogo";
 import TextInputContainer from "./TextInputContainer";
@@ -34,18 +33,21 @@ export default (props: {
     }
 
     return (
-        <TextInputContainer note={i18n.t('coin')}>
-            <TouchableWithoutFeedback
-                onPress={() => _select()}
-                style={{ minHeight: 60 }}
-                containerStyle={{ flexGrow: 1 }}
-            >
-                {
-                    props.value !== undefined &&
-                    <Coin contractId={props.value} />
-                }
-            </TouchableWithoutFeedback>
-        </TextInputContainer>
+        <TouchableWithoutFeedback
+            onPress={() => _select()}
+            style={{ minHeight: 60 }}
+        >
+            <View>
+                <TextInputContainer note={i18n.t('coin')}>
+                    <View>
+                        {
+                            props.value !== undefined &&
+                            <Coin contractId={props.value} />
+                        }
+                    </View>
+                </TextInputContainer>
+            </View>
+        </TouchableWithoutFeedback>
     );
 }
 
@@ -60,7 +62,7 @@ const Coin = (props: {
     }
 
     return (
-        <View style={{...styles.directionRow, ...styles.columnGapBase, ...styles.alignCenterColumn}}>
+        <View style={{ ...styles.directionRow, ...styles.columnGapBase, ...styles.alignCenterColumn }}>
             <CoinLogo contractId={props.contractId} size={48} />
 
             <View>

@@ -1,50 +1,43 @@
-import { View, TouchableHighlight, StyleSheet } from 'react-native';
-import { useTheme, useI18n, useCurrentKoin, useCurrentAddress, useCurrentNetworkId } from '../hooks';
-import { useHookstate } from '@hookstate/core';
-import { ManaStore, UserStore } from '../stores';
-import { useEffect, useRef } from 'react';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { useTheme, useCurrentKoin, useMana, useCoinBalance } from '../hooks';
+import { useEffect, useRef, useState } from 'react';
 import ManaStat from './ManaStat';
-import Modal from './Modal';
 import type { Theme } from '../types/store';
 import ManaProgressLogo from './ManaProgressLogo';
+import ActionSheet, { SheetManager, SheetProps, registerSheet } from 'react-native-actions-sheet';
 
 export default () => {
     const FIVE_DAYS = 432e6; // 5 * 24 * 60 * 60 * 1000
 
-    const i18n = useI18n();
-    const manaState = useHookstate(ManaStore);
-    const modalState = useHookstate(false);
-    const currentPercent = useHookstate(0);
-    const currentMana = useHookstate(-1);
-    const timeRecharge = useHookstate(0);
+    const manaState = useMana();
+    const [currentPercent, setCurrentPercent] = useState(0);
+    const [currentMana, setCurrentMana] = useState(-1);
+    const [timeRecharge, setTimeRecharge] = useState(0);
 
-    const koinContractId = useCurrentKoin().get();
-    const address = useCurrentAddress().get();
-    const networkId = useCurrentNetworkId().get();
-    const koinBalanceState = useHookstate(UserStore.accounts[address].assets[networkId].coins[koinContractId].balance);
-    const koinBalance = koinBalanceState.get() ?? 0;
+    const koinContractId = useCurrentKoin();
+    const koinBalance = useCoinBalance(koinContractId) ?? 0;
 
     const update = (manaBalance: number, koinBalance: number) => {
-        currentMana.set(manaBalance);
+        setCurrentMana(manaBalance);
         if (koinBalance > 0) {
-            currentPercent.set(Math.round(((manaBalance * 100) / koinBalance) * 100) / 100);
+            setCurrentPercent(Math.round(((manaBalance * 100) / koinBalance) * 100) / 100);
         }
     }
 
     const intervalId: { current: NodeJS.Timeout | null } = useRef(null);
     const updateInterval = () => {
-        const lastUpdateMana = ManaStore.lastUpdateMana.get();
-        const initialMana = ManaStore.mana.get();
+        const lastUpdateMana = manaState.lastUpdateMana;
+        const initialMana = manaState.mana;
         const delta = Math.min(Date.now() - lastUpdateMana, FIVE_DAYS);
         let m = initialMana + (delta * koinBalance) / FIVE_DAYS;
         m = Math.min(m, koinBalance);
-        timeRecharge.set(((koinBalance - m) * FIVE_DAYS) / koinBalance);
+        setTimeRecharge(((koinBalance - m) * FIVE_DAYS) / koinBalance);
         const manaBalance = Number(m.toFixed(8));
         update(manaBalance, koinBalance);
     }
 
     useEffect(() => {
-        update(manaState.mana.get(), koinBalance);
+        update(manaState.mana, koinBalance);
         intervalId.current = setInterval(() => {
             updateInterval();
         }, 3000);
@@ -54,33 +47,52 @@ export default () => {
                 clearInterval(intervalId.current);
             }
         }
-    }, [manaState, koinBalanceState]);
+    }, [manaState, koinBalance]);
 
     const theme = useTheme();
     const styles = createStyles(theme);
 
     return (
         <View>
-            <Modal title={i18n.t('mana_recharge')} openState={modalState}>
-                <ManaStat
-                    balance={currentMana.get()}
-                    percent={currentPercent.get()}
-                    timeRecharge={timeRecharge.get()}
-                />
-            </Modal>
-
-            <TouchableHighlight onPress={() => modalState.set(true)}>
+            <TouchableOpacity onPress={() => 
+                SheetManager.show('mana', {
+                    payload: {
+                        currentMana,
+                        currentPercent,
+                        timeRecharge
+                    }
+                })
+            }>
                 <View style={styles.container}>
                     <ManaProgressLogo
                         size={55}
                         strokeWidth={3}
-                        progressPercent={currentPercent.get()}
+                        progressPercent={currentPercent}
                     />
                 </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
         </View>
     );
 }
+
+const ActionSheetMana = (props: SheetProps<{currentMana: number, currentPercent: number, timeRecharge: number}>) => {
+    const theme = useTheme();
+
+    return (
+        <ActionSheet
+            id={props.sheetId}
+            containerStyle={{ ...theme.styles.paddingBase, ...theme.styles.rowGapMedium }}
+        >
+            <ManaStat
+                balance={props.payload?.currentMana ?? 0}
+                percent={props.payload?.currentPercent ?? 0}
+                timeRecharge={props.payload?.timeRecharge ?? 0}
+            />
+        </ActionSheet>
+    );
+}
+registerSheet('mana', ActionSheetMana);
+
 
 const createStyles = (theme: Theme) => {
     const { Color } = theme.vars;

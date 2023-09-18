@@ -2,8 +2,7 @@ import { Button, Text, AccountAvatar } from "../components"
 import { ScrollView, View, Image, StyleSheet } from "react-native";
 import { walletConnectAcceptProposal, logError, walletConnectRejectProposal, showToast } from "../actions";
 import { useAccount, useCurrentAddress, useCurrentNetworkId, useI18n, useNetwork, useTheme } from "../hooks";
-import { useHookstate } from "@hookstate/core";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { checkWCMethod, checkWCNetwork, getNetworkByChainId } from "../lib/WalletConnect";
 import { Feather } from '@expo/vector-icons';
 import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-sheet";
@@ -11,16 +10,16 @@ import type { Theme } from "../types/store";
 
 export default (props: SheetProps) => {
     const currentAddress = useCurrentAddress();
-    const account = useAccount(currentAddress.get());
-    const currentNetworkId = useCurrentNetworkId().get();
-    const currentNetwork = useNetwork(currentNetworkId).get();
+    const account = useAccount(currentAddress);
+    const currentNetworkId = useCurrentNetworkId();
+    const currentNetwork = useNetwork(currentNetworkId);
     const proposal = props.payload.proposal;
     const theme = useTheme();
     const styles = createStyles(theme);
     const { Color } = theme.vars;
     const i18n = useI18n();
-    const checkMethods = useHookstate(true);
-    const checkNetwork = useHookstate(true);
+    const [checkMethods, setCheckMethods] = useState(true);
+    const [checkNetwork, setCheckNetwork] = useState(true);
 
     //data
     const name = proposal?.params?.proposer?.metadata?.name;
@@ -35,14 +34,14 @@ export default (props: SheetProps) => {
     const _checkMethods = () => {
         for (const method of methods) {
             if (!checkWCMethod(method)) {
-                checkMethods.set(false);
+                setCheckMethods(false);
             }
         }
     }
 
     const _checkNetwork = () => {
         if (!checkWCNetwork(chains[0])) {
-            checkNetwork.set(false);
+            setCheckNetwork(false);
         }
     }
 
@@ -81,10 +80,13 @@ export default (props: SheetProps) => {
         <ActionSheet id={props.sheetId} containerStyle={styles.container} closeOnTouchBackdrop={false}>
             <ScrollView contentContainerStyle={{ ...styles.paddingMedium, ...styles.rowGapMedium }}>
 
-                <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
-                    <AccountAvatar size={24} address={account.address} />
-                    <Text>{account.name}</Text>
-                </View>
+                {
+                    account !== undefined &&
+                    <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
+                        <AccountAvatar size={24} address={account.address} />
+                        <Text>{account.name}</Text>
+                    </View>
+                }
 
                 {
                     icons.length > 0 && !icons[0].includes('.svg') &&
@@ -127,7 +129,7 @@ export default (props: SheetProps) => {
                     methods &&
                     <View>
                         <Text style={styles.textSmall}>{i18n.t('dapp_method')}</Text>
-                        {methods.map((method : string) =>
+                        {methods.map((method: string) =>
                             <View key={method}>
                                 {
                                     checkWCMethod(method) &&
@@ -145,16 +147,16 @@ export default (props: SheetProps) => {
             </ScrollView>
 
             {
-                checkMethods.get() === false &&
+                checkMethods === false &&
                 <View style={{ ...styles.paddingBase, ...styles.columnGapBase, ...styles.alignCenterColumn }}>
                     <Text style={{ ...styles.textError, ...styles.textCenter }}>{i18n.t('unsupported_methods')}</Text>
                 </View>
             }
 
             {
-                checkNetwork.get() === false &&
+                checkNetwork === false &&
                 <View style={{ ...styles.paddingBase, ...styles.columnGapBase, ...styles.alignCenterColumn }}>
-                    <Text style={{ ...styles.textError, ...styles.textCenter }}>{i18n.t('misaligned_network', { currentNetwork: currentNetwork.name, requiredNetwork: requiredNetworkName })}</Text>
+                    <Text style={{ ...styles.textError, ...styles.textCenter }}>{i18n.t('misaligned_network', { currentNetwork: currentNetwork?.name, requiredNetwork: requiredNetworkName })}</Text>
                 </View>
             }
 
@@ -166,8 +168,8 @@ export default (props: SheetProps) => {
                     icon={(<Feather name="x" />)}
                 />
                 {
-                    checkMethods.get() === true &&
-                    checkNetwork.get() === true &&
+                    checkMethods === true &&
+                    checkNetwork === true &&
                     <Button
                         style={styles.flex1}
                         onPress={() => accept()}

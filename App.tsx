@@ -71,7 +71,7 @@ const Main = () => {
     return <Loading />;
   }
 
-  if (currentAddress.get() === '') {
+  if (currentAddress === '') {
     return <Intro />;
   }
 

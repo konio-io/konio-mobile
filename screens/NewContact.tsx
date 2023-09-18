@@ -1,4 +1,3 @@
-import { useHookstate } from '@hookstate/core';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NewContactNavigationProp, NewContactRouteProp } from '../types/navigation';
 import { addContact, refreshKap, showToast } from '../actions';
@@ -9,25 +8,26 @@ import { Alert, View } from 'react-native';
 import { useTheme } from '../hooks';
 import { utils } from 'koilib';
 import { isASCIIString } from '../lib/utils';
+import { useState } from 'react';
 
 export default () => {
     const navigation = useNavigation<NewContactNavigationProp>();
     const route = useRoute<NewContactRouteProp>();
-    const address = useHookstate(route.params.address ?? '');
-    const name = useHookstate('');
+    const [address, setAddress] = useState(route.params.address ?? '');
+    const [name, setName] = useState('');
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
-    const addressLoading = useHookstate(false);
-    const kapAddress = useKapName(address.get());
-    const kapName = useKapAddress(address.get());
+    const [addressLoading, setaAddressLoading] = useState(false);
+    const kapAddress = useKapName(address);
+    const kapName = useKapAddress(address);
 
     const add = () => {
-        const addr = address.get().includes('.') ? 
+        const addr = address.includes('.') ? 
             kapAddress :
             address;
 
-        if (!addr.get()) {
+        if (!addr) {
             showToast({
                 type: 'error',
                 text1: i18n.t('missing_address')
@@ -35,7 +35,7 @@ export default () => {
             return;
         }
 
-        if (!name.get()) {
+        if (!name) {
             showToast({
                 type: 'error',
                 text1: i18n.t('missing_name')
@@ -44,7 +44,7 @@ export default () => {
         }
 
         try {
-            const check = utils.isChecksumAddress(addr.get());
+            const check = utils.isChecksumAddress(addr);
             if (!check) {
                 throw "Invalid address";
             }
@@ -57,18 +57,18 @@ export default () => {
         }
 
         addContact({
-            address: addr.get(),
-            name: name.get()
+            address: addr,
+            name: name
         });
 
         navigation.navigate("WithdrawAsset", {
-            to: addr.get()
+            to: addr
         })
     };
 
     const onAddressStopWriting = () => {
-        if (address.get()) {
-            if (!isASCIIString(address.get())) {
+        if (address) {
+            if (!isASCIIString(address)) {
                 Alert.alert(i18n.t('warning'), i18n.t('homograph_attack_warning'), [
                     { text: i18n.t('ok'), onPress: loadKap },
                 ]);
@@ -79,13 +79,13 @@ export default () => {
     };
 
     const loadKap = async () => {
-        addressLoading.set(true);
+        setaAddressLoading(true);
         try {
-            await refreshKap(address.get());
-            addressLoading.set(false);
+            await refreshKap(address);
         } catch (e) {
-            addressLoading.set(false);
         }
+
+        setaAddressLoading(false);
     };
 
     return (
@@ -95,19 +95,19 @@ export default () => {
                 <View style={styles.rowGapSmall}>
                     <TextInput
                         autoFocus={true}
-                        value={name.get()}
-                        onChangeText={(v: string) => name.set(v.trim())}
+                        value={name}
+                        onChangeText={(v: string) => setName(v.trim())}
                         placeholder={i18n.t('name')}
                     />
                 </View>
                 <View style={styles.rowGapSmall}>
                     <TextInput
-                        value={address.get()}
-                        onChangeText={(v: string) => address.set(v.trim())}
+                        value={address}
+                        onChangeText={(v: string) => setAddress(v.trim())}
                         placeholder={i18n.t('address')}
-                        loading={addressLoading.get()}
+                        loading={addressLoading}
                         onStopWriting={onAddressStopWriting}
-                        note={kapName.get() || kapAddress.get()}
+                        note={kapName || kapAddress}
                     />
                 </View>
 

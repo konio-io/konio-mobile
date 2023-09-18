@@ -1,11 +1,11 @@
 import { Keyboard, View } from 'react-native';
-import { State, useHookstate } from '@hookstate/core';
 import { Text, Button, Wrapper, Screen, Seed } from '../components';
-import { addSeed, hideSpinner, logError, refreshCoins, setCurrentAccount, showSpinner, showToast } from '../actions';
+import { addSeed, hideSpinner, logError, setCurrentAccount, showSpinner, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
 import { NewWalletSeedConfirmRouteProp } from '../types/navigation';
 import { useTheme, useI18n } from '../hooks';
+import { useState } from 'react';
 
 export default () => {
     const route = useRoute<NewWalletSeedConfirmRouteProp>();
@@ -13,15 +13,6 @@ export default () => {
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();
-
-    const addWord = (list: State<Array<string>>, word: string) => {
-        list.merge([word]);
-    };
-
-    const removeWord = (list: State<Array<string>>, word: string) => {
-        const filteredList = list.get().filter(w => w !== word);
-        list.set(filteredList);
-    };
 
     const shuffleArray = (array: Array<string>) => {
         for (let i = array.length - 1; i > 0; i--) {
@@ -35,7 +26,7 @@ export default () => {
     const addWallet = () => {
         Keyboard.dismiss();
 
-        if (seed !== sortedWords.get().join(' ')) {
+        if (seed !== sortedWords.join(' ')) {
             showToast({
                 type: 'error',
                 text1: i18n.t('invalid_seed')
@@ -66,10 +57,10 @@ export default () => {
 
     const words = seed.split(' ');
     shuffleArray(words);
-    const unsortedWords = useHookstate(words);
+    const [unsortedWords, setUnsortedWords] = useState(words);
 
     const sortedWordsDefault: Array<string> = [];
-    const sortedWords = useHookstate(sortedWordsDefault);
+    const [sortedWords, setSortedWords] = useState(sortedWordsDefault);
 
     return (
         <Screen keyboardDismiss={true}>
@@ -77,15 +68,15 @@ export default () => {
                 <Text>{i18n.t('confirm_wallet_seed')}</Text>
 
                 <View style={styles.textInputContainer}>
-                    <Seed phrase={sortedWords.get().join(' ')} onWordClick={(word: string) => {
-                        removeWord(sortedWords, word);
-                        addWord(unsortedWords, word);
+                    <Seed phrase={sortedWords.join(' ')} onWordClick={(word: string) => {
+                        setSortedWords( sortedWords.filter(w => w !== word) )
+                        setUnsortedWords( [...unsortedWords, word] );
                     }} />
                 </View>
 
-                <Seed phrase={unsortedWords.get().join(' ')} onWordClick={(word: string) => {
-                    removeWord(unsortedWords, word);
-                    addWord(sortedWords, word);
+                <Seed phrase={unsortedWords.join(' ')} onWordClick={(word: string) => {
+                    setUnsortedWords( unsortedWords.filter(w => w !== word) );
+                    setSortedWords( [...sortedWords, word ] );
                 }} />
             </Wrapper>
 

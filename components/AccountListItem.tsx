@@ -17,7 +17,7 @@ export default (props: {
         <View style={styles.container}>
             <AccountAvatar size={36} address={props.address} />
             <View>
-                <Text>{account.name}</Text>
+                <Text>{account?.name}</Text>
                 <Address address={props.address} copiable={true}/>
             </View>
         </View>

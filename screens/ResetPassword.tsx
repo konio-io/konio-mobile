@@ -2,23 +2,23 @@ import { Text, TextInput, Button, Wrapper, Screen } from '../components';
 import { useNavigation } from '@react-navigation/native';
 import type { IntroNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
-import { useHookstate } from '@hookstate/core';
 import { setPassword, showToast } from '../actions';
 import { useCurrentSeed, useTheme, useI18n } from '../hooks';
 import { View } from 'react-native';
+import { useState } from 'react';
 
 export default () => {
     const navigation = useNavigation<IntroNavigationProp>();
-    const password = useHookstate('');
-    const passwordConfirm = useHookstate('');
-    const seed = useHookstate('');
+    const [password, setPwd] = useState('');
+    const [passwordConfirm, setPwdConfirm] = useState('');
+    const [seed, setSeed] = useState('');
     const currentSeed = useCurrentSeed();
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
 
     const savePassword = () => {
-        if (currentSeed.get() !== seed.get()) {
+        if (currentSeed !== seed) {
             showToast({
                 type: 'error',
                 text1: i18n.t('seed_not_match'),
@@ -26,7 +26,7 @@ export default () => {
             return;
         }
 
-        if ((!password.get())) {
+        if ((!password)) {
             showToast({
                 type: 'error',
                 text1: i18n.t('missing_password'),
@@ -34,7 +34,7 @@ export default () => {
             return;
         }
 
-        if ((password.get() !== passwordConfirm.get())) {
+        if ((password !== passwordConfirm)) {
             showToast({
                 type: 'error',
                 text1: i18n.t('password_not_match'),
@@ -42,7 +42,7 @@ export default () => {
             return;
         }
 
-        setPassword(password.get());
+        setPassword(password);
         showToast({
             type: 'success',
             text1: i18n.t('password_set'),
@@ -60,21 +60,21 @@ export default () => {
                     autoFocus={true}
                     multiline={true}
                     numberOfLines={4}
-                    value={seed.get()}
+                    value={seed}
                     placeholder={i18n.t('seed_phrase')}
-                    onChangeText={(text: string) => seed.set(text.toLowerCase())}
+                    onChangeText={(text: string) => setSeed(text.toLowerCase())}
                 />
 
                 <TextInput
-                    value={password.get()}
-                    onChangeText={(v: string) => password.set(v.trim())}
+                    value={password}
+                    onChangeText={(v: string) => setPwd(v.trim())}
                     placeholder={i18n.t('password')}
                     secureTextEntry={true}
                 />
 
                 <TextInput
-                    value={passwordConfirm.get()}
-                    onChangeText={(v: string) => passwordConfirm.set(v.trim())}
+                    value={passwordConfirm}
+                    onChangeText={(v: string) => setPwdConfirm(v.trim())}
                     placeholder={i18n.t('confirm_password')}
                     secureTextEntry={true}
                 />

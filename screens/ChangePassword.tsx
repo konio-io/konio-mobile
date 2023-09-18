@@ -1,18 +1,17 @@
 import { Wrapper, Screen, Button, TextInput } from "../components"
 import { useI18n, useTheme } from "../hooks"
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 import { UnlockNavigationProp } from "../types/navigation";
-import { useHookstate } from "@hookstate/core";
 import { lock, setPassword, showToast } from "../actions";
 import { View } from "react-native";
 
 export default () => {
     const navigation = useNavigation<UnlockNavigationProp>();
     const i18n = useI18n();
-    const password = useHookstate('');
-    const passwordConfirm = useHookstate('');
+    const [password, setPwd] = useState('');
+    const [passwordConfirm, setPwdConfirm] = useState('');
     const theme = useTheme();
     const styles = theme.styles;
 
@@ -21,7 +20,7 @@ export default () => {
     }, []);
 
     const savePassword = () => {
-        if ((!password.get())) {
+        if ((!password)) {
             showToast({
                 type: 'error',
                 text1: i18n.t('missing_password'),
@@ -29,7 +28,7 @@ export default () => {
             return;
         }
 
-        if ((password.get() !== passwordConfirm.get())) {
+        if ((password !== passwordConfirm)) {
             showToast({
                 type: 'error',
                 text1: i18n.t('password_not_match'),
@@ -37,7 +36,7 @@ export default () => {
             return;
         }
 
-        setPassword(password.get());
+        setPassword(password);
         showToast({
             type: 'success',
             text1: i18n.t('password_set'),
@@ -50,15 +49,15 @@ export default () => {
             <Wrapper>
                 <TextInput
                     autoFocus={true}
-                    value={password.get()}
-                    onChangeText={(v: string) => password.set(v.trim())}
+                    value={password}
+                    onChangeText={(v: string) => setPwd(v.trim())}
                     placeholder={i18n.t('password')}
                     secureTextEntry={true}
                 />
 
                 <TextInput
-                    value={passwordConfirm.get()}
-                    onChangeText={(v: string) => passwordConfirm.set(v.trim())}
+                    value={passwordConfirm}
+                    onChangeText={(v: string) => setPwdConfirm(v.trim())}
                     placeholder={i18n.t('confirm_password')}
                     secureTextEntry={true}
                 />

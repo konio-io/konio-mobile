@@ -3,7 +3,6 @@ import Text from './Text';
 import Button from "./Button";
 import { View, ScrollView } from "react-native";
 import { useAccount, useAccounts, useAddressbook, useContact, useCurrentAddress, useI18n, useTheme } from "../hooks";
-import { useHookstate } from "@hookstate/core";
 import ButtonCircle from "./ButtonCircle";
 import ListItemSelected from "./ListItemSelected";
 import AddressListItem from "./AddressListItem";
@@ -12,23 +11,24 @@ import { useNavigation } from "@react-navigation/native";
 import TextInput from "./TextInput";
 import TextInputActionPaste from "./TextInputActionPaste";
 import { WithdrawAssetNavigationProp } from "../types/navigation";
+import { useState } from "react";
 
 export default (props: SheetProps<{ selected: string }>) => {
 
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
-    const address = useHookstate(props.payload?.selected ?? '');
+    const [address, setAddress] = useState(props.payload?.selected ?? '');
 
     const _close = () => {
         SheetManager.hide(props.sheetId);
     }
 
     const _confirm = () => {
-        if (address.get()) {
+        if (address) {
             SheetManager.hide(props.sheetId, {
                 payload: {
-                    address: address.get()
+                    address
                 }
             });
         }
@@ -43,21 +43,21 @@ export default (props: SheetProps<{ selected: string }>) => {
             <ScrollView>
                 <TextInput
                     multiline={true}
-                    value={address.get()}
-                    onChangeText={(v: string) => address.set(v)}
+                    value={address}
+                    onChangeText={(v: string) => setAddress(v)}
                     actions={(
-                        <TextInputActionPaste state={address} />
+                        <TextInputActionPaste onPaste={(addr: string) => setAddress(addr)} />
                     )}
                 />
 
-                <AccountList onPressItem={(addr: string) => address.set(addr)} selected={address.get()} />
+                <AccountList onPressItem={(addr: string) => setAddress(addr)} selected={address} />
 
                 <View style={styles.paddingVerticalBase}>
                     <View style={styles.paddingHorizontalBase}>
                         <Text style={styles.sectionTitle}>{i18n.t('addressbook')}</Text>
                     </View>
 
-                    <Addressbook onPressItem={(addr: string) => address.set(addr)} selected={address.get()} />
+                    <Addressbook onPressItem={(addr: string) => setAddress(addr)} selected={address} />
                 </View>
             </ScrollView>
 
@@ -75,13 +75,13 @@ const AccountList = (props: {
     selected: string
 }) => {
     const currentAddress = useCurrentAddress();
-    const accounts = useAccounts().get();
+    const accounts = useAccounts();
     const { styles } = useTheme();
     const i18n = useI18n();
-    const result = Object.values(accounts)
+    const result = accounts
         .sort((a, b) => a.name > b.name ? 1 : -1)
         .map(t => t.address)
-        .filter(address => address !== currentAddress.get());
+        .filter(address => address !== currentAddress);
 
     const data = [...new Set(result)];
 
@@ -108,11 +108,11 @@ const Addressbook = (props: {
     const styles = theme.styles;
     const navigation = useNavigation<WithdrawAssetNavigationProp>();
     const currentAddress = useCurrentAddress();
-    const addressBook = useAddressbook().get();
-    const result = Object.values(addressBook)
+    const addressBook = useAddressbook();
+    const result = addressBook
         .sort((a, b) => a.name > b.name ? 1 : -1)
         .map(t => t.address)
-        .filter(address => address !== currentAddress.get());
+        .filter(address => address !== currentAddress);
 
     const data = [...new Set(result)];
 
@@ -149,8 +149,8 @@ const ToListItem = (props: {
     if (account) {
         name = account.name;
     }
-    else if (contact.get()) {
-        name = contact.name.get();
+    else if (contact) {
+        name = contact.name;
     }
 
     return (

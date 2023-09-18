@@ -1,19 +1,56 @@
-import { useNft, useNftCollection, useTheme } from "../hooks";
+import { useCurrentAddressState, useCurrentNetworkId, useCurrentNetworkIdState, useI18n, useNft, useNftCollection, useTheme } from "../hooks";
+import { View, TouchableWithoutFeedback, Image } from "react-native";
 import Text from './Text';
 import { SheetManager } from "react-native-actions-sheet";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import TextInputContainer from "./TextInputContainer";
-import { Image, View } from 'react-native';
+import { useHookstate } from "@hookstate/core";
+import { selectCurrentAddress, selectCurrentNetworkId, selectNft } from "../selectors";
+import { NFT } from "../types/store";
 
 export default (props: {
     value?: {
-        contractId: string,
         tokenId: string,
-    },
+        contractId: string
+    }
     onChange?: Function
     opened?: boolean
 }) => {
+    const currentAddress = useCurrentAddressState()
+    const currentNetworkId = useCurrentNetworkIdState()
+    const [s, setS] = useState<any>();
+
+    useEffect(() => {
+        setS(
+            selectNft({
+                address: currentAddress.get({noproxy: true}),
+                networkId: currentNetworkId.get({noproxy: true}),
+                contractId: props.value?.contractId ?? '',
+                tokenId: props.value?.tokenId ?? ''
+            })
+        )
+
+    }, [currentAddress, currentNetworkId])
+
+    return (
+        <View>
+            <Text>{props.value?.tokenId}</Text>
+        </View>
+    )
+}
+
+/*
+export default (props: {
+    value?: {
+        tokenId: string,
+        contractId: string
+    }
+    onChange?: Function
+    opened?: boolean
+}) => {
+
+    const i18n = useI18n();
+
     useEffect(() => {
         if (props.opened == true) {
             _select();
@@ -21,30 +58,36 @@ export default (props: {
     }, [props.opened])
 
     const _select = async () => {
-        const value: any = await SheetManager.show("asset_nft", {
-            payload: props.value,
+        const data: any = await SheetManager.show("asset_nft", {
+            payload: {
+                contractId: props.value
+            },
         });
 
-        if (value?.tokenId && value?.contractId) {
-            if (props.onChange) {
-                props.onChange(value);
-            }
+        if (data?.contractId && data?.tokenId && props.onChange) {
+            props.onChange({
+                contractId: data.contractId,
+                tokenId: data.tokenId
+            });
         }
     }
 
     return (
-        <TextInputContainer>
-            <TouchableWithoutFeedback
-                onPress={() => _select()}
-                style={{ minHeight: 60 }}
-                containerStyle={{ flexGrow: 1 }}
-            >
-                {
-                    props.value &&
-                    <Nft nft={props.value} />
-                }
-            </TouchableWithoutFeedback>
-        </TextInputContainer>
+        <TouchableWithoutFeedback
+            onPress={() => _select()}
+            style={{ minHeight: 60 }}
+        >
+            <View>
+                <TextInputContainer note={i18n.t('NFT')}>
+                    <View>
+                        {
+                            props.value !== undefined &&
+                            <Nft nft={props.value} />
+                        }
+                    </View>
+                </TextInputContainer>
+            </View>
+        </TouchableWithoutFeedback>
     );
 }
 
@@ -55,17 +98,16 @@ const Nft = (props: {
     }
 }) => {
     const { contractId, tokenId } = props.nft;
-    const collection = useNftCollection(contractId);
-    const nft = useNft({ contractId, tokenId });
     const theme = useTheme();
     const styles = theme.styles;
     const { Border } = theme.vars;
+    const collection = useNftCollection(contractId);
+    const nft = useNft({
+        contractId,
+        tokenId
+    });
 
-    if (!collection) {
-        return <></>;
-    }
-
-    if (!nft) {
+    if (!collection || !nft) {
         return <></>;
     }
 
@@ -87,3 +129,4 @@ const Nft = (props: {
         </View>
     );
 }
+*/

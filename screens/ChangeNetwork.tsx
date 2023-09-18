@@ -16,7 +16,7 @@ export default () => {
   return (
     <Screen>
       <FlatList
-        data={Object.values(networks.get())}
+        data={networks}
         renderItem={({ item }) => <ListItem network={item} />}
         ListFooterComponent={(<Footer />)}
       />
@@ -27,7 +27,7 @@ export default () => {
 export const ListItem = (props: {
   network: ImmutableObject<Network>
 }) => {
-  const currentNetworkId = useCurrentNetworkId().get();
+  const currentNetworkId = useCurrentNetworkId();
   const theme = useTheme();
   const styles = theme.styles;
   const { network } = props;
