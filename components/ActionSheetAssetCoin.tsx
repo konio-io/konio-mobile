@@ -6,7 +6,7 @@ import { useCoins, useI18n, useTheme } from "../hooks";
 import CoinListItem from "./CoinListItem";
 import { useState } from "react";
 
-export default (props: SheetProps<{ 
+export default (props: SheetProps<{
     contractId?: string
 }>) => {
     const [contractId, setContractId] = useState(props.payload?.contractId);
@@ -15,10 +15,6 @@ export default (props: SheetProps<{
     const styles = theme.styles;
     const coins = useCoins();
     const { Spacing } = theme.vars;
-
-    const _close = () => {
-        SheetManager.hide(props.sheetId);
-    }
 
     const _confirm = () => {
         if (contractId) {
@@ -32,7 +28,6 @@ export default (props: SheetProps<{
     return (
         <ActionSheet
             id={props.sheetId}
-            closeOnTouchBackdrop={false}
             containerStyle={{ ...theme.styles.paddingBase, ...theme.styles.rowGapMedium }}
         >
             {
@@ -58,14 +53,10 @@ export default (props: SheetProps<{
                 />
             }
 
-            <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
-                <Button style={{ flex: 1 }} onPress={() => _close()} type="secondary" title={i18n.t('cancel')} />
-
-                {
-                    coins.length > 0 &&
-                    <Button style={{ flex: 1 }} title={i18n.t('confirm')} onPress={() => _confirm()} />
-                }
-            </View>
+            {
+                coins.length > 0 &&
+                <Button title={i18n.t('confirm')} onPress={() => _confirm()} />
+            }
         </ActionSheet>
     );
 }

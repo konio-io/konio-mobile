@@ -37,7 +37,6 @@ export default (props: SheetProps<{ selected: string }>) => {
     return (
         <ActionSheet
             id={props.sheetId}
-            closeOnTouchBackdrop={false}
             containerStyle={{ ...styles.paddingBase, ...styles.rowGapMedium }}
         >
             <ScrollView>
@@ -61,10 +60,7 @@ export default (props: SheetProps<{ selected: string }>) => {
                 </View>
             </ScrollView>
 
-            <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
-                <Button style={{ flex: 1 }} onPress={() => _close()} type="secondary" title={i18n.t('cancel')} />
-                <Button style={{ flex: 1 }} title={i18n.t('confirm')} onPress={() => _confirm()}/>
-            </View>
+            <Button title={i18n.t('confirm')} onPress={() => _confirm()}/>
 
         </ActionSheet>
     );

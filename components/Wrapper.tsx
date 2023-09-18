@@ -25,12 +25,13 @@ const createStyles = (theme: Theme) => {
         ...theme.styles,
         main: {
             width: 300,
-            rowGap: Spacing.medium
+            rowGap: Spacing.medium,
         },
         wrapperCentered: {
             alignItems: 'center', 
             justifyContent: 'center',
-            backgroundColor: Color.base
+            backgroundColor: Color.base,
+            flex: 1
         }
     })
 }

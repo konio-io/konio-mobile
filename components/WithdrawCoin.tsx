@@ -35,7 +35,7 @@ export default (props: {
     }, [lockState]);
 
     const _reset = () => {
-        //setAmount(undefined);
+        setAmount(0);
         setContractId(undefined);
         setTo(undefined);
     };
@@ -129,17 +129,14 @@ export default (props: {
                     onChange={(value: string) => setTo(value)}
                 />
 
-                {
-                    to &&
-                    <AssetCoinInput
-                        value={contractId}
-                        onChange={(value: string) => setContractId(value)}
-                        opened={to ? true : false}
-                    />
-                }
+                <AssetCoinInput
+                    value={contractId}
+                    onChange={(value: string) => setContractId(value)}
+                    opened={to !== undefined && contractId === undefined ? true : false}
+                />
 
                 {
-                    contractId &&
+                    contractId !== undefined &&
                     <AmountInput
                         contractId={contractId}
                         value={amount}

@@ -167,14 +167,14 @@ export const useNft = (args: {contractId: string, tokenId: string}) => {
     const { contractId, tokenId } = args;
     const currentAddress = useHookstate( selectCurrentAddress() );
     const currentNetworkId = useHookstate( selectCurrentNetworkId() );
-    const nft = useHookstate(
+    const nft = 
         selectNft({
             address: currentAddress.get(),
             networkId: currentNetworkId.get(),
             contractId,
             tokenId
         })
-    )
+    
 
     const [value, setValue] = useState<NFT|undefined>(undefined);
 
@@ -268,7 +268,7 @@ export const useAppState = () => {
 }
 
 export const useWC = () => {
-    return useHookstate(WCStore).get();
+    return useHookstate(WCStore).get({noproxy: true});
 }
 
 export const useLogs = () => {

@@ -16,7 +16,7 @@ export default () => {
   const theme = useTheme();
   const styles = theme.styles;
 
-  const add = () => {
+  const add = async () => {
     Keyboard.dismiss();
 
     if (!contractId) {
@@ -37,27 +37,24 @@ export default () => {
 
     showSpinner();
 
-    addNftCollection(contractId)
-    .then(nftCollection => {
-        addNft({
-          contractId: contractId,
-          tokenId: tokenId
-        })
-        .then(nft => {
-          hideSpinner();
-          navigation.goBack();
-          askReview();
-        });
-    })
-    .catch(e => {
+    try {
+      await addNftCollection(contractId);
+      await addNft({
+        contractId: contractId,
+        tokenId: tokenId
+      });
       hideSpinner();
-      logError(e);
+      navigation.goBack();
+      askReview();
+    } catch (e) {
+      hideSpinner();
+      logError(String(e));
       showToast({
         type: 'error',
         text1: i18n.t('unable_to_add_nft'),
         text2: i18n.t('check_contract')
       });
-    });
+    }
   };
 
   return (

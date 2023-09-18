@@ -37,6 +37,7 @@ export default (props: SheetProps<{ contractId: string, tokenId?: string }>) => 
     return (
         <ActionSheet
             id={props.sheetId}
+            closable={false}
             closeOnTouchBackdrop={false}
             containerStyle={{ ...theme.styles.paddingBase, ...theme.styles.rowGapMedium }}
         >
@@ -73,14 +74,10 @@ export default (props: SheetProps<{ contractId: string, tokenId?: string }>) => 
                 </ScrollView>
             }
 
-            <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
-                <Button style={{flex: 1}} onPress={() => _close()} type="secondary" title={i18n.t('cancel')} />
-
-                {
-                    data.length > 0 &&
-                    <Button style={{flex: 1}} title={i18n.t('confirm')} onPress={() => _confirm()} />
-                }
-            </View>
+            {
+                data.length > 0 &&
+                <Button title={i18n.t('confirm')} onPress={() => _confirm()} />
+            }
 
         </ActionSheet>
     );

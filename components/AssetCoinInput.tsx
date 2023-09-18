@@ -39,7 +39,7 @@ export default (props: {
         >
             <View>
                 <TextInputContainer note={i18n.t('coin')}>
-                    <View>
+                    <View style={{minHeight: 60}}>
                         {
                             props.value !== undefined &&
                             <Coin contractId={props.value} />

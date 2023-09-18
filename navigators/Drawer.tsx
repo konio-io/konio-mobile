@@ -6,7 +6,7 @@ import {
 } from '@react-navigation/drawer';
 import { useCurrentAddress, useI18n, useTheme, useAccounts, useLockState, useAppState, useAutolock, useWC, useAccount } from '../hooks';
 import { AccountAvatar, Logo, Separator, Link, Address, WcLogo } from '../components';
-import { logError, refreshCoins, refreshMana, refreshWCActiveSessions, setCurrentAccount, setWCPendingProposal, setWCPendingRequest, showToast, walletConnectAcceptRequest, walletConnectInit, walletConnectPair } from '../actions';
+import { logError, refreshCoins, refreshMana, refreshWCActiveSessions, setCurrentAccount, setWCPendingProposal, setWCPendingRequest, showToast, unsetWCPendingProposal, unsetWCPendingRequest, walletConnectAcceptRequest, walletConnectInit, walletConnectPair } from '../actions';
 import Root from './Root';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import type { Theme } from '../types/store';
@@ -85,18 +85,19 @@ export default () => {
 
     //intercept wc_proposal
     useEffect(() => {
-        if (lock.get() === true) {
+        const pendingProposal = WC.pendingProposal;
+        if (!pendingProposal) {
             return;
         }
 
-        const pendingProposal = WC.pendingProposal;
-        if (!pendingProposal) {
+        if (lock.get() === true) {
             return;
         }
 
         const proposal = Object.assign({}, pendingProposal);
 
         SheetManager.show('wc_proposal', { payload: { proposal } });
+        unsetWCPendingProposal();
     }, [lock, WC.pendingProposal]);
 
     //intercept wc_request
@@ -127,6 +128,7 @@ export default () => {
         }
 
         SheetManager.show('wc_request', { payload: { request } });
+        unsetWCPendingRequest();
     }, [lock, WC.pendingRequest]);
 
     //intercept walletconnect wallet/uri set

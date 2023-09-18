@@ -1,12 +1,9 @@
-import { useCurrentAddressState, useCurrentNetworkId, useCurrentNetworkIdState, useI18n, useNft, useNftCollection, useTheme } from "../hooks";
+import { useNft, useNftCollection, useTheme } from "../hooks";
 import { View, TouchableWithoutFeedback, Image } from "react-native";
 import Text from './Text';
 import { SheetManager } from "react-native-actions-sheet";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import TextInputContainer from "./TextInputContainer";
-import { useHookstate } from "@hookstate/core";
-import { selectCurrentAddress, selectCurrentNetworkId, selectNft } from "../selectors";
-import { NFT } from "../types/store";
 
 export default (props: {
     value?: {
@@ -16,40 +13,6 @@ export default (props: {
     onChange?: Function
     opened?: boolean
 }) => {
-    const currentAddress = useCurrentAddressState()
-    const currentNetworkId = useCurrentNetworkIdState()
-    const [s, setS] = useState<any>();
-
-    useEffect(() => {
-        setS(
-            selectNft({
-                address: currentAddress.get({noproxy: true}),
-                networkId: currentNetworkId.get({noproxy: true}),
-                contractId: props.value?.contractId ?? '',
-                tokenId: props.value?.tokenId ?? ''
-            })
-        )
-
-    }, [currentAddress, currentNetworkId])
-
-    return (
-        <View>
-            <Text>{props.value?.tokenId}</Text>
-        </View>
-    )
-}
-
-/*
-export default (props: {
-    value?: {
-        tokenId: string,
-        contractId: string
-    }
-    onChange?: Function
-    opened?: boolean
-}) => {
-
-    const i18n = useI18n();
 
     useEffect(() => {
         if (props.opened == true) {
@@ -59,9 +22,7 @@ export default (props: {
 
     const _select = async () => {
         const data: any = await SheetManager.show("asset_nft", {
-            payload: {
-                contractId: props.value
-            },
+            payload: props.value,
         });
 
         if (data?.contractId && data?.tokenId && props.onChange) {
@@ -78,7 +39,7 @@ export default (props: {
             style={{ minHeight: 60 }}
         >
             <View>
-                <TextInputContainer note={i18n.t('NFT')}>
+                <TextInputContainer note={'NFT'}>
                     <View>
                         {
                             props.value !== undefined &&
@@ -129,4 +90,3 @@ const Nft = (props: {
         </View>
     );
 }
-*/

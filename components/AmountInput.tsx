@@ -27,7 +27,7 @@ export default (props: {
 
     useEffect(() => {
         if (props.opened === true) {
-            //_select();
+            _select();
         }
     }, [props.opened])
 
@@ -45,18 +45,21 @@ export default (props: {
     }
 
     return (
-        <TextInputContainer note={i18n.t('amount')}>
-            <TouchableWithoutFeedback
-                onPress={() => _select()}
-                style={{ minHeight: 60 }}
-                containerStyle={{ flexGrow: 1 }}
-            >
-                <View>
-                    <Text style={{...styles.textMedium, ...styles.textBold}}>{props.value}</Text>
-                    <Text>~ {usd.toFixed(2)} USD</Text>
-                </View>
-            </TouchableWithoutFeedback>
-        </TextInputContainer>
+        <TouchableWithoutFeedback
+            onPress={() => _select()}
+            style={{ minHeight: 60 }}
+        >
+            <View>
+                <TextInputContainer note={i18n.t('amount')}>
+
+                    <View style={{minHeight: 60}}>
+                        <Text style={{ ...styles.textMedium, ...styles.textBold }}>{props.value}</Text>
+                        <Text>~ {usd.toFixed(2)} USD</Text>
+                    </View>
+
+                </TextInputContainer>
+            </View>
+        </TouchableWithoutFeedback>
     )
 }
 
@@ -95,16 +98,16 @@ const ActionSheetAmount = (props: SheetProps<{ amount: number, contractId: strin
     const { Color } = theme.vars;
     const coin = useCoin(props.payload?.contractId ?? '');
     const [amount, setAmount] = useState(props.payload?.amount.toString() ?? '');
-    const [amountUsd, setAmountUsd] = useState('');
+    const [amountUsd, setAmountUsd] = useState(0);
 
     useEffect(() => {
         if (amount) {
             const v = (price * parseFloat(amount));
             if (!isNaN(v)) {
-                setAmountUsd(v.toString());
+                setAmountUsd(v);
             }
         } else {
-            setAmountUsd('');
+            setAmountUsd(0);
         }
     }, [amount]);
 
@@ -137,14 +140,9 @@ const ActionSheetAmount = (props: SheetProps<{ amount: number, contractId: strin
         }
     }
 
-    const _close = () => {
-        SheetManager.hide(props.sheetId);
-    }
-
     return (
         <ActionSheet
             id={props.sheetId}
-            closeOnTouchBackdrop={false}
             containerStyle={{ ...theme.styles.paddingBase, ...theme.styles.rowGapMedium }}
         >
             <View style={styles.rowGapSmall}>
@@ -172,17 +170,14 @@ const ActionSheetAmount = (props: SheetProps<{ amount: number, contractId: strin
                 />
 
                 <View style={{ ...styles.alignCenterColumn, height: 20 }}>
-                    {amountUsd &&
-                        <Text style={amountUsdStyle}>{amountUsd} USD</Text>
+                    {amountUsd !== undefined &&
+                        <Text style={amountUsdStyle}>{amountUsd.toFixed(2)} USD</Text>
                     }
                 </View>
             </View>
 
-            <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
-                <Button style={{flex: 1}} onPress={() => _close()} type="secondary" title={i18n.t('cancel')} />
-                <Button style={{flex: 1}} title={i18n.t('confirm')} onPress={() => _confirm()}/>
-            </View>
-            
+            <Button style={{ flex: 1 }} title={i18n.t('confirm')} onPress={() => _confirm()} />
+
         </ActionSheet>
     );
 }

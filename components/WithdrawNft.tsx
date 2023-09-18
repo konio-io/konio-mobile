@@ -37,7 +37,7 @@ export default (props: {
 
     const _reset = () => {
         setTo(undefined);
-        //setNft(undefined);
+        setNft(undefined);
     }
 
     const _confirm = () => {
@@ -103,21 +103,17 @@ export default (props: {
                     onChange={(address: string) => setTo(address)}
                 />
          
+
                     <AssetNftInput
                         value={nft}
                         onChange={(value: any) => setNft({
                             tokenId: value.tokenId,
                             contractId: value.contractId
                         })}
-                        opened={!nft}
+                        opened={to !== undefined}
                     />
                 
             </ScrollView>
-
-            <Button title="test" onPress={() => setNft({
-                tokenId: '0x31',
-                contractId: '1LqAs29cya7jGcx5DFmDdpMdZBseEBzoU1'
-            })}/>
 
             {
                 to && nft &&

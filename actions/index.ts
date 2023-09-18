@@ -440,8 +440,6 @@ export const walletConnectAcceptProposal = async (sessionProposal: SignClientTyp
 
     const currentAddress = UserStore.currentAddress.get();
 
-    unsetWCPendingProposal();
-
     const { id, params } = sessionProposal;
     const { requiredNamespaces, relays } = params;
     const namespaces: SessionTypes.Namespaces = {};
@@ -465,7 +463,7 @@ export const walletConnectAcceptProposal = async (sessionProposal: SignClientTyp
         relayProtocol: relays[0].protocol,
         namespaces,
     });
-
+    
     refreshWCActiveSessions();
 }
 
@@ -474,8 +472,6 @@ export const walletConnectRejectProposal = async (sessionProposal: SignClientTyp
     if (!wallet) {
         throw new Error("W3 Wallet not available");
     }
-
-    unsetWCPendingProposal();
 
     const { id } = sessionProposal;
     await wallet.rejectSession({
@@ -494,8 +490,6 @@ export const walletConnectAcceptRequest = async (sessionRequest: SignClientTypes
     if (!address) {
         throw new Error("Current address not available");
     }
-
-    unsetWCPendingRequest();
 
     const networkId = UserStore.currentNetworkId.get();
     const { params, id, topic } = sessionRequest;
@@ -581,8 +575,6 @@ export const walletConnectRejectRequest = async (sessionRequest: SignClientTypes
         throw new Error("W3 Wallet not available");
     }
 
-    unsetWCPendingRequest();
-
     const { id, topic } = sessionRequest;
     const response = formatJsonRpcError(id, getSdkError('USER_REJECTED').message);
     await wallet.respondSessionRequest({
@@ -592,7 +584,7 @@ export const walletConnectRejectRequest = async (sessionRequest: SignClientTypes
 }
 
 export const logError = (text: string) => {
-    console.log(text);
+    console.error(text);
     UserStore.logs.merge([`${Date.now()}|ERROR|${text}`]);
 }
 

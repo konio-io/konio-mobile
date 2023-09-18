@@ -5,7 +5,8 @@ import { Feather } from '@expo/vector-icons';
 import { setPassword, showToast } from '../actions';
 import { useCurrentSeed, useTheme, useI18n } from '../hooks';
 import { View } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { SheetManager } from 'react-native-actions-sheet';
 
 export default () => {
     const navigation = useNavigation<IntroNavigationProp>();
@@ -16,6 +17,13 @@ export default () => {
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
+
+    useEffect(() => {
+        SheetManager.hide('unlock');
+        return () => {
+            SheetManager.show('unlock');
+        };
+    }, []);
 
     const savePassword = () => {
         if (currentSeed !== seed) {
