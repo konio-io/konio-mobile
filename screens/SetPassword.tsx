@@ -2,11 +2,12 @@ import { Text, TextInput, Button, Wrapper, Screen, Switch } from '../components'
 import { useNavigation } from '@react-navigation/native';
 import type { IntroNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
-import { setBiometric, setPassword, showToast } from '../actions';
 import { useBiometric, useI18n, useTheme } from '../hooks';
 import { View } from 'react-native';
 import { useEffect, useState } from 'react';
 import * as LocalAuthentication from "expo-local-authentication";
+import Toast from 'react-native-toast-message';
+import { useStore } from '../stores';
 
 export default () => {
     const navigation = useNavigation<IntroNavigationProp>();
@@ -20,6 +21,7 @@ export default () => {
 
     const [biometricSupport, setBiometricSupport] = useState(false);
     const [fingerprint, setFingerprint] = useState(false);
+    const { Secure, Setting } = useStore();
 
     useEffect(() => {
         (async () => {
@@ -34,7 +36,7 @@ export default () => {
 
     const savePassword = () => {
         if (!password) {
-            showToast({
+            Toast.show({
                 type: 'error',
                 text1: i18n.t('missing_password'),
             });
@@ -42,14 +44,14 @@ export default () => {
         }
 
         if ((password !== passwordConfirm)) {
-            showToast({
+            Toast.show({
                 type: 'error',
                 text1: i18n.t('password_not_match'),
             });
             return;
         }
 
-        setPassword(password);
+        Secure.actions.setPassword(password);
         navigation.navigate("NewWallet");
     }
 
@@ -83,7 +85,7 @@ export default () => {
 
 
                         <Switch
-                            onValueChange={() => setBiometric(!biometric)}
+                            onValueChange={() => Setting.actions.setBiometric(!biometric)}
                             value={biometric}
                         />
 

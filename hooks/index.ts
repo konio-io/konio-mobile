@@ -1,10 +1,8 @@
+/*
 import { useHookstate } from "@hookstate/core";
 import { UserStore, EncryptedStore, LockStore, WCStore, KapStore, SpinnerStore, ManaStore } from "../stores";
 import { getTheme } from "../themes";
 import { AppState, useColorScheme } from 'react-native';
-import Locales from "../lib/Locales";
-import { I18n } from 'i18n-js';
-import { getLocales } from 'expo-localization';
 import { FALLBACK_LOCALE, FALLBACK_THEME, OS_LOCALE, OS_THEME } from "../lib/Constants";
 import { useEffect, useState } from "react";
 import { selectAccount, selectAccounts, selectAddressBook, selectCoin, selectCoinTransaction, selectCoinTransactions, selectCoins, selectContact, selectCurrentAddress, selectCurrentNetworkId, selectKap, selectNetwork, selectNetworks, selectNft, selectNftCollection, selectNfts } from "../selectors";
@@ -27,9 +25,7 @@ export const useCurrentAddress = () => {
     return useHookstate( selectCurrentAddress() ).get();
 }
 
-/**
- * Networks
- */
+
 export const useNetworks = () => {
     const networks = useHookstate( selectNetworks() );
     return networks?.ornull ? Object.values(networks.get()) : [];
@@ -40,9 +36,7 @@ export const useNetwork = (networkId: string) => {
     return network?.ornull ? network.get() : undefined;
 }
 
-/**
- * Accounts
- */
+
 export const useAccounts = () => {
     const accounts = useHookstate( selectAccounts() );
     return accounts?.ornull ? Object.values(accounts.get()) : [];
@@ -53,10 +47,7 @@ export const useAccount = (address: string) => {
     return account?.ornull ? account.get() : undefined;
 }
 
-/**
- * Current account coins
- * @returns 
- */
+
 export const useCoins = () => {
     const currentAddress = useHookstate( selectCurrentAddress() );
     const currentNetworkId = useHookstate( selectCurrentNetworkId() );
@@ -98,11 +89,7 @@ export const useCoinBalance = (contractId: string) => {
     return balance?.ornull ? balance.get() : undefined;
 }
 
-/**
- * Current account/network/coin transactions
- * @param contractId 
- * @returns 
- */
+
 export const useTransactions = (contractId: string) => {
     const currentAddress = useHookstate( selectCurrentAddress() );
     const currentNetworkId = useHookstate ( selectCurrentNetworkId() );
@@ -132,10 +119,7 @@ export const useTransaction = (args: {contractId: string, transactionId: string}
     return transaction?.ornull ? transaction.get() : undefined;
 }
 
-/**
- * Current account nfts
- * @returns 
- */
+
 export const useNftCollections = () => {
     const currentAddress = useHookstate( selectCurrentAddress() );
     const currentNetworkId = useHookstate( selectCurrentNetworkId() );
@@ -214,23 +198,6 @@ export const useCurrentSeed = () => {
     return Object.values(EncryptedStore.accounts).filter(w => w.seed.get() !== undefined)[0].seed.get();
 }
 
-const i18n = new I18n(Locales);
-export const useI18n = () => {
-    let currentLocale = useHookstate(UserStore.locale).get();
-    if (currentLocale === OS_LOCALE) {
-        const systemLocale = getLocales()[0].languageCode;
-        currentLocale = Object.keys(Locales).includes(systemLocale) ?
-            systemLocale :
-            FALLBACK_LOCALE;
-    }
-
-    if (i18n.locale !== currentLocale) {
-        i18n.locale = currentLocale;
-    }
-
-    return i18n;
-}
-
 export const useBiometric = () => {
     return useHookstate(UserStore.biometric).get();
 }
@@ -240,43 +207,12 @@ export const useCurrentKoin = () => {
     return UserStore.networks[currentNetwork.get()].koinContractId.get();
 }
 
-export const useAutolock = () => {
-    return useHookstate(UserStore.autolock).get();
-}
-
 export const useRcLimit = () => {
     return useHookstate(UserStore.rcLimit).get();
 }
 
-export const useAppState = () => {
-    const appState = useHookstate('active');
-
-    useEffect(() => {
-        const appStateListener = AppState.addEventListener(
-            'change',
-            nextAppState => {
-                appState.set(nextAppState);
-            },
-        );
-
-        return () => {
-            appStateListener?.remove();
-        };
-    }, []);
-
-    return appState.get();
-}
-
-export const useWC = () => {
-    return useHookstate(WCStore).get({noproxy: true});
-}
-
 export const useLogs = () => {
     return useHookstate(UserStore.logs).get();
-}
-
-export const useLockState = () => {
-    return useHookstate(LockStore);
 }
 
 export const useKapAddress = (address: string) => {
@@ -334,4 +270,90 @@ export const useLocale = () => {
 
 export const useMana = () => {
     return useHookstate(ManaStore).get();
+}
+*/
+
+import { useHookstate } from "@hookstate/core";
+import { getTheme } from "../themes";
+import { AppState, useColorScheme } from 'react-native';
+import { useStore } from "../stores";
+import { FALLBACK_LOCALE, FALLBACK_THEME, OS_LOCALE, OS_THEME } from "../lib/Constants";
+import Locales from "../lib/Locales";
+import { I18n } from 'i18n-js';
+import { getLocales } from 'expo-localization';
+import { useEffect } from "react";
+
+export const useTheme = () => {
+    const { Setting } = useStore();
+    const storeTheme = useHookstate(Setting.state.theme).get();
+    const systemTheme = useColorScheme() ?? FALLBACK_THEME;
+
+    if (storeTheme === OS_THEME) {
+        return getTheme(systemTheme);
+    }
+
+    return getTheme(storeTheme);
+}
+
+export const useSpinner = () => {
+    const { Spinner } = useStore();
+    return useHookstate(Spinner.state).get();
+}
+
+export const useBiometric = () => {
+    const { Setting } = useStore();
+    return Setting.state.biometric.get();
+}
+
+const i18n = new I18n(Locales);
+export const useI18n = () => {
+    const { Setting } = useStore();
+
+    let currentLocale = useHookstate(Setting.state.locale).get();
+    if (currentLocale === OS_LOCALE) {
+        const systemLocale = getLocales()[0].languageCode;
+        currentLocale = Object.keys(Locales).includes(systemLocale) ?
+            systemLocale :
+            FALLBACK_LOCALE;
+    }
+
+    if (i18n.locale !== currentLocale) {
+        i18n.locale = currentLocale;
+    }
+
+    return i18n;
+}
+
+export const useAppState = () => {
+    const appState = useHookstate('active');
+
+    useEffect(() => {
+        const appStateListener = AppState.addEventListener(
+            'change',
+            nextAppState => {
+                appState.set(nextAppState);
+            },
+        );
+
+        return () => {
+            appStateListener?.remove();
+        };
+    }, []);
+
+    return appState.get();
+}
+
+export const useAutolock = () => {
+    const { Setting } = useStore();
+    return useHookstate(Setting.state.autolock).get();
+}
+
+export const useLockState = () => {
+    const { Lock } = useStore();
+    return useHookstate(Lock.state);
+}
+
+export const useCurrentAddress = () => {
+    const { Setting } = useStore();
+    return useHookstate(Setting.state.currentAccountId);
 }

@@ -1,10 +1,12 @@
-import { useCoin, useTheme } from '../hooks';
+import { useCoin, useCurrentAddress, useCurrentNetworkId, useTheme } from '../hooks';
 import { View, StyleSheet } from 'react-native';
 import CoinLogo from './CoinLogo';
 import type { Theme } from '../types/store';
 import Text from './Text';
 import { Feather } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
+import { useHookstate } from '@hookstate/core';
+import { UserStore } from '../stores';
 
 export default (props: {
     contractId: string
@@ -13,26 +15,27 @@ export default (props: {
     const theme = useTheme();
     const styles = createStyles(theme);
     const { Color } = theme.vars;
-    const coin = useCoin(props.contractId);
+    //const coin = useCoin(props.contractId);
 
     const [selected, setSelected] = useState<boolean|undefined>(undefined);
     useEffect(() => {
         setSelected(props.selected);
     }, [props.selected])
 
-    if (!coin) {
-        return <></>;
-    }
+    console.log('--- render coin list item')
 
     return (
         <View style={styles.container}>
             <View style={styles.leftContainer}>
                 <CoinLogo contractId={props.contractId} size={48} />
 
+{/*
                 <View>
                     <Text style={styles.symbol}>{coin.symbol}</Text>
                     <Text>{coin.name}</Text>
                 </View>
+*/}
+
             </View>
 
             {
@@ -49,6 +52,9 @@ export default (props: {
             {
                 selected === undefined &&
                 <View>
+                    <Balance contractId={props.contractId}/>
+                    {
+                        /*
                     {coin.balance !== undefined && coin.balance >= 0 &&
                         <View>
                             {coin.price !== undefined &&
@@ -60,11 +66,26 @@ export default (props: {
                             <Text style={{ ...styles.text, ...styles.textRight }}>{coin.balance.toFixed(2)}</Text>
                         </View>
                     }
+                        */
+                    }
                 </View>
             }
 
         </View>
     );
+}
+
+const Balance = (props: {
+    contractId: string
+}) => {
+
+    console.log('--- render balance')
+
+    const currentAddress = useCurrentAddress();
+    const currentNetworkId = useCurrentNetworkId();
+    const balance = useHookstate(UserStore.accounts[currentAddress].assets[currentNetworkId].coins[props.contractId].balance);
+
+    return <Text>{balance.get()}</Text>
 }
 
 const createStyles = (theme: Theme) => {

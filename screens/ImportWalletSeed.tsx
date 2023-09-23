@@ -1,10 +1,10 @@
 import { Keyboard, View } from 'react-native';
 import { Button, TextInput, Wrapper, Screen, TextInputActionPaste } from '../components';
-import { addSeed, hideSpinner, logError, setCurrentAccount, showSpinner } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n } from '../hooks';
 import { showToast } from '../actions';
 import { useState } from 'react';
+import { useStore } from '../stores';
 
 export default () => {
   const [seed, setSeed] = useState('');
@@ -12,6 +12,7 @@ export default () => {
   const i18n = useI18n();
   const theme = useTheme();
   const styles = theme.styles;
+  const { Spinner, Setting, Account } = useStore();
 
   const importWallet = () => {
     Keyboard.dismiss();
@@ -24,25 +25,28 @@ export default () => {
       return;
     }
 
-    showSpinner();
+    Spinner.actions.showSpinner();
 
-    addSeed({
-      name: name.trim(),
-      seed: seed.toLowerCase().trim()
-    })
-      .then(address => {
-        hideSpinner();
-        setCurrentAccount(address);
+    setTimeout(() => {
+      Account.actions.addSeed({
+        name: name.trim(),
+        seed: seed.toLowerCase().trim()
       })
-      .catch(e => {
-        hideSpinner();
-        logError(e);
-        showToast({
-          type: 'error',
-          text1: i18n.t('unable_to_import_seed'),
-          text2: i18n.t('check_seed'),
-        });
-      })
+        .then(address => {
+          Spinner.actions.hideSpinner();
+          Setting.actions.setCurrentAccount(address);
+        })
+        .catch(e => {
+          Spinner.actions.hideSpinner();
+          Setting.actions.logError(e);
+          showToast({
+            type: 'error',
+            text1: i18n.t('unable_to_import_seed'),
+            text2: i18n.t('check_seed'),
+          });
+        })
+    }, 2000);
+
   };
 
   return (

@@ -1,20 +1,20 @@
 import 'react-native-gesture-handler';
 import 'text-encoding-polyfill'; //needs for koilib compatibility
 import '@ethersproject/shims'; //needs for etherjs compatibility
-import './components/sheets';
+//import './components/sheets';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { Toast } from "./components";
 import { DarkTheme, DefaultTheme, NavigationContainer, getStateFromPath } from "@react-navigation/native";
-import { useCurrentAddress, useTheme } from './hooks';
+import { useTheme } from './hooks';
 import { SheetProvider } from "react-native-actions-sheet";
-import Drawer from './navigators/Drawer';
-import { executeMigrations, walletConnectSetUri } from './actions';
 import Loading from './screens/Loading';
 import Intro from './navigators/Intro';
-import { userStoreIsLoading, encryptedStoreIsLoading } from './stores';
+import { useStoreLoaded, useStore } from './stores';
 import ErrorMigration from './screens/ErrorMigration';
 import Spinner from './components/Spinner';
+import { Text } from 'react-native';
+import Drawer from './navigators/Drawer';
 
 export default function App() {
   useFonts({
@@ -41,7 +41,7 @@ export default function App() {
     },
     getStateFromPath: (path: string, options: any) => {
       if (path.includes('@2') && !path.includes('requestId')) {
-        walletConnectSetUri(`wc:${path}`);
+        //walletConnectSetUri(`wc:${path}`);
       }
 
       return getStateFromPath(path, options);
@@ -64,22 +64,23 @@ export default function App() {
 }
 
 const Main = () => {
-
-  const currentAddress = useCurrentAddress();
-
-  if (userStoreIsLoading.get() || encryptedStoreIsLoading.get()) {
+  const storeLoaded = useStoreLoaded();
+  const store = useStore();
+  
+  
+  if (!storeLoaded) {
     return <Loading />;
   }
 
-  if (currentAddress === '') {
-    return <Intro />;
+  if (store.Setting.state.currentAccountId.get() === '') {
+    return <Intro/>
   }
 
   try {
-    executeMigrations();
+    //executeMigrations();
   } catch (e) {
     return <ErrorMigration />;
   }
 
-  return <Drawer />;
+  return <Drawer/>
 }

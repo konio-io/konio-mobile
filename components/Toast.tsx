@@ -1,7 +1,7 @@
 import Toast, { BaseToast } from "react-native-toast-message";
 import { rgba } from "../lib/utils";
 import { useTheme } from "../hooks";
-import type { Theme } from "../types/store";
+import type { Theme } from "../types/ui";
 import { StyleSheet } from "react-native";
 
 export default () => {

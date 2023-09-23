@@ -11,7 +11,7 @@ export interface LocalStored { }
 export function localstored<S, E>(options?: {
     key?: string,
     engine?: StoreEngine,
-    isLoadingState?: State<boolean>,
+    loaded?: State<boolean>,
     migrate?: Function
 }): ExtensionFactory<S, E, LocalStored> {
     return () => {
@@ -54,8 +54,8 @@ export function localstored<S, E>(options?: {
                             options?.migrate(state);
                         }
                     }
-                    if (options?.isLoadingState) {
-                        options?.isLoadingState.set(false);
+                    if (options?.loaded) {
+                        options?.loaded.set(true);
                     }
                 });
             },
@@ -71,6 +71,28 @@ export function localstored<S, E>(options?: {
                     Promise.resolve(response).then(() => { });
                 }
             }
+        }
+    }
+}
+
+export const executeMigrations = () => {
+    const sortedMigrations = Object.keys(migrations).sort();
+    const latestVersion = sortedMigrations.reverse()[0];
+    const currentVersion = UserStore.version.get();
+    const migrationsToExecute = [];
+
+    if (currentVersion < latestVersion) {
+        for (const date of sortedMigrations) {
+            if (currentVersion < date) {
+                migrationsToExecute.push(date);
+            }
+        }
+    }
+
+    if (migrationsToExecute.length > 0) {
+        for (const date of migrationsToExecute.reverse()) {
+            migrations[date]();
+            UserStore.version.set(date);
         }
     }
 }
