@@ -4,12 +4,11 @@ import {
     createDrawerNavigator,
     DrawerItem,
 } from '@react-navigation/drawer';
-import { useCurrentAddress, useI18n, useTheme, useAccounts, useLockState, useAppState, useAutolock, useWC, useAccount } from '../hooks';
+import { useCurrentAddress, useI18n, useTheme, useLockState, useAppState, useAutolock, useWC } from '../hooks';
 import { AccountAvatar, Logo, Separator, Link, Address, WcLogo } from '../components';
-import { logError, refreshCoins, refreshMana, refreshWCActiveSessions, setCurrentAccount, setWCPendingProposal, setWCPendingRequest, showToast, unsetWCPendingProposal, unsetWCPendingRequest, walletConnectAcceptRequest, walletConnectInit, walletConnectPair } from '../actions';
 import Root from './Root';
 import { AntDesign, Feather } from '@expo/vector-icons';
-import type { Theme } from '../types/store';
+import type { Theme } from '../types/ui';
 import Constants from 'expo-constants';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
@@ -17,167 +16,12 @@ import { SheetManager } from 'react-native-actions-sheet';
 import { WC_SECURE_METHODS } from '../lib/Constants';
 import NetInfo from '@react-native-community/netinfo';
 import { SignClientTypes } from "@walletconnect/types";
+import { useStore } from '../stores';
+import Toast from 'react-native-toast-message';
+import { useHookstate } from '@hookstate/core';
 
 const Drawer = createDrawerNavigator();
 export default () => {
-
-    const i18n = useI18n();
-    const lock = useLockState();
-    const nextAppState = useAppState();
-    const [dateLock, setDateLock] = useState(0);
-    const autoLock = useAutolock();
-    const WC = useWC();
-    const [connectionAvailable, setConnectionAvailable] = useState(true);
-
-    //Refresh coins and mana on init
-    useEffect(() => {
-        refreshCoins({ balance: true, price: true });
-        refreshMana();
-    }, [])
-
-    //intercept network state change on init
-    useEffect(() => {
-        const unsubscribe = NetInfo.addEventListener(state => {
-            if (connectionAvailable === false && state.isConnected === true) {
-                showToast({
-                    type: 'success',
-                    text1: i18n.t('you_online')
-                });
-                refreshWCActiveSessions();
-            }
-            else if (state.isConnected !== true) {
-                showToast({
-                    type: 'error',
-                    text1: i18n.t('you_offline'),
-                    text2: i18n.t('check_connection')
-                });
-            }
-
-            setConnectionAvailable(state.isConnected === true ? true : false);
-        });
-
-        return unsubscribe;
-    }, []);
-
-    //intercept lock
-    useEffect(() => {
-        if (lock.get() === true) {
-            setDateLock(0); //ios
-            setTimeout(() => {
-                SheetManager.show('unlock');
-            }, 100);
-        }
-    }, [lock]);
-
-    //intercept autolock
-    useEffect(() => {
-        if (autoLock > -1) {
-            if (nextAppState === 'background') {
-                setDateLock(Date.now() + autoLock + 1000);
-            }
-            else if (nextAppState === 'active') {
-                if (dateLock > 0 && Date.now() > dateLock) {
-                    lock.set(true);
-                }
-            }
-        }
-    }, [nextAppState, autoLock]);
-
-    //intercept wc_proposal
-    useEffect(() => {
-        const pendingProposal = WC.pendingProposal;
-        if (!pendingProposal) {
-            return;
-        }
-
-        if (lock.get() === true) {
-            return;
-        }
-
-        const proposal = Object.assign({}, pendingProposal);
-
-        SheetManager.show('wc_proposal', { payload: { proposal } });
-        unsetWCPendingProposal();
-    }, [lock, WC.pendingProposal]);
-
-    //intercept wc_request
-    useEffect(() => {
-        if (lock.get() === true) {
-            return;
-        }
-
-        const pendingRequest = WC.pendingRequest;
-        if (!pendingRequest) {
-            return;
-        }
-
-        const request = Object.assign({}, pendingRequest);
-
-        const method = request.params.request.method;
-        if (!WC_SECURE_METHODS.includes(method)) {
-            walletConnectAcceptRequest(request)
-                .catch(e => {
-                    logError(e);
-                    showToast({
-                        type: 'error',
-                        text1: i18n.t('dapp_request_error', { method }),
-                        text2: i18n.t('check_logs')
-                    })
-                });
-            return;
-        }
-
-        SheetManager.show('wc_request', { payload: { request } });
-        unsetWCPendingRequest();
-    }, [lock, WC.pendingRequest]);
-
-    //intercept walletconnect wallet/uri set
-    useEffect(() => {
-        if (WC.wallet && WC.uri) {
-            walletConnectPair(WC.uri)
-                .then(() => {
-                    console.log('wc_pair: paired');
-                })
-                .catch(e => {
-                    logError(e);
-                    showToast({
-                        type: 'error',
-                        text1: i18n.t('pairing_error'),
-                        text2: i18n.t('check_logs')
-                    });
-                });
-        }
-    }, [WC.uri, WC.wallet]);
-
-    //intercept walletconnect set and subscribe events
-    useEffect(() => {
-        const wallet = WC.wallet;
-        if (wallet) {
-            console.log('wc_register_events');
-
-            const onSessionProposal = (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
-                console.log('wc_proposal', proposal);
-                setWCPendingProposal(proposal);
-            }
-
-            const onSessionRequest = async (request: SignClientTypes.EventArguments["session_request"]) => {
-                console.log('wc_request', request);
-                setWCPendingRequest(request);
-            }
-
-            wallet.on("session_proposal", onSessionProposal);
-            wallet.on("session_request", onSessionRequest);
-            wallet.on("session_delete", () => {
-                refreshWCActiveSessions();
-            });
-        }
-    }, [WC.wallet]);
-
-    //init walletconnect on init
-    useEffect(() => {
-        walletConnectInit();
-    }, []);
-
     return (
         <Drawer.Navigator
             drawerContent={(props) => <DrawerContent {...props} />}
@@ -313,6 +157,173 @@ const DrawerContent = (props: any) => {
 
         </View>
     )
+}
+
+const Init = () => {
+
+    const [connectionAvailable, setConnectionAvailable] = useState(true);
+    const { Coin, Mana, WalletConnect } = useStore();
+    const i18n = useI18n();
+
+    //Refresh coins and mana on init
+    useEffect(() => {
+        Coin.actions.refreshCoins({ balance: true, price: true });
+        Mana.actions.refreshMana();
+        WalletConnect.actions.init();
+
+        //network changes
+        const unsubscribe = NetInfo.addEventListener(state => {
+            if (connectionAvailable === false && state.isConnected === true) {
+                Toast.show({
+                    type: 'success',
+                    text1: i18n.t('you_online')
+                });
+                WalletConnect.actions.refreshActiveSessions();
+            }
+            else if (state.isConnected !== true) {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('you_offline'),
+                    text2: i18n.t('check_connection')
+                });
+            }
+            setConnectionAvailable(state.isConnected === true ? true : false);
+        });
+
+        return unsubscribe;
+    }, [])
+}
+
+const Lock = () => {
+    const lock = useLockState();
+    const [dateLock, setDateLock] = useState(0);
+    const nextAppState = useAppState();
+    const autoLock = useAutolock();
+
+    //intercept lock
+    useEffect(() => {
+        if (lock.get() === true) {
+            setDateLock(0); //ios
+            setTimeout(() => {
+                SheetManager.show('unlock');
+            }, 100);
+        }
+    }, [lock]);
+
+    //intercept autolock
+    useEffect(() => {
+        if (autoLock > -1) {
+            if (nextAppState === 'background') {
+                setDateLock(Date.now() + autoLock + 1000);
+            }
+            else if (nextAppState === 'active') {
+                if (dateLock > 0 && Date.now() > dateLock) {
+                    lock.set(true);
+                }
+            }
+        }
+    }, [nextAppState, autoLock, lock]);
+}
+
+
+const Wc = () => {
+
+    const { WalletConnect } = useStore();
+    const lock = useLockState();
+    const pendingProposal = useHookstate(WalletConnect.state.pendingProposal).get();
+    const pendingRequest = useHookstate(WalletConnect.state.pendingRequest).get();
+    const uri = useHookstate(WalletConnect.state.uri).get();
+    const wallet = useHookstate(WalletConnect.state.wallet).get();
+    const i18n = useI18n();
+
+    //intercept wc_proposal
+    useEffect(() => {
+        const pp = pendingProposal;
+        if (!pp) {
+            return;
+        }
+
+        if (lock.get() === true) {
+            return;
+        }
+
+        const proposal = Object.assign({}, pp);
+
+        SheetManager.show('wc_proposal', { payload: { proposal } });
+        WalletConnect.actions.unsetPendingProposal();
+    }, [lock, pendingProposal]);
+
+    //intercept wc_request
+    useEffect(() => {
+        if (lock.get() === true) {
+            return;
+        }
+
+        const pr = WC.pendingRequest;
+        if (!pr) {
+            return;
+        }
+
+        const request = Object.assign({}, pr);
+
+        const method = request.params.request.method;
+        if (!WC_SECURE_METHODS.includes(method)) {
+            WalletConnect.actions.acceptRequest(request)
+                .catch(e => {
+                    logError(e);
+                    Toast.show({
+                        type: 'error',
+                        text1: i18n.t('dapp_request_error', { method }),
+                        text2: i18n.t('check_logs')
+                    })
+                });
+            return;
+        }
+
+        SheetManager.show('wc_request', { payload: { request } });
+        WalletConnect.actions.unsetPendingRequest();
+    }, [lock, pendingRequest]);
+
+    //intercept walletconnect wallet/uri set
+    useEffect(() => {
+        if (wallet && uri) {
+            WalletConnect.actions.pair(uri)
+                .then(() => {
+                    console.log('wc_pair: paired');
+                })
+                .catch(e => {
+                    logError(e);
+                    Toast.show({
+                        type: 'error',
+                        text1: i18n.t('pairing_error'),
+                        text2: i18n.t('check_logs')
+                    });
+                });2
+        }
+    }, [uri, wallet]);
+
+    //intercept walletconnect set and subscribe events
+    useEffect(() => {
+        if (wallet) {
+            console.log('wc_register_events');
+
+            const onSessionProposal = (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
+                console.log('wc_proposal', proposal);
+                WalletConnect.actions.setPendingProposal(proposal);
+            }
+
+            const onSessionRequest = async (request: SignClientTypes.EventArguments["session_request"]) => {
+                console.log('wc_request', request);
+                WalletConnect.actions.setPendingRequest(request);
+            }
+
+            wallet.on("session_proposal", onSessionProposal);
+            wallet.on("session_request", onSessionRequest);
+            wallet.on("session_delete", () => {
+                WalletConnect.actions.refreshActiveSessions();
+            });
+        }
+    }, [wallet]);
 }
 
 const createStyles = (theme: Theme) => {
