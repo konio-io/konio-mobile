@@ -1,9 +1,9 @@
 import { FlatList, View } from 'react-native';
-import { setLocale } from '../actions';
 import { ListItemSelected, Text, Screen } from '../components';
 import { OS_LOCALE } from '../lib/Constants';
 import { LocaleIndex } from '../lib/Locales';
-import { useLocale } from '../hooks';
+import { useStore } from '../stores';
+import { useHookstate } from '@hookstate/core';
 
 export default () => {
   const data: Array<{ code: string, label: string }> = [
@@ -29,11 +29,12 @@ export const ListItem = (props: {
   label: string
 }) => {
 
-  const locale = useLocale();
+  const { Setting } = useStore();
+  const locale = useHookstate(Setting.state.locale).get();
   const selected = (locale === props.code);
 
   const changeLocale = () => {
-    setLocale(props.code);
+    Setting.actions.setLocale(props.code);
   }
 
   return <ListItemSelected

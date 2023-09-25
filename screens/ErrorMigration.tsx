@@ -1,4 +1,4 @@
-import { Logo, Screen, Text, Wrapper } from "../components"
+import { Logo, Text, Wrapper } from "../components"
 import { useI18n, useTheme } from "../hooks"
 import { View } from "react-native";
 

@@ -3,25 +3,27 @@ import { useI18n, useTheme } from "../hooks"
 import React, { useEffect, useState } from "react";
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
-import { UnlockNavigationProp } from "../types/navigation";
-import { lock, setPassword, showToast } from "../actions";
+import { ChangePasswordNavigationProp } from "../types/navigation";
 import { View } from "react-native";
+import Toast from "react-native-toast-message";
+import { useStore } from "../stores";
 
 export default () => {
-    const navigation = useNavigation<UnlockNavigationProp>();
+    const navigation = useNavigation<ChangePasswordNavigationProp>();
     const i18n = useI18n();
     const [password, setPwd] = useState('');
     const [passwordConfirm, setPwdConfirm] = useState('');
     const theme = useTheme();
     const styles = theme.styles;
+    const { Lock, Secure } = useStore();
 
     useEffect(() => {
-        lock();
+        Lock.actions.lock();
     }, []);
 
     const savePassword = () => {
         if ((!password)) {
-            showToast({
+            Toast.show({
                 type: 'error',
                 text1: i18n.t('missing_password'),
             });
@@ -29,15 +31,15 @@ export default () => {
         }
 
         if ((password !== passwordConfirm)) {
-            showToast({
+            Toast.show({
                 type: 'error',
                 text1: i18n.t('password_not_match'),
             });
             return;
         }
 
-        setPassword(password);
-        showToast({
+        Secure.actions.setPassword(password);
+        Toast.show({
             type: 'success',
             text1: i18n.t('password_set'),
         });

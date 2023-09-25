@@ -16,7 +16,7 @@ export type RootParamList = {
     NewAccount: undefined,
     ImportAccount: undefined,
     EditAccount: {
-        address: string
+        accountId: string
     },
     WalletConnect: NavigatorScreenParams<WalletConnectParamList>,
     Faq: undefined,

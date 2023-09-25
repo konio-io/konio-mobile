@@ -3,16 +3,16 @@ import { SecurityNavigationProp } from '../types/navigation';
 import { useI18n, useBiometric } from '../hooks';
 import { Screen, Switch } from '../components';
 import ListItem from '../components/ListItem';
-import { setBiometric } from '../actions';
 import { useEffect, useState } from 'react';
 import * as LocalAuthentication from "expo-local-authentication";
 import { Feather, Ionicons } from '@expo/vector-icons';
+import { useStore } from '../stores';
 
 export default () => {
     const navigation = useNavigation<SecurityNavigationProp>();
     const i18n = useI18n();
     const biometric = useBiometric();
-
+    const { Setting } = useStore();
     const [biometricSupport, setBiometricSupport] = useState(false);
     const [fingerprint, setFingerprint] = useState(false);
 
@@ -70,7 +70,7 @@ export default () => {
                     icon={(<Ionicons name="ios-finger-print-outline" />)}
                     right={(
                         <Switch
-                            onValueChange={() => setBiometric(!biometric)}
+                            onValueChange={() => Setting.actions.setBiometric(!biometric)}
                             value={biometric}
                         />
                     )}

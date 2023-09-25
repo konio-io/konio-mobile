@@ -33,18 +33,9 @@ export const useSecureStore = (store: () => Store): SecureStore => {
         setPassword: (password: string) => {
             state.merge({ password });
         },
-        
-        checkPassword: (password: string): boolean => {
-            return password === state.password.get();
-        },
-
-        getSeedAccountId: () => {
-            const seedAccount = Object.values(state.accounts.get()).find(account => account.seed);
-            return seedAccount?.address;
-        },
 
         deIncrementIndex: () => {
-            const seedAccountId = actions.getSeedAccountId();
+            const seedAccountId = getters.getSeedAccountId();
             if (seedAccountId) {
                 const seedAccount = state.accounts.nested(seedAccountId);
                 const index = seedAccount.accountIndex.get() ?? 1;
@@ -53,7 +44,7 @@ export const useSecureStore = (store: () => Store): SecureStore => {
         },
 
         incrementIndex: () => {
-            const seedAccountId = actions.getSeedAccountId();
+            const seedAccountId = getters.getSeedAccountId();
             if (seedAccountId) {
                 const seedAccount = state.accounts.nested(seedAccountId);
                 const index = seedAccount.accountIndex.get() ?? 1;
@@ -81,9 +72,27 @@ export const useSecureStore = (store: () => Store): SecureStore => {
         }
     }
 
+    const getters = {
+        getSeedAccountId: () => {
+            const seedAccount = Object.values(state.accounts.get()).find(account => account.seed);
+            return seedAccount?.address;
+        },
+        getSeed: () => {
+            const seedAccountId = getters.getSeedAccountId();
+            if (seedAccountId) {
+                return state.accounts.nested(seedAccountId).seed.get();
+            }
+            return undefined;
+        },
+        checkPassword: (password: string): boolean => {
+            return password === state.password.get();
+        },
+    }
+
     return {
         state,
-        actions
+        actions,
+        getters
     }
 }
 

@@ -4,24 +4,24 @@ import ActionSheet from "./ActionSheet";
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 import type { EditAccountNavigationProps } from "../types/navigation";
-import { deleteAccount } from "../actions";
-import { getSeedAddress } from "../lib/utils";
 import { Alert } from "react-native";
+import { useStore } from "../stores";
 
 export default (props: SheetProps) => {
+    const { Account, Secure } = useStore();
     const navigation = useNavigation<EditAccountNavigationProps>();
-    const { address } = props.payload;
+    const { accountId } = props.payload;
     const i18n = useI18n();
 
     const data = [
         {
             title: i18n.t('edit'),
             icon: <AntDesign name="edit"/>,
-            onPress: () => navigation.navigate('EditAccount', { address: address })
+            onPress: () => navigation.navigate('EditAccount', { accountId: accountId })
         }
     ];
 
-    if (getSeedAddress() !== address) {
+    if (Secure.getters.getSeedAccountId() !== accountId) {
         const showAlert = () => {
             return Alert.alert(
               i18n.t('are_you_sure'),
@@ -29,7 +29,7 @@ export default (props: SheetProps) => {
               [
                 {
                   text: i18n.t('yes'),
-                  onPress: () => deleteAccount(address)
+                  onPress: () => Account.actions.deleteAccount(accountId)
                 },
                 {
                   text: i18n.t('no'),

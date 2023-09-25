@@ -1,5 +1,5 @@
 import { TouchableWithoutFeedback, StyleSheet, View, ScrollView } from "react-native";
-import { Theme } from "../types/store";
+import { Theme } from "../types/ui";
 import { AntDesign } from '@expo/vector-icons';
 import { ReactElement, useState } from "react";
 import { useTheme } from "../hooks";

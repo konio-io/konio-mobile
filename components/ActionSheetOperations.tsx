@@ -3,7 +3,7 @@ import { useI18n } from "../hooks";
 import ActionSheet from "./ActionSheet";
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { CommonActions, useNavigation } from "@react-navigation/native";
-import { showToast } from "../actions";
+import Toast from "react-native-toast-message";
 
 export default (props: SheetProps) => {
     const navigation = useNavigation();
@@ -36,7 +36,7 @@ export default (props: SheetProps) => {
         {
             title: i18n.t('swap'),
             icon: <AntDesign name="swap"/>,
-            onPress: () => showToast({
+            onPress: () => Toast.show({
                 type: 'info',
                 text1: i18n.t('available_soon')
             })

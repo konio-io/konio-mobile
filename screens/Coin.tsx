@@ -2,16 +2,19 @@ import { View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { CoinRouteProp, HoldingsNavigationProp } from '../types/navigation';
 import { Button, TransactionList, Screen, MoreVertical, Text, CoinLogo } from '../components';
-import { useCoin, useI18n, useTheme } from '../hooks';
+import { useI18n, useTheme } from '../hooks';
 import { Feather } from '@expo/vector-icons';
 import { useEffect } from 'react';
 import { SheetManager } from "react-native-actions-sheet";
 import Loading from './Loading';
+import { useStore } from '../stores';
+import { useHookstate } from '@hookstate/core';
 
 export default () => {
     const navigation = useNavigation<HoldingsNavigationProp>();
     const route = useRoute<CoinRouteProp>();
-    const coin = useCoin(route.params.contractId);
+    const { Coin } = useStore();
+    const coin = useHookstate(Coin.state.nested(route.params.contractId)).get();
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();

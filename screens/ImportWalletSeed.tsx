@@ -2,9 +2,9 @@ import { Keyboard, View } from 'react-native';
 import { Button, TextInput, Wrapper, Screen, TextInputActionPaste } from '../components';
 import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n } from '../hooks';
-import { showToast } from '../actions';
 import { useState } from 'react';
 import { useStore } from '../stores';
+import Toast from 'react-native-toast-message';
 
 export default () => {
   const [seed, setSeed] = useState('');
@@ -12,13 +12,13 @@ export default () => {
   const i18n = useI18n();
   const theme = useTheme();
   const styles = theme.styles;
-  const { Spinner, Setting, Account } = useStore();
+  const { Spinner, Setting, Account, Log } = useStore();
 
   const importWallet = () => {
     Keyboard.dismiss();
 
     if (!name) {
-      showToast({
+      Toast.show({
         type: 'error',
         text1: i18n.t('missing_account_name')
       });
@@ -38,8 +38,8 @@ export default () => {
         })
         .catch(e => {
           Spinner.actions.hideSpinner();
-          Setting.actions.logError(e);
-          showToast({
+          Log.actions.logError(e);
+          Toast.show({
             type: 'error',
             text1: i18n.t('unable_to_import_seed'),
             text2: i18n.t('check_seed'),

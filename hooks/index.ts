@@ -215,51 +215,6 @@ export const useLogs = () => {
     return useHookstate(UserStore.logs).get();
 }
 
-export const useKapAddress = (address: string) => {
-    const name = useHookstate(selectKap(address));
-    return name?.ornull ? name.get() : undefined;
-}
-
-export const useKapName = (name: string) => {
-    const store = useHookstate(KapStore);
-    const address = useHookstate('');
-    let foundAddress = '';
-
-    for (const addr in store.get()) {
-        if (store[addr].get() === name) {
-            foundAddress = addr;
-            break;
-        }
-    }
-    address.set(foundAddress);
-
-    return address?.ornull ? address.get() : undefined;
-}
-
-
-export const useAccountValue = () => {
-    const currentAddress = useHookstate(UserStore.currentAddress).get();
-    const currentNetworkId = useHookstate(UserStore.currentNetworkId).get();
-    const coins = useHookstate(UserStore.accounts[currentAddress].assets[currentNetworkId].coins);
-    const total = useHookstate(0);
-
-    useEffect(() => {
-        total.set(0);
-        if (coins.get()) {
-            for (const contractId in coins) {
-                const balance = coins[contractId].balance.get();
-                const price = coins[contractId].price.get();
-    
-                if (balance && price) {
-                    total.set(total.get() + balance * price);
-                }
-            }
-        }
-    }, [currentAddress, currentNetworkId, coins]);
-
-    return total.get();
-}
-
 export const useSpinner = () => {
     return useHookstate(SpinnerStore).get();
 }
@@ -355,5 +310,71 @@ export const useLockState = () => {
 
 export const useCurrentAddress = () => {
     const { Setting } = useStore();
-    return useHookstate(Setting.state.currentAccountId);
+    return useHookstate(Setting.state.currentAccountId).get();
+}
+
+export const useAccountValue = () => {
+    const { Setting, Coin } = useStore();
+    const currentAccountId = useHookstate(Setting.state.currentAccountId).get();
+    const currentNetworkId = useHookstate(Setting.state.currentNetworkId).get();
+    const coins = useHookstate(Coin.state);
+    const total = useHookstate(0);
+
+    useEffect(() => {
+        const coinList = Object.values(coins.get({noproxy: true})).filter(coin => 
+            coin.networkId === currentNetworkId &&
+            coin.accountId === currentAccountId
+        );
+        if (coinList) {
+            for (const coin of coinList) {
+                if (coin.balance && coin.price) {
+                    total.set(total.get() + coin.balance * coin.price);
+                }
+            }
+        } else {
+            total.set(0);
+        }
+    }, [currentAccountId, currentNetworkId, coins]);
+
+    return total.get();
+}
+
+export const useCurrentAccount = () => {
+    const { Account, Setting } = useStore();
+    const currentAccountId = useHookstate(Setting.state.currentAccountId).get();
+    return Account.state.nested(currentAccountId).get();
+}
+
+export const useCurrentNetwork = () => {
+    const { Network, Setting } = useStore();
+    const currentNetworkId = useHookstate(Setting.state.currentNetworkId).get();
+    return Network.state.nested(currentNetworkId).get();
+}
+
+export const useCurrentNetworkId = () => {
+    const { Setting } = useStore();
+    return useHookstate(Setting.state.currentNetworkId).get();
+}
+
+export const useKapAddress = (address: string) => {
+    const { Kap } = useStore();
+    const name = useHookstate(Kap.state.nested(address));
+    return name?.ornull ? name.get() : undefined;
+}
+
+export const useKapName = (name: string) => {
+    const { Kap } = useStore();
+    const store = useHookstate(Kap.state);
+    const address = useHookstate('');
+    let foundAddress = '';
+
+    for (const addr in store.get()) {
+        if (store[addr].get() === name) {
+            foundAddress = addr;
+            break;
+        }
+    }
+    address.set(foundAddress);
+
+    return address?.ornull ? address.get() : undefined;
 }

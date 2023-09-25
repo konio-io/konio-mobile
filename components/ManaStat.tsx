@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import { useTheme } from '../hooks';
 import CircularProgress from './CircularProgress';
 import Text from './Text';
-import type { Theme } from '../types/store';
+import type { Theme } from '../types/ui';
 import { useI18n } from '../hooks';
 
 export default (props: {

@@ -3,7 +3,7 @@ import { Text, Button, Address, Wrapper, Screen, DrawerToggler } from '../compon
 import { useCurrentAddress, useTheme, useI18n } from '../hooks';
 import { AntDesign } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
-import type { Theme } from '../types/store';
+import type { Theme } from '../types/ui';
 import { useNavigation } from '@react-navigation/native';
 import { DepositNavigationProp } from '../types/navigation';
 import { useEffect } from 'react';

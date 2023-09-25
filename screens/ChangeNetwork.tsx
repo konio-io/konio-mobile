@@ -1,22 +1,23 @@
 import { FlatList, View } from 'react-native';
-import { useNetworks, useCurrentNetworkId, useTheme } from '../hooks';
-import { setCurrentNetwork } from '../actions';
+import { useCurrentNetworkId, useTheme } from '../hooks';
 import { ListItemSelected, Text, Screen, ButtonCircle } from '../components';
 import { SheetManager } from 'react-native-actions-sheet';
 import { useNavigation } from '@react-navigation/native';
 import { ChangeNetworkNavigationProp } from '../types/navigation';
 import { DEFAULT_NETWORKS } from '../lib/Constants';
-import { ImmutableObject } from '@hookstate/core';
-import { Network } from '../types/store';
+import { ImmutableObject, useHookstate } from '@hookstate/core';
+import { Network } from '../stores/types';
 import { Feather } from '@expo/vector-icons';
+import { useStore } from '../stores';
 
 export default () => {
-  const networks = useNetworks();
+  const { Network } = useStore();
+  const networks = useHookstate(Network.state).get();
 
   return (
     <Screen>
       <FlatList
-        data={networks}
+        data={Object.values(networks)}
         renderItem={({ item }) => <ListItem network={item} />}
         ListFooterComponent={(<Footer />)}
       />
@@ -27,6 +28,7 @@ export default () => {
 export const ListItem = (props: {
   network: ImmutableObject<Network>
 }) => {
+  const { Setting } = useStore();
   const currentNetworkId = useCurrentNetworkId();
   const theme = useTheme();
   const styles = theme.styles;
@@ -34,7 +36,7 @@ export const ListItem = (props: {
   const selected = currentNetworkId === network.chainId;
 
   const changeNetwork = () => {
-    setCurrentNetwork(network.chainId);
+    Setting.actions.setCurrentNetwork(network.chainId);
   }
 
   return <ListItemSelected

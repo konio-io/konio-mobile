@@ -2,18 +2,19 @@ import { Text, TextInput, Button, Wrapper, Screen } from '../components';
 import { useNavigation } from '@react-navigation/native';
 import type { IntroNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
-import { setPassword, showToast } from '../actions';
-import { useCurrentSeed, useTheme, useI18n } from '../hooks';
+import { useTheme, useI18n } from '../hooks';
 import { View } from 'react-native';
 import { useEffect, useState } from 'react';
 import { SheetManager } from 'react-native-actions-sheet';
+import Toast from 'react-native-toast-message';
+import { useStore } from '../stores';
 
 export default () => {
     const navigation = useNavigation<IntroNavigationProp>();
     const [password, setPwd] = useState('');
     const [passwordConfirm, setPwdConfirm] = useState('');
     const [seed, setSeed] = useState('');
-    const currentSeed = useCurrentSeed();
+    const { Secure } = useStore();
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
@@ -26,8 +27,8 @@ export default () => {
     }, []);
 
     const savePassword = () => {
-        if (currentSeed !== seed) {
-            showToast({
+        if (Secure.getters.getSeed() !== seed) {
+            Toast.show({
                 type: 'error',
                 text1: i18n.t('seed_not_match'),
             });
@@ -35,7 +36,7 @@ export default () => {
         }
 
         if ((!password)) {
-            showToast({
+            Toast.show({
                 type: 'error',
                 text1: i18n.t('missing_password'),
             });
@@ -43,15 +44,15 @@ export default () => {
         }
 
         if ((password !== passwordConfirm)) {
-            showToast({
+            Toast.show({
                 type: 'error',
                 text1: i18n.t('password_not_match'),
             });
             return;
         }
 
-        setPassword(password);
-        showToast({
+        Secure.actions.setPassword(password);
+        Toast.show({
             type: 'success',
             text1: i18n.t('password_set'),
         });

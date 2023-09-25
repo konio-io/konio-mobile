@@ -1,6 +1,6 @@
 import { Keyboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { useTheme } from '../hooks';
-import type { Theme } from '../types/store';
+import type { Theme } from '../types/ui';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default (props: {

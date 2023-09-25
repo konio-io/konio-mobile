@@ -1,13 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NewWalletSeedNavigationProp } from '../types/navigation';
-import { setCurrentAccount, addAccount, showToast, logError, askReview, showSpinner, hideSpinner } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { Button, TextInput, Screen } from '../components';
 import { useI18n, useTheme } from '../hooks';
 import { Keyboard, View } from 'react-native';
-import { EncryptedStore } from '../stores';
 import { MAX_ACCOUNT } from '../lib/Constants';
 import { useState } from 'react';
+import { useStore } from '../stores';
+import Toast from 'react-native-toast-message';
 
 export default () => {
     const navigation = useNavigation<NewWalletSeedNavigationProp>();
@@ -15,13 +15,13 @@ export default () => {
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
-    const accounts = EncryptedStore.accounts;
+    const { Account, Spinner, Setting, Log } = useStore();
 
     const add = () => {
         Keyboard.dismiss();
 
-        if (Object.keys(accounts).length >= MAX_ACCOUNT) {
-            showToast({
+        if (Object.keys(Account.state.get()).length >= MAX_ACCOUNT) {
+            Toast.show({
                 type: 'error',
                 text1: i18n.t('max_accounts_reached', {max: MAX_ACCOUNT})
             });
@@ -29,26 +29,26 @@ export default () => {
         }
 
         if (!name) {
-            showToast({
+            Toast.show({
                 type: 'error',
                 text1: i18n.t('missing_account_name')
             });
             return;
         }
 
-        showSpinner();
+        Spinner.actions.showSpinner();
 
-        addAccount(name.trim())
+        Account.actions.addAccount(name.trim())
             .then(address => {
-                hideSpinner();
-                setCurrentAccount(address);
+                Spinner.actions.hideSpinner();
+                Setting.actions.setCurrentAccount(address);
                 navigation.goBack();
-                askReview();
+                Setting.actions.showAskReview();
             })
             .catch(e => {
-                hideSpinner();
-                logError(e);
-                showToast({
+                Spinner.actions.hideSpinner();
+                Log.actions.logError(e);
+                Toast.show({
                     type: 'error',
                     text1: i18n.t('unable_to_add_account'),
                     text2: i18n.t('check_logs')

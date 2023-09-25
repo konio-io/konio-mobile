@@ -1,9 +1,9 @@
 import { FlatList, View } from 'react-native';
 import { useI18n, useTheme } from '../hooks';
-import { setTheme } from '../actions';
 import { ListItemSelected, Text, Screen } from '../components';
 import { Themes } from '../themes';
 import { OS_THEME } from '../lib/Constants';
+import { useStore } from '../stores';
 
 export default () => {
   const data = [OS_THEME, ...Object.keys(Themes)];
@@ -27,9 +27,10 @@ export const ListItem = (props: {
   const i18n = useI18n();
   const theme = useTheme();
   const selected = (theme.name === props.name);
+  const { Setting } = useStore();
 
   const changeTheme = () => {
-    setTheme(props.name);
+    Setting.actions.setTheme(props.name);
   }
 
   return <ListItemSelected

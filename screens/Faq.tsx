@@ -3,7 +3,7 @@ import { Accordion, Screen, Text } from "../components"
 import { useI18n, useTheme } from "../hooks";
 import { useEffect, useState } from "react";
 import { FAQ_URL } from "../lib/Constants";
-import { Theme } from "../types/store";
+import { Theme } from "../types/ui";
 
 export default () => {
     const theme = useTheme();

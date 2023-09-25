@@ -19,7 +19,7 @@ export const useNetworkStore = (store: () => Store): NetworkStore => {
 
     const actions : NetworkActions = {
         addNetwork: (network: Network) => {
-            state.networks.merge({
+            state.merge({
                 [network.chainId]: network
             });
         },
@@ -34,6 +34,9 @@ export const useNetworkStore = (store: () => Store): NetworkStore => {
             const currentNetworkId = store().Setting.state.currentNetworkId.get();
             const currentNetwork = DEFAULT_NETWORKS[currentNetworkId];
             return currentNetwork.chainId === MAINNET;
+        },
+        getNetworkByChainId: (chainId: string) => {
+            return state.nested(chainId).get({noproxy: true});
         }
     }
 

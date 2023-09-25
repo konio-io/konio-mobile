@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useTheme, useI18n, useAccountValue, useCurrentAddress, useAccount } from '../hooks';
+import { useTheme, useI18n, useAccountValue, useCurrentAddress, useCurrentAccount } from '../hooks';
 import { Screen, DrawerToggler, MoreVertical, Text, Address, ManaBar } from '../components';
 import { AssetsNavigationProp, } from '../types/navigation';
 import { SheetManager } from "react-native-actions-sheet";
@@ -15,7 +15,7 @@ export default () => {
   const theme = useTheme();
   const styles = theme.styles;
   const currentAddressState = useCurrentAddress();
-  const account = useAccount(currentAddressState);
+  const account = useCurrentAccount();
   
   useEffect(() => {
     navigation.setOptions({

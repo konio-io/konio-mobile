@@ -1,16 +1,17 @@
 import { SheetProps } from "react-native-actions-sheet";
-import { deleteContact } from "../actions";
 import { useI18n } from "../hooks";
 import ActionSheet from "./ActionSheet";
 import { AntDesign } from '@expo/vector-icons';
+import { useStore } from "../stores";
 
 export default (props: SheetProps) => {
 
+    const { Contact } = useStore();
     const { address } = props.payload;
     const i18n = useI18n();
 
     const _delete = () => {
-        deleteContact(address);
+        Contact.actions.deleteContact(address);
     };
 
     const data = [

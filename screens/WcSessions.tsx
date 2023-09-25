@@ -3,23 +3,23 @@ import { useEffect } from "react";
 import { getSdkError } from "@walletconnect/utils";
 import { ImmutableObject } from "@hookstate/core";
 import { View, FlatList } from "react-native";
-import { useI18n, useTheme, useWC, useAccount } from "../hooks";
+import { useCurrentAccount, useI18n, useTheme } from "../hooks";
 import Loading from "./Loading";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from '@expo/vector-icons';
 import { WcSessionsNavigationProp } from "../types/navigation";
-import { refreshWCActiveSessions } from "../actions";
 import { SessionTypes } from "@walletconnect/types";
 import { Feather } from '@expo/vector-icons';
+import { useStore } from "../stores";
 
 export default () => {
-    const wc = useWC();
-    const wallet = wc.wallet;
+    const { WalletConnect } = useStore();
+    const wallet = WalletConnect.state.wallet.get();
     if (!wallet) {
         return <Loading />;
     }
 
-    const activeSessions = wc.activeSessions;
+    const activeSessions = WalletConnect.state.activeSessions.get();
     const { styles } = useTheme();
     const navigation = useNavigation<WcSessionsNavigationProp>();
 
@@ -28,11 +28,11 @@ export default () => {
             topic,
             reason: getSdkError("USER_DISCONNECTED"),
         });
-        refreshWCActiveSessions();
+        WalletConnect.actions.refreshActiveSessions();
     }
 
     useEffect(() => {
-        refreshWCActiveSessions();
+        WalletConnect.actions.refreshActiveSessions();
     }, []);
 
     const data = Object.values(activeSessions)
@@ -121,7 +121,7 @@ const ItemHeader = (props: {
     address: string,
     name: string
 }) => {
-    const account = useAccount(props.address);
+    const account = useCurrentAccount();
     const theme = useTheme();
     const styles = theme.styles;
 

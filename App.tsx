@@ -4,17 +4,23 @@ import '@ethersproject/shims'; //needs for etherjs compatibility
 //import './components/sheets';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
-import { Toast } from "./components";
 import { DarkTheme, DefaultTheme, NavigationContainer, getStateFromPath } from "@react-navigation/native";
-import { useTheme } from './hooks';
 import { SheetProvider } from "react-native-actions-sheet";
 import Loading from './screens/Loading';
 import Intro from './navigators/Intro';
 import { useStoreLoaded, useStore } from './stores';
 import ErrorMigration from './screens/ErrorMigration';
 import Spinner from './components/Spinner';
-import { Text } from 'react-native';
 import Drawer from './navigators/Drawer';
+import { useEffect, useState } from 'react';
+import { SheetManager } from 'react-native-actions-sheet';
+import { WC_SECURE_METHODS } from './lib/Constants';
+import NetInfo from '@react-native-community/netinfo';
+import { SignClientTypes } from "@walletconnect/types";
+import { useI18n, useTheme, useLockState, useAppState, useAutolock } from './hooks';
+import { useHookstate } from '@hookstate/core';
+import Toast from 'react-native-toast-message';
+import { View } from 'react-native';
 
 export default function App() {
   useFonts({
@@ -23,6 +29,7 @@ export default function App() {
   });
 
   const theme = useTheme();
+  // @ts-ignore
   const PolyfillCrypto = global.PolyfillCrypto;
   const navigationTheme = theme.name === 'dark' ? DarkTheme : DefaultTheme;
 
@@ -40,8 +47,9 @@ export default function App() {
       }
     },
     getStateFromPath: (path: string, options: any) => {
+      const { WalletConnect } = useStore();
       if (path.includes('@2') && !path.includes('requestId')) {
-        //walletConnectSetUri(`wc:${path}`);
+        WalletConnect.actions.setUri(`wc:${path}`);
       }
 
       return getStateFromPath(path, options);
@@ -49,6 +57,7 @@ export default function App() {
   };
 
   return (
+    //@ts-ignore
     <NavigationContainer theme={navigationTheme} linking={linking} fallback={<Loading />}>
       <PolyfillCrypto />
 
@@ -82,5 +91,182 @@ const Main = () => {
     return <ErrorMigration />;
   }
 
-  return <Drawer/>
+  return (
+    <View>
+      <Init/>
+      <Wc/>
+      <Lock/>
+      <Drawer/>
+    </View>
+  )
+}
+
+const Wc = () => {
+  const { WalletConnect, Log } = useStore();
+  const lock = useLockState();
+  const pendingProposal = useHookstate(WalletConnect.state.pendingProposal).get();
+  const pendingRequest = useHookstate(WalletConnect.state.pendingRequest).get();
+  const uri = useHookstate(WalletConnect.state.uri).get();
+  const wallet = useHookstate(WalletConnect.state.wallet).get();
+  const i18n = useI18n();
+
+  //intercept wc_proposal
+  useEffect(() => {
+      const pp = pendingProposal;
+      if (!pp) {
+          return;
+      }
+
+      if (lock.get() === true) {
+          return;
+      }
+
+      const proposal = Object.assign({}, pp);
+
+      SheetManager.show('wc_proposal', { payload: { proposal } });
+      WalletConnect.actions.unsetPendingProposal();
+  }, [lock, pendingProposal]);
+
+  //intercept wc_request
+  useEffect(() => {
+      if (lock.get() === true) {
+          return;
+      }
+
+      const pr = pendingRequest;
+      if (!pr) {
+          return;
+      }
+
+      const request = Object.assign({}, pr);
+
+      const method = request.params.request.method;
+      if (!WC_SECURE_METHODS.includes(method)) {
+          WalletConnect.actions.acceptRequest(request)
+              .catch(e => {
+                  Log.actions.logError(e);
+                  Toast.show({
+                      type: 'error',
+                      text1: i18n.t('dapp_request_error', { method }),
+                      text2: i18n.t('check_logs')
+                  })
+              });
+          return;
+      }
+
+      SheetManager.show('wc_request', { payload: { request } });
+      WalletConnect.actions.unsetPendingRequest();
+  }, [lock, pendingRequest]);
+
+  //intercept walletconnect wallet/uri set
+  useEffect(() => {
+      if (wallet && uri) {
+          WalletConnect.actions.pair(uri)
+              .then(() => {
+                  console.log('wc_pair: paired');
+              })
+              .catch(e => {
+                  Log.actions.logError(e);
+                  Toast.show({
+                      type: 'error',
+                      text1: i18n.t('pairing_error'),
+                      text2: i18n.t('check_logs')
+                  });
+              });2
+      }
+  }, [uri, wallet]);
+
+  //intercept walletconnect set and subscribe events
+  useEffect(() => {
+      if (wallet) {
+          console.log('wc_register_events');
+
+          const onSessionProposal = (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
+              console.log('wc_proposal', proposal);
+              WalletConnect.actions.setPendingProposal(proposal);
+          }
+
+          const onSessionRequest = async (request: SignClientTypes.EventArguments["session_request"]) => {
+              console.log('wc_request', request);
+              WalletConnect.actions.setPendingRequest(request);
+          }
+
+          wallet.on("session_proposal", onSessionProposal);
+          wallet.on("session_request", onSessionRequest);
+          wallet.on("session_delete", () => {
+              WalletConnect.actions.refreshActiveSessions();
+          });
+      }
+  }, [wallet]);
+  
+  return <></>
+}
+
+const Init = () => {
+  const [connectionAvailable, setConnectionAvailable] = useState(true);
+  const { Coin, Mana, WalletConnect } = useStore();
+  const i18n = useI18n();
+
+  //Refresh coins and mana on init
+  useEffect(() => {
+      Coin.actions.refreshCoins({ balance: true, price: true });
+      Mana.actions.refreshMana();
+      WalletConnect.actions.init();
+
+      //network changes
+      const unsubscribe = NetInfo.addEventListener(state => {
+          if (connectionAvailable === false && state.isConnected === true) {
+              Toast.show({
+                  type: 'success',
+                  text1: i18n.t('you_online')
+              });
+              WalletConnect.actions.refreshActiveSessions();
+          }
+          else if (state.isConnected !== true) {
+              Toast.show({
+                  type: 'error',
+                  text1: i18n.t('you_offline'),
+                  text2: i18n.t('check_connection')
+              });
+          }
+          setConnectionAvailable(state.isConnected === true ? true : false);
+      });
+
+      return unsubscribe;
+  }, [])
+
+  return <></>
+}
+
+const Lock = () => {
+  const lock = useLockState();
+  const [dateLock, setDateLock] = useState(0);
+  const nextAppState = useAppState();
+  const autoLock = useAutolock();
+
+  //intercept lock
+  useEffect(() => {
+      if (lock.get() === true) {
+          setDateLock(0); //ios
+          setTimeout(() => {
+              SheetManager.show('unlock');
+          }, 100);
+      }
+  }, [lock]);
+
+  //intercept autolock
+  useEffect(() => {
+      if (autoLock > -1) {
+          if (nextAppState === 'background') {
+              setDateLock(Date.now() + autoLock + 1000);
+          }
+          else if (nextAppState === 'active') {
+              if (dateLock > 0 && Date.now() > dateLock) {
+                  lock.set(true);
+              }
+          }
+      }
+  }, [nextAppState, autoLock, lock]);
+
+  return <></>
 }

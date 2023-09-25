@@ -81,7 +81,7 @@ export const useWalletConnectStore = (store: () => Store) : WalletConnectStore =
                 namespaces,
             });
             
-            actions.refreshWCActiveSessions();
+            actions.refreshActiveSessions();
         },
         
         rejectProposal: async (sessionProposal: SignClientTypes.EventArguments["session_proposal"]) => {
@@ -228,7 +228,9 @@ export const useWalletConnectStore = (store: () => Store) : WalletConnectStore =
                 state.pendingRequest.set(none);
             }
         },
-        
+    }
+
+    const getters = {
         checkMethod: (method: string) : boolean => {
             if (Object.values(WC_METHODS).includes(method)) {
                 return true;
@@ -245,6 +247,7 @@ export const useWalletConnectStore = (store: () => Store) : WalletConnectStore =
 
     return {
         state,
-        actions
+        actions,
+        getters
     }
 }

@@ -1,3 +1,5 @@
+import HDKoinos from "./HDKoinos";
+
 export const rgba = (color: string, opacity: number): string => {
     return color.replace('1)', opacity.toString() + ')');
 }
@@ -30,4 +32,8 @@ export const accessPropertyValue = (obj: Record<string, any>, path: string): any
     }
 
     return currentObj;
+}
+
+export const generateSeed = () => {
+    return HDKoinos.randomMnemonic();
 }

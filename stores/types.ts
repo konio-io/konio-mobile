@@ -12,7 +12,6 @@ export type SettingState = {
     currentAccountId: string,
     rcLimit: string,
     version: string,
-    logs: Array<string>,
     locale: string,
     theme: string,
     biometric: boolean,
@@ -29,13 +28,26 @@ export interface SettingActions {
     setAutolock(autolock: number): void;
     showAskReview(): Promise<void>;
     setRcLimit(value: string): void;
-    logError(text: string): void;
-    logReset(): void;
 }
 
 export interface SettingStore {
     state: State<SettingState>;
     actions: SettingActions
+}
+
+/**
+ * Log
+ */
+export type LogState = Array<string>;
+
+export interface LogActions {
+    logError(text: string): void;
+    logReset(): void;
+}
+
+export interface LogStore {
+    state: State<LogState>;
+    actions: LogActions
 }
 
 /**
@@ -56,19 +68,23 @@ export type SecureState = {
 
 export interface SecureActions {
     setPassword: (password: string) => void;
-    checkPassword: (password: string) => boolean;
-    getSeedAccountId: () => string | undefined;
     deIncrementIndex: () => void;
     incrementIndex: () => void;
     deleteAccount: (id: string) => void;
     addAccount: (account: AccountSecure) => void;
 }
 
-export interface SecureStore {
-    state: State<SecureState>;
-    actions: SecureActions
+export interface SecureGetters {
+    getSeedAccountId: () => string | undefined;
+    getSeed: () => string | undefined;
+    checkPassword: (password: string) => boolean;
 }
 
+export interface SecureStore {
+    state: State<SecureState>;
+    actions: SecureActions;
+    getters: SecureGetters;
+}
 
 /**
  * Account
@@ -287,7 +303,8 @@ export interface NetworkActions {
 }
 
 export interface NetworkGetters {
-    isMainnet: () => boolean
+    isMainnet: () => boolean,
+    getNetworkByChainId: (chainId: string) => Network|undefined
 }
 
 export interface NetworkStore {
@@ -374,13 +391,17 @@ export interface WalletConnectActions {
     unsetPendingProposal: () => void;
     setPendingRequest: (request: SignClientTypes.EventArguments["session_request"]) => void;
     unsetPendingRequest: () => void;
+}
+
+export interface WalletConnectGetters {
     checkMethod: (method: string) => boolean;
     checkNetwork: (chainId: string) => boolean;
 }
 
 export interface WalletConnectStore {
     state: State<WalletConnectState>;
-    actions: WalletConnectActions
+    actions: WalletConnectActions;
+    getters: WalletConnectGetters;
 }
 
 /**
@@ -460,5 +481,6 @@ export interface Store {
     Mana: ManaStore;
     WalletConnect: WalletConnectStore;
     Koin: KoinStore;
-    Lock: LockStore
+    Lock: LockStore;
+    Log: LogStore;
 }

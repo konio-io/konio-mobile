@@ -1,7 +1,7 @@
 import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import React, { ReactElement } from 'react';
 import { useTheme } from '../hooks';
-import type { Theme } from '../types/store';
+import type { Theme } from '../types/ui';
 
 export default (props: {
     onPress: Function,

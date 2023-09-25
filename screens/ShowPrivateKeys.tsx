@@ -1,18 +1,17 @@
 import { ScrollView, View } from "react-native";
 import { Screen, TextInputActionCopy, Text, AddressListItem } from "../components"
-import { useAccount, useLockState, useTheme } from "../hooks"
+import { useLockState, useTheme } from "../hooks"
 import React, { useEffect } from "react";
-import { lock } from "../actions";
-import { EncryptedStore } from "../stores";
+import { useStore } from "../stores";
 
 export default () => {
-    const encryptedStore = EncryptedStore;
+    const { Secure, Lock } = useStore();
     const theme = useTheme();
     const styles = theme.styles;
     const lockState = useLockState();
 
     useEffect(() => {
-        lock();
+        Lock.actions.lock();
     }, [])
 
     return (
@@ -20,7 +19,7 @@ export default () => {
             {
                 lockState.get() === false &&
                 <ScrollView contentContainerStyle={{ ...styles.paddingBase, ...styles.rowGapMedium }}>
-                    {Object.values(encryptedStore.accounts.get()).map(account =>
+                    {Object.values(Secure.state.accounts.get()).map(account =>
                         <PrivateKey key={account.address} address={account.address} privateKey={account.privateKey} />
                     )}
                 </ScrollView>
@@ -33,7 +32,8 @@ const PrivateKey = (props: {
     address: string,
     privateKey: string
 }) => {
-    const account = useAccount(props.address);
+    const { Account } = useStore();
+    const account = Account.state.nested(props.address).get();
     const theme = useTheme();
     const styles = theme.styles;
 

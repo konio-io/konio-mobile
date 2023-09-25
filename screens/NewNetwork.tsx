@@ -1,16 +1,16 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NewNetworkNavigationProp } from '../types/navigation';
-import { addNetwork, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen } from '../components';
 import { useI18n } from '../hooks';
 import { View, Alert, ScrollView } from 'react-native';
-import { UserStore } from '../stores';
 import { useTheme } from '../hooks';
-import type { Network } from '../types/store';
+import type { Network } from '../stores/types';
 import { DEFAULT_NETWORKS } from '../lib/Constants';
 import { Provider } from 'koilib';
 import { useState } from 'react';
+import Toast from 'react-native-toast-message';
+import { useStore } from '../stores';
 
 export default () => {
   const DEFAULT_NETWORK = Object.values(DEFAULT_NETWORKS)[0];
@@ -22,6 +22,7 @@ export default () => {
   const [rpcNode, setRpcNode] = useState('');
   const [explorer, setExplorer] = useState('');
   const [koinContractId, setKoinContractId] = useState('');
+  const { Network } = useStore();
 
   const showAlert = () => {
     return Alert.alert(
@@ -41,7 +42,7 @@ export default () => {
 
   const add = async (replace = false) => {
     if (!name || !rpcNode || !explorer) {
-      showToast({
+      Toast.show({
         type: 'error',
         text1: i18n.t('missing_data')
       });
@@ -52,19 +53,20 @@ export default () => {
     const chainId = await provider.getChainId();
 
     if (!chainId) {
-      showToast({
+      Toast.show({
         type: 'error',
         text1: i18n.t('wrong_rpc_node')
       });
       return;
     }
 
-    if (UserStore.networks[chainId] && replace === false) {
+    if (Network.state.nested(chainId) && replace === false) {
       showAlert();
       return;
     }
 
     const network: Network = {
+      id: chainId,
       name: name,
       chainId: chainId,
       rpcNodes: [rpcNode],
@@ -72,7 +74,7 @@ export default () => {
       explorer: explorer
     };
 
-    addNetwork(network);
+    Network.actions.addNetwork(network);
     navigation.navigate('ChangeNetwork')
   };
 

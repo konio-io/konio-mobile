@@ -1,25 +1,25 @@
 import { Button, Text, Accordion, AccountAvatar } from "../components"
-import { useCurrentAddress, useI18n, useTheme, useWC, useAccount, useCurrentNetworkId, useNetwork } from "../hooks";
+import { useI18n, useTheme, useCurrentAccount, useCurrentNetwork } from "../hooks";
 import { View, Image, StyleSheet, ScrollView } from "react-native";
-import { walletConnectAcceptRequest, askReview, logError, walletConnectRejectRequest, showToast } from "../actions";
-import { checkWCMethod, checkWCNetwork, getNetworkByChainId } from "../lib/WalletConnect";
 import { useEffect, useState } from "react";
 import { Feather } from '@expo/vector-icons';
-import { getContract } from "../lib/utils";
 import { WC_METHODS } from "../lib/Constants";
 import Loading from "../screens/Loading";
 import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-sheet";
-import type { Theme } from "../types/store";
+import type { Theme } from "../types/ui";
+import { useStore } from "../stores";
+import Toast from "react-native-toast-message";
 
 export default (props: SheetProps) => {
-    const wallet = useWC().wallet;
+    const { WalletConnect, Network, Setting, Log, Account } = useStore();
+    const wallet = WalletConnect.state.wallet.get();
     if (!wallet) {
         return <Loading />
     }
 
-    const currentAddress = useCurrentAddress();
-    const currentNetworkId = useCurrentNetworkId();
-    const currentNetwork = useNetwork(currentNetworkId);
+    const account = useCurrentAccount();
+    const network = useCurrentNetwork();
+
     const request = props.payload.request;
     const theme = useTheme();
     const styles = createStyles(theme);
@@ -36,44 +36,43 @@ export default (props: SheetProps) => {
     const url = data?.peer?.metadata?.url;
     const method = request.params.request.method;
     const chainId = request.params.chainId;
-    const requiredNetwork = getNetworkByChainId(chainId);
+    const requiredNetwork = Network.getters.getNetworkByChainId(chainId);
     const requiredNetworkName = requiredNetwork ? requiredNetwork.name : i18n.t('unknown');
     const requiredAddress = data.namespaces.koinos?.accounts[0]?.split(':')[2];
-    const account = useAccount(requiredAddress);
     const icons = data?.peer?.metadata?.icons;
 
     const _checkAddress = () => {
-        if (currentAddress !== requiredAddress) {
+        if (account.address !== requiredAddress) {
             setCheckAddress(false);
         }
     }
 
     const _checkMethod = () => {
-        if (!checkWCMethod(method)) {
+        if (!WalletConnect.getters.checkMethod(method)) {
             setCheckMethod(false);
         }
     }
 
     const _checkNetwork = () => {
-        if (!checkWCNetwork(chainId)) {
+        if (!WalletConnect.getters.checkNetwork(chainId)) {
             setCheckNetwork(false);
         }
     }
 
     const accept = async () => {
-        walletConnectAcceptRequest(request)
+        WalletConnect.actions.acceptRequest(request)
             .then(() => {
                 SheetManager.hide('wc_request');
-                showToast({
+                Toast.show({
                     type: 'success',
                     text1: i18n.t('dapp_request_success')
                 });
-                askReview();
+                Setting.actions.showAskReview();
             })
             .catch(e => {
                 SheetManager.hide('wc_request');
-                logError(e);
-                showToast({
+                Log.actions.logError(e);
+                Toast.show({
                     type: 'error',
                     text1: i18n.t('dapp_request_error', { method }),
                     text2: i18n.t('check_logs')
@@ -82,8 +81,8 @@ export default (props: SheetProps) => {
     }
 
     const reject = async () => {
-        walletConnectRejectRequest(request)
-            .catch(e => logError(e))
+        WalletConnect.actions.rejectRequest(request)
+            .catch(e => Log.actions.logError(e))
 
         SheetManager.hide('wc_request');
     }
@@ -177,14 +176,14 @@ export default (props: SheetProps) => {
             {
                 checkNetwork === false &&
                 <View style={{ ...styles.paddingBase, ...styles.columnGapBase, ...styles.alignCenterColumn }}>
-                    <Text style={{ ...styles.textError, ...styles.textCenter }}>{i18n.t('misaligned_network', { currentNetwork: currentNetwork?.name, requiredNetwork: requiredNetworkName })}</Text>
+                    <Text style={{ ...styles.textError, ...styles.textCenter }}>{i18n.t('misaligned_network', { currentNetwork: network?.name, requiredNetwork: requiredNetworkName })}</Text>
                 </View>
             }
 
             {
                 checkAddress === false &&
                 <View style={{ ...styles.paddingBase, ...styles.columnGapBase, ...styles.alignCenterColumn }}>
-                    <Text style={{ ...styles.textError, ...styles.textCenter }}>{i18n.t('misaligned_address', { currentAddress: currentAddress, requiredAddress: requiredAddress })}</Text>
+                    <Text style={{ ...styles.textError, ...styles.textCenter }}>{i18n.t('misaligned_address', { currentAddress: account.address, requiredAddress: requiredAddress })}</Text>
                 </View>
             }
 
@@ -246,8 +245,7 @@ const SignMessageDetail = (props: {
 const SendTransactionDetail = (props: {
     transaction: any
 }) => {
-    const currentAddress = useCurrentAddress();
-    const currentNetworkId = useCurrentNetworkId();
+    const { Koin, Log } = useStore();
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
@@ -258,11 +256,7 @@ const SendTransactionDetail = (props: {
             const contractId = operation.call_contract.contract_id;
 
             try {
-                const contract = await getContract({
-                    address: currentAddress,
-                    networkId: currentNetworkId,
-                    contractId
-                });
+                const contract = await Koin.getters.fetchContract(contractId);
 
                 if (contract.abi) {
                     const decodedOperation = await contract.decodeOperation(operation)
@@ -278,7 +272,7 @@ const SendTransactionDetail = (props: {
                 }
             } catch (e) {
                 console.error(e);
-                logError(String(e));
+                Log.actions.logError(String(e));
             }
         }
     }

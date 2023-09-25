@@ -4,7 +4,7 @@ import { FlatList, TouchableOpacity, View, StyleSheet } from "react-native";
 import Text from "./Text";
 import React from "react";
 import ActionSheet, { SheetManager } from "react-native-actions-sheet";
-import type { Theme } from "../types/store";
+import type { Theme } from "../types/ui";
 
 export default (props: {
     sheetId: string,

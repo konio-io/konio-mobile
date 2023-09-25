@@ -1,26 +1,28 @@
-import type { Theme } from "../types/store";
+import type { Theme } from "../types/ui";
 import { Pressable, View, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { checkPassword, showToast, unlock } from '../actions';
 import { useTheme, useI18n, useBiometric } from '../hooks';
 import { Button, TextInput, Logo, Text } from '../components';
 import { useNavigation } from '@react-navigation/native';
-import { UnlockNavigationProp } from '../types/navigation';
+import { ResetPasswordNavigationProp } from '../types/navigation';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useEffect, useState } from 'react';
 import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-sheet";
+import Toast from "react-native-toast-message";
+import { useStore } from "../stores";
 
 export default (props: SheetProps) => {
-    const navigation = useNavigation<UnlockNavigationProp>();
+    const navigation = useNavigation<ResetPasswordNavigationProp>();
     const i18n = useI18n();
     const [password, setPwd] = useState('');
     const biometric = useBiometric();
     const theme = useTheme();
     const styles = createStyles(theme);
+    const { Secure, Lock } = useStore();
 
     const unlockPassword = () => {
-        if (!checkPassword(password)) {
-            showToast({
+        if (!Secure.getters.checkPassword(password)) {
+            Toast.show({
                 type: 'error',
                 text1: i18n.t('wrong_password')
             });
@@ -41,7 +43,7 @@ export default (props: SheetProps) => {
                 unlockWallet();
             }
         } catch (error) {
-            showToast({
+            Toast.show({
                 type: 'error',
                 text1: i18n.t('wrong_biometric')
             });
@@ -49,7 +51,7 @@ export default (props: SheetProps) => {
     };
 
     const unlockWallet = () => {
-        unlock();
+        Lock.actions.unlock();
         setPwd('');
         SheetManager.hide('unlock');
     }

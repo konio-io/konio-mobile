@@ -1,12 +1,13 @@
 import { View } from 'react-native';
 import { Text, Button, TextInput, Wrapper, Screen, Seed, TextInputActionCopy } from '../components';
-import { generateSeed, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n } from '../hooks';
 import { useNavigation } from '@react-navigation/native';
 import type { NewWalletSeedNavigationProp } from '../types/navigation';
 import { useEffect, useState } from 'react';
 import TextInputAction from '../components/TextInputAction';
+import Toast from 'react-native-toast-message';
+import { generateSeed } from '../lib/utils';
 
 export default () => {
     const navigation = useNavigation<NewWalletSeedNavigationProp>();
@@ -18,7 +19,7 @@ export default () => {
 
     const next = () => {
         if (!name) {
-            showToast({
+            Toast.show({
                 type: 'error',
                 text1: i18n.t('missing_account_name'),
             });

@@ -3,7 +3,7 @@ import { createAvatar } from '@dicebear/core';
 import { identicon } from '@dicebear/collection';
 import { SvgXml } from 'react-native-svg';
 import { useTheme } from '../hooks';
-import type { Theme } from '../types/store';
+import type { Theme } from '../types/ui';
 
 export default (props: {
     address: string,

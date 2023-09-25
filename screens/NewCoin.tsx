@@ -1,14 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NewCoinNavigationProp } from '../types/navigation';
-import { addCoin, askReview, logError, showSpinner, hideSpinner, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen, Text, CoinLogo, ActivityIndicator } from '../components';
-import { useCoins, useCurrentNetworkId, useI18n } from '../hooks';
+import { useCurrentNetworkId, useI18n } from '../hooks';
 import { Keyboard, ScrollView, View, TouchableOpacity } from 'react-native';
 import { useTheme, useCurrentAddress } from '../hooks';
 import { TOKENS_URL } from '../lib/Constants';
-import { getCoinBalance } from '../lib/utils';
 import { useEffect, useState } from 'react';
+import Toast from 'react-native-toast-message';
+import { useStore } from '../stores';
 
 export default () => {
   const navigation = useNavigation<NewCoinNavigationProp>();
@@ -16,30 +16,31 @@ export default () => {
   const i18n = useI18n();
   const theme = useTheme();
   const styles = theme.styles;
+  const { Spinner, Setting, Log, Coin } = useStore();
 
   const add = () => {
     Keyboard.dismiss();
 
     if (!contractId) {
-      showToast({
+      Toast.show({
         type: 'error',
         text1: i18n.t('missing_contract_address')
       });
       return;
     }
 
-    showSpinner();
+    Spinner.actions.showSpinner();
 
-    addCoin(contractId)
+    Coin.actions.addCoin(contractId)
       .then(coin => {
-        hideSpinner();
+        Spinner.actions.hideSpinner();
         navigation.goBack();
-        askReview();
+        Setting.actions.showAskReview();
       })
       .catch(e => {
-        hideSpinner();
-        logError(e);
-        showToast({
+        Spinner.actions.hideSpinner();
+        Log.actions.logError(e);
+        Toast.show({
           type: 'error',
           text1: i18n.t('unable_to_add_coin'),
           text2: i18n.t('check_contract')
@@ -88,9 +89,10 @@ const SuggestList = (props: {
     chainId: string
   }
 
+  const { Coin, Log } = useStore();
   const currentNetworkId = useCurrentNetworkId();
   const currentAddress = useCurrentAddress();
-  const currentCoins = useCoins();
+  const currentCoins = Coin.getters.getCoins();
   const [coinList, setCoinList] = useState<Array<Item>>([]);
   const i18n = useI18n();
   const theme = useTheme();
@@ -113,11 +115,7 @@ const SuggestList = (props: {
       });
 
       for (const token of tokenList) {
-        const value = await getCoinBalance({
-          address: currentAddress,
-          networkId: currentNetworkId,
-          contractId: token.address
-        });
+        const value = await Coin.getters.fetchCoinBalance(token.address);
         
         //if (value && value > 0) {
           setCoinList(current => [
@@ -131,7 +129,7 @@ const SuggestList = (props: {
         //}
       }
     } catch (e) {
-      logError(String(e));
+      Log.actions.logError(String(e));
     }
     setSearching(false);
   }

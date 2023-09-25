@@ -108,14 +108,14 @@ export const useKoinStore = (store: () => Store): KoinStore => {
         },
         
         getProvider: (): Provider => {
-            const networkId = Setting.state.currentNetworkId.get();
-            const rpcNodes = Network.state.nested(networkId).rpcNodes.get();
+            const networkId = store().Setting.state.currentNetworkId.get();
+            const rpcNodes = store().Network.state.nested(networkId).rpcNodes.get();
             return new Provider([...rpcNodes]);
         },
         
         getSigner: (): Signer => {
-            const accountId = Setting.state.currentAccountId.get();
-            const account = Secure.state.accounts.nested(accountId);
+            const accountId = store().Setting.state.currentAccountId.get();
+            const account = store().Secure.state.accounts.nested(accountId);
             const provider = getters.getProvider();
             const signer = Signer.fromWif(account.privateKey.get());
             signer.provider = provider;

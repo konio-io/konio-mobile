@@ -147,7 +147,7 @@ export const useCoinStore = (store: () => Store) : CoinStore => {
             });
         
             actions.refreshCoinBalance(transactionState.contractId.get());
-            Mana.actions.refreshMana();
+            store().Mana.actions.refreshMana();
         
             return transactionState.get();
         },
@@ -222,7 +222,7 @@ export const useCoinStore = (store: () => Store) : CoinStore => {
                         coin.decimal.set(contract.decimal);
                     }
                 })
-                .catch(e => store().Setting.actions.logError(e))
+                .catch(e => store().Log.actions.logError(e))
         },
         
         refreshCoinBalance: (id: string) => {
@@ -242,7 +242,7 @@ export const useCoinStore = (store: () => Store) : CoinStore => {
                 }
             })
             .catch(e => {
-                store().Setting.actions.logError(e)
+                store().Log.actions.logError(e)
             });
         },
         
@@ -273,7 +273,7 @@ export const useCoinStore = (store: () => Store) : CoinStore => {
                         coin.price.set(price);
                     }
                 }).catch(e => 
-                    store().Setting.actions.logError(e)
+                    store().Log.actions.logError(e)
                 );
         },
     }

@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { Svg, Circle, Text as SVGText, Path } from 'react-native-svg'
+import { Svg, Circle, Path } from 'react-native-svg'
 import { useTheme } from "../hooks";
 
 export default (props: {

@@ -1,6 +1,6 @@
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { useTheme } from '../hooks';
-import type { Theme } from '../types/store';
+import type { Theme } from '../types/ui';
 
 export default (props: {
     children: any,

@@ -2,7 +2,7 @@ import React, { ReactNode } from "react"
 import { Pressable, View, StyleSheet } from "react-native"
 import { AntDesign } from '@expo/vector-icons';
 import { useTheme } from "../hooks";
-import type { Theme } from "../types/store";
+import type { Theme } from "../types/ui";
 import TextInputAction from "./TextInputAction";
 
 export default (props: {

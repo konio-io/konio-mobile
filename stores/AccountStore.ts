@@ -128,7 +128,7 @@ export const useAccountStore = (store: () => Store): AccountStore => {
         },
         
         deleteAccount: (id: string) => {
-            const seedAccountId = store().Secure.actions.getSeedAccountId();
+            const seedAccountId = store().Secure.getters.getSeedAccountId();
             if (!seedAccountId) {
                 throw new Error("Unable to retrieve seed account");
             }

@@ -2,8 +2,9 @@ import * as Clipboard from 'expo-clipboard';
 import { TouchableOpacity, Text, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n, useKapAddress } from '../hooks';
-import { refreshKap, showToast } from '../actions';
 import { useEffect } from 'react';
+import { useStore } from '../stores';
+import Toast from 'react-native-toast-message';
 
 export default (props: {
     address: string,
@@ -13,7 +14,7 @@ export default (props: {
     const i18n = useI18n();
     const copyToClipboard = async () => {
         await Clipboard.setStringAsync(props.address);
-        showToast({
+        Toast.show({
             type: 'info',
             text1: i18n.t('address_copied')
         });
@@ -40,9 +41,10 @@ const Container = (props: {
     const styles = theme.styles;
     const length = props.length ?? 5;
     const kapName = useKapAddress(props.address);
+    const { Kap } = useStore();
 
     useEffect(() => {
-        refreshKap(props.address);
+        Kap.actions.refreshKap(props.address);
     }, [props.address])
 
     return (

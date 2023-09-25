@@ -1,8 +1,8 @@
 import TextInputAction from "./TextInputAction"
 import * as Clipboard from 'expo-clipboard';
 import { Feather } from '@expo/vector-icons';
-import { showToast } from "../actions";
 import { useI18n } from "../hooks";
+import Toast from "react-native-toast-message";
 
 export default (props: {
     copy: string
@@ -11,7 +11,7 @@ export default (props: {
     const i18n = useI18n();
     const copyToClipboard = async () => {
         await Clipboard.setStringAsync(props.copy);
-        showToast({
+        Toast.show({
             type: 'info',
             text1: i18n.t('copied_to_clipboard')
         });

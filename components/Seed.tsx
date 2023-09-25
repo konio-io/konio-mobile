@@ -1,6 +1,6 @@
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '../hooks';
-import type { Theme } from '../types/store';
+import type { Theme } from '../types/ui';
 import { ReactElement } from 'react';
 import Text from './Text';
 

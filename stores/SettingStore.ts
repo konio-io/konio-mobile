@@ -17,7 +17,6 @@ const state = hookstate<SettingState>(
         autolock: -1,
         rcLimit: '95',
         version: '20230908',
-        logs: [],
         askReview: false
     },
     localstored({
@@ -69,7 +68,7 @@ export const useSettingStore = (store: () => Store) : SettingStore => {
                     StoreReview.requestReview()
                     .then(() => state.askReview.set(true))
                     .catch(e => {
-                        actions.logError(e);
+                        store().Log.actions.logError(e);
                         state.askReview.set(true)
                     });
                 }
@@ -79,15 +78,6 @@ export const useSettingStore = (store: () => Store) : SettingStore => {
         setRcLimit: (value: string) => {
             state.rcLimit.set(value);
         },
-        
-        logError: (text: string) => {
-            console.error(text);
-            state.logs.merge([`${Date.now()}|ERROR|${text}`]);
-        },
-        
-        logReset: () => {
-            state.logs.set([]);
-        }
     }
     
     return {

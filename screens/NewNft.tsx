@@ -1,12 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NewCoinNavigationProp } from '../types/navigation';
-import { addNft, addNftCollection, askReview, logError, showSpinner, hideSpinner, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen } from '../components';
 import { useI18n } from '../hooks';
 import { View, Keyboard } from 'react-native';
 import { useTheme } from '../hooks';
 import { useState } from 'react';
+import Toast from 'react-native-toast-message';
+import { useStore } from '../stores';
 
 export default () => {
   const navigation = useNavigation<NewCoinNavigationProp>();
@@ -15,12 +16,13 @@ export default () => {
   const i18n = useI18n();
   const theme = useTheme();
   const styles = theme.styles;
+  const { Log, Setting, Spinner, Nft, NftCollection } = useStore();
 
   const add = async () => {
     Keyboard.dismiss();
 
     if (!contractId) {
-      showToast({
+      Toast.show({
         type: 'error',
         text1: i18n.t('missing_contract_address')
       });
@@ -28,28 +30,28 @@ export default () => {
     }
 
     if (!tokenId) {
-      showToast({
+      Toast.show({
         type: 'error',
         text1: i18n.t('missing_token_id')
       });
       return;
     }
 
-    showSpinner();
+    Spinner.actions.showSpinner();
 
     try {
-      await addNftCollection(contractId);
-      await addNft({
+      await NftCollection.actions.addNftCollection(contractId);
+      await Nft.actions.addNft({
         contractId: contractId,
         tokenId: tokenId
       });
-      hideSpinner();
+      Spinner.actions.hideSpinner();
       navigation.goBack();
-      askReview();
+      Setting.actions.showAskReview();
     } catch (e) {
-      hideSpinner();
-      logError(String(e));
-      showToast({
+      Spinner.actions.hideSpinner();
+      Log.actions.logError(String(e));
+      Toast.show({
         type: 'error',
         text1: i18n.t('unable_to_add_nft'),
         text2: i18n.t('check_contract')

@@ -14,6 +14,7 @@ import { useLockStore } from "./LockStore";
 import { useManaStore } from "./ManaStore";
 import { Store } from "./types";
 import { useHookstate } from "@hookstate/core";
+import { useLogStore } from "./LogStore";
 
 export const useStore = () : Store => {
     return {
@@ -30,7 +31,8 @@ export const useStore = () : Store => {
         Mana: useManaStore(useStore),
         WalletConnect: useWalletConnectStore(useStore),
         Koin: useKoinStore(useStore),
-        Lock: useLockStore(useStore)
+        Lock: useLockStore(useStore),
+        Log: useLogStore(useStore),
     };
 };
 

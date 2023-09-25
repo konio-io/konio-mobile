@@ -1,11 +1,12 @@
 import { Keyboard, View } from 'react-native';
 import { Text, Button, Wrapper, Screen, Seed } from '../components';
-import { addSeed, hideSpinner, logError, setCurrentAccount, showSpinner, showToast } from '../actions';
 import { Feather } from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
 import { NewWalletSeedConfirmRouteProp } from '../types/navigation';
 import { useTheme, useI18n } from '../hooks';
 import { useState } from 'react';
+import Toast from 'react-native-toast-message';
+import { useStore } from '../stores';
 
 export default () => {
     const route = useRoute<NewWalletSeedConfirmRouteProp>();
@@ -13,6 +14,7 @@ export default () => {
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();
+    const { Spinner, Setting, Account, Log } = useStore();
 
     const shuffleArray = (array: Array<string>) => {
         for (let i = array.length - 1; i > 0; i--) {
@@ -27,27 +29,27 @@ export default () => {
         Keyboard.dismiss();
 
         if (seed !== sortedWords.join(' ')) {
-            showToast({
+            Toast.show({
                 type: 'error',
                 text1: i18n.t('invalid_seed')
             });
             return;
         }
 
-        showSpinner();
+        Spinner.actions.showSpinner();
 
-        addSeed({
+        Account.actions.addSeed({
             name: name,
             seed: seed
         })
             .then(address => {
-                hideSpinner();
-                setCurrentAccount(address);
+                Spinner.actions.hideSpinner();
+                Setting.actions.setCurrentAccount(address);
             })
             .catch(e => {
-                hideSpinner();
-                logError(e);
-                showToast({
+                Spinner.actions.hideSpinner();
+                Log.actions.logError(e);
+                Toast.show({
                     type: 'error',
                     text1: i18n.t('unable_to_add_wallet'),
                     text2: i18n.t('generate_new_one')
