@@ -10,14 +10,13 @@ import { DappsNavigationProp, RootNavigationProp } from "../types/navigation";
 import { AntDesign } from '@expo/vector-icons';
 import Loading from "./Loading";
 import { TouchableOpacity, TouchableWithoutFeedback  } from "react-native";
-import { useStore } from "../stores";
+import { LogStore } from "../stores";
 
 export default () => {
     const navigation = useNavigation<DappsNavigationProp>();
     const [data, setData] = useState<Array<Dapp>>([]);
     const [selectedTag, setSelectedTag] = useState('all');
     const [isLoading, setIsLoading] = useState(true);
-    const { Log } = useStore();
 
     const load = () => {
         fetch(`${DAPPS_URL}/index.json`)
@@ -27,7 +26,7 @@ export default () => {
                 setData(list);
                 setIsLoading(false);
             })
-            .catch(e => Log.actions.logError(e));
+            .catch(e => LogStore.actions.logError(e));
     }
 
     useEffect(() => {

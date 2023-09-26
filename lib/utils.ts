@@ -1,4 +1,8 @@
-import HDKoinos from "./HDKoinos";
+const KOINOS_PATH = "m/44'/659'/";
+
+import { Signer } from "koilib";
+import { ethers } from "ethers";
+import crypto from 'react-native-quick-crypto';
 
 export const rgba = (color: string, opacity: number): string => {
     return color.replace('1)', opacity.toString() + ')');
@@ -35,5 +39,25 @@ export const accessPropertyValue = (obj: Record<string, any>, path: string): any
 }
 
 export const generateSeed = () => {
-    return HDKoinos.randomMnemonic();
+    return randomMnemonic();
+}
+
+export const randomMnemonic = () => {
+    return ethers.utils.entropyToMnemonic(
+        crypto.getRandomValues(new Uint8Array(16))
+    );
+}
+
+export const createWallet = (mnemonic: string, index: number) => {
+    const hdNode = ethers.utils.HDNode.fromMnemonic(mnemonic);
+    const keyPath = `${KOINOS_PATH}${index}'/0/0`;
+    const key = hdNode.derivePath(keyPath);
+    const signer = new Signer({
+        privateKey: key.privateKey.slice(2),
+    });
+
+    return {
+        address: signer.getAddress(),
+        privateKey: signer.getPrivateKey("wif", false)
+    };
 }

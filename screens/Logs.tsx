@@ -1,12 +1,11 @@
 import { View, Share, ScrollView } from "react-native";
 import { Button, Screen, Text } from "../components"
 import { useI18n, useTheme } from "../hooks";
-import { useStore } from "../stores";
 import { useHookstate } from "@hookstate/core";
+import { LogStore } from "../stores";
 
 export default () => {
-    const { Log } = useStore();
-    const logs = useHookstate(Log.state).get();
+    const logs = useHookstate(LogStore.state).get();
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();
@@ -31,7 +30,7 @@ export default () => {
 
             <View style={{...styles.paddingBase, ...styles.directionRow, ...styles.columnGapBase}}>
                 <Button style={styles.flex1} type="secondary" title={i18n.t('share')} onPress={share}/>
-                <Button style={styles.flex1} title={i18n.t('reset')} onPress={Log.actions.logReset}/>
+                <Button style={styles.flex1} title={i18n.t('reset')} onPress={LogStore.actions.logReset}/>
             </View>
         </Screen>
     );

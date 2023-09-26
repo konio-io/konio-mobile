@@ -1,22 +1,19 @@
 import { hookstate } from "@hookstate/core";
-import { LockActions, LockState, LockStore, Store } from "./types";
+import { ILockActions, LockState } from "../types/store";
 
 const state = hookstate<LockState>(false);
 
-export const useLockStore = (store: () => Store) : LockStore => {
+const actions : ILockActions = {
+    lock: () => {
+        state.set(true);
+    },
     
-    const actions : LockActions = {
-        lock: () => {
-            state.set(true);
-        },
-        
-        unlock: () => {
-            state.set(false);
-        }
-    }
-
-    return {
-        state,
-        actions
+    unlock: () => {
+        state.set(false);
     }
 }
+
+export default {
+    state,
+    actions
+};

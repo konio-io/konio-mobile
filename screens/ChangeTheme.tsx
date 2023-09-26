@@ -3,7 +3,7 @@ import { useI18n, useTheme } from '../hooks';
 import { ListItemSelected, Text, Screen } from '../components';
 import { Themes } from '../themes';
 import { OS_THEME } from '../lib/Constants';
-import { useStore } from '../stores';
+import { SettingStore } from '../stores';
 
 export default () => {
   const data = [OS_THEME, ...Object.keys(Themes)];
@@ -27,10 +27,9 @@ export const ListItem = (props: {
   const i18n = useI18n();
   const theme = useTheme();
   const selected = (theme.name === props.name);
-  const { Setting } = useStore();
 
   const changeTheme = () => {
-    Setting.actions.setTheme(props.name);
+    SettingStore.actions.setTheme(props.name);
   }
 
   return <ListItemSelected

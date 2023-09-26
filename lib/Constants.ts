@@ -4,6 +4,7 @@ export const MAINNET = "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==";
 export const DEFAULT_NETWORK = "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==";
 export const DEFAULT_NETWORKS: Record<string, Network> = {
     "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==": {
+        id: "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==",
         name: "Mainnet",
         chainId: "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==",
         rpcNodes: [
@@ -14,6 +15,7 @@ export const DEFAULT_NETWORKS: Record<string, Network> = {
         koinContractId: "15DJN4a8SgrbGhhGksSBASiSYjGnMU8dGL"
     },
     "EiBncD4pKRIQWco_WRqo5Q-xnXR7JuO3PtZv983mKdKHSQ==": {
+        id: "EiBncD4pKRIQWco_WRqo5Q-xnXR7JuO3PtZv983mKdKHSQ==",
         name: "Harbinger (testnet)",
         chainId: "EiBncD4pKRIQWco_WRqo5Q-xnXR7JuO3PtZv983mKdKHSQ==",
         rpcNodes: [

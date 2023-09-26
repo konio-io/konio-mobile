@@ -1,27 +1,25 @@
 import { View, StyleSheet } from "react-native";
-import AccountAvatar from "./AccountAvatar";
+import Avatar from "./Avatar";
 import Text from "./Text";
 import { useTheme } from "../hooks";
 import Address from "./Address";
 import type { Theme } from "../types/ui";
-import { useStore } from "../stores";
+import { AccountStore } from "../stores";
 import { useHookstate } from "@hookstate/core";
 
 export default (props: {
-    address: string
+    accountId: string
 }) => {
-
-    const { Account } = useStore();
-    const account = useHookstate(Account.state.nested(props.address)).get();
+    const account = useHookstate(AccountStore.state.nested(props.accountId)).get();
     const theme = useTheme();
     const styles = createStyles(theme);
 
     return (
         <View style={styles.container}>
-            <AccountAvatar size={36} address={props.address} />
+            <Avatar size={36} address={account.address} />
             <View>
                 <Text>{account?.name}</Text>
-                <Address address={props.address} copiable={true}/>
+                <Address address={account.address} copiable={true}/>
             </View>
         </View>
     );

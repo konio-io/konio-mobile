@@ -1,29 +1,31 @@
 import { Button, Text, TextInput } from '../components';
 import { View, StyleSheet, TouchableWithoutFeedback } from "react-native";
-import { useCoin, useI18n, useTheme } from '../hooks';
+import { useI18n, useTheme } from '../hooks';
 import { useEffect, useState } from "react";
-import { Theme } from '../types/store';
+import { Theme } from '../types/ui';
 import TextInputContainer from './TextInputContainer';
 import ActionSheet, { SheetManager, SheetProps, registerSheet } from 'react-native-actions-sheet';
+import { useHookstate } from '@hookstate/core';
+import { CoinStore } from '../stores';
 
 export default (props: {
     value?: number,
-    contractId: string,
+    coinId: string,
     onChange?: Function,
     opened?: boolean
 }) => {
-    const coin = useCoin(props.contractId);
-    const [usd, setUsd] = useState(0)
+    const [usd, setUsd] = useState(0);
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();
 
     useEffect(() => {
-        if (coin?.price && props.value) {
-            const price = coin.price ?? 0;
+        const coin = CoinStore.state.nested(props.coinId);
+        if (coin.price.ornull && props.value) {
+            const price = coin.price?.ornull?.get() ?? 0;
             setUsd(props.value * price);
         }
-    }, [props.value, coin]);
+    }, [props.value, props.coinId]);
 
     useEffect(() => {
         if (props.opened === true) {
@@ -35,7 +37,7 @@ export default (props: {
         const data: any = await SheetManager.show("amount", {
             payload: {
                 amount: props.value,
-                contractId: props.contractId
+                coinId: props.coinId
             }
         });
 
@@ -96,7 +98,7 @@ const ActionSheetAmount = (props: SheetProps<{ amount: number, contractId: strin
     const i18n = useI18n();
     const styles = createStyles(theme);
     const { Color } = theme.vars;
-    const coin = useCoin(props.payload?.contractId ?? '');
+    const coin = useHookstate(CoinStore.state.nested(props.payload?.contractId ?? '')).get();
     const [amount, setAmount] = useState(props.payload?.amount.toString() ?? '');
     const [amountUsd, setAmountUsd] = useState(0);
 

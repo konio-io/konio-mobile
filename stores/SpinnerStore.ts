@@ -1,22 +1,19 @@
 import { hookstate } from "@hookstate/core";
-import { SpinnerActions, SpinnerState, SpinnerStore, Store } from "./types";
+import { ISpinnerActions, SpinnerState } from "../types/store";
 
 const state = hookstate<SpinnerState>(false);
 
-export const useSpinnerStore = (store: () => Store) : SpinnerStore => {
+const actions : ISpinnerActions = {
+    showSpinner: () => {
+        state.set(true);
+    },
     
-    const actions : SpinnerActions = {
-        showSpinner: () => {
-            state.set(true);
-        },
-        
-        hideSpinner: () => {
-            state.set(false);
-        }
-    }
-
-    return {
-        state,
-        actions
+    hideSpinner: () => {
+        state.set(false);
     }
 }
+
+export default {
+    state,
+    actions
+};

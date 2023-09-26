@@ -1,29 +1,36 @@
 import { SheetProps } from "react-native-actions-sheet";
-import { deleteCoin, showToast } from "../actions";
-import { useCoin, useI18n } from "../hooks";
+import { useI18n } from "../hooks";
 import ActionSheet from "./ActionSheet";
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 import { AssetsNavigationProp } from "../types/navigation";
 import * as Clipboard from 'expo-clipboard';
+import { CoinStore } from "../stores";
+import Toast from "react-native-toast-message";
 
-export default (props: SheetProps) => {
+export default (props: SheetProps<{ 
+    coinId: string 
+}>) => {
 
-    const { contractId } = props.payload;
+    if (!props.payload?.coinId) {
+        return <></>
+    }
+    
+    const coinId = props.payload.coinId;
     const i18n = useI18n();
     const navigation = useNavigation<AssetsNavigationProp>();
-    const coin = useCoin(contractId);
+    const coin = CoinStore.state.nested(coinId).get();
     
     const _delete = () => {
         navigation.navigate('Assets');
         setTimeout(() => {
-            deleteCoin(contractId);
+            CoinStore.actions.deleteCoin(coinId);
         }, 1000)
     };
 
     const _copyContractId = async () => {
-        await Clipboard.setStringAsync(contractId);
-        showToast({
+        await Clipboard.setStringAsync(coin.contractId);
+        Toast.show({
             type: 'info',
             text1: i18n.t('copied_to_clipboard')
         });
@@ -32,7 +39,7 @@ export default (props: SheetProps) => {
     const data = [
         {
             title: i18n.t('contract_address'),
-            description: coin?.contractId,
+            description: coin.contractId,
             icon: <AntDesign name="codesquareo"/>,
             onPress: () => _copyContractId()
         }

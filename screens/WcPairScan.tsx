@@ -4,7 +4,7 @@ import { WcPairScanNavigationProp } from "../types/navigation";
 import { useI18n, useTheme } from "../hooks";
 import { View } from "react-native";
 import CodeScanner from "../components/CodeScanner";
-import { useStore } from "../stores";
+import { WalletConnectStore, LogStore } from "../stores";
 import Toast from "react-native-toast-message";
 
 
@@ -13,15 +13,14 @@ export default () => {
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();
-    const { WalletConnect, Log } = useStore();
 
     const _pair = (uri: string) => {
-        WalletConnect.actions.pair(uri)
+        WalletConnectStore.actions.pair(uri)
             .then(() => {
                 navigation.navigate('WcSessions');
             })
             .catch(e => {
-                Log.actions.logError(e);
+                LogStore.actions.logError(e);
                 Toast.show({
                     type: 'error',
                     text1: i18n.t('pairing_error'),

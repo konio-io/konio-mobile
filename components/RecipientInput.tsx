@@ -1,20 +1,19 @@
 import { useI18n, useTheme } from "../hooks";
-import AccountAvatar from "./AccountAvatar";
+import Avatar from "./Avatar";
 import { View, TouchableWithoutFeedback } from "react-native";
 import Text from './Text';
 import { SheetManager } from "react-native-actions-sheet";
 import TextInputContainer from "./TextInputContainer";
 import Address from "./Address";
-import { useStore } from "../stores";
+import { ContactStore } from "../stores";
 
 export default (props: {
     value?: string,
     onChange?: Function
 }) => {
-    const { Contact } = useStore();
     const theme = useTheme();
     const styles = theme.styles;
-    const contact = props.value ? Contact.getters.getContact(props.value) : undefined;
+    const contact = props.value ? ContactStore.getters.getContact(props.value) : undefined;
     const i18n = useI18n();
 
     const _select = async () => {
@@ -38,7 +37,7 @@ export default (props: {
 
                         {
                             props.value &&
-                            <AccountAvatar size={48} address={props.value} />
+                            <Avatar size={48} address={props.value} />
                         }
                         {
                             props.value &&

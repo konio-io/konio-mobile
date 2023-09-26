@@ -5,7 +5,7 @@ import { TextInput, Button, Screen } from '../components';
 import { useI18n } from '../hooks';
 import { View, Alert, ScrollView } from 'react-native';
 import { useTheme } from '../hooks';
-import type { Network } from '../stores/types';
+import type { Network } from '../types/store';
 import { DEFAULT_NETWORKS } from '../lib/Constants';
 import { Provider } from 'koilib';
 import { useState } from 'react';

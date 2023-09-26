@@ -7,14 +7,13 @@ import { View } from 'react-native';
 import { useEffect, useState } from 'react';
 import { SheetManager } from 'react-native-actions-sheet';
 import Toast from 'react-native-toast-message';
-import { useStore } from '../stores';
+import { SecureStore } from '../stores';
 
 export default () => {
     const navigation = useNavigation<IntroNavigationProp>();
     const [password, setPwd] = useState('');
     const [passwordConfirm, setPwdConfirm] = useState('');
     const [seed, setSeed] = useState('');
-    const { Secure } = useStore();
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
@@ -27,7 +26,7 @@ export default () => {
     }, []);
 
     const savePassword = () => {
-        if (Secure.getters.getSeed() !== seed) {
+        if (SecureStore.getters.getSeed() !== seed) {
             Toast.show({
                 type: 'error',
                 text1: i18n.t('seed_not_match'),
@@ -51,7 +50,7 @@ export default () => {
             return;
         }
 
-        Secure.actions.setPassword(password);
+        SecureStore.actions.setPassword(password);
         Toast.show({
             type: 'success',
             text1: i18n.t('password_set'),

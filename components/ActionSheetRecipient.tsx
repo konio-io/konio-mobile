@@ -2,7 +2,7 @@ import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-shee
 import Text from './Text';
 import Button from "./Button";
 import { View, ScrollView } from "react-native";
-import { useAccount, useAccounts, useAddressbook, useContact, useCurrentAddress, useI18n, useTheme } from "../hooks";
+import { useI18n, useTheme } from "../hooks";
 import ButtonCircle from "./ButtonCircle";
 import ListItemSelected from "./ListItemSelected";
 import AddressListItem from "./AddressListItem";

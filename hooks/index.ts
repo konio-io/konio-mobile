@@ -222,25 +222,28 @@ export const useSpinner = () => {
 export const useLocale = () => {
     return useHookstate(UserStore.locale).get();
 }
-
-export const useMana = () => {
-    return useHookstate(ManaStore).get();
-}
 */
 
 import { useHookstate } from "@hookstate/core";
 import { getTheme } from "../themes";
 import { AppState, useColorScheme } from 'react-native';
-import { useStore } from "../stores";
 import { FALLBACK_LOCALE, FALLBACK_THEME, OS_LOCALE, OS_THEME } from "../lib/Constants";
 import Locales from "../lib/Locales";
 import { I18n } from 'i18n-js';
 import { getLocales } from 'expo-localization';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import SettingStore from "../stores/SettingStore";
+import SecureStore from "../stores/SecureStore";
+import AccountStore from "../stores/AccountStore";
+import CoinStore from "../stores/CoinStore";
+import NetworkStore from "../stores/NetworkStore";
+import KapStore from "../stores/KapStore";
+import LockStore from "../stores/LockStore";
+import SpinnerStore from "../stores/SpinnerStore";
+import { NftCollectionStore } from "../stores";
 
 export const useTheme = () => {
-    const { Setting } = useStore();
-    const storeTheme = useHookstate(Setting.state.theme).get();
+    const storeTheme = useHookstate(SettingStore.state.theme).get();
     const systemTheme = useColorScheme() ?? FALLBACK_THEME;
 
     if (storeTheme === OS_THEME) {
@@ -251,20 +254,12 @@ export const useTheme = () => {
 }
 
 export const useSpinner = () => {
-    const { Spinner } = useStore();
-    return useHookstate(Spinner.state).get();
-}
-
-export const useBiometric = () => {
-    const { Setting } = useStore();
-    return Setting.state.biometric.get();
+    return useHookstate(SpinnerStore.state).get();
 }
 
 const i18n = new I18n(Locales);
 export const useI18n = () => {
-    const { Setting } = useStore();
-
-    let currentLocale = useHookstate(Setting.state.locale).get();
+    let currentLocale = useHookstate(SettingStore.state.locale).get();
     if (currentLocale === OS_LOCALE) {
         const systemLocale = getLocales()[0].languageCode;
         currentLocale = Object.keys(Locales).includes(systemLocale) ?
@@ -299,29 +294,21 @@ export const useAppState = () => {
 }
 
 export const useAutolock = () => {
-    const { Setting } = useStore();
-    return useHookstate(Setting.state.autolock).get();
+    return useHookstate(SettingStore.state.autolock).get();
 }
 
 export const useLockState = () => {
-    const { Lock } = useStore();
-    return useHookstate(Lock.state);
-}
-
-export const useCurrentAddress = () => {
-    const { Setting } = useStore();
-    return useHookstate(Setting.state.currentAccountId).get();
+    return useHookstate(LockStore.state);
 }
 
 export const useAccountValue = () => {
-    const { Setting, Coin } = useStore();
-    const currentAccountId = useHookstate(Setting.state.currentAccountId).get();
-    const currentNetworkId = useHookstate(Setting.state.currentNetworkId).get();
-    const coins = useHookstate(Coin.state);
+    const currentAccountId = useHookstate(SettingStore.state.currentAccountId).get();
+    const currentNetworkId = useHookstate(SettingStore.state.currentNetworkId).get();
+    const coins = useHookstate(CoinStore.state);
     const total = useHookstate(0);
 
     useEffect(() => {
-        const coinList = Object.values(coins.get({noproxy: true})).filter(coin => 
+        const coinList = Object.values(coins.get({ noproxy: true })).filter(coin =>
             coin.networkId === currentNetworkId &&
             coin.accountId === currentAccountId
         );
@@ -340,36 +327,35 @@ export const useAccountValue = () => {
 }
 
 export const useCurrentAccount = () => {
-    const { Account, Setting } = useStore();
-    const currentAccountId = useHookstate(Setting.state.currentAccountId).get();
-    return Account.state.nested(currentAccountId).get();
+    const currentAccountId = useHookstate(SettingStore.state.currentAccountId).get();
+    return AccountStore.state.nested(currentAccountId).get();
 }
 
 export const useCurrentNetwork = () => {
-    const { Network, Setting } = useStore();
-    const currentNetworkId = useHookstate(Setting.state.currentNetworkId).get();
-    return Network.state.nested(currentNetworkId).get();
+    const currentNetworkId = useHookstate(SettingStore.state.currentNetworkId).get();
+    return NetworkStore.state.nested(currentNetworkId).get();
+}
+
+export const useCurrentAccountId = () => {
+    return useHookstate(SettingStore.state.currentAccountId).get();
 }
 
 export const useCurrentNetworkId = () => {
-    const { Setting } = useStore();
-    return useHookstate(Setting.state.currentNetworkId).get();
+    return useHookstate(SettingStore.state.currentNetworkId).get();
 }
 
 export const useKapAddress = (address: string) => {
-    const { Kap } = useStore();
-    const name = useHookstate(Kap.state.nested(address));
+    const name = useHookstate(KapStore.state.nested(address));
     return name?.ornull ? name.get() : undefined;
 }
 
 export const useKapName = (name: string) => {
-    const { Kap } = useStore();
-    const store = useHookstate(Kap.state);
+    const store = useHookstate(KapStore.state);
     const address = useHookstate('');
     let foundAddress = '';
 
     for (const addr in store.get()) {
-        if (store[addr].get() === name) {
+        if (store.nested(addr).get() === name) {
             foundAddress = addr;
             break;
         }
@@ -377,4 +363,56 @@ export const useKapName = (name: string) => {
     address.set(foundAddress);
 
     return address?.ornull ? address.get() : undefined;
+}
+
+export const useHydrated = () => {
+    const setting = useHookstate(SettingStore.state);
+    const secure = useHookstate(SecureStore.state);
+    const account = useHookstate(AccountStore.state);
+    const coin = useHookstate(CoinStore.state);
+    const network = useHookstate(NetworkStore.state);
+    const [state, setState] = useState(false);
+
+    useEffect(() => {
+        if (
+            setting?.ornull?.get()
+            && secure?.ornull?.get()
+            && account?.ornull?.get()
+            && coin?.ornull?.get()
+            && network?.ornull?.get()
+        ) {
+            setState(true);
+        }
+    }, [setting, secure, account, coin, network])
+
+    return state;
+}
+
+export const useCoins = () => {
+    const currentAccountId = useHookstate(SettingStore.state.currentAccountId).get();
+    const currentNetworkId = useHookstate(SettingStore.state.currentAccountId).get();
+    const coins = useHookstate(CoinStore.state).get();
+
+    return Object.values(coins).filter(
+        coin => coin.networkId === currentNetworkId &&
+            coin.accountId === currentAccountId
+    );
+}
+
+export const useNftCollections = () => {
+    const currentAccountId = useHookstate(SettingStore.state.currentAccountId).get();
+    const currentNetworkId = useHookstate(SettingStore.state.currentAccountId).get();
+    const nftCollections = useHookstate(NftCollectionStore.state).get();
+
+    return Object.values(nftCollections).filter(nft => 
+        nft.networkId === currentNetworkId &&
+        nft.accountId === currentAccountId
+    );
+}
+
+export const useKoinBalance = () => {
+    const currentAccountId = useHookstate(SettingStore.state.currentAccountId).get();
+    const currentNetwork = useCurrentNetwork();
+    const coinId = CoinStore.getters.coinId(currentAccountId, currentNetwork.id, currentNetwork.koinContractId);
+    return useHookstate(CoinStore.state.nested(coinId).balance).get() ?? 0;
 }

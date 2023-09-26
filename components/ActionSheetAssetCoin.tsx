@@ -2,24 +2,33 @@ import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-shee
 import Button from "./Button";
 import Text from "./Text";
 import { FlatList, TouchableOpacity, View } from "react-native";
-import { useCoins, useI18n, useTheme } from "../hooks";
+import { useI18n, useTheme } from "../hooks";
 import CoinListItem from "./CoinListItem";
 import { useState } from "react";
+import { SettingStore, CoinStore } from "../stores";
 
 export default (props: SheetProps<{
-    contractId?: string
+    coinId?: string
 }>) => {
-    const [contractId, setContractId] = useState(props.payload?.contractId);
+    const [coinId, setCoinId] = useState(props.payload?.coinId);
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
-    const coins = useCoins();
+
+    const currentAccountId = SettingStore.state.currentAccountId.get();
+    const currentNetworkId = SettingStore.state.currentAccountId.get();
+    const coins = CoinStore.state.get();
+
+    const data = Object.values(coins).filter(coin => 
+        coin.networkId === currentNetworkId &&
+        coin.accountId === currentAccountId
+    );
     const { Spacing } = theme.vars;
 
     const _confirm = () => {
-        if (contractId) {
+        if (coinId) {
             const payload = {
-                contractId
+                coinId
             };
             SheetManager.hide(props.sheetId, { payload });
         }
@@ -31,21 +40,21 @@ export default (props: SheetProps<{
             containerStyle={{ ...theme.styles.paddingBase, ...theme.styles.rowGapMedium }}
         >
             {
-                coins.length === 0 &&
+                data.length === 0 &&
                 <View style={styles.alignCenterColumn}>
                     <Text>{i18n.t('no_assets')}</Text>
                 </View>
             }
 
             {
-                coins.length > 0 &&
+                data.length > 0 &&
                 <FlatList
-                    data={coins}
+                    data={data}
                     renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => setContractId(item.contractId)}>
+                        <TouchableOpacity onPress={() => setCoinId(item.id)}>
                             <CoinListItem
-                                contractId={item.contractId}
-                                selected={item.contractId === contractId}
+                                coinId={item.id}
+                                selected={item.id === coinId}
                             />
                         </TouchableOpacity>
                     )}
@@ -54,7 +63,7 @@ export default (props: SheetProps<{
             }
 
             {
-                coins.length > 0 &&
+                data.length > 0 &&
                 <Button title={i18n.t('confirm')} onPress={() => _confirm()} />
             }
         </ActionSheet>

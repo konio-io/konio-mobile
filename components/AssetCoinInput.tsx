@@ -1,10 +1,11 @@
-import { useCoin, useI18n, useTheme } from "../hooks";
+import { useI18n, useTheme } from "../hooks";
 import { View, TouchableWithoutFeedback } from "react-native";
 import Text from './Text';
 import { SheetManager } from "react-native-actions-sheet";
 import { useEffect } from "react";
 import CoinLogo from "./CoinLogo";
 import TextInputContainer from "./TextInputContainer";
+import { CoinStore } from "../stores";
 
 export default (props: {
     value?: string
@@ -15,7 +16,7 @@ export default (props: {
     const i18n = useI18n();
 
     useEffect(() => {
-        if (props.opened == true) {
+        if (props.opened === true) {
             _select();
         }
     }, [props.opened])
@@ -23,12 +24,12 @@ export default (props: {
     const _select = async () => {
         const data: any = await SheetManager.show("asset_coin", {
             payload: {
-                contractId: props.value
+                coinId: props.value
             },
         });
 
-        if (data?.contractId && props.onChange) {
-            props.onChange(data.contractId);
+        if (data?.coinId && props.onChange) {
+            props.onChange(data.coinId);
         }
     }
 
@@ -42,7 +43,7 @@ export default (props: {
                     <View style={{minHeight: 60}}>
                         {
                             props.value !== undefined &&
-                            <Coin contractId={props.value} />
+                            <Coin coinId={props.value} />
                         }
                     </View>
                 </TextInputContainer>
@@ -52,18 +53,15 @@ export default (props: {
 }
 
 const Coin = (props: {
-    contractId: string
+    coinId: string
 }) => {
     const theme = useTheme();
     const styles = theme.styles;
-    const coin = useCoin(props.contractId);
-    if (!coin) {
-        return <></>;
-    }
+    const coin = CoinStore.state.nested(props.coinId).get();
 
     return (
         <View style={{ ...styles.directionRow, ...styles.columnGapBase, ...styles.alignCenterColumn }}>
-            <CoinLogo contractId={props.contractId} size={48} />
+            <CoinLogo coinId={props.coinId} size={48} />
 
             <View>
                 <Text style={styles.symbol}>{coin.symbol}</Text>

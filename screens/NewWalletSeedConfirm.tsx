@@ -6,7 +6,7 @@ import { NewWalletSeedConfirmRouteProp } from '../types/navigation';
 import { useTheme, useI18n } from '../hooks';
 import { useState } from 'react';
 import Toast from 'react-native-toast-message';
-import { useStore } from '../stores';
+import { LogStore, SpinnerStore, SettingStore, AccountStore } from '../stores';
 
 export default () => {
     const route = useRoute<NewWalletSeedConfirmRouteProp>();
@@ -14,7 +14,6 @@ export default () => {
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();
-    const { Spinner, Setting, Account, Log } = useStore();
 
     const shuffleArray = (array: Array<string>) => {
         for (let i = array.length - 1; i > 0; i--) {
@@ -36,19 +35,19 @@ export default () => {
             return;
         }
 
-        Spinner.actions.showSpinner();
+        SpinnerStore.actions.showSpinner();
 
-        Account.actions.addSeed({
+        AccountStore.actions.addSeed({
             name: name,
             seed: seed
         })
             .then(address => {
-                Spinner.actions.hideSpinner();
-                Setting.actions.setCurrentAccount(address);
+                SpinnerStore.actions.hideSpinner();
+                SettingStore.actions.setCurrentAccount(address);
             })
             .catch(e => {
-                Spinner.actions.hideSpinner();
-                Log.actions.logError(e);
+                SpinnerStore.actions.hideSpinner();
+                LogStore.actions.logError(e);
                 Toast.show({
                     type: 'error',
                     text1: i18n.t('unable_to_add_wallet'),

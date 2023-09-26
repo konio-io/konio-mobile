@@ -1,21 +1,22 @@
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme, useCurrentKoin, useMana, useCoinBalance } from '../hooks';
+import { useKoinBalance, useTheme } from '../hooks';
 import { useEffect, useRef, useState } from 'react';
 import ManaStat from './ManaStat';
-import type { Theme } from '../types/store';
+import type { Theme } from '../types/ui';
 import ManaProgressLogo from './ManaProgressLogo';
 import ActionSheet, { SheetManager, SheetProps, registerSheet } from 'react-native-actions-sheet';
+import { ManaStore } from '../stores';
+import { useHookstate } from '@hookstate/core';
 
 export default () => {
     const FIVE_DAYS = 432e6; // 5 * 24 * 60 * 60 * 1000
 
-    const manaState = useMana();
+    const mana = useHookstate(ManaStore.state).get();
+    const koinBalance = useKoinBalance();
+    
     const [currentPercent, setCurrentPercent] = useState(0);
     const [currentMana, setCurrentMana] = useState(-1);
     const [timeRecharge, setTimeRecharge] = useState(0);
-
-    const koinContractId = useCurrentKoin();
-    const koinBalance = useCoinBalance(koinContractId) ?? 0;
 
     const update = (manaBalance: number, koinBalance: number) => {
         setCurrentMana(manaBalance);
@@ -26,8 +27,8 @@ export default () => {
 
     const intervalId: { current: NodeJS.Timeout | null } = useRef(null);
     const updateInterval = () => {
-        const lastUpdateMana = manaState.lastUpdateMana;
-        const initialMana = manaState.mana;
+        const lastUpdateMana = mana.lastUpdateMana;
+        const initialMana = mana.mana;
         const delta = Math.min(Date.now() - lastUpdateMana, FIVE_DAYS);
         let m = initialMana + (delta * koinBalance) / FIVE_DAYS;
         m = Math.min(m, koinBalance);
@@ -37,7 +38,7 @@ export default () => {
     }
 
     useEffect(() => {
-        update(manaState.mana, koinBalance);
+        update(mana.mana, koinBalance);
         intervalId.current = setInterval(() => {
             updateInterval();
         }, 3000);
@@ -47,7 +48,7 @@ export default () => {
                 clearInterval(intervalId.current);
             }
         }
-    }, [manaState, koinBalance]);
+    }, [mana, koinBalance]);
 
     const theme = useTheme();
     const styles = createStyles(theme);

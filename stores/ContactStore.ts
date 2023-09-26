@@ -1,115 +1,109 @@
 import { hookstate, none } from "@hookstate/core";
-import { Contact, ContactActions, ContactGetters, ContactState, ContactStore, Store } from "./types";
+import { Contact, IContactActions, IContactGetters, ContactState } from "../types/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { localstored } from "./localstored";
+import { localstored } from '@hookstate/localstored';
 import { utils } from "koilib";
-
-export const ContactStoreLoaded = hookstate(false);
+import { getStore } from "./registry";
 
 const state = hookstate<ContactState>(
     {}, 
     localstored({
         key: 'contact',
-        engine: AsyncStorage,
-        loaded: ContactStoreLoaded
+        engine: AsyncStorage
     })
 );
 
-export const useContactStore = (store: () => Store): ContactStore => {
-
-    const actions : ContactActions = {
-        addContact: (item: Contact) => {
-            state.merge({ [item.address]: item });
-        },
-        
-        deleteContact: (address: string) => {
-            state.nested(address).set(none);
-        }
+const actions : IContactActions = {
+    addContact: (item: Contact) => {
+        state.merge({ [item.address]: item });
+    },
+    
+    deleteContact: (address: string) => {
+        state.nested(address).set(none);
     }
+}
 
-    const getters : ContactGetters = {
-        getContact: (search: string) => {
-            const accounts = store().Account.state;
-            const addressbook = state;
-            const kap = store().Kap.state;
-        
-            const accountByAddress = accounts[search].get();
-            if (accountByAddress) {
+const getters : IContactGetters = {
+    getContact: (search: string) => {
+        const accounts = getStore('Account').state;
+        const addressbook = state;
+        const kap = getStore('Kap').state;
+    
+        const accountByAddress = accounts[search].get();
+        if (accountByAddress) {
+            return {
+                name: accountByAddress.name,
+                address: search,
+                addable: false
+            };
+        }
+    
+        const accountByName = Object.values(accounts.get()).find(account => account.name === search);
+        if (accountByName) {
+            return {
+                name: search,
+                address: accountByName.name,
+                addable: false
+            };
+        }
+    
+        const contactByAddress = addressbook[search].get();
+        if (contactByAddress) {
+            return {
+                name: contactByAddress.name,
+                address: search,
+                addable: false
+            };
+        }
+    
+        const contactByName = Object.values(addressbook.get()).find(contact => contact.name === search);
+        if (contactByName) {
+            return {
+                name: search,
+                address: contactByName.name,
+                addable: false
+            };
+        }
+    
+        if (getStore('Network').getters.isMainnet()) {
+            const kapByAddress = kap[search].get();
+            if (kapByAddress) {
                 return {
-                    name: accountByAddress.name,
+                    name: kapByAddress,
                     address: search,
-                    addable: false
-                };
+                    addable: true
+                }
             }
-        
-            const accountByName = Object.values(accounts.get()).find(account => account.name === search);
-            if (accountByName) {
+    
+            const kapByName = Object.keys(kap.get()).find(address => address === search);
+            if (kapByName) {
                 return {
                     name: search,
-                    address: accountByName,
-                    addable: false
+                    address: kapByName,
+                    addable: true
                 };
             }
-        
-            const contactByAddress = addressbook[search].get();
-            if (contactByAddress) {
+        }
+    
+        try {
+            const check = utils.isChecksumAddress(search);
+            if (check) {
                 return {
-                    name: contactByAddress.name,
+                    name: '',
                     address: search,
-                    addable: false
-                };
-            }
-        
-            const contactByName = Object.values(addressbook.get()).find(contact => contact.name === search);
-            if (contactByName) {
-                return {
-                    name: search,
-                    address: contactByName,
-                    addable: false
-                };
-            }
-        
-            if (store().Network.getters.isMainnet()) {
-                const kapByAddress = kap[search].get();
-                if (kapByAddress) {
-                    return {
-                        name: kapByAddress,
-                        address: search,
-                        addable: true
-                    }
-                }
-        
-                const kapByName = Object.keys(kap.get()).find(address => address === search);
-                if (kapByName) {
-                    return {
-                        name: search,
-                        address: kapByName,
-                        addable: true
-                    };
+                    addable: true
                 }
             }
-        
-            try {
-                const check = utils.isChecksumAddress(search);
-                if (check) {
-                    return {
-                        name: '',
-                        address: search,
-                        addable: true
-                    }
-                }
-            } catch (e) {
-                return undefined;
-            }
-        
+        } catch (e) {
             return undefined;
         }
+    
+        return undefined;
     }
+}
 
-    return {
-        state,
-        actions,
-        getters
-    }
-
+export default {
+    state,
+    actions,
+    getters
 }

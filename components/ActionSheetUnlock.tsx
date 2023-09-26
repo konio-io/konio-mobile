@@ -1,7 +1,7 @@
 import type { Theme } from "../types/ui";
 import { Pressable, View, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { useTheme, useI18n, useBiometric } from '../hooks';
+import { useTheme, useI18n } from '../hooks';
 import { Button, TextInput, Logo, Text } from '../components';
 import { useNavigation } from '@react-navigation/native';
 import { ResetPasswordNavigationProp } from '../types/navigation';
@@ -9,19 +9,18 @@ import * as LocalAuthentication from 'expo-local-authentication';
 import { useEffect, useState } from 'react';
 import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-sheet";
 import Toast from "react-native-toast-message";
-import { useStore } from "../stores";
+import { SecureStore, LockStore, SettingStore } from "../stores";
 
 export default (props: SheetProps) => {
     const navigation = useNavigation<ResetPasswordNavigationProp>();
     const i18n = useI18n();
     const [password, setPwd] = useState('');
-    const biometric = useBiometric();
+    const biometric = SettingStore.state.biometric;
     const theme = useTheme();
     const styles = createStyles(theme);
-    const { Secure, Lock } = useStore();
 
     const unlockPassword = () => {
-        if (!Secure.getters.checkPassword(password)) {
+        if (!SecureStore.getters.checkPassword(password)) {
             Toast.show({
                 type: 'error',
                 text1: i18n.t('wrong_password')
@@ -51,7 +50,7 @@ export default (props: SheetProps) => {
     };
 
     const unlockWallet = () => {
-        Lock.actions.unlock();
+        LockStore.actions.unlock();
         setPwd('');
         SheetManager.hide('unlock');
     }

@@ -1,28 +1,26 @@
-import { useNft, useNftCollection, useTheme } from "../hooks";
+import { useTheme } from "../hooks";
 import { View, TouchableWithoutFeedback, Image } from "react-native";
 import Text from './Text';
 import { SheetManager } from "react-native-actions-sheet";
 import { useEffect } from "react";
 import TextInputContainer from "./TextInputContainer";
+import { NftCollectionStore, NftStore } from "../stores";
 
 export default (props: {
-    value?: {
-        tokenId: string,
-        contractId: string
-    }
+    nftId?: string,
     onChange?: Function
     opened?: boolean
 }) => {
 
     useEffect(() => {
-        if (props.opened == true) {
+        if (props.opened === true) {
             _select();
         }
     }, [props.opened])
 
     const _select = async () => {
         const data: any = await SheetManager.show("asset_nft", {
-            payload: props.value,
+            payload: { nftId: props.nftId },
         });
 
         if (data?.contractId && data?.tokenId && props.onChange) {
@@ -42,8 +40,8 @@ export default (props: {
                 <TextInputContainer note={'NFT'}>
                     <View>
                         {
-                            props.value !== undefined &&
-                            <Nft nft={props.value} />
+                            props.nftId !== undefined &&
+                            <Nft nftId={props.nftId} />
                         }
                     </View>
                 </TextInputContainer>
@@ -53,22 +51,14 @@ export default (props: {
 }
 
 const Nft = (props: {
-    nft: {
-        contractId: string,
-        tokenId: string
-    }
+    nftId: string
 }) => {
-    const { contractId, tokenId } = props.nft;
     const theme = useTheme();
     const styles = theme.styles;
     const { Border } = theme.vars;
-    const collection = useNftCollection(contractId);
-    const nft = useNft({
-        contractId,
-        tokenId
-    });
-
-    if (!collection || !nft) {
+    const nft = NftStore.state.nested(props.nftId).get();
+    const nftCollection = NftCollectionStore.state.nested(props.nftId).get();
+    if (!nftCollection || !nft) {
         return <></>;
     }
 
@@ -83,10 +73,9 @@ const Nft = (props: {
             }} />
 
             <View>
-                <Text>{collection.name}</Text>
+                <Text>{nftCollection.name}</Text>
                 <Text>{nft.tokenId}</Text>
             </View>
-            
         </View>
     );
 }

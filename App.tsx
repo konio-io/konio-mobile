@@ -1,14 +1,13 @@
 import 'react-native-gesture-handler';
 import 'text-encoding-polyfill'; //needs for koilib compatibility
 import '@ethersproject/shims'; //needs for etherjs compatibility
-//import './components/sheets';
+import './components/sheets';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { DarkTheme, DefaultTheme, NavigationContainer, getStateFromPath } from "@react-navigation/native";
 import { SheetProvider } from "react-native-actions-sheet";
 import Loading from './screens/Loading';
 import Intro from './navigators/Intro';
-import { useStoreLoaded, useStore } from './stores';
 import ErrorMigration from './screens/ErrorMigration';
 import Spinner from './components/Spinner';
 import Drawer from './navigators/Drawer';
@@ -17,10 +16,12 @@ import { SheetManager } from 'react-native-actions-sheet';
 import { WC_SECURE_METHODS } from './lib/Constants';
 import NetInfo from '@react-native-community/netinfo';
 import { SignClientTypes } from "@walletconnect/types";
-import { useI18n, useTheme, useLockState, useAppState, useAutolock } from './hooks';
+import { useI18n, useTheme, useLockState, useAppState, useAutolock, useCurrentAccountId } from './hooks';
 import { useHookstate } from '@hookstate/core';
 import Toast from 'react-native-toast-message';
 import { View } from 'react-native';
+import { useHydrated } from './hooks';
+import { CoinStore, WalletConnectStore, LogStore, ManaStore } from './stores'
 
 export default function App() {
   useFonts({
@@ -47,9 +48,8 @@ export default function App() {
       }
     },
     getStateFromPath: (path: string, options: any) => {
-      const { WalletConnect } = useStore();
       if (path.includes('@2') && !path.includes('requestId')) {
-        WalletConnect.actions.setUri(`wc:${path}`);
+        WalletConnectStore.actions.setUri(`wc:${path}`);
       }
 
       return getStateFromPath(path, options);
@@ -73,15 +73,14 @@ export default function App() {
 }
 
 const Main = () => {
-  const storeLoaded = useStoreLoaded();
-  const store = useStore();
+  const hydrated = useHydrated();
+  const currentAccountId = useCurrentAccountId();
   
-  
-  if (!storeLoaded) {
+  if (!hydrated) {
     return <Loading />;
   }
 
-  if (store.Setting.state.currentAccountId.get() === '') {
+  if (currentAccountId=== '') {
     return <Intro/>
   }
 
@@ -102,12 +101,11 @@ const Main = () => {
 }
 
 const Wc = () => {
-  const { WalletConnect, Log } = useStore();
   const lock = useLockState();
-  const pendingProposal = useHookstate(WalletConnect.state.pendingProposal).get();
-  const pendingRequest = useHookstate(WalletConnect.state.pendingRequest).get();
-  const uri = useHookstate(WalletConnect.state.uri).get();
-  const wallet = useHookstate(WalletConnect.state.wallet).get();
+  const pendingProposal = useHookstate(WalletConnectStore.state.pendingProposal).get();
+  const pendingRequest = useHookstate(WalletConnectStore.state.pendingRequest).get();
+  const uri = useHookstate(WalletConnectStore.state.uri).get();
+  const wallet = useHookstate(WalletConnectStore.state.wallet).get();
   const i18n = useI18n();
 
   //intercept wc_proposal
@@ -124,7 +122,7 @@ const Wc = () => {
       const proposal = Object.assign({}, pp);
 
       SheetManager.show('wc_proposal', { payload: { proposal } });
-      WalletConnect.actions.unsetPendingProposal();
+      WalletConnectStore.actions.unsetPendingProposal();
   }, [lock, pendingProposal]);
 
   //intercept wc_request
@@ -142,9 +140,9 @@ const Wc = () => {
 
       const method = request.params.request.method;
       if (!WC_SECURE_METHODS.includes(method)) {
-          WalletConnect.actions.acceptRequest(request)
+          WalletConnectStore.actions.acceptRequest(request)
               .catch(e => {
-                  Log.actions.logError(e);
+                  LogStore.actions.logError(e);
                   Toast.show({
                       type: 'error',
                       text1: i18n.t('dapp_request_error', { method }),
@@ -155,18 +153,18 @@ const Wc = () => {
       }
 
       SheetManager.show('wc_request', { payload: { request } });
-      WalletConnect.actions.unsetPendingRequest();
+      WalletConnectStore.actions.unsetPendingRequest();
   }, [lock, pendingRequest]);
 
-  //intercept walletconnect wallet/uri set
+  //intercept walletconnectStore wallet/uri set
   useEffect(() => {
       if (wallet && uri) {
-          WalletConnect.actions.pair(uri)
+          WalletConnectStore.actions.pair(uri)
               .then(() => {
                   console.log('wc_pair: paired');
               })
               .catch(e => {
-                  Log.actions.logError(e);
+                  LogStore.actions.logError(e);
                   Toast.show({
                       type: 'error',
                       text1: i18n.t('pairing_error'),
@@ -176,25 +174,25 @@ const Wc = () => {
       }
   }, [uri, wallet]);
 
-  //intercept walletconnect set and subscribe events
+  //intercept walletconnectStore set and subscribe events
   useEffect(() => {
       if (wallet) {
           console.log('wc_register_events');
 
           const onSessionProposal = (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
               console.log('wc_proposal', proposal);
-              WalletConnect.actions.setPendingProposal(proposal);
+              WalletConnectStore.actions.setPendingProposal(proposal);
           }
 
           const onSessionRequest = async (request: SignClientTypes.EventArguments["session_request"]) => {
               console.log('wc_request', request);
-              WalletConnect.actions.setPendingRequest(request);
+              WalletConnectStore.actions.setPendingRequest(request);
           }
 
           wallet.on("session_proposal", onSessionProposal);
           wallet.on("session_request", onSessionRequest);
           wallet.on("session_delete", () => {
-              WalletConnect.actions.refreshActiveSessions();
+              WalletConnectStore.actions.refreshActiveSessions();
           });
       }
   }, [wallet]);
@@ -204,14 +202,13 @@ const Wc = () => {
 
 const Init = () => {
   const [connectionAvailable, setConnectionAvailable] = useState(true);
-  const { Coin, Mana, WalletConnect } = useStore();
   const i18n = useI18n();
 
   //Refresh coins and mana on init
   useEffect(() => {
-      Coin.actions.refreshCoins({ balance: true, price: true });
-      Mana.actions.refreshMana();
-      WalletConnect.actions.init();
+      CoinStore.actions.refreshCoins({ balance: true, price: true });
+      ManaStore.actions.refreshMana();
+      WalletConnectStore.actions.init();
 
       //network changes
       const unsubscribe = NetInfo.addEventListener(state => {
@@ -220,7 +217,7 @@ const Init = () => {
                   type: 'success',
                   text1: i18n.t('you_online')
               });
-              WalletConnect.actions.refreshActiveSessions();
+              WalletConnectStore.actions.refreshActiveSessions();
           }
           else if (state.isConnected !== true) {
               Toast.show({

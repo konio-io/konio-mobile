@@ -1,5 +1,7 @@
 import { hookstate } from "@hookstate/core";
-import { ManaActions, ManaState, ManaStore, Store } from "./types";
+import { IManaActions, ManaState } from "../types/store";
+import { getStore } from "./registry";
+
 /**
  * Mana local store
  * It is used to provide global "mana" recharge
@@ -14,24 +16,21 @@ const ManaStoreDefault = {
 
 const state = hookstate<ManaState>({...ManaStoreDefault});
 
-export const useManaStore = (store: () => Store) : ManaStore => {
+const actions : IManaActions = {
+    refreshMana: async () => {
+        console.log('refresh mana');
+        const accountId = getStore('Setting').state.currentAccountId.get();
+        const address = getStore('Account').state.nested(accountId).address.get();
+        const provider = getStore('Koin').getters.getProvider();
+        const manaBalance = await provider.getAccountRc(address);
     
-    const actions : ManaActions = {
-        refreshMana: async () => {
-            console.log('refresh mana');
-            const accountId = store().Setting.state.currentAccountId.get();
-            const address = store().Account.state.nested(accountId).address.get();
-            const provider = store().Koin.getters.getProvider();
-            const manaBalance = await provider.getAccountRc(address);
-        
-            state.merge({
-                mana: Number(manaBalance) / 1e8
-            });
-        }
-    }
-
-    return {
-        state,
-        actions
+        state.merge({
+            mana: Number(manaBalance) / 1e8
+        });
     }
 }
+
+export default {
+    state,
+    actions
+};

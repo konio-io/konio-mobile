@@ -2,22 +2,31 @@ import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-shee
 import Button from "./Button";
 import Text from "./Text";
 import { ScrollView, TouchableOpacity, View } from "react-native";
-import { useI18n, useNftCollections, useTheme } from "../hooks";
+import { useI18n, useTheme } from "../hooks";
 import NftCollectionListItem from "./NftCollectionListItem";
 import NftListItem from "./NftListItem";
 import { useState } from "react";
+import { SettingStore, NftCollectionStore, NftStore } from "../stores";
 
-export default (props: SheetProps<{ contractId: string, tokenId?: string }>) => {
-    const [contractId, setContractId] = useState(props.payload?.contractId ?? '');
-    const [tokenId, setTokenId] = useState(props.payload?.tokenId ?? '');
+export default (props: SheetProps<{ 
+    nftId?: string 
+}>) => {
+    const [nftId, setNftId] = useState(props.payload?.nftId ?? '');
     const theme = useTheme();
     const i18n = useI18n();
     const styles = theme.styles;
-    const data = useNftCollections();
+
+    const currentAccountId = SettingStore.state.currentAccountId.get();
+    const currentNetworkId = SettingStore.state.currentAccountId.get();
+    const nftCollections = NftCollectionStore.state.get();
+
+    const data = Object.values(nftCollections).filter(nft => 
+        nft.networkId === currentNetworkId &&
+        nft.accountId === currentAccountId
+    );
 
     const _select = (data: any) => {
-        setContractId(data.contractId);
-        setTokenId(data.tokenId);
+        setNftId(data.nftId);
     }
 
     const _close = () => {
@@ -25,11 +34,8 @@ export default (props: SheetProps<{ contractId: string, tokenId?: string }>) => 
     }
 
     const _confirm = () => {
-        if (contractId && tokenId) {
-            const payload = {
-                contractId,
-                tokenId
-            };
+        if (nftId) {
+            const payload = { nftId };
             SheetManager.hide(props.sheetId, { payload });
         }
     }
@@ -56,15 +62,14 @@ export default (props: SheetProps<{ contractId: string, tokenId?: string }>) => 
                         data.map(collection =>
 
                             <NftCollectionListItem
-                                key={collection.contractId}
-                                contractId={collection.contractId}
+                                key={collection.id}
+                                nftCollectionId={collection.id}
                                 renderItem={
                                     (tId: string) =>
-                                        <TouchableOpacity key={tId} onPress={() => _select({ contractId: collection.contractId, tokenId: tId })}>
+                                        <TouchableOpacity key={tId} onPress={() => _select({ nftId: tId })}>
                                             <NftListItem
-                                                contractId={collection.contractId}
-                                                tokenId={tId}
-                                                selected={tId === tokenId && collection.contractId === contractId}
+                                                nftId={nftId}
+                                                selected={tId === nftId}
                                             />
                                         </TouchableOpacity>
                                 }

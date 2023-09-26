@@ -1,13 +1,12 @@
 import { View, TextInput } from 'react-native';
 import { useTheme, useI18n } from '../hooks';
 import { Screen, Text } from '../components';
-import { useStore } from '../stores';
+import { SettingStore } from '../stores';
 
 export default () => {
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
-    const { Setting } = useStore();
 
     return (
         <Screen keyboardDismiss={true}>
@@ -21,8 +20,8 @@ export default () => {
                     <TextInput
                         style={{ ...styles.textInputText, textAlign: 'center', width: 50}}
                         keyboardType='numeric'
-                        value={Setting.state.rcLimit.get()}
-                        onChangeText={(v: string) => Setting.actions.setRcLimit(v)}
+                        value={SettingStore.state.rcLimit.get()}
+                        onChangeText={(v: string) => SettingStore.actions.setRcLimit(v)}
                     />
                 </View>
             </View>

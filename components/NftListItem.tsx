@@ -1,16 +1,16 @@
-import { useNft, useTheme } from "../hooks";
+import { useTheme } from "../hooks";
 import { Image, View } from 'react-native';
 import { useEffect, useState } from "react";
 import { rgba } from "../lib/utils";
 import { Feather } from '@expo/vector-icons';
+import { useHookstate } from "@hookstate/core";
+import { NftStore } from "../stores";
 
 export default (props: {
-    contractId: string,
-    tokenId: string,
+    nftId: string,
     selected?: boolean
 }) => {
-    const { tokenId, contractId } = props;
-    const nft = useNft({ tokenId, contractId });
+    const nft = useHookstate(NftStore.state.nested(props.nftId)).get();
     const theme = useTheme();
     const styles = theme.styles;
     const { Border, Color } = theme.vars;

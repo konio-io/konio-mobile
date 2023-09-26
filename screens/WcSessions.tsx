@@ -1,4 +1,4 @@
-import { Screen, Text, Separator, Button, Accordion, AccountAvatar, ButtonCircle } from "../components"
+import { Screen, Text, Separator, Button, Accordion, Avatar, ButtonCircle } from "../components"
 import { useEffect } from "react";
 import { getSdkError } from "@walletconnect/utils";
 import { ImmutableObject } from "@hookstate/core";
@@ -10,16 +10,15 @@ import { AntDesign } from '@expo/vector-icons';
 import { WcSessionsNavigationProp } from "../types/navigation";
 import { SessionTypes } from "@walletconnect/types";
 import { Feather } from '@expo/vector-icons';
-import { useStore } from "../stores";
+import { WalletConnectStore } from "../stores";
 
 export default () => {
-    const { WalletConnect } = useStore();
-    const wallet = WalletConnect.state.wallet.get();
+    const wallet = WalletConnectStore.state.wallet.get();
     if (!wallet) {
         return <Loading />;
     }
 
-    const activeSessions = WalletConnect.state.activeSessions.get();
+    const activeSessions = WalletConnectStore.state.activeSessions.get();
     const { styles } = useTheme();
     const navigation = useNavigation<WcSessionsNavigationProp>();
 
@@ -28,11 +27,11 @@ export default () => {
             topic,
             reason: getSdkError("USER_DISCONNECTED"),
         });
-        WalletConnect.actions.refreshActiveSessions();
+        WalletConnectStore.actions.refreshActiveSessions();
     }
 
     useEffect(() => {
-        WalletConnect.actions.refreshActiveSessions();
+        WalletConnectStore.actions.refreshActiveSessions();
     }, []);
 
     const data = Object.values(activeSessions)
@@ -128,7 +127,7 @@ const ItemHeader = (props: {
     return (
         <View style={{ ...styles.directionRow, ...styles.alignSpaceBetweenRow, ...styles.alignCenterColumn, ...styles.paddingBase }}>
             <View style={{ ...styles.directionRow, ...styles.columnGapBase, ...styles.alignCenterColumn }}>
-                <AccountAvatar address={props.address} size={36} />
+                <Avatar address={props.address} size={36} />
                 <Text>{account.name}</Text>
             </View>
             <View>

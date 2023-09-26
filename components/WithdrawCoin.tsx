@@ -1,22 +1,25 @@
 import { Button } from '../components';
 import { ScrollView, View } from "react-native";
-import { useCurrentAddress, useCurrentNetworkId, useI18n, useLockState, useTheme } from '../hooks';
+import { useI18n, useLockState, useTheme } from '../hooks';
 import RecipientInput from '../components/RecipientInput';
 import AmountInput from '../components/AmountInput';
 import { Feather } from '@expo/vector-icons';
 import AssetCoinInput from '../components/AssetCoinInput';
-import { askReview, withdrawCoinConfirm, hideSpinner, lock, logError, showSpinner, showToast, withdrawCoin } from '../actions';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 import { WithdrawNavigationProp } from '../types/navigation';
 import { useEffect, useState } from 'react';
+import { SettingStore, LockStore, SpinnerStore, CoinStore, LogStore } from '../stores';
+import { useHookstate } from '@hookstate/core';
+import Toast from 'react-native-toast-message';
 
 export default (props: {
-    contractId?: string
+    coinId?: string
 }) => {
-    const currentAddress = useCurrentAddress();
-    const currentNetworkId = useCurrentNetworkId();
+    const currentAccountState = useHookstate(SettingStore.state.currentAccountId);
+    const currentNetworkState = useHookstate(SettingStore.state.currentNetworkId);
+
     const [to, setTo] = useState<string|undefined>(undefined);
-    const [contractId, setContractId] = useState(props.contractId);
+    const [coinId, setCoinId] = useState(props.coinId);
     const [amount, setAmount] = useState(0);
     const [sendRequest, setSendRequest] = useState(false);
     const i18n = useI18n();
@@ -26,7 +29,7 @@ export default (props: {
 
     useEffect(() => {
         _reset();
-    }, [currentAddress, currentNetworkId]);
+    }, [currentAccountState, currentNetworkState]);
 
     useEffect(() => {
         if (lockState.get() === false && sendRequest === true) {
@@ -36,30 +39,30 @@ export default (props: {
 
     const _reset = () => {
         setAmount(0);
-        setContractId(undefined);
+        setCoinId(undefined);
         setTo(undefined);
     };
 
     const _confirm = () => {
-        lock();
+        LockStore.actions.lock();
         setSendRequest(true);
     };
 
     const _send = () => {
-        if (!to || !contractId || !amount) {
+        if (!to || !coinId || !amount) {
             return;
         }
 
-        showSpinner();
+        SpinnerStore.actions.showSpinner();
 
-        withdrawCoin({
+        CoinStore.actions.withdrawCoin({
             to,
-            contractId,
+            id: coinId,
             value: amount.toString(),
             note: ''
         })
             .then(transaction => {
-                hideSpinner();
+                SpinnerStore.actions.hideSpinner();
 
                 navigation.dispatch(
                     CommonActions.reset({
@@ -75,7 +78,7 @@ export default (props: {
                                         {
                                             name: "Coin",
                                             params: {
-                                                contractId
+                                                coinId
                                             }
                                         }
                                     ]
@@ -85,24 +88,24 @@ export default (props: {
                     })
                 );
 
-                showToast({
+                Toast.show({
                     type: 'info',
                     text1: i18n.t('transaction_committed'),
                 });
 
-                withdrawCoinConfirm({
-                    contractId,
+                CoinStore.actions.withdrawCoinConfirm({
+                    id: coinId,
                     transaction
                 }).then(tsx => {
-                    showToast({
+                    Toast.show({
                         type: 'success',
                         text1: i18n.t('transaction_confirmed'),
                     });
-                    askReview();
+                    SettingStore.actions.showAskReview();
                 })
                     .catch(e => {
-                        logError(e)
-                        showToast({
+                        LogStore.actions.logError(e)
+                        Toast.show({
                             type: 'error',
                             text1: i18n.t('transaction_confirm_failed'),
                             text2: i18n.t('check_logs')
@@ -110,9 +113,9 @@ export default (props: {
                     });
             })
             .catch(e => {
-                hideSpinner();
-                logError(e);
-                showToast({
+                SpinnerStore.actions.hideSpinner();
+                LogStore.actions.logError(e);
+                Toast.show({
                     type: 'error',
                     text1: i18n.t('transaction_commit_failed'),
                     text2: i18n.t('check_logs')
@@ -130,25 +133,25 @@ export default (props: {
                 />
 
                 <AssetCoinInput
-                    value={contractId}
-                    onChange={(value: string) => setContractId(value)}
-                    opened={to !== undefined && contractId === undefined ? true : false}
+                    value={coinId}
+                    onChange={(value: string) => setCoinId(value)}
+                    opened={to !== undefined && coinId === undefined ? true : false}
                 />
 
                 {
-                    contractId !== undefined &&
+                    coinId !== undefined &&
                     <AmountInput
-                        contractId={contractId}
+                        coinId={coinId}
                         value={amount}
                         onChange={(value: number) => setAmount(value)}
-                        opened={contractId ? true : false}
+                        opened={coinId ? true : false}
                     />
                 }
 
             </ScrollView>
 
             {
-                to && contractId && amount !== undefined && amount > 0 &&
+                to && coinId && amount !== undefined && amount > 0 &&
                 <Button
                     title={i18n.t('send')}
                     onPress={() => _confirm()}

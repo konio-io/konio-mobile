@@ -1,4 +1,4 @@
-import { Button, Text, Accordion, AccountAvatar } from "../components"
+import { Button, Text, Accordion, Avatar } from "../components"
 import { useI18n, useTheme, useCurrentAccount, useCurrentNetwork } from "../hooks";
 import { View, Image, StyleSheet, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
@@ -7,12 +7,11 @@ import { WC_METHODS } from "../lib/Constants";
 import Loading from "../screens/Loading";
 import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-sheet";
 import type { Theme } from "../types/ui";
-import { useStore } from "../stores";
+import { WalletConnectStore, NetworkStore, SettingStore, LogStore, KoinStore } from "../stores";
 import Toast from "react-native-toast-message";
 
 export default (props: SheetProps) => {
-    const { WalletConnect, Network, Setting, Log, Account } = useStore();
-    const wallet = WalletConnect.state.wallet.get();
+    const wallet = WalletConnectStore.state.wallet.get();
     if (!wallet) {
         return <Loading />
     }
@@ -36,7 +35,7 @@ export default (props: SheetProps) => {
     const url = data?.peer?.metadata?.url;
     const method = request.params.request.method;
     const chainId = request.params.chainId;
-    const requiredNetwork = Network.getters.getNetworkByChainId(chainId);
+    const requiredNetwork = NetworkStore.getters.getNetworkByChainId(chainId);
     const requiredNetworkName = requiredNetwork ? requiredNetwork.name : i18n.t('unknown');
     const requiredAddress = data.namespaces.koinos?.accounts[0]?.split(':')[2];
     const icons = data?.peer?.metadata?.icons;
@@ -48,30 +47,30 @@ export default (props: SheetProps) => {
     }
 
     const _checkMethod = () => {
-        if (!WalletConnect.getters.checkMethod(method)) {
+        if (!WalletConnectStore.getters.checkMethod(method)) {
             setCheckMethod(false);
         }
     }
 
     const _checkNetwork = () => {
-        if (!WalletConnect.getters.checkNetwork(chainId)) {
+        if (!WalletConnectStore.getters.checkNetwork(chainId)) {
             setCheckNetwork(false);
         }
     }
 
     const accept = async () => {
-        WalletConnect.actions.acceptRequest(request)
+        WalletConnectStore.actions.acceptRequest(request)
             .then(() => {
                 SheetManager.hide('wc_request');
                 Toast.show({
                     type: 'success',
                     text1: i18n.t('dapp_request_success')
                 });
-                Setting.actions.showAskReview();
+                SettingStore.actions.showAskReview();
             })
             .catch(e => {
                 SheetManager.hide('wc_request');
-                Log.actions.logError(e);
+                LogStore.actions.logError(e);
                 Toast.show({
                     type: 'error',
                     text1: i18n.t('dapp_request_error', { method }),
@@ -81,8 +80,8 @@ export default (props: SheetProps) => {
     }
 
     const reject = async () => {
-        WalletConnect.actions.rejectRequest(request)
-            .catch(e => Log.actions.logError(e))
+        WalletConnectStore.actions.rejectRequest(request)
+            .catch(e => LogStore.actions.logError(e))
 
         SheetManager.hide('wc_request');
     }
@@ -100,7 +99,7 @@ export default (props: SheetProps) => {
                 {
                     account &&
                     <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
-                        <AccountAvatar size={24} address={account.address} />
+                        <Avatar size={24} address={account.address} />
                         <Text>{account.name}</Text>
                     </View>
                 }
@@ -245,7 +244,6 @@ const SignMessageDetail = (props: {
 const SendTransactionDetail = (props: {
     transaction: any
 }) => {
-    const { Koin, Log } = useStore();
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
@@ -256,7 +254,7 @@ const SendTransactionDetail = (props: {
             const contractId = operation.call_contract.contract_id;
 
             try {
-                const contract = await Koin.getters.fetchContract(contractId);
+                const contract = await KoinStore.getters.fetchContract(contractId);
 
                 if (contract.abi) {
                     const decodedOperation = await contract.decodeOperation(operation)
@@ -272,7 +270,7 @@ const SendTransactionDetail = (props: {
                 }
             } catch (e) {
                 console.error(e);
-                Log.actions.logError(String(e));
+                LogStore.actions.logError(String(e));
             }
         }
     }

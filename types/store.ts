@@ -19,8 +19,8 @@ export type SettingState = {
     askReview: boolean
 }
 
-export interface SettingActions {
-    setCurrentAccount(address: string): void;
+export interface ISettingActions {
+    setCurrentAccount(accountId: string): void;
     setCurrentNetwork(networkId: string): void;
     setLocale(locale: string): void;
     setTheme(theme: string): void;
@@ -30,9 +30,9 @@ export interface SettingActions {
     setRcLimit(value: string): void;
 }
 
-export interface SettingStore {
+export interface ISettingStore {
     state: State<SettingState>;
-    actions: SettingActions
+    actions: ISettingActions
 }
 
 /**
@@ -40,14 +40,14 @@ export interface SettingStore {
  */
 export type LogState = Array<string>;
 
-export interface LogActions {
+export interface ILogActions {
     logError(text: string): void;
     logReset(): void;
 }
 
 export interface LogStore {
     state: State<LogState>;
-    actions: LogActions
+    actions: ILogActions
 }
 
 /**
@@ -66,7 +66,7 @@ export type SecureState = {
     password: string
 }
 
-export interface SecureActions {
+export interface ISecureActions {
     setPassword: (password: string) => void;
     deIncrementIndex: () => void;
     incrementIndex: () => void;
@@ -74,16 +74,16 @@ export interface SecureActions {
     addAccount: (account: AccountSecure) => void;
 }
 
-export interface SecureGetters {
+export interface ISecureGetters {
     getSeedAccountId: () => string | undefined;
     getSeed: () => string | undefined;
     checkPassword: (password: string) => boolean;
 }
 
-export interface SecureStore {
+export interface ISecureStore {
     state: State<SecureState>;
-    actions: SecureActions;
-    getters: SecureGetters;
+    actions: ISecureActions;
+    getters: ISecureGetters;
 }
 
 /**
@@ -97,18 +97,18 @@ export type Account = {
 
 export type AccountState = Record<string, Account>
 
-export interface AccountActions {
+export interface IAccountActions {
     addAddress(accountId: string, name: string): void;
     addSeed(args: { seed: string; name: string }): Promise<string>;
-    importAccount(args: { privateKey: string; name: string }): Promise<string>;
+    importAccount: (args: { privateKey: string; name: string }) => Promise<string>;
     addAccount(name: string): Promise<string>;
     deleteAccount(id: string): void;
     setAccountName(address: string, name: string): void;
 }
 
-export interface AccountStore {
+export interface IAccountStore {
     state: State<AccountState>;
-    actions: AccountActions
+    actions: IAccountActions
 }
 
 /**
@@ -121,19 +121,23 @@ export type Contact = {
 
 export type ContactState = Record<string, Contact>
 
-export interface ContactActions {
+export interface IContactActions {
     addContact: (item: Contact) => void;
     deleteContact: (address: string) => void;
 }
 
-export interface ContactGetters {
-    getContact: (search: string) => object | undefined;
+export interface IContactGetters {
+    getContact: (search: string) => {
+        name: string,
+        address: string,
+        addable: boolean
+    } | undefined;
 }
 
-export interface ContactStore {
+export interface IContactStore {
     state: State<ContactState>;
-    actions: ContactActions;
-    getters: ContactGetters;
+    actions: IContactActions;
+    getters: IContactGetters;
 }
 
 /**
@@ -154,7 +158,7 @@ export type Coin = {
 
 export type CoinState = Record<string, Coin>
 
-export interface CoinGetters {
+export interface ICoinGetters {
     getCoins: () => Array<Coin>;
     getCoin: (contractId: string) => Coin|undefined;
     coinId: (accountId: string, networkId: string, contractId: string) => string;
@@ -164,16 +168,16 @@ export interface CoinGetters {
     fetchCoinContract: (contractId: string) => Promise<any>;
 }
 
-export interface CoinActions {
+export interface ICoinActions {
     withdrawCoin: (args: {
-        contractId: string;
+        id: string;
         to: string;
         value: string;
         note: string;
     }) => Promise<Transaction>;
     addCoin: (contractId: string) => Promise<Coin>;
     withdrawCoinConfirm: (args: {
-        contractId: string;
+        id: string;
         transaction: TransactionJsonWait;
     }) => Promise<Transaction>;
     deleteCoin: (id: string) => void;
@@ -196,10 +200,10 @@ export interface CoinActions {
     refreshCoinPrice: (id: string) => Promise<void>;
 }
 
-export interface CoinStore {
+export interface ICoinStore {
     state: State<CoinState>;
-    actions: CoinActions,
-    getters: CoinGetters
+    actions: ICoinActions,
+    getters: ICoinGetters
 }
 
 
@@ -219,20 +223,20 @@ export type NftCollection = {
 
 export type NftCollectionState = Record<string, NftCollection>
 
-export interface NftCollectionActions {
+export interface INftCollectionActions {
     addNftCollection: (contractId: string) => Promise<NftCollection>;
     deleteNftCollection: (id: string) => void;
 }
 
-export interface NftCollectionGetters {
+export interface INftCollectionGetters {
     getNftContract: (contractId: string) => Promise<any>;
     nftCollectionId: (accountId: string, networkId: string, contractId: string) => string;
 }
 
-export interface NftCollectionStore {
+export interface INftCollectionStore {
     state: State<NftCollectionState>;
-    actions: NftCollectionActions;
-    getters: NftCollectionGetters;
+    actions: INftCollectionActions;
+    getters: INftCollectionGetters;
 }
 
 /**
@@ -251,7 +255,7 @@ export type Nft = {
 
 export type NftState = Record<string, Nft>
 
-export interface NftActions {
+export interface INftActions {
     addNft: (args: {
         contractId: string;
         tokenId: string;
@@ -269,7 +273,7 @@ export interface NftActions {
     withdrawNftConfirm: (id: string) => Promise<boolean>;
 }
 
-export interface NftGetters {
+export interface INftGetters {
     fetchNft: (args: {
         uri: string;
         tokenId: string;
@@ -277,10 +281,10 @@ export interface NftGetters {
     nftId: (accountId: string, networkId: string, contractId: string, tokenId: string) => string;
 }
 
-export interface NftStore {
+export interface INftStore {
     state: State<NftState>;
-    actions: NftActions;
-    getters: NftGetters;
+    actions: INftActions;
+    getters: INftGetters;
 }
 
 /**
@@ -297,20 +301,20 @@ export type Network = {
 
 export type NetworkState = Record<string, Network>
 
-export interface NetworkActions {
+export interface INetworkActions {
     addNetwork: (network: Network) => void;
     deleteNetwork: (networkId: string) => void;
 }
 
-export interface NetworkGetters {
+export interface INetworkGetters {
     isMainnet: () => boolean,
     getNetworkByChainId: (chainId: string) => Network|undefined
 }
 
-export interface NetworkStore {
+export interface INetworkStore {
     state: State<NetworkState>;
-    actions: NetworkActions,
-    getters: NetworkGetters
+    actions: INetworkActions,
+    getters: INetworkGetters
 }
 
 /**
@@ -335,19 +339,19 @@ export type Transaction = {
  */
 export type KapState = Record<string, string>
 
-export interface KapActions {
+export interface IKapActions {
     refreshKap: (search: string) => Promise<void>;
 }
 
-export interface KapGetters {
+export interface IKapGetters {
     getKapAddressByName: (name: string) => Promise<string | undefined>;
     getKapProfileByAddress: (address: string) => Promise<any | undefined>;
 }
 
-export interface KapStore {
+export interface IKapStore {
     state: State<KapState>;
-    actions: KapActions,
-    getters: KapGetters
+    actions: IKapActions,
+    getters: IKapGetters
 }
 
 /**
@@ -358,13 +362,13 @@ export type ManaState = {
     lastUpdateMana: number
 }
 
-export interface ManaActions {
+export interface IManaActions {
     refreshMana: () => Promise<void>;
 }
 
-export interface ManaStore {
+export interface IManaStore {
     state: State<ManaState>;
-    actions: ManaActions
+    actions: IManaActions
 }
 
 /**
@@ -378,7 +382,7 @@ export type WalletConnectState = {
     uri: string | null
 }
 
-export interface WalletConnectActions {
+export interface IWalletConnectActions {
     init: () => Promise<void>;
     setUri: (uri: string) => void;
     pair: (CURI: string) => Promise<void>;
@@ -393,15 +397,15 @@ export interface WalletConnectActions {
     unsetPendingRequest: () => void;
 }
 
-export interface WalletConnectGetters {
+export interface IWalletConnectGetters {
     checkMethod: (method: string) => boolean;
     checkNetwork: (chainId: string) => boolean;
 }
 
-export interface WalletConnectStore {
+export interface IWalletConnectStore {
     state: State<WalletConnectState>;
-    actions: WalletConnectActions;
-    getters: WalletConnectGetters;
+    actions: IWalletConnectActions;
+    getters: IWalletConnectGetters;
 }
 
 /**
@@ -409,14 +413,14 @@ export interface WalletConnectStore {
  */
 export type SpinnerState = boolean;
 
-export interface SpinnerActions {
+export interface ISpinnerActions {
     showSpinner: () => void;
     hideSpinner: () => void;
 }
 
-export interface SpinnerStore {
+export interface ISpinnerStore {
     state: State<SpinnerState>;
-    actions: SpinnerActions
+    actions: ISpinnerActions
 }
 
 /**
@@ -424,20 +428,20 @@ export interface SpinnerStore {
  */
 export type LockState = boolean;
 
-export interface LockActions {
+export interface ILockActions {
     lock: () => void,
     unlock: () => void
 }
 
-export interface LockStore {
+export interface ILockStore {
     state: State<LockState>,
-    actions: LockActions
+    actions: ILockActions
 }
 
 /**
  * Koin
  */
-export interface KoinActions {
+export interface IKoinActions {
     signHash: (signer: Signer, hash: string) => Promise<string>;
     signMessage: (signer: Signer, message: string) => Promise<string>;
     prepareTransaction: (signer: Signer, tx: TransactionJson) => Promise<TransactionJson>;
@@ -456,31 +460,31 @@ export interface KoinActions {
     }>;
 }
 
-export interface KoinGetters {
+export interface IKoinGetters {
     fetchContract: (contractId: string) => Promise<Contract>;
     getProvider: () => Provider;
     getSigner: () => Signer;
 }
 
-export interface KoinStore {
-    actions: KoinActions,
-    getters: KoinGetters
+export interface IKoinStore {
+    actions: IKoinActions,
+    getters: IKoinGetters
 }
 
-export interface Store {
-    Setting: SettingStore;
-    Account: AccountStore;
-    Network: NetworkStore;
-    Secure: SecureStore;
-    Contact: ContactStore;
-    Coin: CoinStore;
-    NftCollection: NftCollectionStore;
-    Nft: NftStore;
-    Spinner: SpinnerStore;
-    Kap: KapStore;
-    Mana: ManaStore;
-    WalletConnect: WalletConnectStore;
-    Koin: KoinStore;
-    Lock: LockStore;
+export type StoreRegistry = {
+    Setting: ISettingStore;
+    Account: IAccountStore;
+    Network: INetworkStore;
+    Secure: ISecureStore;
+    Contact: IContactStore;
+    Coin: ICoinStore;
+    NftCollection: INftCollectionStore;
+    Nft: INftStore;
+    Spinner: ISpinnerStore;
+    Kap: IKapStore;
+    Mana: IManaStore;
+    WalletConnect: IWalletConnectStore;
+    Koin: IKoinStore;
+    Lock: ILockStore;
     Log: LogStore;
-}
+};

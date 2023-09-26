@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { ChangePasswordNavigationProp } from "../types/navigation";
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
-import { useStore } from "../stores";
+import { LockStore, SecureStore } from "../stores";
 
 export default () => {
     const navigation = useNavigation<ChangePasswordNavigationProp>();
@@ -15,10 +15,9 @@ export default () => {
     const [passwordConfirm, setPwdConfirm] = useState('');
     const theme = useTheme();
     const styles = theme.styles;
-    const { Lock, Secure } = useStore();
 
     useEffect(() => {
-        Lock.actions.lock();
+        LockStore.actions.lock();
     }, []);
 
     const savePassword = () => {
@@ -38,7 +37,7 @@ export default () => {
             return;
         }
 
-        Secure.actions.setPassword(password);
+        SecureStore.actions.setPassword(password);
         Toast.show({
             type: 'success',
             text1: i18n.t('password_set'),

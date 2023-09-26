@@ -3,7 +3,7 @@ import { TouchableOpacity, Text, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n, useKapAddress } from '../hooks';
 import { useEffect } from 'react';
-import { useStore } from '../stores';
+import { KapStore } from '../stores';
 import Toast from 'react-native-toast-message';
 
 export default (props: {
@@ -41,10 +41,9 @@ const Container = (props: {
     const styles = theme.styles;
     const length = props.length ?? 5;
     const kapName = useKapAddress(props.address);
-    const { Kap } = useStore();
 
     useEffect(() => {
-        Kap.actions.refreshKap(props.address);
+        KapStore.actions.refreshKap(props.address);
     }, [props.address])
 
     return (

@@ -6,13 +6,12 @@ import { useNavigation } from '@react-navigation/native';
 import { ChangeNetworkNavigationProp } from '../types/navigation';
 import { DEFAULT_NETWORKS } from '../lib/Constants';
 import { ImmutableObject, useHookstate } from '@hookstate/core';
-import { Network } from '../stores/types';
+import { Network } from '../types/store';
 import { Feather } from '@expo/vector-icons';
-import { useStore } from '../stores';
+import { NetworkStore, SettingStore } from '../stores';
 
 export default () => {
-  const { Network } = useStore();
-  const networks = useHookstate(Network.state).get();
+  const networks = useHookstate(NetworkStore.state).get();
 
   return (
     <Screen>
@@ -28,7 +27,6 @@ export default () => {
 export const ListItem = (props: {
   network: ImmutableObject<Network>
 }) => {
-  const { Setting } = useStore();
   const currentNetworkId = useCurrentNetworkId();
   const theme = useTheme();
   const styles = theme.styles;
@@ -36,8 +34,8 @@ export const ListItem = (props: {
   const selected = currentNetworkId === network.chainId;
 
   const changeNetwork = () => {
-    Setting.actions.setCurrentNetwork(network.chainId);
-  }
+    SettingStore.actions.setCurrentNetwork(network.chainId);
+  };
 
   return <ListItemSelected
     ItemComponent={(

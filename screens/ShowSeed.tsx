@@ -2,17 +2,16 @@ import { View } from "react-native";
 import { Wrapper, Screen, Seed, TextInputActionCopy } from "../components"
 import { useTheme, useLockState } from "../hooks"
 import React, { useEffect } from "react";
-import { useStore } from "../stores";
+import { SecureStore, LockStore } from "../stores";
 
 export default () => {
-    const { Lock, Secure } = useStore();
-    const currentSeed = Secure.getters.getSeed() ?? '';
+    const currentSeed = SecureStore.getters.getSeed() ?? '';
     const theme = useTheme();
     const styles = theme.styles;
     const lockState = useLockState();
 
     useEffect(() => {
-        Lock.actions.lock();
+        LockStore.actions.lock();
     }, [])
 
     return (

@@ -1,52 +1,43 @@
 import { hookstate, none } from "@hookstate/core";
-import { Network, NetworkActions, NetworkGetters, NetworkState, NetworkStore, Store } from "./types";
+import { Network, INetworkActions, INetworkGetters, NetworkState } from "../types/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { localstored } from "./localstored";
+import { localstored } from '@hookstate/localstored';
 import { DEFAULT_NETWORKS, MAINNET } from "../lib/Constants";
-
-export const NetworkStoreLoaded = hookstate(false);
+import { getStore } from "./registry";
 
 const state = hookstate<NetworkState>(
     {}, 
     localstored({
         key: 'network',
         engine: AsyncStorage,
-        loaded: NetworkStoreLoaded
     })
 )
 
-export const useNetworkStore = (store: () => Store): NetworkStore => {
-
-    const actions : NetworkActions = {
-        addNetwork: (network: Network) => {
-            state.merge({
-                [network.chainId]: network
-            });
-        },
-        
-        deleteNetwork: (networkId: string) => {
-            state.nested(networkId).set(none);
-        }
-    }
-
-    const getters : NetworkGetters = {
-        isMainnet: () => {
-            const currentNetworkId = store().Setting.state.currentNetworkId.get();
-            const currentNetwork = DEFAULT_NETWORKS[currentNetworkId];
-            return currentNetwork.chainId === MAINNET;
-        },
-        getNetworkByChainId: (chainId: string) => {
-            return state.nested(chainId).get({noproxy: true});
-        }
-    }
-
-    return {
-        state,
-        actions,
-        getters
-    };
+const actions : INetworkActions = {
+    addNetwork: (network: Network) => {
+        state.merge({
+            [network.chainId]: network
+        });
+    },
     
+    deleteNetwork: (networkId: string) => {
+        state.nested(networkId).set(none);
+    }
 }
 
+const getters : INetworkGetters = {
+    isMainnet: () => {
+        const currentNetworkId = getStore('Setting').state.currentNetworkId.get();
+        const currentNetwork = DEFAULT_NETWORKS[currentNetworkId];
+        return currentNetwork.chainId === MAINNET;
+    },
+    getNetworkByChainId: (chainId: string) => {
+        return state.nested(chainId).get({noproxy: true});
+    }
+}
 
-
+export default {
+    state,
+    actions,
+    getters
+};

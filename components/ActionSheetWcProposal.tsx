@@ -1,17 +1,16 @@
-import { Button, Text, AccountAvatar } from "../components"
+import { Button, Text, Avatar } from "../components"
 import { ScrollView, View, Image, StyleSheet } from "react-native";
 import { useCurrentAccount, useCurrentNetwork, useI18n, useTheme } from "../hooks";
 import { useEffect, useState } from "react";
 import { Feather } from '@expo/vector-icons';
 import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-sheet";
 import type { Theme } from "../types/ui";
-import { useStore } from "../stores";
+import { NetworkStore, WalletConnectStore, LogStore } from "../stores";
 import Toast from "react-native-toast-message";
 
 export default (props: SheetProps) => {
     const proposal = props.payload.proposal;
     
-    const { Network, WalletConnect, Log } = useStore();
     const account = useCurrentAccount();
     const network = useCurrentNetwork();
     const theme = useTheme();
@@ -27,26 +26,26 @@ export default (props: SheetProps) => {
     const description = proposal?.params?.proposer?.metadata?.description;
     const methods = proposal?.params?.requiredNamespaces?.koinos?.methods;
     const chains = proposal?.params?.requiredNamespaces?.koinos?.chains ?? ['unknown'];
-    const requiredNetwork = Network.getters.getNetworkByChainId(chains[0]);
+    const requiredNetwork = NetworkStore.getters.getNetworkByChainId(chains[0]);
     const requiredNetworkName = requiredNetwork ? requiredNetwork.name : i18n.t('unknown');
     const icons = proposal.params.proposer.metadata.icons;
 
     const _checkMethods = () => {
         for (const method of methods) {
-            if (!WalletConnect.getters.checkMethod(method)) {
+            if (!WalletConnectStore.getters.checkMethod(method)) {
                 setCheckMethods(false);
             }
         }
     }
 
     const _checkNetwork = () => {
-        if (!WalletConnect.getters.checkNetwork(chains[0])) {
+        if (!WalletConnectStore.getters.checkNetwork(chains[0])) {
             setCheckNetwork(false);
         }
     }
 
     const accept = () => {
-        WalletConnect.actions.acceptProposal(proposal)
+        WalletConnectStore.actions.acceptProposal(proposal)
             .then(() => {
                 Toast.show({
                     type: 'success',
@@ -55,7 +54,7 @@ export default (props: SheetProps) => {
                 SheetManager.hide('wc_proposal');
             })
             .catch(e => {
-                Log.actions.logError(e);
+                LogStore.actions.logError(e);
                 Toast.show({
                     type: 'error',
                     text1: i18n.t('dapp_proposal_error')
@@ -65,8 +64,8 @@ export default (props: SheetProps) => {
     }
 
     const reject = () => {
-        WalletConnect.actions.rejectProposal(proposal)
-            .catch(e => Log.actions.logError(e));
+        WalletConnectStore.actions.rejectProposal(proposal)
+            .catch(e => LogStore.actions.logError(e));
 
         SheetManager.hide('wc_proposal');
     }
@@ -83,7 +82,7 @@ export default (props: SheetProps) => {
                 {
                     account !== undefined &&
                     <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
-                        <AccountAvatar size={24} address={account.address} />
+                        <Avatar size={24} address={account.address} />
                         <Text>{account.name}</Text>
                     </View>
                 }
@@ -132,12 +131,12 @@ export default (props: SheetProps) => {
                         {methods.map((method: string) =>
                             <View key={method}>
                                 {
-                                    WalletConnect.getters.checkMethod(method) &&
+                                    WalletConnectStore.getters.checkMethod(method) &&
                                     <Text style={styles.textSuccess}><Feather name="check-circle" size={16} color={Color.success} /> {i18n.t(method.replace('koinos_', ''))}</Text>
                                 }
 
                                 {
-                                    !WalletConnect.getters.checkMethod(method) &&
+                                    !WalletConnectStore.getters.checkMethod(method) &&
                                     <Text style={styles.textError}><Feather name="x-circle" size={16} color={Color.error} /> {i18n.t(method.replace('koinos_', ''))}</Text>
                                 }
                             </View>

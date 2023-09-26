@@ -1,6 +1,6 @@
 import { View, Share, StyleSheet } from 'react-native';
 import { Text, Button, Address, Wrapper, Screen, DrawerToggler } from '../components';
-import { useCurrentAddress, useTheme, useI18n } from '../hooks';
+import { useTheme, useI18n, useCurrentAccount } from '../hooks';
 import { AntDesign } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
 import type { Theme } from '../types/ui';
@@ -11,11 +11,11 @@ import { useEffect } from 'react';
 export default () => {
     const i18n = useI18n();
     const navigation = useNavigation<DepositNavigationProp>();
-    const address = useCurrentAddress();
+    const account = useCurrentAccount();
 
     const shareAddress = async () => {
         await Share.share({
-            message: address
+            message: account.address
         });
     };
 
@@ -38,12 +38,12 @@ export default () => {
                     <View style={styles.qrcodeContainer}>
                         <QRCode
                             size={200}
-                            value={address}
+                            value={account.address}
                             logoBackgroundColor='transparent'
                         />
                     </View>
 
-                    <Address address={address} copiable={true} />
+                    <Address address={account.address} copiable={true} />
                 </View>
             </Wrapper>
 

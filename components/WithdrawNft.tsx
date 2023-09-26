@@ -1,6 +1,6 @@
 import { Button} from '../components';
 import { ScrollView, View } from "react-native";
-import { useCurrentAddress, useCurrentNetworkId, useI18n, useLockState, useTheme } from '../hooks';
+import { useI18n, useLockState, useTheme } from '../hooks';
 import RecipientInput from '../components/RecipientInput';
 import { Feather } from '@expo/vector-icons';
 import AssetNftInput from '../components/AssetNftInput';
@@ -8,26 +8,25 @@ import { askReview, hideSpinner, lock, logError, showSpinner, showToast, withdra
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { WithdrawAssetNavigationProp } from '../types/navigation';
+import { useHookstate } from '@hookstate/core';
+import { SettingStore } from '../stores';
 
 export default (props: {
-    nft?: {
-        contractId: string,
-        tokenId: string
-    }
+    nftId?: string
 }) => {
     const navigation = useNavigation<WithdrawAssetNavigationProp>();
-    const currentAddress = useCurrentAddress();
-    const currentNetworkId = useCurrentNetworkId();
+    const currentAccountState = useHookstate(SettingStore.state.currentAccountId);
+    const currentNetworkState = useHookstate(SettingStore.state.currentNetworkId);
     const i18n = useI18n();
     const theme = useTheme();
     const [to, setTo] = useState<string|undefined>();
-    const [nft, setNft] = useState(props.nft);
+    const [nft, setNft] = useState(props.nftId);
     const lockState = useLockState();
     const [sendRequest, setSendRequest] = useState(false);
 
     useEffect(() => {
         _reset();
-    }, [currentAddress, currentNetworkId]);
+    }, [currentAccountState, currentNetworkState]);
 
     useEffect(() => {
         if (lockState.get() === false && sendRequest === true) {
@@ -105,11 +104,8 @@ export default (props: {
          
 
                     <AssetNftInput
-                        value={nft}
-                        onChange={(value: any) => setNft({
-                            tokenId: value.tokenId,
-                            contractId: value.contractId
-                        })}
+                        id={nft}
+                        onChange={(value: any) => setNft(value)}
                         opened={to !== undefined}
                     />
                 

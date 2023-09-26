@@ -6,8 +6,8 @@ import { useI18n, useTheme } from '../hooks';
 import { Keyboard, View } from 'react-native';
 import { MAX_ACCOUNT } from '../lib/Constants';
 import { useState } from 'react';
-import { useStore } from '../stores';
 import Toast from 'react-native-toast-message';
+import { AccountStore, SpinnerStore, SettingStore, LogStore } from '../stores';
 
 export default () => {
     const navigation = useNavigation<NewWalletSeedNavigationProp>();
@@ -15,12 +15,11 @@ export default () => {
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
-    const { Account, Spinner, Setting, Log } = useStore();
 
     const add = () => {
         Keyboard.dismiss();
 
-        if (Object.keys(Account.state.get()).length >= MAX_ACCOUNT) {
+        if (Object.keys(AccountStore.state.get()).length >= MAX_ACCOUNT) {
             Toast.show({
                 type: 'error',
                 text1: i18n.t('max_accounts_reached', {max: MAX_ACCOUNT})
@@ -36,18 +35,18 @@ export default () => {
             return;
         }
 
-        Spinner.actions.showSpinner();
+        SpinnerStore.actions.showSpinner();
 
-        Account.actions.addAccount(name.trim())
+        AccountStore.actions.addAccount(name.trim())
             .then(address => {
-                Spinner.actions.hideSpinner();
-                Setting.actions.setCurrentAccount(address);
+                SpinnerStore.actions.hideSpinner();
+                SettingStore.actions.setCurrentAccount(address);
                 navigation.goBack();
-                Setting.actions.showAskReview();
+                SettingStore.actions.showAskReview();
             })
             .catch(e => {
-                Spinner.actions.hideSpinner();
-                Log.actions.logError(e);
+                SpinnerStore.actions.hideSpinner();
+                LogStore.actions.logError(e);
                 Toast.show({
                     type: 'error',
                     text1: i18n.t('unable_to_add_account'),

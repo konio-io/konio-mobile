@@ -9,7 +9,7 @@ import { utils } from 'koilib';
 import { isASCIIString } from '../lib/utils';
 import { useState } from 'react';
 import Toast from 'react-native-toast-message';
-import { useStore } from '../stores';
+import { ContactStore, KapStore } from '../stores';
 
 export default () => {
     const navigation = useNavigation<NewContactNavigationProp>();
@@ -22,7 +22,6 @@ export default () => {
     const [addressLoading, setaAddressLoading] = useState(false);
     const kapAddress = useKapName(address);
     const kapName = useKapAddress(address);
-    const { Contact, Kap } = useStore();
 
     const add = () => {
         const addr = address.includes('.') ? 
@@ -58,7 +57,7 @@ export default () => {
             return;
         }
 
-        Contact.actions.addContact({
+        ContactStore.actions.addContact({
             address: addr,
             name: name
         });
@@ -83,7 +82,7 @@ export default () => {
     const loadKap = async () => {
         setaAddressLoading(true);
         try {
-            await Kap.actions.refreshKap(address);
+            await KapStore.actions.refreshKap(address);
         } catch (e) {
         }
 

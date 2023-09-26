@@ -1,40 +1,34 @@
-import { useCoin, useCurrentAddress, useCurrentNetworkId, useTheme } from '../hooks';
+import { useTheme } from '../hooks';
 import { View, StyleSheet } from 'react-native';
 import CoinLogo from './CoinLogo';
-import type { Theme } from '../types/store';
+import type { Theme } from '../types/ui';
 import Text from './Text';
 import { Feather } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import { useHookstate } from '@hookstate/core';
-import { UserStore } from '../stores';
+import CoinStore from '../stores/CoinStore';
 
 export default (props: {
-    contractId: string
+    coinId: string
     selected?: boolean
 }) => {
     const theme = useTheme();
     const styles = createStyles(theme);
     const { Color } = theme.vars;
-    //const coin = useCoin(props.contractId);
 
-    const [selected, setSelected] = useState<boolean|undefined>(undefined);
+    const [selected, setSelected] = useState<boolean | undefined>(undefined);
     useEffect(() => {
         setSelected(props.selected);
-    }, [props.selected])
-
-    console.log('--- render coin list item')
+    }, [props.selected]);
 
     return (
         <View style={styles.container}>
             <View style={styles.leftContainer}>
-                <CoinLogo contractId={props.contractId} size={48} />
+                <CoinLogo coinId={props.coinId} size={48} />
 
-{/*
                 <View>
-                    <Text style={styles.symbol}>{coin.symbol}</Text>
-                    <Text>{coin.name}</Text>
+                    <SymbolName coinId={props.coinId}/>
                 </View>
-*/}
 
             </View>
 
@@ -42,32 +36,17 @@ export default (props: {
                 selected !== undefined &&
                 <View>
                     {
-                        selected === true && <Feather name="check-circle" size={20} color={Color.primary}/>
+                        selected === true && <Feather name="check-circle" size={20} color={Color.primary} />
                     }
                     {
-                        selected === false && <Feather name="circle" size={20} color={Color.primary}/>
+                        selected === false && <Feather name="circle" size={20} color={Color.primary} />
                     }
                 </View>
             }
             {
                 selected === undefined &&
                 <View>
-                    <Balance contractId={props.contractId}/>
-                    {
-                        /*
-                    {coin.balance !== undefined && coin.balance >= 0 &&
-                        <View>
-                            {coin.price !== undefined &&
-                                <Text style={{ ...styles.text, ...styles.textRight }}>
-                                    {(coin.balance * coin.price).toFixed(2)} USD
-                                </Text>
-                            }
-
-                            <Text style={{ ...styles.text, ...styles.textRight }}>{coin.balance.toFixed(2)}</Text>
-                        </View>
-                    }
-                        */
-                    }
+                    <Balance coinId={props.coinId} />
                 </View>
             }
 
@@ -75,17 +54,43 @@ export default (props: {
     );
 }
 
-const Balance = (props: {
-    contractId: string
+const SymbolName = (props: {
+    coinId: string
 }) => {
+    const name = useHookstate(CoinStore.state.nested(props.coinId).name).get();
+    const symbol = useHookstate(CoinStore.state.nested(props.coinId).symbol).get();
+    const { styles } = useTheme();
 
-    console.log('--- render balance')
+    return (
+        <View>
+            <Text style={styles.symbol}>{symbol}</Text>
+            <Text>{name}</Text>
+        </View>
+    )
+}
 
-    const currentAddress = useCurrentAddress();
-    const currentNetworkId = useCurrentNetworkId();
-    const balance = useHookstate(UserStore.accounts[currentAddress].assets[currentNetworkId].coins[props.contractId].balance);
+const Balance = (props: {
+    coinId: string
+}) => {
+    const balance = useHookstate(CoinStore.state.nested(props.coinId).balance).get();
+    const price = useHookstate(CoinStore.state.nested(props.coinId).price).get();
+    const { styles } = useTheme();
+    
+    return (
+        <View>
+            {balance !== undefined && balance >= 0 &&
+                <View>
+                    {price !== undefined &&
+                        <Text style={{ ...styles.text, ...styles.textRight }}>
+                            {(balance * price).toFixed(2)} USD
+                        </Text>
+                    }
 
-    return <Text>{balance.get()}</Text>
+                    <Text style={{ ...styles.text, ...styles.textRight }}>{balance.toFixed(2)}</Text>
+                </View>
+            }
+        </View>
+    )
 }
 
 const createStyles = (theme: Theme) => {

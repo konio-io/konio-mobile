@@ -74,12 +74,11 @@ export type HoldingsParamList = {
     Assets: undefined,
     NewCoin: undefined,
     Coin: {
-        contractId: string
+        coinId: string
     },
     NewNft: undefined,
     Nft: {
-        tokenId: string,
-        contractId: string
+        nftId: string
     },
 }
 export type AssetsNavigationProp = StackNavigationProp<HoldingsParamList, 'Assets'>;

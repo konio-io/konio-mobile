@@ -5,10 +5,9 @@ import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 import type { EditAccountNavigationProps } from "../types/navigation";
 import { Alert } from "react-native";
-import { useStore } from "../stores";
+import { AccountStore, SecureStore } from "../stores";
 
 export default (props: SheetProps) => {
-    const { Account, Secure } = useStore();
     const navigation = useNavigation<EditAccountNavigationProps>();
     const { accountId } = props.payload;
     const i18n = useI18n();
@@ -21,7 +20,7 @@ export default (props: SheetProps) => {
         }
     ];
 
-    if (Secure.getters.getSeedAccountId() !== accountId) {
+    if (SecureStore.getters.getSeedAccountId() !== accountId) {
         const showAlert = () => {
             return Alert.alert(
               i18n.t('are_you_sure'),
@@ -29,7 +28,7 @@ export default (props: SheetProps) => {
               [
                 {
                   text: i18n.t('yes'),
-                  onPress: () => Account.actions.deleteAccount(accountId)
+                  onPress: () => AccountStore.actions.deleteAccount(accountId)
                 },
                 {
                   text: i18n.t('no'),

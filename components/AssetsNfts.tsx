@@ -24,7 +24,7 @@ export default () => {
           data.map(collection =>
             <NftCollectionListItem
               key={collection.contractId}
-              contractId={collection.contractId}
+              nftCollectionId={collection.contractId}
               renderItem={(tokenId: string) => 
                 <TouchableNftListItem key={tokenId} contractId={collection.contractId} tokenId={tokenId} />
               }

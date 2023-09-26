@@ -7,14 +7,13 @@ import { Feather } from '@expo/vector-icons';
 import { useEffect } from 'react';
 import { SheetManager } from "react-native-actions-sheet";
 import Loading from './Loading';
-import { useStore } from '../stores';
 import { useHookstate } from '@hookstate/core';
+import { CoinStore } from '../stores';
 
 export default () => {
     const navigation = useNavigation<HoldingsNavigationProp>();
     const route = useRoute<CoinRouteProp>();
-    const { Coin } = useStore();
-    const coin = useHookstate(Coin.state.nested(route.params.contractId)).get();
+    const coin = useHookstate(CoinStore.state.nested(route.params.contractId)).get();
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();

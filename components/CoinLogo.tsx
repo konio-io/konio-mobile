@@ -1,36 +1,29 @@
 import CircleLogo from './CircleLogo';
 import { View, Image } from 'react-native';
-import { useCoin, useCurrentAddress, useTheme } from '../hooks';
 import { useEffect, useState } from "react";
-import { getContractInfo } from '../lib/utils';
-import { useCurrentNetworkId } from '../hooks';
 import { useHookstate } from '@hookstate/core';
-import { UserStore } from '../stores';
+import CoinStore from '../stores/CoinStore';
 
 export default (props: {
-    contractId: string
+    coinId: string
     size: number
 }) => {
-    const [logo,setlogo] = useState('',);
+    const [logo, setlogo] = useState('',);
     const theme = useTheme();
     const { Border } = theme.vars;
-    //const coin = useCoin(props.contractId);
-
-    const currentAddress = useCurrentAddress();
-    const currentNetworkId = useCurrentNetworkId();
-    const coinLogo = useHookstate(UserStore.accounts[currentAddress].assets[currentNetworkId].coins[props.contractId].logo);
-
-    console.log('--- render logo', props.contractId)
+    const coinLogo = useHookstate(CoinStore.state.nested(props.coinId).logo);
+    const contractId = CoinStore.state.nested(props.coinId).contractId.get();
 
     useEffect(() => {
-        if (!coinLogo?.get()) {
-            getContractInfo(props.contractId).then(info => {
+        if (coinLogo?.ornull?.get()) {
+            setlogo(coinLogo.ornull.get());
+        }
+        else {
+            CoinStore.getters.fetchContractInfo(contractId).then(info => {
                 if (info.logo) {
                     setlogo(info.logo);
                 }
             });
-        } else {
-            setlogo(coinLogo.get());
         }
     }, [coinLogo]);
 
@@ -41,7 +34,7 @@ export default (props: {
             }
             {!logo &&
                 <CircleLogo
-                    seed={props.contractId}
+                    seed={contractId}
                     name=''
                     size={props.size}
                 />

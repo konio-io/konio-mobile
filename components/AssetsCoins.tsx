@@ -1,14 +1,13 @@
 import { FlatList, RefreshControl, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import {  useCoins, useTheme } from '../hooks';
 import { CoinListItem, ButtonCircle, Button } from '.';
 import { AssetsNavigationProp, } from '../types/navigation';
 import { SheetManager } from "react-native-actions-sheet";
 import { Feather } from '@expo/vector-icons';
-import { refreshCoins } from '../actions';
 import { useState } from 'react';
 import { Coin } from '../types/store';
-import { UserStore } from '../stores';
+import { useCoins, useTheme } from '../hooks';
+import CoinStore from '../stores/CoinStore';
 
 export default () => {
   const [refreshing, setRefreshing] = useState(false)
@@ -16,23 +15,12 @@ export default () => {
 
   const _loadCoinList = async () => {
       setRefreshing(true);
-      await refreshCoins({balance: true, price: true, info: true});
+      await CoinStore.actions.refreshCoins({balance: true, price: true, info: true});
       setRefreshing(false);
   };
 
-  console.log('--- render assets coins')
-
-  const cc = () => {
-    const address = UserStore.currentAddress.get();
-    const networkId = UserStore.currentNetworkId.get();
-    const contractId = "15DJN4a8SgrbGhhGksSBASiSYjGnMU8dGL";
-    const b = UserStore.accounts[address].assets[networkId].coins[contractId].balance.get() ?? 1;
-    UserStore.accounts[address].assets[networkId].coins[contractId].balance.set(b * 2);
-  }
-
   return (
     <View>
-      <Button title='Test' onPress={() => cc()}/>
       <FlatList
           data={coins}
           renderItem={({ item }) => <TouchableCoinListItem coin={item} />}
@@ -54,13 +42,13 @@ const TouchableCoinListItem = (props: {
 
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('Coin', { contractId: props.coin.contractId })}
+      onPress={() => navigation.navigate('Coin', { coinId: props.coin.id })}
       onLongPress={() => {
         SheetManager.show('coin', { payload: { contractId: props.coin.contractId } });
       }}
     >
       <View style={styles.listItemContainer}>
-        <CoinListItem contractId={props.coin.contractId} />
+        <CoinListItem coinId={props.coin.contractId} />
       </View>
     </TouchableOpacity>
   );

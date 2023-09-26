@@ -3,8 +3,8 @@ import { Button, TextInput, Wrapper, Screen, TextInputActionPaste } from '../com
 import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n } from '../hooks';
 import { useState } from 'react';
-import { useStore } from '../stores';
 import Toast from 'react-native-toast-message';
+import { SpinnerStore, SettingStore, AccountStore, LogStore } from '../stores';
 
 export default () => {
   const [seed, setSeed] = useState('');
@@ -12,7 +12,6 @@ export default () => {
   const i18n = useI18n();
   const theme = useTheme();
   const styles = theme.styles;
-  const { Spinner, Setting, Account, Log } = useStore();
 
   const importWallet = () => {
     Keyboard.dismiss();
@@ -25,20 +24,20 @@ export default () => {
       return;
     }
 
-    Spinner.actions.showSpinner();
+    SpinnerStore.actions.showSpinner();
 
     setTimeout(() => {
-      Account.actions.addSeed({
+      AccountStore.actions.addSeed({
         name: name.trim(),
         seed: seed.toLowerCase().trim()
       })
         .then(address => {
-          Spinner.actions.hideSpinner();
-          Setting.actions.setCurrentAccount(address);
+          SpinnerStore.actions.hideSpinner();
+          SettingStore.actions.setCurrentAccount(address);
         })
         .catch(e => {
-          Spinner.actions.hideSpinner();
-          Log.actions.logError(e);
+          SpinnerStore.actions.hideSpinner();
+          LogStore.actions.logError(e);
           Toast.show({
             type: 'error',
             text1: i18n.t('unable_to_import_seed'),

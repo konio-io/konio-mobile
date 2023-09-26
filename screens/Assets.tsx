@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useTheme, useI18n, useAccountValue, useCurrentAddress, useCurrentAccount } from '../hooks';
+import { useTheme, useI18n, useAccountValue, useCurrentAccount } from '../hooks';
 import { Screen, DrawerToggler, MoreVertical, Text, Address, ManaBar } from '../components';
 import { AssetsNavigationProp, } from '../types/navigation';
 import { SheetManager } from "react-native-actions-sheet";
@@ -9,12 +9,15 @@ import AssetsCoins from '../components/AssetsCoins';
 import AssetsNfts from '../components/AssetsNfts';
 import { CATEGORY_COINS, CATEGORY_NFTS } from '../lib/Constants';
 import AssetToggler from '../components/AssetToggler';
+import SettingStore from '../stores/SettingStore';
+import { useHookstate } from '@hookstate/core';
 
 export default () => {
   const navigation = useNavigation<AssetsNavigationProp>();
   const theme = useTheme();
   const styles = theme.styles;
-  const currentAddressState = useCurrentAddress();
+
+  const currentAddressState = useHookstate(SettingStore.state.currentAccountId);
   const account = useCurrentAccount();
   
   useEffect(() => {
@@ -23,11 +26,11 @@ export default () => {
       headerShadowVisible: false,
       headerTitleAlign: 'center',
       headerLeft: () => (<DrawerToggler />),
-      headerRight: () => (<MoreVertical onPress={() => SheetManager.show('account', { payload: { address: currentAddressState } })} />),
+      headerRight: () => (<MoreVertical onPress={() => SheetManager.show('account', { payload: { address: account.address } })} />),
       headerTitle: () => (
         <View style={styles.alignCenterColumn}>
           <Text style={styles.textMedium}>{account?.name}</Text>
-          <Address address={currentAddressState} copiable={true} />
+          <Address address={account.address} copiable={true} />
         </View>
       )
     });

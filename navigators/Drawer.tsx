@@ -4,17 +4,16 @@ import {
     createDrawerNavigator,
     DrawerItem,
 } from '@react-navigation/drawer';
-import { useCurrentAccount, useCurrentAddress, useI18n, useTheme } from '../hooks';
-import { AccountAvatar, Logo, Separator, Link, Address, WcLogo } from '../components';
+import { useCurrentAccount, useI18n, useTheme } from '../hooks';
+import { Avatar, Logo, Separator, Link, Address, WcLogo } from '../components';
 import Root from './Root';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import type { Theme } from '../types/ui';
 import Constants from 'expo-constants';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-import { useStore } from '../stores';
-
 import { useHookstate } from '@hookstate/core';
+import AccountStore from '../stores/AccountStore';
+import SettingStore from '../stores/SettingStore';
 
 const Drawer = createDrawerNavigator();
 export default () => {
@@ -32,10 +31,8 @@ export default () => {
 
 const DrawerContent = (props: any) => {
     const { navigation } = props;
-    const { Account, Setting } = useStore();
-    const currentAddress = useCurrentAddress();
     const currentAccount = useCurrentAccount();
-    const accounts = useHookstate(Account.state).get();
+    const accounts = useHookstate(AccountStore.state).get();
     const i18n = useI18n();
     const theme = useTheme();
     const styles = createStyles(theme);
@@ -47,7 +44,7 @@ const DrawerContent = (props: any) => {
             {
                 currentAccount &&
                 <View style={styles.currentAccountContainer}>
-                    <AccountAvatar size={48} address={currentAccount.address} />
+                    <Avatar size={48} address={currentAccount.address} />
                     <View>
                         <Text style={styles.textLarge}>{currentAccount.name}</Text>
                         <Address address={currentAccount.address} copiable={true} />
@@ -58,14 +55,14 @@ const DrawerContent = (props: any) => {
             <ScrollView>
                 <Separator />
 
-                {Object.values(accounts).map(account => account.address !== currentAddress &&
+                {Object.values(accounts).map(account => account.id !== currentAccount.id &&
                     <DrawerItem
                         labelStyle={styles.text}
-                        key={account.address}
+                        key={account.id}
                         label={account.name}
-                        icon={() => <AccountAvatar size={28} address={account.address} />}
+                        icon={() => <Avatar size={28} address={account.id} />}
                         onPress={() => {
-                            Setting.actions.setCurrentAccount(account.address);
+                            SettingStore.actions.setCurrentAccount(account.id);
                             navigation.navigate('Root', {
                                 screen: 'Account'
                             });

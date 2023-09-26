@@ -4,22 +4,21 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { EditAccountNavigationProps, EditAccountRouteProp } from "../types/navigation";
 import { Feather } from '@expo/vector-icons';import { View } from "react-native";
 import { useState } from "react";
-import { useStore } from "../stores";
 import { useHookstate } from "@hookstate/core";
+import { AccountStore } from "../stores";
 
 export default () => {
     const i18n = useI18n();
     const route = useRoute<EditAccountRouteProp>();
     const navigation = useNavigation<EditAccountNavigationProps>();
     const theme = useTheme();
-    const { Account } = useStore();
-    const account = useHookstate(Account.state.nested(route.params.address)).get();
+    const account = useHookstate(AccountStore.state.nested(route.params.accountId)).get();
     const [name, setName] = useState(account?.name ?? '');
     
     const styles = theme.styles;
 
     const save = () => {
-        Account.actions.setAccountName(route.params.address, name);
+        AccountStore.actions.setAccountName(route.params.accountId, name);
         navigation.goBack();
     }
 

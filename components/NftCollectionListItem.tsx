@@ -1,17 +1,18 @@
-import { useNftCollection, useTheme } from "../hooks";
+import { useTheme } from "../hooks";
 import { View } from 'react-native';
 import Text from "./Text";
+import { useHookstate } from "@hookstate/core";
+import { NftCollectionStore, NftStore } from "../stores";
 
 export default (props: {
-  contractId: string
+  nftCollectionId: string
   renderItem: Function
 }) => {
   const theme = useTheme();
   const styles = theme.styles;
-  const collection = useNftCollection(props.contractId);
-  if (!collection) {
-    return <></>;
-  }
+  const collection = useHookstate(NftCollectionStore.state.nested(props.nftCollectionId)).get();
+  const nfts = useHookstate(NftStore.state).get();
+  const data = Object.values(nfts).filter(nft => nft.nftCollectionId === collection.id);
 
   return (
     <View style={{
@@ -29,7 +30,7 @@ export default (props: {
         flexWrap: 'wrap'
       }}>
         {
-          Object.keys(collection.tokens).map(item => props.renderItem(item))
+          data.map(item => props.renderItem(item.id))
         }
       </View>
     </View>

@@ -3,7 +3,7 @@ import TextInput from './TextInput';
 import Toast from './Toast';
 import Logo from './Logo';
 import Button from './Button';
-import AccountAvatar from './AccountAvatar';
+import Avatar from './Avatar';
 import ManaBar from './ManaBar';
 import CircularProgress from './CircularProgress';
 import ManaStat from './ManaStat';
@@ -45,7 +45,7 @@ export {
     Toast,
     Button,
     ButtonCircle,
-    AccountAvatar,
+    Avatar,
     ManaBar,
     ManaStat,
     CircularProgress,

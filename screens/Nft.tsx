@@ -5,8 +5,8 @@ import { Screen, MoreVertical, Text, Wrapper } from '../components';
 import { useCurrentAccount, useCurrentNetworkId, useTheme } from '../hooks';
 import { useEffect } from 'react';
 import { SheetManager } from "react-native-actions-sheet";
-import { useStore } from '../stores';
 import { useHookstate } from '@hookstate/core';
+import { NftCollectionStore, NftStore } from '../stores';
 
 export default () => {
     const navigation = useNavigation<AssetsNavigationProp>();
@@ -14,12 +14,11 @@ export default () => {
     const theme = useTheme();
     const styles = theme.styles;
     const { Border } = theme.vars;
-    const { NftCollection, Nft } = useStore();
-    const collection = useHookstate(NftCollection.state.nested(route.params.contractId));
+    const collection = useHookstate(NftCollectionStore.state.nested(route.params.contractId));
     const account = useCurrentAccount();
     const networkId = useCurrentNetworkId();
-    const nftId = Nft.getters.nftId(account.id, networkId, route.params.contractId, route.params.tokenId);
-    const nft = useHookstate(Nft.state.nested(nftId)).get();
+    const nftId = NftStore.getters.nftId(account.id, networkId, route.params.contractId, route.params.tokenId);
+    const nft = useHookstate(NftStore.state.nested(nftId)).get();
 
     useEffect(() => {
         navigation.setOptions({

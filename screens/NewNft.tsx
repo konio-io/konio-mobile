@@ -7,7 +7,7 @@ import { View, Keyboard } from 'react-native';
 import { useTheme } from '../hooks';
 import { useState } from 'react';
 import Toast from 'react-native-toast-message';
-import { useStore } from '../stores';
+import { LogStore, SettingStore, SpinnerStore, NftStore, NftCollectionStore } from '../stores';
 
 export default () => {
   const navigation = useNavigation<NewCoinNavigationProp>();
@@ -16,7 +16,6 @@ export default () => {
   const i18n = useI18n();
   const theme = useTheme();
   const styles = theme.styles;
-  const { Log, Setting, Spinner, Nft, NftCollection } = useStore();
 
   const add = async () => {
     Keyboard.dismiss();
@@ -37,20 +36,20 @@ export default () => {
       return;
     }
 
-    Spinner.actions.showSpinner();
+    SpinnerStore.actions.showSpinner();
 
     try {
-      await NftCollection.actions.addNftCollection(contractId);
-      await Nft.actions.addNft({
+      await NftCollectionStore.actions.addNftCollection(contractId);
+      await NftStore.actions.addNft({
         contractId: contractId,
         tokenId: tokenId
       });
-      Spinner.actions.hideSpinner();
+      SpinnerStore.actions.hideSpinner();
       navigation.goBack();
-      Setting.actions.showAskReview();
+      SettingStore.actions.showAskReview();
     } catch (e) {
-      Spinner.actions.hideSpinner();
-      Log.actions.logError(String(e));
+      SpinnerStore.actions.hideSpinner();
+      LogStore.actions.logError(String(e));
       Toast.show({
         type: 'error',
         text1: i18n.t('unable_to_add_nft'),

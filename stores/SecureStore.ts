@@ -1,9 +1,7 @@
 import { hookstate, none } from "@hookstate/core";
-import { AccountSecure, SecureActions, SecureState, SecureStore, Store } from "./types";
+import { AccountSecure, ISecureActions, ISecureGetters, SecureState } from "../types/store";
 import * as ExpoSecureStore from 'expo-secure-store';
-import { localstored } from "./localstored";
-
-export const SecureStoreLoaded = hookstate(false);
+import { localstored } from '@hookstate/localstored';
 
 const state = hookstate<SecureState>(
     {
@@ -22,79 +20,72 @@ const state = hookstate<SecureState>(
             removeItem: (key: string) => {
                 return ExpoSecureStore.deleteItemAsync(key);
             }
-        },
-        loaded: SecureStoreLoaded
+        }
     })
 );
 
-export const useSecureStore = (store: () => Store): SecureStore => {
+const actions : ISecureActions = {
+    setPassword: (password: string) => {
+        state.merge({ password });
+    },
 
-    const actions : SecureActions = {
-        setPassword: (password: string) => {
-            state.merge({ password });
-        },
-
-        deIncrementIndex: () => {
-            const seedAccountId = getters.getSeedAccountId();
-            if (seedAccountId) {
-                const seedAccount = state.accounts.nested(seedAccountId);
-                const index = seedAccount.accountIndex.get() ?? 1;
-                seedAccount.accountIndex.set(index - 1);
-            }
-        },
-
-        incrementIndex: () => {
-            const seedAccountId = getters.getSeedAccountId();
-            if (seedAccountId) {
-                const seedAccount = state.accounts.nested(seedAccountId);
-                const index = seedAccount.accountIndex.get() ?? 1;
-                seedAccount.accountIndex.set(index + 1);
-            }
-        },
-
-        deleteAccount: (id: string) => {
-            const account = state.accounts.nested(id);
-            account.set(none);
-
-            if (!account.accountIndex.get()) {
-                actions.deIncrementIndex();
-            }
-        },
-        
-        addAccount: (account: AccountSecure) => {
-            state.merge({
-                [account.address]: account
-            });
-
-            if (!account.accountIndex) {
-                actions.incrementIndex();
-            }
+    deIncrementIndex: () => {
+        const seedAccountId = getters.getSeedAccountId();
+        if (seedAccountId) {
+            const seedAccount = state.accounts.nested(seedAccountId);
+            const index = seedAccount.accountIndex.get() ?? 1;
+            seedAccount.accountIndex.set(index - 1);
         }
-    }
+    },
 
-    const getters = {
-        getSeedAccountId: () => {
-            const seedAccount = Object.values(state.accounts.get()).find(account => account.seed);
-            return seedAccount?.address;
-        },
-        getSeed: () => {
-            const seedAccountId = getters.getSeedAccountId();
-            if (seedAccountId) {
-                return state.accounts.nested(seedAccountId).seed.get();
-            }
-            return undefined;
-        },
-        checkPassword: (password: string): boolean => {
-            return password === state.password.get();
-        },
-    }
+    incrementIndex: () => {
+        const seedAccountId = getters.getSeedAccountId();
+        if (seedAccountId) {
+            const seedAccount = state.accounts.nested(seedAccountId);
+            const index = seedAccount.accountIndex.get() ?? 1;
+            seedAccount.accountIndex.set(index + 1);
+        }
+    },
 
-    return {
-        state,
-        actions,
-        getters
+    deleteAccount: (id: string) => {
+        const account = state.accounts.nested(id);
+        account.set(none);
+
+        if (!account.accountIndex.get()) {
+            actions.deIncrementIndex();
+        }
+    },
+    
+    addAccount: (account: AccountSecure) => {
+        state.merge({
+            [account.address]: account
+        });
+
+        if (!account.accountIndex) {
+            actions.incrementIndex();
+        }
     }
 }
 
+const getters : ISecureGetters = {
+    getSeedAccountId: () => {
+        const seedAccount = Object.values(state.accounts.get()).find(account => account.seed);
+        return seedAccount?.address;
+    },
+    getSeed: () => {
+        const seedAccountId = getters.getSeedAccountId();
+        if (seedAccountId) {
+            return state.accounts.nested(seedAccountId).seed.get();
+        }
+        return undefined;
+    },
+    checkPassword: (password: string): boolean => {
+        return password === state.password.get();
+    },
+}
 
-
+export default {
+    state,
+    actions,
+    getters
+}

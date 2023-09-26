@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import AccountAvatar from "./AccountAvatar";
+import Avatar from "./Avatar";
 import Text from "./Text";
 import { useTheme } from "../hooks";
 import Address from "./Address";
@@ -14,7 +14,7 @@ export default (props: {
 
     return (
         <View style={{...styles.directionRow, ...styles.columnGapBase, ...styles.alignCenterColumn}}>
-            <AccountAvatar size={48} address={props.address} />
+            <Avatar size={48} address={props.address} />
             <View>
                 {props.name &&
                     <Text>{props.name}</Text>

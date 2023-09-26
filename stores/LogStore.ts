@@ -1,22 +1,27 @@
 import { hookstate } from "@hookstate/core";
-import { LogActions, LogState, LogStore, Store } from "./types";
+import { ILogActions, LogState } from "../types/store";
+import { localstored } from '@hookstate/localstored';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const state = hookstate<LogState>([]);
+const state = hookstate<LogState>(
+    [], 
+    localstored({
+        key: 'network',
+        engine: AsyncStorage,
+    })
+)
 
-export const useLogStore = (store: () => Store) : LogStore => {
+const actions : ILogActions = {
+    logError: (text: string) => {
+        state.merge([text]);
+    },
     
-    const actions : LogActions = {
-        logError: (text: string) => {
-            state.merge([text]);
-        },
-        
-        logReset: () => {
-            state.set([]);
-        }
-    }
-
-    return {
-        state,
-        actions
+    logReset: () => {
+        state.set([]);
     }
 }
+
+export default {
+    state,
+    actions
+};
