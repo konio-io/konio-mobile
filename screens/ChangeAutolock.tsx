@@ -1,6 +1,6 @@
 import { FlatList, View } from 'react-native';
 import { useI18n, useAutolock } from '../hooks';
-import { ListItemSelected, Text, Screen } from '../components';
+import { ListItem, Text, Screen } from '../components';
 import { SettingStore } from '../stores';
 
 export default () => {
@@ -21,14 +21,14 @@ export default () => {
 
       <FlatList
         data={data}
-        renderItem={({ item }) => <ListItem item={item} />}
+        renderItem={({ item }) => <AutolockListItem item={item} />}
       />
 
     </Screen>
   );
 }
 
-export const ListItem = (props: {
+export const AutolockListItem = (props: {
   item: number
 }) => {
 
@@ -59,8 +59,8 @@ export const ListItem = (props: {
     SettingStore.actions.setAutolock(props.item);
   }
 
-  return <ListItemSelected
-    ItemComponent={(
+  return <ListItem
+    content={(
       <View>
         <Text>{convertMils(props.item)}</Text>
       </View>

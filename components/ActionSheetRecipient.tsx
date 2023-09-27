@@ -4,7 +4,7 @@ import Button from "./Button";
 import { View, ScrollView } from "react-native";
 import { useCurrentAccount, useI18n, useTheme } from "../hooks";
 import ButtonCircle from "./ButtonCircle";
-import ListItemSelected from "./ListItemSelected";
+import ListItem from "./ListItem";
 import AddressListItem from "./AddressListItem";
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
@@ -149,8 +149,8 @@ const ToListItem = (props: {
     }
 
     return (
-        <ListItemSelected
-            ItemComponent={<AddressListItem address={props.address} name={name} />}
+        <ListItem
+            content={<AddressListItem address={props.address} name={name} />}
             selected={props.selected}
             onPress={() => props.onPress(props.address)}
             onLongPress={() => SheetManager.show('addressbook_item', { payload: { address: props.address } })}

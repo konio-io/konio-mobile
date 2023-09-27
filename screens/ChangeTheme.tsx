@@ -1,6 +1,6 @@
 import { FlatList, View } from 'react-native';
 import { useI18n, useTheme } from '../hooks';
-import { ListItemSelected, Text, Screen } from '../components';
+import { ListItem, Text, Screen } from '../components';
 import { Themes } from '../themes';
 import { OS_THEME } from '../lib/Constants';
 import { SettingStore } from '../stores';
@@ -13,14 +13,14 @@ export default () => {
 
       <FlatList
         data={data}
-        renderItem={({ item }) => <ListItem name={item} />}
+        renderItem={({ item }) => <ThemeListItem name={item} />}
       />
 
     </Screen>
   );
 }
 
-export const ListItem = (props: {
+export const ThemeListItem = (props: {
   name: string
 }) => {
 
@@ -32,8 +32,8 @@ export const ListItem = (props: {
     SettingStore.actions.setTheme(props.name);
   }
 
-  return <ListItemSelected
-    ItemComponent={(
+  return <ListItem
+    content={(
       <View>
         <Text>{i18n.t(props.name)}</Text>
       </View>

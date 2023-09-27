@@ -12,7 +12,6 @@ import TransactionList from './TransactionList';
 import ActivityIndicator from './ActivityIndicator';
 import Wrapper from './Wrapper';
 import CoinListItem from './CoinListItem';
-import ListItemSelected from './ListItemSelected';
 import ListItem from './ListItem';
 import Selector from './Selector';
 import Copiable from './Copiable';
@@ -36,6 +35,7 @@ import Accordion from './Accordion';
 import Badge from './Badge';
 import WcLogo from './Wclogo';
 import ButtonCircle from './ButtonCircle';
+import SelectedTicker from './SelectedTicker';
 
 export {
     ActivityIndicator,
@@ -53,7 +53,6 @@ export {
     TransactionList,
     Wrapper,
     CoinListItem,
-    ListItemSelected,
     ListItem,
     Selector,
     Copiable,
@@ -75,5 +74,6 @@ export {
     ManaProgressLogo,
     Accordion,
     Badge,
-    WcLogo
+    WcLogo,
+    SelectedTicker
 }

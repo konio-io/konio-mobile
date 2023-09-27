@@ -1,5 +1,5 @@
 import { FlatList, View } from 'react-native';
-import { ListItemSelected, Text, Screen } from '../components';
+import { ListItem, Text, Screen } from '../components';
 import { OS_LOCALE } from '../lib/Constants';
 import { LocaleIndex } from '../lib/Locales';
 import { useHookstate } from '@hookstate/core';
@@ -18,13 +18,13 @@ export default () => {
     <Screen>
       <FlatList
         data={data}
-        renderItem={({ item }) => <ListItem code={item.code} label={item.label} />}
+        renderItem={({ item }) => <LocaleListItem code={item.code} label={item.label} />}
       />
     </Screen>
   );
 }
 
-export const ListItem = (props: {
+export const LocaleListItem = (props: {
   code: string,
   label: string
 }) => {
@@ -32,8 +32,8 @@ export const ListItem = (props: {
   const locale = useHookstate(SettingStore.state.locale).get();
   const selected = (locale === props.code);
 
-  return <ListItemSelected
-    ItemComponent={(
+  return <ListItem
+    content={(
       <View>
         <Text>{props.label}</Text>
       </View>

@@ -3,11 +3,11 @@ import { View, StyleSheet } from 'react-native';
 import CoinLogo from './CoinLogo';
 import type { Theme } from '../types/ui';
 import Text from './Text';
-import { Feather } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import { useHookstate } from '@hookstate/core';
 import CoinStore from '../stores/CoinStore';
 import { Coin } from '../types/store';
+import SelectedTicker from './SelectedTicker';
 
 export default (props: {
     coin: Coin
@@ -37,12 +37,7 @@ export default (props: {
             {
                 selected !== undefined &&
                 <View>
-                    {
-                        selected === true && <Feather name="check-circle" size={20} color={Color.primary} />
-                    }
-                    {
-                        selected === false && <Feather name="circle" size={20} color={Color.primary} />
-                    }
+                    <SelectedTicker selected={selected}/>
                 </View>
             }
             {

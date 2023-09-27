@@ -1,16 +1,17 @@
 import { TouchableOpacity, View } from "react-native";
 import Text from "./Text";
 import { useTheme } from "../hooks";
-import React, { ReactElement, } from "react";
+import React, { ReactElement, useEffect, useState, } from "react";
+import { Feather } from '@expo/vector-icons';
+import SelectedTicker from "./SelectedTicker";
 
 export default (props: {
     content: string | ReactElement,
-    name: string,
-    description?: string,
     onPress?: Function,
     onLongPress?: Function,
     icon?: ReactElement,
     right?: ReactElement,
+    selected?: boolean
 }) => {
 
     const theme = useTheme();
@@ -21,16 +22,16 @@ export default (props: {
             <TouchableOpacity
                 onPress={() => {
                     if (props.onPress) {
-                        props.onPress(props.name)
+                        props.onPress()
                     }
                 }}
                 onLongPress={() => {
                     if (props.onLongPress) {
-                        props.onLongPress(props.name);
+                        props.onLongPress();
                     }
                 }}>
                 <View style={{ backgroundColor: Color.base }}>
-                    <ItemContent {...props} />
+                    <ItemContent {...props} selected={props.selected} />
                 </View>
             </TouchableOpacity>
         )
@@ -38,20 +39,25 @@ export default (props: {
 
     return (
         <View style={{ backgroundColor: Color.base }}>
-            <ItemContent {...props} />
+            <ItemContent {...props} selected={props.selected} />
         </View>
     )
 };
 
 const ItemContent = (props: {
     content: string | ReactElement,
-    description?: string,
     icon?: ReactElement,
     right?: ReactElement,
+    selected?: boolean
 }) => {
     const theme = useTheme();
     const { Color } = theme.vars;
     const styles = theme.styles;
+
+    const [selected, setSelected] = useState<boolean | undefined>(undefined);
+    useEffect(() => {
+        setSelected(props.selected);
+    }, [props.selected]);
 
     return (
         <View style={{ ...styles.directionRow, ...styles.paddingBase, ...styles.columnGapBase }}>
@@ -70,9 +76,6 @@ const ItemContent = (props: {
                 {typeof props.content === 'string' &&
                     <View>
                         <Text style={styles.textMedium}>{props.content}</Text>
-                        {props.description && 
-                            <Text style={styles.textSmall}>{props.description}</Text>
-                        }
                     </View>
                 }
 
@@ -81,6 +84,13 @@ const ItemContent = (props: {
                 }
 
                 {props.right}
+
+                {
+                    selected !== undefined &&
+                    <View>
+                        <SelectedTicker selected={selected}/>
+                    </View>
+                }
             </View>
         </View>
     )
