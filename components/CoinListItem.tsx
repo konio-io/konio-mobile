@@ -7,9 +7,10 @@ import { Feather } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import { useHookstate } from '@hookstate/core';
 import CoinStore from '../stores/CoinStore';
+import { Coin } from '../types/store';
 
 export default (props: {
-    coinId: string
+    coin: Coin
     selected?: boolean
 }) => {
     const theme = useTheme();
@@ -24,10 +25,11 @@ export default (props: {
     return (
         <View style={styles.container}>
             <View style={styles.leftContainer}>
-                <CoinLogo coinId={props.coinId} size={48} />
+                <CoinLogo coinId={props.coin.id} size={48} />
 
                 <View>
-                    <SymbolName coinId={props.coinId}/>
+                    <Text style={styles.symbol}>{props.coin.symbol}</Text>
+                    <Text>{props.coin.name}</Text>
                 </View>
 
             </View>
@@ -46,27 +48,12 @@ export default (props: {
             {
                 selected === undefined &&
                 <View>
-                    <Balance coinId={props.coinId} />
+                    <Balance coinId={props.coin.id} />
                 </View>
             }
 
         </View>
     );
-}
-
-const SymbolName = (props: {
-    coinId: string
-}) => {
-    const name = useHookstate(CoinStore.state.nested(props.coinId).name).get();
-    const symbol = useHookstate(CoinStore.state.nested(props.coinId).symbol).get();
-    const { styles } = useTheme();
-
-    return (
-        <View>
-            <Text style={styles.symbol}>{symbol}</Text>
-            <Text>{name}</Text>
-        </View>
-    )
 }
 
 const Balance = (props: {

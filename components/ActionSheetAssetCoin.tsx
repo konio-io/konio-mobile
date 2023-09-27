@@ -16,7 +16,7 @@ export default (props: SheetProps<{
     const styles = theme.styles;
 
     const currentAccountId = SettingStore.state.currentAccountId.get();
-    const currentNetworkId = SettingStore.state.currentAccountId.get();
+    const currentNetworkId = SettingStore.state.currentNetworkId.get();
     const coins = CoinStore.state.get();
 
     const data = Object.values(coins).filter(coin => 
@@ -53,7 +53,7 @@ export default (props: SheetProps<{
                     renderItem={({ item }) => (
                         <TouchableOpacity onPress={() => setCoinId(item.id)}>
                             <CoinListItem
-                                coinId={item.id}
+                                coin={item}
                                 selected={item.id === coinId}
                             />
                         </TouchableOpacity>

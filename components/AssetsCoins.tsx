@@ -44,11 +44,11 @@ const TouchableCoinListItem = (props: {
     <TouchableOpacity
       onPress={() => navigation.navigate('Coin', { coinId: props.coin.id })}
       onLongPress={() => {
-        SheetManager.show('coin', { payload: { contractId: props.coin.contractId } });
+        SheetManager.show('coin', { payload: { coinId: props.coin.id } });
       }}
     >
       <View style={styles.listItemContainer}>
-        <CoinListItem coinId={props.coin.contractId} />
+        <CoinListItem coin={props.coin} />
       </View>
     </TouchableOpacity>
   );

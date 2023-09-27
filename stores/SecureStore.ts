@@ -57,7 +57,7 @@ const actions : ISecureActions = {
     },
     
     addAccount: (account: AccountSecure) => {
-        state.merge({
+        state.accounts.merge({
             [account.address]: account
         });
 

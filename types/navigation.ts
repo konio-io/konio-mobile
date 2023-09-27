@@ -155,9 +155,9 @@ export type ImportWalletSeedRouteProp = RouteProp<IntroParamList, 'ImportWalletS
 export type WithdrawParamList = {
     WithdrawAsset: {
         to?: string,
-        contractId?: string
+        coinId?: string
         amount?: number,
-        tokenId?: string
+        nftId?: string
     },
     NewContact: {
         address?: string

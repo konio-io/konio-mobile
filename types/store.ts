@@ -174,12 +174,12 @@ export interface ICoinActions {
         to: string;
         value: string;
         note: string;
-    }) => Promise<Transaction>;
+    }) => Promise<Transaction|undefined>;
     addCoin: (contractId: string) => Promise<Coin>;
     withdrawCoinConfirm: (args: {
         id: string;
         transaction: TransactionJsonWait;
-    }) => Promise<Transaction>;
+    }) => Promise<Transaction|undefined>;
     deleteCoin: (id: string) => void;
     refreshCoins: (args?: {
         contract?: boolean;

@@ -32,7 +32,7 @@ const actions : INftActions = {
         //to do check owner_of
     
         const id = getters.nftId(accountId, networkId, contractId, tokenId);
-    
+
         const nft: Nft = {
             id,
             tokenId,
@@ -44,13 +44,19 @@ const actions : INftActions = {
             image: token.image ?? 'unknown',
         };
     
-        state.nfts.merge({ [id]: nft });
+        state.merge({ [id]: nft });
     
         return nft;
     },
     
     deleteNft: (id: string) => {
-        state.nested(id).set(none);
+        const nft = state.nested(id);
+        const nftCollectionId = nft.nftCollectionId.get({noproxy: true});
+        nft.set(none);
+        const nftsInSameCollection = Object.values(state.get()).filter(nft => nft.nftCollectionId === nftCollectionId);
+        if (nftsInSameCollection.length === 0) {
+            getStore('NftCollection').actions.deleteNftCollection(nftCollectionId);
+        }
     },
     
     withdrawNft: async (args: {

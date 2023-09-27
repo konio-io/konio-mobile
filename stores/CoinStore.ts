@@ -17,19 +17,54 @@ const state = hookstate<CoinState>(
 );
 
 const actions : ICoinActions = {
-    withdrawCoin: async (args: { id: string, to: string, value: string, note: string }) => {
+    addCoin: async (contractId: string) => {
+        const accountId = getStore('Setting').state.currentAccountId.get();
+        const networkId = getStore('Setting').state.currentNetworkId.get();
+    
+        const contract = await getters.fetchCoinContract(contractId);
+    
+        const id = getters.coinId(accountId, networkId, contractId);
+        const coin : Coin = {
+            id,
+            contractId,
+            networkId,
+            accountId,
+            decimal: contract.decimal ?? 0,
+            symbol: contract.symbol
+        };
+    
+        state.merge({
+            [id]: coin
+        });
+    
+        actions.refreshCoin({
+            id,
+            balance: true,
+            info: true,
+            price: true
+        });
+        
+        return coin;
+    },
+
+    withdrawCoin: async (args: { 
+        id: string, 
+        to: string, 
+        value: string, 
+        note: string 
+    }) : Promise<Transaction|undefined> => {
         const accountId = getStore('Setting').state.currentAccountId.get();
         const address = getStore('Account').state.nested(accountId).address.get();
-        const { contractId, to, value, note } = args;
+        const { id, to, value, note } = args;
         
-        const coin = getters.getCoin(contractId);
+        const coin = getters.getCoin(id);
     
         if (!coin) {
             throw new Error("Coin not found in store");
         }
     
         const rcLimit = getStore('Setting').state.rcLimit.get();
-        const contract = await getStore('Koin').getters.fetchContract(contractId);
+        const contract = await getStore('Koin').getters.fetchContract(coin.contractId);
     
         if (!contract.abi) {
             throw new Error("Contract abi not found");
@@ -61,6 +96,7 @@ const actions : ICoinActions = {
             throw new Error(`Transfer failed. Logs: ${receipt.logs.join(",")}`);
         }
     
+        /*
         const tsx: Transaction = {
             transactionId: transaction.id,
             contractId,
@@ -73,45 +109,18 @@ const actions : ICoinActions = {
         };
     
         coin.transactions.merge({ [tsx.transactionId]: tsx });
-        return transaction;
-    },
-    
-    addCoin: async (contractId: string) => {
-        const accountId = getStore('Setting').state.currentAccountId.get();
-        const networkId = getStore('Setting').state.currentNetworkId.get();
-    
-        const contract = await getters.fetchCoinContract(contractId);
-    
-        const id = getters.coinId(accountId, networkId, contractId);
-        const coin : Coin = {
-            id,
-            contractId,
-            networkId,
-            accountId,
-            decimal: contract.decimal ?? 0,
-            symbol: contract.symbol
-        };
-    
-        state.merge({
-            [id]: coin
-        });
-    
-        actions.refreshCoin({
-            id,
-            balance: true,
-            info: true,
-            price: true
-        });
         
-        return coin;
+        return transaction;
+        */
+       return undefined;
     },
     
     withdrawCoinConfirm: async (args: {
         id: string,
         transaction: TransactionJsonWait
-    }) : Promise<Transaction> => {
-    
-        const { contractId, transaction } = args;
+    }) : Promise<Transaction|undefined> => {
+        /*
+        const { id, transaction } = args;
         const accountId = getStore('Setting').state.currentAccountId.get();
         const networkId = getStore('Setting').state.currentNetworkId.get();
     
@@ -146,6 +155,9 @@ const actions : ICoinActions = {
         getStore('Mana').actions.refreshMana();
     
         return transactionState.get();
+        */
+
+        return undefined;
     },
     
     deleteCoin: (id: string) => {

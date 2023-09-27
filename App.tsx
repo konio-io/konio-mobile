@@ -91,7 +91,7 @@ const Main = () => {
   }
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <Init/>
       <Wc/>
       <Lock/>

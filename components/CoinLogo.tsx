@@ -3,6 +3,7 @@ import { View, Image } from 'react-native';
 import { useEffect, useState } from "react";
 import { useHookstate } from '@hookstate/core';
 import CoinStore from '../stores/CoinStore';
+import { useTheme } from '../hooks';
 
 export default (props: {
     coinId: string

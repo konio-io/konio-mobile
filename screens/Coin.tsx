@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { CoinRouteProp, HoldingsNavigationProp } from '../types/navigation';
-import { Button, TransactionList, Screen, MoreVertical, Text, CoinLogo } from '../components';
+import { Button, Screen, MoreVertical, Text, CoinLogo } from '../components';
 import { useI18n, useTheme } from '../hooks';
 import { Feather } from '@expo/vector-icons';
 import { useEffect } from 'react';
@@ -13,7 +13,7 @@ import { CoinStore } from '../stores';
 export default () => {
     const navigation = useNavigation<HoldingsNavigationProp>();
     const route = useRoute<CoinRouteProp>();
-    const coin = useHookstate(CoinStore.state.nested(route.params.contractId)).get();
+    const coin = useHookstate(CoinStore.state.nested(route.params.coinId)).get();
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();
@@ -25,7 +25,7 @@ export default () => {
                 headerRight: () => {
                     return (
                         <MoreVertical onPress={() => {
-                            SheetManager.show('coin', { payload: { contractId: route.params.contractId } });
+                            SheetManager.show('coin', { payload: { coinId: route.params.coinId } });
                         }} />
                     )
                 }
@@ -58,7 +58,7 @@ export default () => {
                     </View>
 
                     <View style={{ ...styles.alignCenterColumn, ...styles.rowGapSmall }}>
-                        <CoinLogo size={48} contractId={route.params.contractId} />
+                        <CoinLogo size={48} coinId={route.params.coinId} />
                     </View>
                 </View>
 
@@ -71,7 +71,7 @@ export default () => {
                                 navigation.navigate('Withdraw', {
                                     screen: 'WithdrawAsset',
                                     params: {
-                                        contractId: route.params.contractId
+                                        coinId: route.params.coinId
                                     }
                                 });
                             }}
@@ -91,8 +91,6 @@ export default () => {
             <View style={{ ...styles.paddingBase }}>
                 <Text style={styles.sectionTitle}>{i18n.t('transactions')}</Text>
             </View>
-
-            <TransactionList contractId={route.params.contractId} />
 
         </Screen>
     );

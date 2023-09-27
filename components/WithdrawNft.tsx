@@ -1,4 +1,4 @@
-import { Button} from '../components';
+import { Button } from '../components';
 import { ScrollView, View } from "react-native";
 import { useI18n, useLockState, useTheme } from '../hooks';
 import RecipientInput from '../components/RecipientInput';
@@ -19,7 +19,7 @@ export default (props: {
     const currentNetworkState = useHookstate(SettingStore.state.currentNetworkId);
     const i18n = useI18n();
     const theme = useTheme();
-    const [to, setTo] = useState<string|undefined>();
+    const [to, setTo] = useState<string | undefined>();
     const [nft, setNft] = useState(props.nftId);
     const lockState = useLockState();
     const [sendRequest, setSendRequest] = useState(false);
@@ -56,21 +56,31 @@ export default (props: {
             tokenId: nft.tokenId,
             to
         })
-        .then(() => {
-            //withdraw confirmation
-            withdrawNftConfirm({
-                contractId: nft.contractId,
-                tokenId: nft.tokenId,
-                to
-            }).then(() => {
-                hideSpinner();
-                navigation.goBack();
+            .then(() => {
+                //withdraw confirmation
+                withdrawNftConfirm({
+                    contractId: nft.contractId,
+                    tokenId: nft.tokenId,
+                    to
+                }).then(() => {
+                    hideSpinner();
+                    navigation.goBack();
 
-                showToast({
-                    type: 'success',
-                    text1: i18n.t('transaction_confirmed'),
-                });
-                askReview();
+                    showToast({
+                        type: 'success',
+                        text1: i18n.t('transaction_confirmed'),
+                    });
+                    askReview();
+                })
+                    .catch(e => {
+                        hideSpinner();
+                        logError(e);
+                        showToast({
+                            type: 'error',
+                            text1: i18n.t('nft_transfer_failed'),
+                            text2: i18n.t('check_logs')
+                        });
+                    });
             })
             .catch(e => {
                 hideSpinner();
@@ -81,19 +91,9 @@ export default (props: {
                     text2: i18n.t('check_logs')
                 });
             });
-        })
-        .catch(e => {
-            hideSpinner();
-            logError(e);
-            showToast({
-                type: 'error',
-                text1: i18n.t('nft_transfer_failed'),
-                text2: i18n.t('check_logs')
-            });  
-        });
     }
 
-    
+
     return (
         <View style={{ flex: 1, ...theme.styles.paddingBase }}>
             <ScrollView contentContainerStyle={theme.styles.rowGapBase}>
@@ -101,14 +101,12 @@ export default (props: {
                     value={to}
                     onChange={(address: string) => setTo(address)}
                 />
-         
 
-                    <AssetNftInput
-                        id={nft}
-                        onChange={(value: any) => setNft(value)}
-                        opened={to !== undefined}
-                    />
-                
+                <AssetNftInput
+                    nftId={nft}
+                    onChange={(value: string) => setNft(value)}
+                    opened={to !== undefined}
+                />
             </ScrollView>
 
             {

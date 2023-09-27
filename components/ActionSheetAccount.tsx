@@ -7,16 +7,23 @@ import type { EditAccountNavigationProps } from "../types/navigation";
 import { Alert } from "react-native";
 import { AccountStore, SecureStore } from "../stores";
 
-export default (props: SheetProps) => {
+export default (props: SheetProps<{ 
+  accountId: string 
+}>) => {
+
     const navigation = useNavigation<EditAccountNavigationProps>();
-    const { accountId } = props.payload;
+    const accountId = props.payload?.accountId;
     const i18n = useI18n();
+
+    if (!accountId) {
+      return <></>;
+    }
 
     const data = [
         {
             title: i18n.t('edit'),
             icon: <AntDesign name="edit"/>,
-            onPress: () => navigation.navigate('EditAccount', { accountId: accountId })
+            onPress: () => navigation.navigate('EditAccount', { accountId })
         }
     ];
 

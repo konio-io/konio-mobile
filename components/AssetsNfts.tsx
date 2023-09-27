@@ -4,9 +4,12 @@ import { useTheme, useNftCollections } from '../hooks';
 import { ButtonCircle } from '.';
 import { AssetsNavigationProp, } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
-import NftCollectionListItem from './NftCollectionListItem';
 import NftListItem from './NftListItem';
 import { SheetManager } from 'react-native-actions-sheet';
+import { Nft, NftCollection } from '../types/store';
+import Text from './Text';
+import { NftStore } from '../stores';
+import { useHookstate } from '@hookstate/core';
 
 export default () => {
   const theme = useTheme();
@@ -23,11 +26,8 @@ export default () => {
         {
           data.map(collection =>
             <NftCollectionListItem
-              key={collection.contractId}
-              nftCollectionId={collection.contractId}
-              renderItem={(tokenId: string) => 
-                <TouchableNftListItem key={tokenId} contractId={collection.contractId} tokenId={tokenId} />
-              }
+              key={collection.id}
+              nftCollection={collection}
             />
           )
         }
@@ -39,21 +39,49 @@ export default () => {
   );
 }
 
-const TouchableNftListItem = (props: {
-  contractId: string,
-  tokenId: string
+const NftCollectionListItem = (props: {
+  nftCollection: NftCollection
 }) => {
-  const { tokenId, contractId } = props;
+  const { styles } = useTheme();
+  const nfts = useHookstate(NftStore.state).get();
+  const data = Object.values(nfts).filter(nft => nft.nftCollectionId === props.nftCollection.id);
+
+  return (
+    <View style={{
+      width: 330,
+      ...styles.rowGapSmall
+    }}>
+      <Text style={{ ...styles.textMedium, ...styles.textBold }}>
+        {props.nftCollection.name}
+      </Text>
+
+      <View style={{
+        ...styles.directionRow,
+        ...styles.columnGapBase,
+        ...styles.rowGapBase,
+        flexWrap: 'wrap'
+      }}>
+        {
+          data.map(nft => <TouchableNftListItem key={nft.id} nft={nft}/>)
+        }
+      </View>
+    </View>
+  )
+}
+
+const TouchableNftListItem = (props: {
+  nft: Nft
+}) => {
   const navigation = useNavigation<AssetsNavigationProp>();
 
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('Nft', { tokenId, contractId })}
+      onPress={() => navigation.navigate('Nft', { nftId: props.nft.id })}
       onLongPress={() => {
-        SheetManager.show('nft', { payload: { tokenId, contractId } });
+        SheetManager.show('nft', { payload: { nftId: props.nft.id } });
       }}
     >
-      <NftListItem tokenId={tokenId} contractId={contractId} />
+      <NftListItem nft={props.nft}/>
     </TouchableOpacity>
   )
 }

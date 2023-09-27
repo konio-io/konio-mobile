@@ -2,7 +2,7 @@ import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-shee
 import Text from './Text';
 import Button from "./Button";
 import { View, ScrollView } from "react-native";
-import { useI18n, useTheme } from "../hooks";
+import { useCurrentAccount, useI18n, useTheme } from "../hooks";
 import ButtonCircle from "./ButtonCircle";
 import ListItemSelected from "./ListItemSelected";
 import AddressListItem from "./AddressListItem";
@@ -12,6 +12,8 @@ import TextInput from "./TextInput";
 import TextInputActionPaste from "./TextInputActionPaste";
 import { WithdrawAssetNavigationProp } from "../types/navigation";
 import { useState } from "react";
+import { AccountStore, ContactStore } from "../stores";
+import { useHookstate } from "@hookstate/core";
 
 export default (props: SheetProps<{ selected: string }>) => {
 
@@ -19,10 +21,6 @@ export default (props: SheetProps<{ selected: string }>) => {
     const theme = useTheme();
     const styles = theme.styles;
     const [address, setAddress] = useState(props.payload?.selected ?? '');
-
-    const _close = () => {
-        SheetManager.hide(props.sheetId);
-    }
 
     const _confirm = () => {
         if (address) {
@@ -70,14 +68,15 @@ const AccountList = (props: {
     onPressItem: Function,
     selected: string
 }) => {
-    const currentAddress = useCurrentAddress();
-    const accounts = useAccounts();
+    const accounts = useHookstate(AccountStore.state).get();
+    const currentAccount = useCurrentAccount();
+   
     const { styles } = useTheme();
     const i18n = useI18n();
-    const result = accounts
+    const result = Object.values(accounts)
         .sort((a, b) => a.name > b.name ? 1 : -1)
         .map(t => t.address)
-        .filter(address => address !== currentAddress);
+        .filter(address => address !== currentAccount.address);
 
     const data = [...new Set(result)];
 
@@ -103,12 +102,12 @@ const Addressbook = (props: {
     const theme = useTheme();
     const styles = theme.styles;
     const navigation = useNavigation<WithdrawAssetNavigationProp>();
-    const currentAddress = useCurrentAddress();
-    const addressBook = useAddressbook();
-    const result = addressBook
+    const currentAccount = useCurrentAccount();
+    const addressBook = useHookstate(ContactStore.state).get();
+    const result = Object.values(addressBook)
         .sort((a, b) => a.name > b.name ? 1 : -1)
         .map(t => t.address)
-        .filter(address => address !== currentAddress);
+        .filter(address => address !== currentAccount.address);
 
     const data = [...new Set(result)];
 
@@ -138,8 +137,8 @@ const ToListItem = (props: {
     selected: boolean
 }) => {
 
-    const account = useAccount(props.address);
-    const contact = useContact(props.address);
+    const account = Object.values(AccountStore.state.get()).find(account => account.address === props.address);
+    const contact = ContactStore.state.nested(props.address).get();
     let name = '';
 
     if (account) {

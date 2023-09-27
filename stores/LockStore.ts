@@ -1,7 +1,7 @@
 import { hookstate } from "@hookstate/core";
 import { ILockActions, LockState } from "../types/store";
 
-const state = hookstate<LockState>(false);
+const state = hookstate<LockState>(true);
 
 const actions : ILockActions = {
     lock: () => {

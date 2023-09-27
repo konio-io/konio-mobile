@@ -27,11 +27,6 @@ export default (props: {
     numberOfLines?: number
 }) => {
 
-    const [value, setValue] = useState('');
-    useEffect(() => {
-        setValue(props.value)
-    }, [props.value])
-
     const theme = useTheme();
     const { Color } = theme.vars;
     const styles = theme.styles;
@@ -45,7 +40,7 @@ export default (props: {
             }, 1000)
 
             return () => clearTimeout(delayDebounceFn)
-        }, [value])
+        }, [props.value])
     }
 
     return (
@@ -74,7 +69,7 @@ export default (props: {
                     ...props.style
                 }}
                 placeholderTextColor={rgba(Color.baseContrast, 0.3)}
-                value={value}
+                value={props.value}
                 textAlignVertical="top"
                 onChangeText={(v: string) => {
                     if (props.onChangeText) {

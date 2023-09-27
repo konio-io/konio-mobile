@@ -1,15 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NewCoinNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
-import { TextInput, Button, Screen, Text, CoinLogo, ActivityIndicator } from '../components';
-import { useCoins, useCurrentAccountId, useCurrentNetworkId, useI18n } from '../hooks';
-import { Keyboard, ScrollView, View, TouchableOpacity } from 'react-native';
+import { TextInput, Button, Screen, Text, ActivityIndicator } from '../components';
+import { useCoins, useCurrentNetwork, useI18n } from '../hooks';
+import { Keyboard, ScrollView, View, TouchableOpacity, Image } from 'react-native';
 import { useTheme } from '../hooks';
 import { TOKENS_URL } from '../lib/Constants';
 import { useEffect, useState } from 'react';
 import Toast from 'react-native-toast-message';
 import { SpinnerStore, CoinStore, LogStore, SettingStore } from '../stores';
-import { useHookstate } from '@hookstate/core';
 
 export default () => {
   const navigation = useNavigation<NewCoinNavigationProp>();
@@ -89,10 +88,7 @@ const SuggestList = (props: {
     chainId: string
   }
 
-  const currentNetworkIdState = useHookstate(SettingStore.state.currentNetworkId);
-  const currentAccountIdState = useHookstate(SettingStore.state.currentAccountId);
-
-  const currentNetworkId = currentAccountIdState.get();
+  const currentNetwork = useCurrentNetwork();
   const currentCoins = useCoins();
   const [coinList, setCoinList] = useState<Array<Item>>([]);
   const i18n = useI18n();
@@ -106,7 +102,7 @@ const SuggestList = (props: {
       const tokenListResponse = await fetch(`${TOKENS_URL}/index.json`);
       const tokenMap: Array<Token> = await tokenListResponse.json();
       const tokenList = Object.values(tokenMap).filter(token => {
-        return token.chainId === currentNetworkId
+        return token.chainId === currentNetwork.chainId
           && !Object.keys(currentCoins).includes(token.address)
           && token.symbol !== "MANA";
       });
@@ -131,11 +127,11 @@ const SuggestList = (props: {
     setSearching(false);
   }
 
+  const data = coinList.slice(0, 5);
+
   useEffect(() => {
     refreshList();
-  }, [currentNetworkIdState, currentAccountIdState]);
-
-  const data = coinList.slice(0, 5);
+  },[]);
 
   return (
     <View>
@@ -175,3 +171,28 @@ const ListItem = (props: {
     </TouchableOpacity>
   );
 }
+
+const CoinLogo = (props: {
+  contractId: string,
+  size: number
+}) => {
+  const [logo, setlogo] = useState('',);
+  const theme = useTheme();
+  const { Border } = theme.vars;
+
+  useEffect(() => {
+          CoinStore.getters.fetchContractInfo(props.contractId).then(info => {
+              if (info.logo) {
+                  setlogo(info.logo);
+              }
+          });
+  }, []);
+
+  return (
+      <View style={{borderRadius: props.size, borderColor: Border.color, borderWidth: Border.width, padding: 1}}>
+          {logo &&
+              <Image style={{ width: props.size, height: props.size, borderRadius: props.size }} source={{ uri: logo }} />
+          }
+      </View>
+  );
+};

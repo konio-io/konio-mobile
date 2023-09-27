@@ -39,6 +39,8 @@ const actions : INftCollectionActions = {
 
     deleteNftCollection: (id: string) => {
         state.nested(id).set(none);
+        const nfts = Object.values(getStore('Nft').state.get()).filter(nft => nft.nftCollectionId === id);
+        nfts.map(nft => getStore('Nft').actions.deleteNft(nft.id));
     },
 }
 

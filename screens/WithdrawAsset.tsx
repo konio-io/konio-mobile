@@ -13,7 +13,8 @@ export default () => {
     const route = useRoute<WithdrawAssetRouteProp>();
     const navigation = useNavigation<WithdrawAssetNavigationProp>();
     const [category, setCategory] = useState(CATEGORY_COINS);
-    const [contractId, setContractId] = useState<string|undefined>(undefined)
+    const [coinId, setCoinId] = useState<string|undefined>(undefined);
+    const [nftId, setNftId] = useState<string|undefined>(undefined);
     const i18n = useI18n();
 
     useEffect(() => {
@@ -25,8 +26,11 @@ export default () => {
     }, [navigation]);
 
     useEffect(() => {
-        if (route.params.contractId) {
-            setContractId(route.params.contractId)
+        if (route.params.coinId) {
+            setCoinId(route.params.coinId)
+        }
+        if (route.params.nftId) {
+            setNftId(route.params.nftId)
         }
     }, [route.params])
 
@@ -38,11 +42,11 @@ export default () => {
 
             {
                 category === CATEGORY_COINS &&
-                <WithdrawCoin contractId={contractId}/>
+                <WithdrawCoin coinId={coinId}/>
             }
             {
                 category === CATEGORY_NFTS &&
-                <WithdrawNft/>
+                <WithdrawNft nftId={nftId}/>
             }
         </Screen>
     );

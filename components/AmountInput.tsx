@@ -79,7 +79,7 @@ const createStyles = (theme: Theme) => {
         amount: {
             ...styles.textInput,
             borderWidth: 0,
-            width: '100%'
+            width: '100%',
         },
         coinSelectorContainer: {
             marginRight: 40,
@@ -93,12 +93,12 @@ const createStyles = (theme: Theme) => {
     });
 }
 
-const ActionSheetAmount = (props: SheetProps<{ amount: number, contractId: string }>) => {
+const ActionSheetAmount = (props: SheetProps<{ amount: number, coinId: string }>) => {
     const theme = useTheme();
     const i18n = useI18n();
     const styles = createStyles(theme);
     const { Color } = theme.vars;
-    const coin = useHookstate(CoinStore.state.nested(props.payload?.contractId ?? '')).get();
+    const coin = CoinStore.state.nested(props.payload?.coinId ?? '').get();
     const [amount, setAmount] = useState(props.payload?.amount.toString() ?? '');
     const [amountUsd, setAmountUsd] = useState(0);
 
@@ -178,7 +178,7 @@ const ActionSheetAmount = (props: SheetProps<{ amount: number, contractId: strin
                 </View>
             </View>
 
-            <Button style={{ flex: 1 }} title={i18n.t('confirm')} onPress={() => _confirm()} />
+            <Button title={i18n.t('confirm')} onPress={() => _confirm()} />
 
         </ActionSheet>
     );

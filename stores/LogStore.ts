@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const state = hookstate<LogState>(
     [], 
     localstored({
-        key: 'network',
+        key: 'log',
         engine: AsyncStorage,
     })
 )

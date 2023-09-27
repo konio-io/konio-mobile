@@ -15,7 +15,7 @@ export default (props: SheetProps) => {
     const navigation = useNavigation<ResetPasswordNavigationProp>();
     const i18n = useI18n();
     const [password, setPwd] = useState('');
-    const biometric = SettingStore.state.biometric;
+    const biometric = SettingStore.state.biometric.get();
     const theme = useTheme();
     const styles = createStyles(theme);
 

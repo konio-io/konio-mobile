@@ -23,11 +23,8 @@ export default (props: {
             payload: { nftId: props.nftId },
         });
 
-        if (data?.contractId && data?.tokenId && props.onChange) {
-            props.onChange({
-                contractId: data.contractId,
-                tokenId: data.tokenId
-            });
+        if (data?.nftId && props.onChange) {
+            props.onChange(data.nftId);
         }
     }
 
@@ -57,8 +54,12 @@ const Nft = (props: {
     const styles = theme.styles;
     const { Border } = theme.vars;
     const nft = NftStore.state.nested(props.nftId).get();
-    const nftCollection = NftCollectionStore.state.nested(props.nftId).get();
-    if (!nftCollection || !nft) {
+    if (!nft) {
+        return <></>;
+    }
+
+    const nftCollection = NftCollectionStore.state.nested(nft.nftCollectionId).get();
+    if (!nftCollection) {
         return <></>;
     }
 

@@ -36,7 +36,7 @@ export const actions : IAccountActions = {
                 coin.logo = info.logo;
             } catch (e) {}
     
-            getStore('Coin').state.coins.merge({
+            getStore('Coin').state.merge({
                 [id]: coin
             });
         }
@@ -46,7 +46,7 @@ export const actions : IAccountActions = {
             name,
             address: accountId
         };
-        state.accounts.merge({ [account.address]: account });
+        state.merge({ [account.address]: account });
     },
     
     addSeed: async (args: {

@@ -26,7 +26,7 @@ export default () => {
       headerShadowVisible: false,
       headerTitleAlign: 'center',
       headerLeft: () => (<DrawerToggler />),
-      headerRight: () => (<MoreVertical onPress={() => SheetManager.show('account', { payload: { address: account.address } })} />),
+      headerRight: () => (<MoreVertical onPress={() => SheetManager.show('account', { payload: { accountId: account.id } })} />),
       headerTitle: () => (
         <View style={styles.alignCenterColumn}>
           <Text style={styles.textMedium}>{account?.name}</Text>

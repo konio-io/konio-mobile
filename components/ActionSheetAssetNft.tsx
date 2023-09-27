@@ -3,10 +3,10 @@ import Button from "./Button";
 import Text from "./Text";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { useI18n, useTheme } from "../hooks";
-import NftCollectionListItem from "./NftCollectionListItem";
 import NftListItem from "./NftListItem";
-import { useState } from "react";
 import { SettingStore, NftCollectionStore, NftStore } from "../stores";
+import { Nft, NftCollection } from "../types/store";
+import { useState } from "react";
 
 export default (props: SheetProps<{ 
     nftId?: string 
@@ -17,7 +17,7 @@ export default (props: SheetProps<{
     const styles = theme.styles;
 
     const currentAccountId = SettingStore.state.currentAccountId.get();
-    const currentNetworkId = SettingStore.state.currentAccountId.get();
+    const currentNetworkId = SettingStore.state.currentNetworkId.get();
     const nftCollections = NftCollectionStore.state.get();
 
     const data = Object.values(nftCollections).filter(nft => 
@@ -27,10 +27,6 @@ export default (props: SheetProps<{
 
     const _select = (data: any) => {
         setNftId(data.nftId);
-    }
-
-    const _close = () => {
-        SheetManager.hide(props.sheetId);
     }
 
     const _confirm = () => {
@@ -43,8 +39,8 @@ export default (props: SheetProps<{
     return (
         <ActionSheet
             id={props.sheetId}
-            closable={false}
-            closeOnTouchBackdrop={false}
+            closable={true}
+            closeOnTouchBackdrop={true}
             containerStyle={{ ...theme.styles.paddingBase, ...theme.styles.rowGapMedium }}
         >
             {
@@ -63,13 +59,13 @@ export default (props: SheetProps<{
 
                             <NftCollectionListItem
                                 key={collection.id}
-                                nftCollectionId={collection.id}
+                                nftCollection={collection}
                                 renderItem={
-                                    (tId: string) =>
-                                        <TouchableOpacity key={tId} onPress={() => _select({ nftId: tId })}>
+                                    (item: Nft) =>
+                                        <TouchableOpacity key={item.id} onPress={() => _select({ nftId: item.id })}>
                                             <NftListItem
-                                                nftId={nftId}
-                                                selected={tId === nftId}
+                                                nft={item}
+                                                selected={item.id === nftId}
                                             />
                                         </TouchableOpacity>
                                 }
@@ -87,3 +83,34 @@ export default (props: SheetProps<{
         </ActionSheet>
     );
 }
+
+const NftCollectionListItem = (props: {
+    nftCollection: NftCollection,
+    renderItem: Function
+  }) => {
+    const { styles } = useTheme();
+    const nfts = NftStore.state.get();
+    const data = Object.values(nfts).filter(nft => nft.nftCollectionId === props.nftCollection.id);
+  
+    return (
+      <View style={{
+        width: 330,
+        ...styles.rowGapSmall
+      }}>
+        <Text style={{ ...styles.textMedium, ...styles.textBold }}>
+          {props.nftCollection.name}
+        </Text>
+  
+        <View style={{
+          ...styles.directionRow,
+          ...styles.columnGapBase,
+          ...styles.rowGapBase,
+          flexWrap: 'wrap'
+        }}>
+          {
+            data.map(nft => props.renderItem(nft))
+          }
+        </View>
+      </View>
+    )
+  }

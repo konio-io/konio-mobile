@@ -37,7 +37,8 @@ export default () => {
 
         SpinnerStore.actions.showSpinner();
 
-        AccountStore.actions.addAccount(name.trim())
+        setTimeout(() => {
+            AccountStore.actions.addAccount(name.trim())
             .then(address => {
                 SpinnerStore.actions.hideSpinner();
                 SettingStore.actions.setCurrentAccount(address);
@@ -53,6 +54,7 @@ export default () => {
                     text2: i18n.t('check_logs')
                 });
             });
+        }, 1000);
 
     };
 

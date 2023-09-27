@@ -3,14 +3,12 @@ import { Image, View } from 'react-native';
 import { useEffect, useState } from "react";
 import { rgba } from "../lib/utils";
 import { Feather } from '@expo/vector-icons';
-import { useHookstate } from "@hookstate/core";
-import { NftStore } from "../stores";
+import { Nft } from "../types/store";
 
 export default (props: {
-    nftId: string,
+    nft: Nft,
     selected?: boolean
 }) => {
-    const nft = useHookstate(NftStore.state.nested(props.nftId)).get();
     const theme = useTheme();
     const styles = theme.styles;
     const { Border, Color } = theme.vars;
@@ -20,10 +18,6 @@ export default (props: {
         setSelected(props.selected);
     }, [props.selected])
 
-    if (!nft) {
-        return <></>
-    }
-
     return (
         <View
             style={{
@@ -31,7 +25,7 @@ export default (props: {
                 borderRadius: Border.radius
             }}
         >
-            <Image source={{ uri: nft.image }} resizeMode="contain" style={{
+            <Image source={{ uri: props.nft.image }} resizeMode="contain" style={{
                 width: 100,
                 height: 100,
                 borderRadius: Border.radius,

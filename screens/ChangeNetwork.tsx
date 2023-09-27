@@ -31,10 +31,10 @@ export const ListItem = (props: {
   const theme = useTheme();
   const styles = theme.styles;
   const { network } = props;
-  const selected = currentNetworkId === network.chainId;
+  const selected = currentNetworkId === network.id;
 
   const changeNetwork = () => {
-    SettingStore.actions.setCurrentNetwork(network.chainId);
+    SettingStore.actions.setCurrentNetwork(network.id);
   };
 
   return <ListItemSelected
@@ -47,8 +47,8 @@ export const ListItem = (props: {
     selected={selected}
     onPress={changeNetwork}
     onLongPress={() => {
-      if (!Object.keys(DEFAULT_NETWORKS).includes(network.chainId)) {
-        SheetManager.show('network', { payload: { networkId: network.chainId } });
+      if (!Object.keys(DEFAULT_NETWORKS).includes(network.id)) {
+        SheetManager.show('network', { payload: { networkId: network.id } });
       }
     }}
   />

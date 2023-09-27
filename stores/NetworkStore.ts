@@ -6,7 +6,7 @@ import { DEFAULT_NETWORKS, MAINNET } from "../lib/Constants";
 import { getStore } from "./registry";
 
 const state = hookstate<NetworkState>(
-    {}, 
+    DEFAULT_NETWORKS, 
     localstored({
         key: 'network',
         engine: AsyncStorage,
