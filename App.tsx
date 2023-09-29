@@ -18,17 +18,13 @@ import NetInfo from '@react-native-community/netinfo';
 import { SignClientTypes } from "@walletconnect/types";
 import { useI18n, useTheme, useLockState, useAppState, useAutolock, useCurrentAccountId } from './hooks';
 import { useHookstate } from '@hookstate/core';
-import Toast from 'react-native-toast-message';
+import { Toast as MyToast } from './components';
 import { View } from 'react-native';
 import { useHydrated } from './hooks';
-import { CoinStore, WalletConnectStore, LogStore, ManaStore } from './stores'
+import { CoinStore, WalletConnectStore, LogStore, ManaStore } from './stores';
+import Toast from 'react-native-toast-message';
 
 export default function App() {
-  useFonts({
-    'Poppins': require('./assets/Poppins-Regular.otf'),
-    'Poppins_bold': require('./assets/Poppins_bold.otf')
-  });
-
   const theme = useTheme();
   // @ts-ignore
   const PolyfillCrypto = global.PolyfillCrypto;
@@ -66,17 +62,21 @@ export default function App() {
       </SheetProvider>
 
       <StatusBar style={theme.statusBarStyle} />
-      <Toast />
+      <MyToast />
       <Spinner />
     </NavigationContainer>
   );
 }
 
 const Main = () => {
+  const [fontsLoaded] = useFonts({
+    'Poppins': require('./assets/Poppins-Regular.otf'),
+    'Poppins_bold': require('./assets/Poppins_bold.otf')
+  });
   const hydrated = useHydrated();
   const currentAccountId = useCurrentAccountId();
   
-  if (!hydrated) {
+  if (!hydrated || !fontsLoaded) {
     return <Loading />;
   }
 

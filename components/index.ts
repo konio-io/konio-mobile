@@ -8,7 +8,7 @@ import ManaBar from './ManaBar';
 import CircularProgress from './CircularProgress';
 import ManaStat from './ManaStat';
 import Address from './Address';
-import TransactionList from './TransactionList';
+import TransactionListItem from './TransactionListItem';
 import ActivityIndicator from './ActivityIndicator';
 import Wrapper from './Wrapper';
 import CoinListItem from './CoinListItem';
@@ -50,7 +50,7 @@ export {
     ManaStat,
     CircularProgress,
     Address,
-    TransactionList,
+    TransactionListItem,
     Wrapper,
     CoinListItem,
     ListItem,

@@ -79,7 +79,6 @@
   "time_recharge": "Ricarica temporale",
   "deposit": "Ricevi",
   "withdraw": "Invia",
-  "destination_address": "Indirizzo di destinazione",
   "note": "Nota",
   "confirm": "Conferma",
   "select_amount": "Seleziona importo",
@@ -156,7 +155,7 @@
   "edit_account": "Modifica account",
   "default": "Predefinito",
   "total_balance": "Saldo totale",
-  "transactions": "Transazioni",
+  "transactions": "Ultime transazioni",
   "add_contact": "Aggiungi contatto",
   "add_to_addressbook": "Aggiungi alla rubrica",
   "max_accounts_reached": "Numero massimo di account raggiunto ({{max}})",
@@ -228,7 +227,7 @@
   "getBlock": "Ottieni blocco",
   "submitBlock": "Invia blocco",
   "message": "Messaggio",
-  "operations": "Operations",
+  "operations": "Operazioni",
   "you_offline": "Sei offline",
   "check_connection": "Controlla la tua connessione ad internet",
   "you_online": "Sei dinuovo online",
@@ -244,5 +243,7 @@
   "transaction_SUCCESS":"Completata",
   "transaction_PENDING":"Pendente",
   "transaction_ERROR":"Fallita",
-  "no_assets":"Non ci sono assets"
+  "no_assets":"Non ci sono assets",
+  "nft_transfer_failed":"Trasferimento NFT fallito",
+  "assets":"Assets"
 }

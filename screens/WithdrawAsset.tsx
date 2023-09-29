@@ -27,12 +27,14 @@ export default () => {
 
     useEffect(() => {
         if (route.params.coinId) {
-            setCoinId(route.params.coinId)
+            setCoinId(route.params.coinId);
+            setCategory(CATEGORY_COINS);
         }
         if (route.params.nftId) {
-            setNftId(route.params.nftId)
+            setNftId(route.params.nftId);
+            setCategory(CATEGORY_NFTS);
         }
-    }, [route.params])
+    }, [route.params]);
 
     return (
         <Screen insets={true}>

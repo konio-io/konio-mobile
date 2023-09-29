@@ -1,19 +1,19 @@
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { useKoinBalance, useTheme } from '../hooks';
 import { useEffect, useRef, useState } from 'react';
 import ManaStat from './ManaStat';
-import type { Theme } from '../types/ui';
-import ManaProgressLogo from './ManaProgressLogo';
 import ActionSheet, { SheetManager, SheetProps, registerSheet } from 'react-native-actions-sheet';
 import { ManaStore } from '../stores';
 import { useHookstate } from '@hookstate/core';
+import Text from './Text';
+import { Ionicons } from '@expo/vector-icons';
 
 export default () => {
     const FIVE_DAYS = 432e6; // 5 * 24 * 60 * 60 * 1000
 
     const mana = useHookstate(ManaStore.state).get();
     const koinBalance = useKoinBalance();
-    
+
     const [currentPercent, setCurrentPercent] = useState(0);
     const [currentMana, setCurrentMana] = useState(-1);
     const [timeRecharge, setTimeRecharge] = useState(0);
@@ -21,7 +21,8 @@ export default () => {
     const update = (manaBalance: number, koinBalance: number) => {
         setCurrentMana(manaBalance);
         if (koinBalance > 0) {
-            setCurrentPercent(Math.round(((manaBalance * 100) / koinBalance) * 100) / 100);
+            const perc = Math.round(((manaBalance * 100) / koinBalance) * 100) / 100;
+            setCurrentPercent(perc > 100 ? 100 : perc);
         }
     }
 
@@ -51,11 +52,14 @@ export default () => {
     }, [mana, koinBalance]);
 
     const theme = useTheme();
-    const styles = createStyles(theme);
+    const styles = theme.styles;
+    const { Color, Border } = theme.vars;
+    const UnloadedColor = Border.color;
+    const LoadedColor = Color.success;
 
     return (
         <View>
-            <TouchableOpacity onPress={() => 
+            <TouchableOpacity onPress={() =>
                 SheetManager.show('mana', {
                     payload: {
                         currentMana,
@@ -64,25 +68,48 @@ export default () => {
                     }
                 })
             }>
-                <View style={styles.container}>
-                    <ManaProgressLogo
-                        size={55}
-                        strokeWidth={3}
-                        progressPercent={currentPercent}
-                    />
+                <View style={{width: 200, alignItems: 'center'}}>
+                    
+                    {/*
+                    <View style={{
+                        width: '100%',
+                        height: 4,
+                        backgroundColor: UnloadedColor,
+                        borderRadius: 4
+                    }}>
+                        <View style={{
+                            position: 'absolute',
+                            width: `${currentPercent}%`,
+                            height: '100%',
+                            top: 0,
+                            left: 0,
+                            backgroundColor: LoadedColor,
+                            borderRadius: 4
+                        }}/>
+                    </View>
+
+                    */}
+
+                    <View style={{ ...theme.styles.directionRow, columnGap: 2 }}>
+                        <Ionicons name="timer-outline" size={14} color={LoadedColor} />
+                        <Text style={{ ...theme.styles.text, color: LoadedColor, fontSize: 12, lineHeight: 16 }}>MANA</Text>
+                        <Text style={{ ...theme.styles.text, color: LoadedColor, fontSize: 12, lineHeight: 16 }}> {currentPercent}</Text>
+                        <Text style={{ ...theme.styles.text, color: LoadedColor, fontSize: 10, lineHeight: 16 }}>%</Text>
+                    </View>
+
                 </View>
             </TouchableOpacity>
         </View>
     );
 }
 
-const ActionSheetMana = (props: SheetProps<{currentMana: number, currentPercent: number, timeRecharge: number}>) => {
+const ActionSheetMana = (props: SheetProps<{ currentMana: number, currentPercent: number, timeRecharge: number }>) => {
     const theme = useTheme();
 
     return (
         <ActionSheet
             id={props.sheetId}
-            containerStyle={{ ...theme.styles.paddingBase, ...theme.styles.rowGapMedium }}
+            containerStyle={{ ...theme.styles.paddingBase, ...theme.styles.rowGapMedium, backgroundColor: theme.vars.Color.base }}
         >
             <ManaStat
                 balance={props.payload?.currentMana ?? 0}
@@ -93,15 +120,3 @@ const ActionSheetMana = (props: SheetProps<{currentMana: number, currentPercent:
     );
 }
 registerSheet('mana', ActionSheetMana);
-
-
-const createStyles = (theme: Theme) => {
-    const { Color } = theme.vars;
-
-    return StyleSheet.create({
-        ...theme.styles,
-        container: {
-            backgroundColor: Color.base
-        }
-    });
-}

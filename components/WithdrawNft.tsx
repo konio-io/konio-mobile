@@ -4,12 +4,12 @@ import { useI18n, useLockState, useTheme } from '../hooks';
 import RecipientInput from '../components/RecipientInput';
 import { Feather } from '@expo/vector-icons';
 import AssetNftInput from '../components/AssetNftInput';
-import { askReview, hideSpinner, lock, logError, showSpinner, showToast, withdrawNft, withdrawNftConfirm } from '../actions';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { WithdrawAssetNavigationProp } from '../types/navigation';
 import { useHookstate } from '@hookstate/core';
-import { SettingStore } from '../stores';
+import { SettingStore, NftStore, SpinnerStore, LogStore, LockStore } from '../stores';
+import Toast from 'react-native-toast-message';
 
 export default (props: {
     nftId?: string
@@ -20,7 +20,7 @@ export default (props: {
     const i18n = useI18n();
     const theme = useTheme();
     const [to, setTo] = useState<string | undefined>();
-    const [nft, setNft] = useState(props.nftId);
+    const [nftId, setNftId] = useState<string | undefined>();
     const lockState = useLockState();
     const [sendRequest, setSendRequest] = useState(false);
 
@@ -34,48 +34,49 @@ export default (props: {
         }
     }, [lockState]);
 
+    useEffect(() => {
+        setNftId(props.nftId);
+    }, [props.nftId])
+
+
     const _reset = () => {
         setTo(undefined);
-        setNft(undefined);
+        setNftId(undefined);
     }
 
     const _confirm = () => {
-        lock();
+        LockStore.actions.lock();
         setSendRequest(true);
     };
 
     const _send = () => {
-        if (!to || !nft?.contractId || !nft?.tokenId) {
+        if (!to || !nftId) {
             return;
         }
 
-        showSpinner();
+        SpinnerStore.actions.showSpinner();
 
-        withdrawNft({
-            contractId: nft.contractId,
-            tokenId: nft.tokenId,
+        NftStore.actions.withdrawNft({
+            id: nftId,
             to
         })
             .then(() => {
                 //withdraw confirmation
-                withdrawNftConfirm({
-                    contractId: nft.contractId,
-                    tokenId: nft.tokenId,
-                    to
-                }).then(() => {
-                    hideSpinner();
-                    navigation.goBack();
+                NftStore.actions.withdrawNftConfirm(nftId)
+                    .then(() => {
+                        SpinnerStore.actions.hideSpinner();
+                        navigation.goBack();
 
-                    showToast({
-                        type: 'success',
-                        text1: i18n.t('transaction_confirmed'),
-                    });
-                    askReview();
-                })
+                        Toast.show({
+                            type: 'success',
+                            text1: i18n.t('transaction_confirmed'),
+                        });
+                        SettingStore.actions.showAskReview();
+                    })
                     .catch(e => {
-                        hideSpinner();
-                        logError(e);
-                        showToast({
+                        SpinnerStore.actions.hideSpinner();
+                        LogStore.actions.logError(e);
+                        Toast.show({
                             type: 'error',
                             text1: i18n.t('nft_transfer_failed'),
                             text2: i18n.t('check_logs')
@@ -83,9 +84,9 @@ export default (props: {
                     });
             })
             .catch(e => {
-                hideSpinner();
-                logError(e);
-                showToast({
+                SpinnerStore.actions.hideSpinner();
+                LogStore.actions.logError(e);
+                Toast.show({
                     type: 'error',
                     text1: i18n.t('nft_transfer_failed'),
                     text2: i18n.t('check_logs')
@@ -103,14 +104,14 @@ export default (props: {
                 />
 
                 <AssetNftInput
-                    nftId={nft}
-                    onChange={(value: string) => setNft(value)}
-                    opened={to !== undefined}
+                    nftId={nftId}
+                    onChange={(value: string) => setNftId(value)}
+                    opened={to !== undefined && nftId === undefined}
                 />
             </ScrollView>
 
             {
-                to && nft &&
+                to && nftId &&
                 <Button
                     title={i18n.t('send')}
                     onPress={() => _confirm()}

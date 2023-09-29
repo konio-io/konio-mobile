@@ -44,6 +44,8 @@ const actions : ICoinActions = {
             price: true
         });
         
+        getStore('Transaction').actions.refreshTransactions(id);
+
         return coin;
     },
 
@@ -52,13 +54,13 @@ const actions : ICoinActions = {
         to: string, 
         value: string, 
         note: string 
-    }) : Promise<Transaction|undefined> => {
+    }) : Promise<TransactionJsonWait|undefined> => {
         const accountId = getStore('Setting').state.currentAccountId.get();
         const address = getStore('Account').state.nested(accountId).address.get();
-        const { id, to, value, note } = args;
+
+        const { id, to, value } = args;
         
-        const coin = getters.getCoin(id);
-    
+        const coin = state.nested(id).get();
         if (!coin) {
             throw new Error("Coin not found in store");
         }
@@ -95,43 +97,34 @@ const actions : ICoinActions = {
         if (receipt && receipt.logs) {
             throw new Error(`Transfer failed. Logs: ${receipt.logs.join(",")}`);
         }
-    
-        /*
+
         const tsx: Transaction = {
+            id: transaction.id,
             transactionId: transaction.id,
-            contractId,
+            networkId: coin.networkId,
+            contractId: coin.contractId,
             from: address,
             to,
             value,
-            timestamp: new Date().toISOString(),
+            timestamp: Date.now(),
             status: TRANSACTION_STATUS_PENDING,
-            note
         };
     
-        coin.transactions.merge({ [tsx.transactionId]: tsx });
+        getStore('Transaction').actions.addTransaction(tsx);
         
         return transaction;
-        */
-       return undefined;
     },
     
     withdrawCoinConfirm: async (args: {
         id: string,
         transaction: TransactionJsonWait
     }) : Promise<Transaction|undefined> => {
-        /*
+        
         const { id, transaction } = args;
-        const accountId = getStore('Setting').state.currentAccountId.get();
-        const networkId = getStore('Setting').state.currentNetworkId.get();
     
         if (!transaction.id) {
             throw new Error("Transaction id not found");
         }
-    
-        const transactionState = UserStore.accounts[address]
-            .assets[networkId]
-            .coins[contractId]
-            .transactions[transaction.id];
     
         let blockNumber = null;
         try {
@@ -142,22 +135,16 @@ const actions : ICoinActions = {
             blockNumber = result.blockNumber;
     
         } catch (e) {
-            transactionState.merge({ status: TRANSACTION_STATUS_ERROR });
+            getStore('Transaction').actions.updateTransaction(transaction.id, { status: TRANSACTION_STATUS_ERROR });
             throw e;
         }
     
-        transactionState.merge({
-            blockNumber,
-            status: TRANSACTION_STATUS_SUCCESS
-        });
+        getStore('Transaction').actions.updateTransaction(transaction.id, { status: TRANSACTION_STATUS_SUCCESS });
     
-        actions.refreshCoinBalance(transactionState.contractId.get());
+        actions.refreshCoinBalance(id);
         getStore('Mana').actions.refreshMana();
     
-        return transactionState.get();
-        */
-
-        return undefined;
+        return getStore('Transaction').state.nested(transaction.id).get();
     },
     
     deleteCoin: (id: string) => {
@@ -294,17 +281,6 @@ const getters : ICoinGetters = {
         return Object.values(state.get({noproxy: true})).filter(coin => 
             coin.networkId === networkId &&
             coin.accountId === accountId
-        );
-    },
-
-    getCoin: (contractId: string) => {
-        const accountId = getStore('Setting').state.currentAccountId.get();
-        const networkId = getStore('Setting').state.currentNetworkId.get();
-
-        return Object.values(state.get({noproxy: true})).find(coin => 
-            coin.networkId === networkId &&
-            coin.accountId === accountId &&
-            coin.contractId == contractId
         );
     },
 

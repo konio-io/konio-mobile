@@ -79,7 +79,6 @@
   "time_recharge": "充值时间",
   "deposit": "接收",
   "withdraw": "发送",
-  "destination_address": "目标地址",
   "note": "备注",
   "confirm": "确认",
   "select_amount": "选择金额",
@@ -156,7 +155,7 @@
   "edit_account": "编辑帐户",
   "default": "默认",
   "total_balance": "总余额",
-  "transactions": "交易记录",
+  "transactions": "最新交易",
   "add_contact": "添加联系人",
   "add_to_addressbook": "添加到通讯录",
   "max_accounts_reached": "已达到最大帐户数 ({{max}})",
@@ -243,5 +242,8 @@
   "about": "About",
   "transaction_SUCCESS": "完成",
   "transaction_PENDING": "待处理",
-  "transaction_ERROR": "失败"
+  "transaction_ERROR": "失败",
+  "no_assets": "没有资产",
+  "nft_transfer_failed": "NFT转账失败",
+  "assets": "资产"
 }

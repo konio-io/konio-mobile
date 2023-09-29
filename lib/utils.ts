@@ -61,3 +61,7 @@ export const createWallet = (mnemonic: string, index: number) => {
         privateKey: signer.getPrivateKey("wif", false)
     };
 }
+
+export const compactString = (word: string, length: number) : string => {
+    return `${word.substring(0, length)} ... ${word.substring(word.length - length, word.length)}`;
+}

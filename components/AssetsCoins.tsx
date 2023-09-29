@@ -1,6 +1,6 @@
 import { FlatList, RefreshControl, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { CoinListItem, ButtonCircle, Button } from '.';
+import { CoinListItem, ButtonCircle } from '.';
 import { AssetsNavigationProp, } from '../types/navigation';
 import { SheetManager } from "react-native-actions-sheet";
 import { Feather } from '@expo/vector-icons';
@@ -10,10 +10,10 @@ import { useCoins, useTheme } from '../hooks';
 import CoinStore from '../stores/CoinStore';
 
 export default () => {
-  const [refreshing, setRefreshing] = useState(false)
+  const [refreshing, setRefreshing] = useState(false);
   const coins = useCoins();
 
-  const _loadCoinList = async () => {
+  const _refresh = async () => {
       setRefreshing(true);
       await CoinStore.actions.refreshCoins({balance: true, price: true, info: true});
       setRefreshing(false);
@@ -25,7 +25,7 @@ export default () => {
           data={coins}
           renderItem={({ item }) => <TouchableCoinListItem coin={item} />}
           refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={_loadCoinList} />
+              <RefreshControl refreshing={refreshing} onRefresh={_refresh} />
           }
           ListFooterComponent={<Footer />}
       />

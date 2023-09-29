@@ -45,7 +45,7 @@ export interface ILogActions {
     logReset(): void;
 }
 
-export interface LogStore {
+export interface ILogStore {
     state: State<LogState>;
     actions: ILogActions
 }
@@ -160,7 +160,6 @@ export type CoinState = Record<string, Coin>
 
 export interface ICoinGetters {
     getCoins: () => Array<Coin>;
-    getCoin: (contractId: string) => Coin|undefined;
     coinId: (accountId: string, networkId: string, contractId: string) => string;
     fetchContractInfo: (contractId: string) => Promise<any>;
     fetchCoinPrice: (contractId: string) => Promise<number | null>;
@@ -174,7 +173,7 @@ export interface ICoinActions {
         to: string;
         value: string;
         note: string;
-    }) => Promise<Transaction|undefined>;
+    }) => Promise<TransactionJsonWait|undefined>;
     addCoin: (contractId: string) => Promise<Coin>;
     withdrawCoinConfirm: (args: {
         id: string;
@@ -327,11 +326,34 @@ export type Transaction = {
     contractId: string,
     from: string,
     to: string,
-    value: string,
-    timestamp: string,
-    blockNumber?: number
-    status: "PENDING" | "SUCCESS" | "ERROR",
-    note?: string
+    value?: string,
+    tokenId?: string,
+    timestamp?: number,
+    status: "PENDING" | "SUCCESS" | "ERROR"
+}
+
+export type TransactionState = Record<string, Transaction>
+
+export interface ITransactionActions {
+    addTransaction: (Transaction: Transaction) => void;
+    updateTransaction: (transactionId: string, data: any) => void;
+    refreshTransactions: (coinId: string) => Promise<void>
+}
+
+export interface ITransactionGetters {
+    getTransactionHistory: (args: {
+        coinId: string, 
+        seqNum?: number, 
+        limit?: number, 
+        ascending?: boolean,
+        cb?: Function
+    }) => Promise<Array<Transaction>>;
+}
+
+export interface ITransactionStore {
+    state: State<TransactionState>;
+    actions: ITransactionActions,
+    getters: ITransactionGetters
 }
 
 /**
@@ -486,5 +508,6 @@ export type StoreRegistry = {
     WalletConnect: IWalletConnectStore;
     Koin: IKoinStore;
     Lock: ILockStore;
-    Log: LogStore;
+    Log: ILogStore;
+    Transaction: ITransactionStore;
 };

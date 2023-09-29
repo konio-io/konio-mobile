@@ -19,7 +19,7 @@ export default (props: {
     const currentNetworkState = useHookstate(SettingStore.state.currentNetworkId);
 
     const [to, setTo] = useState<string|undefined>(undefined);
-    const [coinId, setCoinId] = useState(props.coinId);
+    const [coinId, setCoinId] = useState<string|undefined>(undefined);
     const [amount, setAmount] = useState(0);
     const [sendRequest, setSendRequest] = useState(false);
     const i18n = useI18n();
@@ -36,6 +36,10 @@ export default (props: {
             _send();
         }
     }, [lockState]);
+
+    useEffect(() => {
+        setCoinId(props.coinId);
+    }, [props.coinId])
 
     const _reset = () => {
         setAmount(0);
@@ -62,6 +66,11 @@ export default (props: {
             note: ''
         })
             .then(transaction => {
+                console.log('t',transaction);
+                if (!transaction) {
+                    throw new Error("Unable to return transaction");
+                }
+
                 SpinnerStore.actions.hideSpinner();
 
                 navigation.dispatch(
@@ -135,7 +144,7 @@ export default (props: {
                 <AssetCoinInput
                     value={coinId}
                     onChange={(value: string) => setCoinId(value)}
-                    opened={to !== undefined && coinId === undefined ? true : false}
+                    opened={to !== undefined && coinId === undefined}
                 />
 
                 {

@@ -78,7 +78,6 @@
     "time_recharge": "شحن الوقت",
     "deposit": "استلام",
     "withdraw": "إرسال",
-    "destination_address": "عنوان الوجهة",
     "note": "ملاحظة",
     "confirm": "تأكيد",
     "select_amount": "اختيار المبلغ",
@@ -156,7 +155,7 @@
     "default": "الافتراضي",
     "total_balance": "الرصيد الإجمالي",
     "transactions": "المعاملات",
-    "add_contact": "إضافة جهة اتصال",
+    "add_contact": "أحدث المعاملات",
     "add_to_addressbook": "إضافة إلى دفتر العناوين",
     "max_accounts_reached": "تم الوصول إلى الحد الأقصى للحسابات ({{max}})",
     "dapp_name": "اسم الداب",
@@ -242,5 +241,8 @@
     "about":"About",
     "transaction_SUCCESS": "مكتمل",
     "transaction_PENDING": "قيد الانتظار",
-    "transaction_ERROR": "فشل"
+    "transaction_ERROR": "فشل",
+    "no_assets": "لا توجد أصول",
+    "nft_transfer_failed": "فشل نقل NFT",
+    "assets": "الأصول"
 }

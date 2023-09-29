@@ -1,20 +1,22 @@
-import { View, Image } from 'react-native';
+import { View, Image, ScrollView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import type { NftRouteProp, AssetsNavigationProp } from '../types/navigation';
-import { Screen, MoreVertical, Text, Wrapper } from '../components';
-import { useTheme } from '../hooks';
+import type { NftRouteProp, HoldingsNavigationProp } from '../types/navigation';
+import { Screen, MoreVertical, Text, Wrapper, Button } from '../components';
+import { useI18n, useTheme } from '../hooks';
 import { useEffect } from 'react';
 import { SheetManager } from "react-native-actions-sheet";
 import { NftCollectionStore, NftStore } from '../stores';
+import { Feather } from '@expo/vector-icons';
 
 export default () => {
-    const navigation = useNavigation<AssetsNavigationProp>();
+    const navigation = useNavigation<HoldingsNavigationProp>();
     const route = useRoute<NftRouteProp>();
     const theme = useTheme();
     const styles = theme.styles;
     const { Border } = theme.vars;
     const nft = NftStore.state.nested(route.params.nftId).get();
     const collection = NftCollectionStore.state.nested(nft.nftCollectionId).get();
+    const i18n = useI18n();
 
     useEffect(() => {
         navigation.setOptions({
@@ -35,19 +37,43 @@ export default () => {
 
     return (
         <Screen>
-            <Wrapper>
-                <View style={{...styles.alignCenterColumn, ...styles.rowGapBase, ...styles.paddingVerticalBase}}>
+            <ScrollView>
+                <View style={{ ...styles.alignCenterColumn, ...styles.rowGapBase, ...styles.paddingBase }}>
                     <Image source={{ uri: nft.image }} resizeMode="contain" style={{
-                        width: 300,
+                        width: '100%',
                         height: 300,
                         borderRadius: Border.radius
                     }} />
+                    <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
+                        <Button
+                            style={{ flex: 1 }}
+                            title={i18n.t('send')}
+                            onPress={() => {
+                                navigation.navigate('Withdraw', {
+                                    screen: 'WithdrawAsset',
+                                    params: {
+                                        nftId: route.params.nftId
+                                    }
+                                });
+                            }}
+                            icon={<Feather name="arrow-up-right" />}
+                        />
+                        <Button
+                            style={{ flex: 1 }}
+                            title={i18n.t('receive')}
+                            onPress={() => navigation.navigate('Deposit')}
+                            icon={<Feather name="arrow-down-right" />}
+                            type='secondary'
+                        />
+                    </View>
+
                     <View>
-                        <Text style={{...styles.textMedium, ...styles.textBold}}>{collection.name}</Text>
+                        <Text style={{ ...styles.textMedium, ...styles.textBold }}>{collection.name}</Text>
                         <Text>{nft.description}</Text>
                     </View>
                 </View>
-            </Wrapper>
+
+            </ScrollView>
         </Screen>
     );
 }

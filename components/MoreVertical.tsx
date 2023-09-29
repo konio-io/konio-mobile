@@ -11,7 +11,7 @@ export default (props: {
   
     return (
       <TouchableOpacity onPress={() => props.onPress()}>
-        <View style={{ padding: Spacing.base, backgroundColor: Color.base }}>
+        <View style={{ padding: Spacing.base }}>
           <Feather color={Color.baseContrast} size={24} name="more-vertical" />
         </View>
       </TouchableOpacity>

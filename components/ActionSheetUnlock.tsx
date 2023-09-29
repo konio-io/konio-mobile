@@ -100,7 +100,8 @@ const createStyles = (theme: Theme) => {
             backgroundColor: Color.base,
             ...styles.alignCenterRow,
             ...styles.paddingBase,
-            ...styles.rowGapBase
+            ...styles.rowGapBase,
+            flex: 1
         }
     });
 }

@@ -15,7 +15,6 @@ export default (props: {
 }) => {
     const theme = useTheme();
     const styles = createStyles(theme);
-    const { Color } = theme.vars;
 
     const [selected, setSelected] = useState<boolean | undefined>(undefined);
     useEffect(() => {
@@ -62,13 +61,15 @@ const Balance = (props: {
         <View>
             {balance !== undefined && balance >= 0 &&
                 <View>
+                    <Text style={{ ...styles.text, ...styles.textRight }}>{balance.toFixed(2)}</Text>
+
                     {price !== undefined &&
                         <Text style={{ ...styles.text, ...styles.textRight }}>
                             {(balance * price).toFixed(2)} USD
                         </Text>
                     }
 
-                    <Text style={{ ...styles.text, ...styles.textRight }}>{balance.toFixed(2)}</Text>
+                    
                 </View>
             }
         </View>

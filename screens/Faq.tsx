@@ -4,6 +4,7 @@ import { useI18n, useTheme } from "../hooks";
 import { useEffect, useState } from "react";
 import { FAQ_URL } from "../lib/Constants";
 import { Theme } from "../types/ui";
+import { LogStore, SpinnerStore } from "../stores";
 
 export default () => {
     const theme = useTheme();
@@ -19,10 +20,16 @@ export default () => {
     }
 
     useEffect(() => {
+        SpinnerStore.actions.showSpinner();
         fetch(`${FAQ_URL}${i18n.locale}.json`)
             .then(response => response.json())
             .then(jsonResponse => {
                 setData(jsonResponse);
+                SpinnerStore.actions.hideSpinner();
+            })
+            .catch(e => {
+                LogStore.actions.logError(e);
+                SpinnerStore.actions.hideSpinner();
             })
     }, []);
 

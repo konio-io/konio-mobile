@@ -40,11 +40,14 @@ export default (props: {
                 <Text style={styles.title}>{i18n.t('balance')}</Text>
                 <Text style={{ ...styles.textCenter, ...styles.text }}>{props.balance.toString()}</Text>
             </View>
-
-            <View>
-                <Text style={styles.title}>{i18n.t('time_recharge')}</Text>
-                <Text style={{ ...styles.textCenter, ...styles.text }}>{millisecondsToString(props.timeRecharge)}</Text>
-            </View>
+            
+            {
+                props.timeRecharge > 0 &&
+                <View>
+                    <Text style={styles.title}>{i18n.t('time_recharge')}</Text>
+                    <Text style={{ ...styles.textCenter, ...styles.text }}>{millisecondsToString(props.timeRecharge)}</Text>
+                </View>
+            }
         </View>
     );
 }
@@ -64,7 +67,7 @@ const millisecondsToString = (milliseconds: number) => {
     if (interval > 2) return Math.floor(interval) + " minutes";
 
     interval = Math.floor(seconds);
-    if (interval === 0) return "Mana recharged";
+    if (interval === 0) return "";
     return interval + " seconds";
 }
 

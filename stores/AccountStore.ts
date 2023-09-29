@@ -116,7 +116,7 @@ export const actions : IAccountActions = {
             id: address,
             address,
             privateKey
-        }
+        };
     
         getStore('Secure').actions.addAccount(accountSecure);
         

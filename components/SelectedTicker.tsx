@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { useTheme } from '../hooks';
-import { Feather } from '@expo/vector-icons';
+import { Octicons } from '@expo/vector-icons';
 
 export default (props: {
     selected: boolean
@@ -11,10 +11,12 @@ export default (props: {
     return (
         <View>
             {
-                props.selected === true && <Feather name="check-circle" size={20} color={Color.primary} />
+                props.selected === true && 
+                <Octicons name="check-circle" size={20} color={Color.primary} />
             }
             {
-                props.selected === false && <Feather name="circle" size={20} color={Color.primary} />
+                props.selected === false && 
+                <Octicons name="circle" size={20} color={Color.primary} />
             }
         </View>
     )

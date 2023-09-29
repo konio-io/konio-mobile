@@ -15,20 +15,20 @@ export default () => {
 
   const i18n = useI18n();
   const theme = useTheme();
-  const { FontFamily, Color, Border } = theme.vars;
+  const { FontFamily, Color } = theme.vars;
 
   return (
     <Stack.Navigator screenOptions={{
       headerStyle: {
         backgroundColor: Color.base,
-        borderBottomColor: Border.color,
-        borderBottomWidth: Border.width
       },
       headerTitleStyle: {
         fontFamily: FontFamily.sans,
         color: Color.baseContrast
       },
-      headerTintColor: Color.primary
+      headerTintColor: Color.primary,
+      headerShadowVisible: false,
+      headerBackTitleVisible: false
     }}>
       <Stack.Screen
         name="Intro"

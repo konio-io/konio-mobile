@@ -155,7 +155,7 @@
     "edit_account":"Edit account",
     "default":"Default",
     "total_balance":"Total balance",
-    "transactions":"Transactions",
+    "transactions":"Latest transactions",
     "add_contact":"Add contact",
     "add_to_addressbook":"Add to addressbook",
     "max_accounts_reached":"Max accounts reached ({{max}})",
@@ -244,5 +244,6 @@
     "transaction_PENDING":"Pending",
     "transaction_ERROR":"Failed",
     "no_assets":"There are no assets",
-    "nft_transfer_failed":"NFT transfer failed"
+    "nft_transfer_failed":"NFT transfer failed",
+    "assets":"Assets"
   }

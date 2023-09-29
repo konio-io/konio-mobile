@@ -79,7 +79,6 @@
     "time_recharge": "Zaman şarjı",
     "deposit": "Al",
     "withdraw": "Gönder",
-    "destination_address": "Hedef adres",
     "note": "Not",
     "confirm": "Onayla",
     "select_amount": "Miktar Seç",
@@ -156,7 +155,7 @@
     "edit_account": "Hesabı düzenle",
     "default": "Varsayılan",
     "total_balance": "Toplam bakiye",
-    "transactions": "İşlemler",
+    "transactions": "Son işlemler",
     "add_contact": "Kişi ekle",
     "add_to_addressbook": "Adres defterine ekle",
     "max_accounts_reached": "Maksimum hesap sayısına ulaşıldı ({{max}})",
@@ -243,5 +242,8 @@
     "about":"About",
     "transaction_SUCCESS": "Tamamlandı",
     "transaction_PENDING": "Beklemede",
-    "transaction_ERROR": "Başarısız"
+    "transaction_ERROR": "Başarısız",
+    "no_assets": "Varlık yok",
+    "nft_transfer_failed": "NFT transferi başarısız oldu",
+    "assets": "Varlıklar"
 }

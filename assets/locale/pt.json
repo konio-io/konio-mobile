@@ -79,7 +79,6 @@
   "time_recharge": "Recarregar tempo",
   "deposit": "Receber",
   "withdraw": "Enviar",
-  "destination_address": "Endereço de destino",
   "note": "Observação",
   "confirm": "Confirmar",
   "select_amount": "Selecionar valor",
@@ -156,7 +155,7 @@
   "edit_account": "Editar conta",
   "default": "Padrão",
   "total_balance": "Saldo total",
-  "transactions": "Transações",
+  "transactions": "Últimas transações",
   "add_contact": "Adicionar contato",
   "add_to_addressbook": "Adicionar à agenda de endereços",
   "max_accounts_reached": "Limite máximo de contas atingido ({{max}})",
@@ -243,5 +242,8 @@
   "about": "About",
   "transaction_SUCCESS": "Concluído",
   "transaction_PENDING": "Pendente",
-  "transaction_ERROR": "Falha"
+  "transaction_ERROR": "Falha",
+  "no_assets": "Não há ativos",
+  "nft_transfer_failed": "Falha na transferência de NFT",
+  "assets": "Ativos"
 }

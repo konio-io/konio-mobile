@@ -28,7 +28,7 @@ export default () => {
           tabBarActiveTintColor: Color.primary,
           tabBarInactiveTintColor: Color.baseContrast,
           tabBarLabelStyle: { fontFamily: FontFamily.sans },
-          tabBarShowLabel: false,
+          tabBarShowLabel: true,
           tabBarStyle: {
             backgroundColor: Color.base,
             borderTopColor: Border.color,
@@ -36,24 +36,24 @@ export default () => {
           },
           headerStyle: {
             backgroundColor: Color.base,
-            borderBottomColor: Border.color,
-            borderBottomWidth: Border.width
+            borderBottomWidth: 0
           },
           headerTitleStyle: {
             fontFamily: FontFamily.sans,
             color: Color.baseContrast
           },
-          headerTintColor: Color.primary
+          headerTintColor: Color.primary,
+          headerShadowVisible: false
         }}
       >
         <Tab.Screen
           name="Holdings"
           component={Holdings}
           options={{
-            title: i18n.t('holdings'),
+            title: i18n.t('assets'),
             headerShown: false,
             tabBarIcon: ({ color, size }) => (
-              <AntDesign name="wallet" size={size} color={color} />
+              <AntDesign name="wallet" size={30} color={color} />
             ),
             unmountOnBlur: true
           }}
@@ -62,6 +62,7 @@ export default () => {
           name="Operations"
           component={Unavailable}
           options={{
+            title: i18n.t('operations'),
             headerShown: false,
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="swap" size={size} color={color} />

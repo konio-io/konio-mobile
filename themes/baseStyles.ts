@@ -1,4 +1,4 @@
-import type { ThemeVars } from "../types/store";
+import type { ThemeVars } from "../types/ui";
 import { rgba } from "../lib/utils";
 
 export const getStyles = (themeVars : ThemeVars) => {
@@ -91,7 +91,6 @@ export const getStyles = (themeVars : ThemeVars) => {
             flexDirection: 'row',
             columnGap: Spacing.base,
             padding: Spacing.base,
-            backgroundColor: Color.base,
             justifyContent: 'space-between',
             alignItems: 'center',
         },

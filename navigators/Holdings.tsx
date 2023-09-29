@@ -26,7 +26,9 @@ export default () => {
           fontFamily: FontFamily.sans,
           color: Color.baseContrast
         },
-        headerTintColor: Color.primary
+        headerTintColor: Color.primary,
+        headerShadowVisible: false,
+        headerBackTitleVisible: false
       }}>
       <Stack.Screen
         name="Assets"

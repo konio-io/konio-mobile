@@ -79,7 +79,6 @@
   "time_recharge": "بارگذاری زمان",
   "deposit": "دریافت",
   "withdraw": "ارسال",
-  "destination_address": "آدرس مقصد",
   "note": "یادداشت",
   "confirm": "تأیید",
   "select_amount": "انتخاب مقدار",
@@ -156,7 +155,7 @@
   "edit_account": "ویرایش حساب",
   "default": "پیش‌فرض",
   "total_balance": "موجودی کل",
-  "transactions": "تراکنش‌ها",
+  "transactions": "آخرین معاملات" ,
   "add_contact": "افزودن مخاطب",
   "add_to_addressbook": "افزودن به دفترچه آدرس",
   "max_accounts_reached": "حداکثر تعداد حساب رسیده است ({{max}})",
@@ -243,5 +242,8 @@
   "about": "About",
   "transaction_SUCCESS": "کامل شده",
   "transaction_PENDING": "در انتظار",
-  "transaction_ERROR": "ناموفق"
+  "transaction_ERROR": "ناموفق",
+  "no_assets": "دارای دارایی نیست",
+  "nft_transfer_failed": "انتقال NFT ناموفق بود",
+  "assets": "دارایی‌ها"
 }

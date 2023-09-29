@@ -12,7 +12,8 @@ const state = hookstate<LogState>(
 )
 
 const actions : ILogActions = {
-    logError: (text: string) => {
+    logError: (text: any) => {
+        console.error(text);
         state.merge([text]);
     },
     

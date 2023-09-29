@@ -61,7 +61,7 @@ const actions : ISecureActions = {
             [account.address]: account
         });
 
-        if (!account.accountIndex) {
+        if (account.accountIndex === undefined) {
             actions.incrementIndex();
         }
     }

@@ -66,8 +66,8 @@ const Nft = (props: {
     return (
         <View style={{...styles.directionRow, ...styles.columnGapBase}}>
             <Image source={{ uri: nft.image }} resizeMode="contain" style={{
-                width: 100,
-                height: 100,
+                width: 50,
+                height: 50,
                 borderRadius: Border.radius,
                 borderWidth: Border.width,
                 borderColor: Border.color

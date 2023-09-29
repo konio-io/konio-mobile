@@ -1,4 +1,4 @@
-import type { Theme, ThemeVars } from "../types/store";
+import type { Theme, ThemeVars } from "../types/ui";
 import { getStyles } from "./baseStyles";
 
 export const getTheme = () : Theme => {
@@ -37,7 +37,7 @@ export const getTheme = () : Theme => {
     const Border = {
         color: 'rgba(220,220,220,1)',
         width: 1,
-        radius: 15
+        radius: 10
     };
 
     const vars : ThemeVars = { Spacing, FontSize, FontFamily, Color, Border };

@@ -79,7 +79,6 @@
   "time_recharge": "Пополнить время",
   "deposit": "Получить",
   "withdraw": "Отправить",
-  "destination_address": "Адрес назначения",
   "note": "Примечание",
   "confirm": "Подтвердить",
   "select_amount": "Выбрать сумму",
@@ -156,7 +155,7 @@
   "edit_account": "Редактировать аккаунт",
   "default": "По умолчанию",
   "total_balance": "Общий баланс",
-  "transactions": "Транзакции",
+  "transactions": "Последние операции",
   "add_contact": "Добавить контакт",
   "add_to_addressbook": "Добавить в адресную книгу",
   "max_accounts_reached": "Достигнуто максимальное количество аккаунтов ({{max}})",
@@ -243,5 +242,8 @@
   "about": "About",
   "transaction_SUCCESS": "Завершено",
   "transaction_PENDING": "В ожидании",
-  "transaction_ERROR": "Не выполнено"
+  "transaction_ERROR": "Не выполнено",
+  "no_assets": "Нет активов",
+  "nft_transfer_failed": "Ошибка при передаче NFT",
+  "assets": "Активы"
 }

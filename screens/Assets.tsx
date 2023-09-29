@@ -16,6 +16,7 @@ export default () => {
   const navigation = useNavigation<AssetsNavigationProp>();
   const theme = useTheme();
   const styles = theme.styles;
+  const { Spacing } = theme.vars;
 
   const currentAddressState = useHookstate(SettingStore.state.currentAccountId);
   const account = useCurrentAccount();
@@ -23,29 +24,25 @@ export default () => {
   useEffect(() => {
     navigation.setOptions({
       title: account?.name,
-      headerShadowVisible: false,
       headerTitleAlign: 'center',
       headerLeft: () => (<DrawerToggler />),
-      headerRight: () => (<MoreVertical onPress={() => SheetManager.show('account', { payload: { accountId: account.id } })} />),
+      headerRight: () => (
+        <MoreVertical 
+          onPress={() => SheetManager.show('account', { payload: { accountId: account.id } })} 
+        />),
       headerTitle: () => (
         <View style={styles.alignCenterColumn}>
           <Text style={styles.textMedium}>{account?.name}</Text>
-          <Address address={account.address} copiable={true} />
         </View>
       )
     });
-  }, [navigation, currentAddressState]);
+  }, [navigation, currentAddressState, theme]);
 
   return (
     <Screen>
-      <View style={{ ...styles.rowGapBase }}>
-        <View style={{ ...styles.directionRow, ...styles.paddingBase, ...styles.alignSpaceBetweenRow }}>
-          <Summary />
-
-          <View>
-            <ManaBar />
-          </View>
-        </View>
+      <View style={{paddingVertical: Spacing.base, ...styles.alignCenterColumn }}>
+        <Summary />
+        <ManaBar />
       </View>
 
       <Body />
@@ -74,14 +71,10 @@ const Body = () => {
 
 const Summary = () => {
   const theme = useTheme();
-  const i18n = useI18n();
   const styles = theme.styles;
   const total = useAccountValue();
 
   return (
-    <View>
-      <Text style={styles.textXlarge}>{total.toFixed(2)} USD</Text>
-      <Text style={styles.textSmall}>{i18n.t('total_balance')}</Text>
-    </View>
+    <Text style={{...styles.textXlarge, lineHeight: 30}}>{total.toFixed(2)} USD</Text>
   )
 }

@@ -20,17 +20,17 @@ export default () => {
         <Screen>
             <ScrollView contentContainerStyle={{...styles.paddingBase, ...styles.rowGapSmall}}>
             {
-                logs.map(item => 
-                    <View key={item.split('|')[0]}>
-                    <Text>{item}</Text>
+                logs.length > 0 && logs.map((item,index) => 
+                    <View key={index}>
+                        <Text>{item}</Text>
                     </View>
                 )
             }
             </ScrollView>
 
             <View style={{...styles.paddingBase, ...styles.directionRow, ...styles.columnGapBase}}>
-                <Button style={styles.flex1} type="secondary" title={i18n.t('share')} onPress={share}/>
-                <Button style={styles.flex1} title={i18n.t('reset')} onPress={LogStore.actions.logReset}/>
+                <Button style={styles.flex1} title={i18n.t('reset')} type="secondary" onPress={LogStore.actions.logReset}/>
+                <Button style={styles.flex1} title={i18n.t('share')} onPress={share}/>
             </View>
         </Screen>
     );
