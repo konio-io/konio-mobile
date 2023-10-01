@@ -75,13 +75,13 @@ const Main = () => {
   });
   const hydrated = useHydrated();
   const currentAccountId = useCurrentAccountId();
-  
+
   if (!hydrated || !fontsLoaded) {
     return <Loading />;
   }
 
-  if (currentAccountId=== '') {
-    return <Intro/>
+  if (currentAccountId === '') {
+    return <Intro />
   }
 
   try {
@@ -91,11 +91,11 @@ const Main = () => {
   }
 
   return (
-    <View style={{flex: 1}}>
-      <Init/>
-      <Lock/>
-      <Drawer/>
-      <Wc/>
+    <View style={{ flex: 1 }}>
+      <Init />
+      <Lock />
+      <Drawer />
+      <Wc />
     </View>
   )
 }
@@ -107,58 +107,58 @@ const Wc = () => {
 
   //intercept walletconnectStore wallet/uri set
   useEffect(() => {
-      if (wallet && uri) {
-          WalletConnectStore.actions.pair(uri)
-              .then(() => {
-                  console.log('wc_pair: paired');
-              })
-              .catch(e => {
-                  LogStore.actions.logError(e);
-                  Toast.show({
-                      type: 'error',
-                      text1: i18n.t('pairing_error'),
-                      text2: i18n.t('check_logs')
-                  });
-              });
-      }
+    if (wallet && uri) {
+      WalletConnectStore.actions.pair(uri)
+        .then(() => {
+          console.log('wc_pair: paired');
+        })
+        .catch(e => {
+          LogStore.actions.logError(e);
+          Toast.show({
+            type: 'error',
+            text1: i18n.t('pairing_error'),
+            text2: i18n.t('check_logs')
+          });
+        });
+    }
   }, [uri, wallet]);
 
   //intercept walletconnectStore set and subscribe events
   useEffect(() => {
-      if (wallet) {
-          console.log('wc_register_events');
+    if (wallet) {
+      console.log('wc_register_events');
 
-          const onSessionProposal = (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
-              console.log('wc_proposal', proposal);
-              SheetManager.show('wc_proposal', { payload: { proposal: Object.assign({}, proposal) } });
-          }
-
-          const onSessionRequest = async (request: SignClientTypes.EventArguments["session_request"]) => {
-              console.log('wc_request', request);
-              const method = request.params.request.method;
-              if (!WC_SECURE_METHODS.includes(method)) {
-                  WalletConnectStore.actions.acceptRequest(request)
-                      .catch(e => {
-                          LogStore.actions.logError(e);
-                          Toast.show({
-                              type: 'error',
-                              text1: i18n.t('dapp_request_error', { method }),
-                              text2: i18n.t('check_logs')
-                          })
-                      });
-                  return;
-              }
-              SheetManager.show('wc_request', { payload: { request } });
-          }
-
-          wallet.on("session_proposal", onSessionProposal);
-          wallet.on("session_request", onSessionRequest);
-          wallet.on("session_delete", () => {
-              WalletConnectStore.actions.refreshActiveSessions();
-          });
+      const onSessionProposal = (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
+        console.log('wc_proposal', proposal);
+        SheetManager.show('wc_proposal', { payload: { proposal: Object.assign({}, proposal) } });
       }
+
+      const onSessionRequest = async (request: SignClientTypes.EventArguments["session_request"]) => {
+        console.log('wc_request', request);
+        const method = request.params.request.method;
+        if (!WC_SECURE_METHODS.includes(method)) {
+          WalletConnectStore.actions.acceptRequest(request)
+            .catch(e => {
+              LogStore.actions.logError(e);
+              Toast.show({
+                type: 'error',
+                text1: i18n.t('dapp_request_error', { method }),
+                text2: i18n.t('check_logs')
+              })
+            });
+          return;
+        }
+        SheetManager.show('wc_request', { payload: { request } });
+      }
+
+      wallet.on("session_proposal", onSessionProposal);
+      wallet.on("session_request", onSessionRequest);
+      wallet.on("session_delete", () => {
+        WalletConnectStore.actions.refreshActiveSessions();
+      });
+    }
   }, [wallet]);
-  
+
   return <></>
 }
 
@@ -168,30 +168,30 @@ const Init = () => {
 
   //Refresh coins and mana on init
   useEffect(() => {
-      CoinStore.actions.refreshCoins({ balance: true, price: true });
-      ManaStore.actions.refreshMana();
-      WalletConnectStore.actions.init();
+    CoinStore.actions.refreshCoins({ balance: true, price: true });
+    ManaStore.actions.refreshMana();
+    WalletConnectStore.actions.init();
 
-      //network changes
-      const unsubscribe = NetInfo.addEventListener(state => {
-          if (connectionAvailable === false && state.isConnected === true) {
-              Toast.show({
-                  type: 'success',
-                  text1: i18n.t('you_online')
-              });
-              WalletConnectStore.actions.refreshActiveSessions();
-          }
-          else if (state.isConnected !== true) {
-              Toast.show({
-                  type: 'error',
-                  text1: i18n.t('you_offline'),
-                  text2: i18n.t('check_connection')
-              });
-          }
-          setConnectionAvailable(state.isConnected === true ? true : false);
-      });
+    //network changes
+    const unsubscribe = NetInfo.addEventListener(state => {
+      if (connectionAvailable === false && state.isConnected === true) {
+        Toast.show({
+          type: 'success',
+          text1: i18n.t('you_online')
+        });
+        WalletConnectStore.actions.refreshActiveSessions();
+      }
+      else if (state.isConnected !== true) {
+        Toast.show({
+          type: 'error',
+          text1: i18n.t('you_offline'),
+          text2: i18n.t('check_connection')
+        });
+      }
+      setConnectionAvailable(state.isConnected === true ? true : false);
+    });
 
-      return unsubscribe;
+    return unsubscribe;
   }, [])
 
   return <></>
@@ -205,26 +205,26 @@ const Lock = () => {
 
   //intercept lock
   useEffect(() => {
-      if (lock.get() === true) {
-          setDateLock(0); //ios
-          setTimeout(() => {
-              SheetManager.show('unlock');
-          }, 100);
-      }
+    if (lock.get() === true) {
+      setDateLock(0); //ios
+      setTimeout(() => {
+        SheetManager.show('unlock');
+      }, 100);
+    }
   }, [lock]);
 
   //intercept autolock
   useEffect(() => {
-      if (autoLock > -1) {
-          if (nextAppState === 'background') {
-              setDateLock(Date.now() + autoLock + 1000);
-          }
-          else if (nextAppState === 'active') {
-              if (dateLock > 0 && Date.now() > dateLock) {
-                  lock.set(true);
-              }
-          }
+    if (autoLock > -1) {
+      if (nextAppState === 'background') {
+        setDateLock(Date.now() + autoLock + 1000);
       }
+      else if (nextAppState === 'active') {
+        if (dateLock > 0 && Date.now() > dateLock) {
+          lock.set(true);
+        }
+      }
+    }
   }, [nextAppState, autoLock, lock]);
 
   return <></>
