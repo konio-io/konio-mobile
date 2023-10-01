@@ -1,4 +1,4 @@
-import { hookstate, none } from "@hookstate/core";
+import { hookstate } from "@hookstate/core";
 import { WALLET_CONNECT_PROJECT_ID, WC_METHODS } from "../lib/Constants";
 import { Core } from "@walletconnect/core";
 import { Web3Wallet } from "@walletconnect/web3wallet";
@@ -11,8 +11,6 @@ import { getStore } from "./registry";
 const state = hookstate<WalletConnectState>({
     wallet: null,
     activeSessions: {},
-    pendingProposal: null,
-    pendingRequest: null,
     uri: null
 });
 
@@ -196,34 +194,6 @@ const actions : IWalletConnectActions = {
         const wallet = state.wallet.get();
         if (wallet) {
             state.activeSessions.set(wallet.getActiveSessions());
-        }
-    },
-    
-    setPendingProposal: (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
-        const wallet = state.wallet.get();
-        if (wallet) {
-            state.pendingProposal.set(proposal);
-        }
-    },
-    
-    unsetPendingProposal: () => {
-        const wallet = state.wallet.get();
-        if (wallet) {
-            state.pendingProposal.set(none);
-        }
-    },
-    
-    setPendingRequest: (request: SignClientTypes.EventArguments["session_request"]) => {
-        const wallet = state.wallet.get();
-        if (wallet) {
-            state.pendingRequest.set(request);
-        }
-    },
-    
-    unsetPendingRequest: () => {
-        const wallet = state.wallet.get();
-        if (wallet) {
-            state.pendingRequest.set(none);
         }
     },
 }

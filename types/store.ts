@@ -396,8 +396,6 @@ export interface IManaStore {
 export type WalletConnectState = {
     wallet: IWeb3Wallet | null,
     activeSessions: Record<string, SessionTypes.Struct>,
-    pendingProposal: SignClientTypes.EventArguments["session_proposal"] | null,
-    pendingRequest: SignClientTypes.EventArguments["session_request"] | null
     uri: string | null
 }
 
@@ -410,10 +408,6 @@ export interface IWalletConnectActions {
     acceptRequest: (sessionRequest: SignClientTypes.EventArguments["session_request"]) => Promise<void>;
     rejectRequest: (sessionRequest: SignClientTypes.EventArguments["session_request"]) => Promise<void>;
     refreshActiveSessions: () => void;
-    setPendingProposal: (proposal: SignClientTypes.EventArguments["session_proposal"]) => void;
-    unsetPendingProposal: () => void;
-    setPendingRequest: (request: SignClientTypes.EventArguments["session_request"]) => void;
-    unsetPendingRequest: () => void;
 }
 
 export interface IWalletConnectGetters {

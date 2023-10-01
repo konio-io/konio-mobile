@@ -93,68 +93,17 @@ const Main = () => {
   return (
     <View style={{flex: 1}}>
       <Init/>
-      <Wc/>
       <Lock/>
       <Drawer/>
+      <Wc/>
     </View>
   )
 }
 
 const Wc = () => {
-  const lock = useLockState();
-  const pendingProposal = useHookstate(WalletConnectStore.state.pendingProposal).get();
-  const pendingRequest = useHookstate(WalletConnectStore.state.pendingRequest).get();
   const uri = useHookstate(WalletConnectStore.state.uri).get();
   const wallet = useHookstate(WalletConnectStore.state.wallet).get();
   const i18n = useI18n();
-
-  //intercept wc_proposal
-  useEffect(() => {
-      const pp = pendingProposal;
-      if (!pp) {
-          return;
-      }
-
-      if (lock.get() === true) {
-          return;
-      }
-
-      const proposal = Object.assign({}, pp);
-
-      SheetManager.show('wc_proposal', { payload: { proposal } });
-      WalletConnectStore.actions.unsetPendingProposal();
-  }, [lock, pendingProposal]);
-
-  //intercept wc_request
-  useEffect(() => {
-      if (lock.get() === true) {
-          return;
-      }
-
-      const pr = pendingRequest;
-      if (!pr) {
-          return;
-      }
-
-      const request = Object.assign({}, pr);
-
-      const method = request.params.request.method;
-      if (!WC_SECURE_METHODS.includes(method)) {
-          WalletConnectStore.actions.acceptRequest(request)
-              .catch(e => {
-                  LogStore.actions.logError(e);
-                  Toast.show({
-                      type: 'error',
-                      text1: i18n.t('dapp_request_error', { method }),
-                      text2: i18n.t('check_logs')
-                  })
-              });
-          return;
-      }
-
-      SheetManager.show('wc_request', { payload: { request } });
-      WalletConnectStore.actions.unsetPendingRequest();
-  }, [lock, pendingRequest]);
 
   //intercept walletconnectStore wallet/uri set
   useEffect(() => {
@@ -181,12 +130,25 @@ const Wc = () => {
 
           const onSessionProposal = (proposal: SignClientTypes.EventArguments["session_proposal"]) => {
               console.log('wc_proposal', proposal);
-              WalletConnectStore.actions.setPendingProposal(proposal);
+              SheetManager.show('wc_proposal', { payload: { proposal: Object.assign({}, proposal) } });
           }
 
           const onSessionRequest = async (request: SignClientTypes.EventArguments["session_request"]) => {
               console.log('wc_request', request);
-              WalletConnectStore.actions.setPendingRequest(request);
+              const method = request.params.request.method;
+              if (!WC_SECURE_METHODS.includes(method)) {
+                  WalletConnectStore.actions.acceptRequest(request)
+                      .catch(e => {
+                          LogStore.actions.logError(e);
+                          Toast.show({
+                              type: 'error',
+                              text1: i18n.t('dapp_request_error', { method }),
+                              text2: i18n.t('check_logs')
+                          })
+                      });
+                  return;
+              }
+              SheetManager.show('wc_request', { payload: { request } });
           }
 
           wallet.on("session_proposal", onSessionProposal);

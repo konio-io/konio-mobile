@@ -8,25 +8,27 @@ import { rgba } from "../lib/utils";
 import { useNavigation } from "@react-navigation/native";
 import { DappsNavigationProp, RootNavigationProp } from "../types/navigation";
 import { AntDesign } from '@expo/vector-icons';
-import Loading from "./Loading";
 import { TouchableOpacity, TouchableWithoutFeedback  } from "react-native";
-import { LogStore } from "../stores";
+import { LogStore, SpinnerStore } from "../stores";
 
 export default () => {
     const navigation = useNavigation<DappsNavigationProp>();
     const [data, setData] = useState<Array<Dapp>>([]);
     const [selectedTag, setSelectedTag] = useState('all');
-    const [isLoading, setIsLoading] = useState(true);
 
     const load = () => {
+        SpinnerStore.actions.showSpinner();
         fetch(`${DAPPS_URL}/index.json`)
             .then(response => response.json())
             .then(json => {
                 const list: Array<Dapp> = Object.values(json);
                 setData(list);
-                setIsLoading(false);
+                SpinnerStore.actions.hideSpinner();
             })
-            .catch(e => LogStore.actions.logError(e));
+            .catch(e => {
+                LogStore.actions.logError(e);
+                SpinnerStore.actions.hideSpinner();
+            });
     }
 
     useEffect(() => {
@@ -45,10 +47,6 @@ export default () => {
     let filteredData = data;
     if (selectedTag !== 'all') {
         filteredData = data.filter(item => item.tags.includes(selectedTag));
-    }
-
-    if (isLoading === true) {
-        return <Loading />
     }
 
     return (

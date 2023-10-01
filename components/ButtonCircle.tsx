@@ -30,7 +30,7 @@ export default (props: {
                 <View style={{...styles.containerInternal, height: props.size ?? DEFAULT_SIZE}}>
                 {
                     React.cloneElement(props.icon, {
-                        size: 22,
+                        size: 16,
                         color: iconColor
                     })
                 }
