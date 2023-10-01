@@ -6,7 +6,7 @@ import Locales from "../lib/Locales";
 import { I18n } from 'i18n-js';
 import { getLocales } from 'expo-localization';
 import { useEffect, useState } from "react";
-import { SettingStore, SecureStore, CoinStore, AccountStore, NetworkStore, KapStore, LockStore, NftCollectionStore } from "../stores";
+import { SettingStore, SecureStore, CoinStore, AccountStore, NetworkStore, NameserverStore, LockStore, NftCollectionStore } from "../stores";
 
 export const useTheme = () => {
     const storeTheme = useHookstate(SettingStore.state.theme).get();
@@ -70,6 +70,7 @@ export const useAccountValue = () => {
     const total = useHookstate(0);
 
     useEffect(() => {
+        total.set(0);
         const coinList = Object.values(coins.get({ noproxy: true })).filter(coin =>
             coin.networkId === currentNetworkId &&
             coin.accountId === currentAccountId
@@ -80,8 +81,6 @@ export const useAccountValue = () => {
                     total.set(total.get() + coin.balance * coin.price);
                 }
             }
-        } else {
-            total.set(0);
         }
     }, [currentAccountId, currentNetworkId, coins]);
 
@@ -104,27 +103,6 @@ export const useCurrentAccountId = () => {
 
 export const useCurrentNetworkId = () => {
     return useHookstate(SettingStore.state.currentNetworkId).get();
-}
-
-export const useKapAddress = (address: string) => {
-    const name = useHookstate(KapStore.state.nested(address));
-    return name?.ornull ? name.get() : undefined;
-}
-
-export const useKapName = (name: string) => {
-    const store = useHookstate(KapStore.state);
-    const address = useHookstate('');
-    let foundAddress = '';
-
-    for (const addr in store.get()) {
-        if (store.nested(addr).get() === name) {
-            foundAddress = addr;
-            break;
-        }
-    }
-    address.set(foundAddress);
-
-    return address?.ornull ? address.get() : undefined;
 }
 
 export const useHydrated = () => {

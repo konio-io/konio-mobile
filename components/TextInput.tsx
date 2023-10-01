@@ -61,6 +61,7 @@ export default (props: {
             )}
             actions={props.actions}
             note={props.note}
+            loading={props.loading}
         >
             <TextInput
                 style={{

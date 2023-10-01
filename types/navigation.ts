@@ -20,7 +20,11 @@ export type RootParamList = {
     },
     WalletConnect: NavigatorScreenParams<WalletConnectParamList>,
     Faq: undefined,
-    About: undefined
+    About: undefined,
+    WithdrawToScan: undefined,
+    NewContact: {
+        address?: string
+    }
 }
 export type AccountNavigationProp = StackNavigationProp<RootParamList, 'Account'>;
 export type AccountRouteProp = RouteProp<RootParamList, 'Account'>;
@@ -38,6 +42,10 @@ export type FaqNavigationProp = StackNavigationProp<RootParamList, 'Faq'>;
 export type FaqRouteProp = RouteProp<RootParamList, 'Faq'>;
 export type AboutNavigationProp = StackNavigationProp<RootParamList, 'About'>;
 export type AboutRouteProp = RouteProp<RootParamList, 'About'>;
+export type WithdrawToScanNavigationProp = StackNavigationProp<RootParamList, 'WithdrawToScan'>;
+export type WithdrawToScanRouteProp = RouteProp<RootParamList, 'WithdrawToScan'>;
+export type NewContactNavigationProp = StackNavigationProp<RootParamList, 'NewContact'>;
+export type NewContactRouteProp = RouteProp<RootParamList, 'NewContact'>;
 
 /** WalletConnect */
 export type WalletConnectParamList = {
@@ -57,7 +65,12 @@ export type WcSessionsRouteProp = RouteProp<WalletConnectParamList, 'WcSessions'
 export type AccountParamList = {
     Holdings: NavigatorScreenParams<HoldingsParamList>,
     Dapps: undefined,
-    Withdraw: NavigatorScreenParams<WithdrawParamList>,
+    Withdraw: {
+        to?: string,
+        coinId?: string
+        amount?: number,
+        nftId?: string
+    },
     Deposit: undefined
 }
 export type HoldingsNavigationProp = StackNavigationProp<AccountParamList, 'Holdings'>;
@@ -150,23 +163,3 @@ export type NewWalletSeedConfirmNavigationProp = StackNavigationProp<IntroParamL
 export type NewWalletSeedConfirmRouteProp = RouteProp<IntroParamList, 'NewWalletSeedConfirm'>;
 export type ImportWalletSeedNavigationProp = StackNavigationProp<IntroParamList, 'ImportWalletSeed'>;
 export type ImportWalletSeedRouteProp = RouteProp<IntroParamList, 'ImportWalletSeed'>;
-
-/** Withdraw */
-export type WithdrawParamList = {
-    WithdrawAsset: {
-        to?: string,
-        coinId?: string
-        amount?: number,
-        nftId?: string
-    },
-    NewContact: {
-        address?: string
-    },
-    WithdrawToScan: undefined
-}
-export type WithdrawAssetNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawAsset'>;
-export type WithdrawAssetRouteProp = RouteProp<WithdrawParamList, 'WithdrawAsset'>;
-export type WithdrawToScanNavigationProp = StackNavigationProp<WithdrawParamList, 'WithdrawToScan'>;
-export type WithdrawToScanRouteProp = RouteProp<WithdrawParamList, 'WithdrawToScan'>;
-export type NewContactNavigationProp = StackNavigationProp<WithdrawParamList, 'NewContact'>;
-export type NewContactRouteProp = RouteProp<WithdrawParamList, 'NewContact'>;

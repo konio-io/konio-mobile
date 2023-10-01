@@ -1,12 +1,12 @@
 import { Text } from "../components"
 import { useNavigation } from "@react-navigation/native";
-import { WithdrawToScanNavigationProp } from "../types/navigation";
+import { HoldingsNavigationProp } from "../types/navigation";
 import { useI18n, useTheme } from "../hooks";
 import { View } from "react-native";
 import CodeScanner from "../components/CodeScanner";
 
 export default () => {
-    const navigation = useNavigation<WithdrawToScanNavigationProp>();
+    const navigation = useNavigation<HoldingsNavigationProp>();
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();
@@ -18,7 +18,7 @@ export default () => {
                     <Text>{i18n.t('scan_to_code')}</Text>
                 </View>
             )}
-            onScan={(to: string) => navigation.navigate('WithdrawAsset', { to })}
+            onScan={(to: string) => navigation.navigate('Withdraw', { to })}
             onClose={() => navigation.goBack()}
         />
     );

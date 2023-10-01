@@ -5,7 +5,8 @@ import Text from './Text';
 import { SheetManager } from "react-native-actions-sheet";
 import TextInputContainer from "./TextInputContainer";
 import Address from "./Address";
-import { ContactStore } from "../stores";
+import { AccountStore, ContactStore } from "../stores";
+import { useEffect, useState } from "react";
 
 export default (props: {
     value?: string,
@@ -13,8 +14,20 @@ export default (props: {
 }) => {
     const theme = useTheme();
     const styles = theme.styles;
-    const contact = props.value ? ContactStore.getters.getContact(props.value) : undefined;
+    const [name, setName] = useState('');
     const i18n = useI18n();
+
+    useEffect(() => {
+        if (props.value) {
+            const contactName = ContactStore.state.nested(props.value)?.name?.get()
+                || AccountStore.state.nested(props.value)?.name?.get();
+
+            if (contactName) {
+                setName(contactName);
+            }
+        }
+    }, [props.value])
+
 
     const _select = async () => {
         const value: any = await SheetManager.show("recipient", {
@@ -34,7 +47,6 @@ export default (props: {
                 <TextInputContainer note={i18n.t('recipient')}>
 
                     <View style={{ ...styles.directionRow, ...styles.columnGapSmall, minHeight: 60 }}>
-
                         {
                             props.value &&
                             <Avatar size={48} address={props.value} />
@@ -43,10 +55,10 @@ export default (props: {
                             props.value &&
                             <View>
                                 {
-                                    contact?.name &&
-                                    <Text>{contact.name}</Text>
+                                    name &&
+                                    <Text>{name}</Text>
                                 }
-                                <Address address={props.value}></Address>
+                                <Address address={props.value} length={10}/>
                             </View>
                         }
                     </View>

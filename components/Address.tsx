@@ -1,10 +1,9 @@
 import * as Clipboard from 'expo-clipboard';
 import { TouchableOpacity, Text, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { useTheme, useI18n, useKapAddress } from '../hooks';
-import { useEffect } from 'react';
-import { KapStore } from '../stores';
+import { useTheme, useI18n } from '../hooks';
 import Toast from 'react-native-toast-message';
+import { compactString } from '../lib/utils';
 
 export default (props: {
     address: string,
@@ -40,22 +39,11 @@ const Container = (props: {
     const { Color } = theme.vars;
     const styles = theme.styles;
     const length = props.length ?? 5;
-    const kapName = useKapAddress(props.address);
-
-    useEffect(() => {
-        KapStore.actions.refreshKap(props.address);
-    }, [props.address])
 
     return (
         <View style={styles.addressContainer}>
             <Text style={styles.addressText}>
-                { kapName !== undefined && 
-                    `${kapName}`
-                }
-
-                { kapName === undefined && 
-                    `${props.address.substring(0, length)} ... ${props.address.substring(props.address.length - length, props.address.length)}`
-                }
+                {compactString(props.address, length)}
             </Text>
 
             {props.copiable === true &&

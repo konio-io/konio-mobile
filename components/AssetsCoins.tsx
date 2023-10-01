@@ -47,9 +47,7 @@ const TouchableCoinListItem = (props: {
         SheetManager.show('coin', { payload: { coinId: props.coin.id } });
       }}
     >
-      <View style={styles.listItemContainer}>
-        <CoinListItem coin={props.coin} />
-      </View>
+      <CoinListItem coin={props.coin} />
     </TouchableOpacity>
   );
 }

@@ -76,5 +76,8 @@ export const WC_SECURE_METHODS = [
 ];
 export const KAP_NAMESERVICE_CID = "13tmzDmfqCsbYT26C4CmKxq86d33senqH3";
 export const KAP_PROFILE_CID = "1EttfMuvTXGh8oE6vLiRF5JfqBvRiofFkB";
+export const KAP_PREFIX = "kap://";
+export const NIC_NAMESERVICE_CID = "1KD9Es7LBBjA1FY3ViCgQJ7e6WH1ipKbhz";
+export const NIC_PREFIX = '@';
 export const CATEGORY_COINS = 'coins';
 export const CATEGORY_NFTS = 'nfts';

@@ -126,18 +126,9 @@ export interface IContactActions {
     deleteContact: (address: string) => void;
 }
 
-export interface IContactGetters {
-    getContact: (search: string) => {
-        name: string,
-        address: string,
-        addable: boolean
-    } | undefined;
-}
-
 export interface IContactStore {
     state: State<ContactState>;
     actions: IContactActions;
-    getters: IContactGetters;
 }
 
 /**
@@ -359,21 +350,27 @@ export interface ITransactionStore {
 /**
  * Kap
  */
-export type KapState = Record<string, string>
+export type NameserverState = Record<string, string>
 
-export interface IKapActions {
-    refreshKap: (search: string) => Promise<void>;
+export interface INameserverActions {
+    add: (address: string, ns: string) => void;
 }
 
-export interface IKapGetters {
+export interface INameserverGetters {
+    getAddress: (query: string) => Promise<string | undefined>;
+    validateKapQuery: (query: string) => string|null;
+    validateNicQuery: (query: string) => string|null;
+    getNicAddressByName: (name: string) => Promise<string | undefined>;
+    getNicNameByAddress: (address: string) => Promise<any | undefined>;
     getKapAddressByName: (name: string) => Promise<string | undefined>;
     getKapProfileByAddress: (address: string) => Promise<any | undefined>;
+    
 }
 
-export interface IKapStore {
-    state: State<KapState>;
-    actions: IKapActions,
-    getters: IKapGetters
+export interface INameserverStore {
+    state: State<NameserverState>;
+    actions: INameserverActions,
+    getters: INameserverGetters
 }
 
 /**
@@ -503,7 +500,7 @@ export type StoreRegistry = {
     NftCollection: INftCollectionStore;
     Nft: INftStore;
     Spinner: ISpinnerStore;
-    Kap: IKapStore;
+    Nameserver: INameserverStore;
     Mana: IManaStore;
     WalletConnect: IWalletConnectStore;
     Koin: IKoinStore;

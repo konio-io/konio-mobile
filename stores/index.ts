@@ -1,7 +1,7 @@
 import AccountStore from "./AccountStore";
 import CoinStore from "./CoinStore";
 import ContactStore from "./ContactStore";
-import KapStore from "./KapStore";
+import NameserverStore from "./NameserverStore";
 import KoinStore from "./KoinStore";
 import LockStore from "./LockStore";
 import LogStore from "./LogStore";
@@ -19,7 +19,7 @@ export {
   AccountStore,
   CoinStore,
   ContactStore,
-  KapStore,
+  NameserverStore,
   KoinStore,
   LockStore,
   LogStore,

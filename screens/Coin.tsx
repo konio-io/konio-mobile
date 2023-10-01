@@ -35,7 +35,7 @@ export default () => {
     }, [coin, navigation]);
 
     if (!coin) {
-        return <Loading/>
+        return <Loading />
     }
 
     return (
@@ -70,10 +70,7 @@ export default () => {
                             title={i18n.t('send')}
                             onPress={() => {
                                 navigation.navigate('Withdraw', {
-                                    screen: 'WithdrawAsset',
-                                    params: {
-                                        coinId: route.params.coinId
-                                    }
+                                    coinId: route.params.coinId
                                 });
                             }}
                             icon={<Feather name="arrow-up-right" />}
@@ -91,7 +88,7 @@ export default () => {
 
             <View style={{ ...styles.paddingBase, flex: 1 }}>
                 <Text style={styles.sectionTitle}>{i18n.t('transactions')}</Text>
-                <TransactionList coin={coin}/>
+                <TransactionList coin={coin} />
             </View>
 
         </Screen>
@@ -107,7 +104,7 @@ const TransactionList = (props: {
     const transactions = useHookstate(TransactionStore.state).get();
 
     const data = Object.values(transactions)
-        .filter(transaction => 
+        .filter(transaction =>
             transaction.contractId === props.coin.contractId &&
             (transaction.from === currentAccount.address || transaction.to === currentAccount.address) &&
             transaction.networkId === currentNetworkId
@@ -123,7 +120,7 @@ const TransactionList = (props: {
     return (
         <FlatList
             data={data}
-            renderItem={({ item }) => <TransactionListItem transaction={item} coin={props.coin}/>}
+            renderItem={({ item }) => <TransactionListItem transaction={item} coin={props.coin} />}
             refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={_refresh} />
             }

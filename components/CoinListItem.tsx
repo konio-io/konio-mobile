@@ -89,7 +89,9 @@ const createStyles = (theme: Theme) => {
             flex: 1,
             flexDirection: 'row',
             justifyContent: 'space-between',
-            alignItems: 'center'
+            alignItems: 'center',
+            paddingVertical: Spacing.small,
+            paddingHorizontal: Spacing.base
         },
         leftContainer: {
             flexDirection: 'row',

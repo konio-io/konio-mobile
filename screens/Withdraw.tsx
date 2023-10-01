@@ -1,6 +1,6 @@
 import { DrawerToggler, Screen } from '../components';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { WithdrawAssetNavigationProp, WithdrawAssetRouteProp } from '../types/navigation';
+import { WithdrawNavigationProp, WithdrawRouteProp } from '../types/navigation';
 import { View } from 'react-native';
 import { CATEGORY_COINS, CATEGORY_NFTS } from '../lib/Constants';
 import AssetToggler from '../components/AssetToggler';
@@ -10,8 +10,8 @@ import WithdrawNft from '../components/WithdrawNft';
 import { useI18n } from '../hooks';
 
 export default () => {
-    const route = useRoute<WithdrawAssetRouteProp>();
-    const navigation = useNavigation<WithdrawAssetNavigationProp>();
+    const route = useRoute<WithdrawRouteProp>();
+    const navigation = useNavigation<WithdrawNavigationProp>();
     const [category, setCategory] = useState(CATEGORY_COINS);
     const [coinId, setCoinId] = useState<string|undefined>(undefined);
     const [nftId, setNftId] = useState<string|undefined>(undefined);
@@ -26,11 +26,11 @@ export default () => {
     }, [navigation]);
 
     useEffect(() => {
-        if (route.params.coinId) {
+        if (route.params?.coinId) {
             setCoinId(route.params.coinId);
             setCategory(CATEGORY_COINS);
         }
-        if (route.params.nftId) {
+        if (route.params?.nftId) {
             setNftId(route.params.nftId);
             setCategory(CATEGORY_NFTS);
         }

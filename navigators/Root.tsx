@@ -11,6 +11,8 @@ import { RootParamList } from "../types/navigation";
 import Faq from "../screens/Faq";
 import About from "../screens/About";
 import { useI18n, useTheme } from "../hooks";
+import WithdrawToScan from "../screens/WithdrawToScan";
+import NewContact from "../screens/NewContact";
 
 const Stack = createStackNavigator<RootParamList>();
 
@@ -93,6 +95,23 @@ export default () => {
         component={About}
         options={{
           title: i18n.t('about')
+        }}
+      />
+      <Stack.Screen
+        name="WithdrawToScan"
+        component={WithdrawToScan}
+        options={{
+          title: i18n.t('send'),
+          presentation: 'modal',
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name="NewContact"
+        component={NewContact}
+        options={{
+          title: i18n.t('new_contact'),
+          presentation: 'modal'
         }}
       />
     </Stack.Navigator>

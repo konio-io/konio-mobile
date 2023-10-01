@@ -6,21 +6,24 @@ import { useCurrentAccount, useI18n, useTheme } from "../hooks";
 import ButtonCircle from "./ButtonCircle";
 import ListItem from "./ListItem";
 import AddressListItem from "./AddressListItem";
-import { Feather } from '@expo/vector-icons';
+import { Feather, AntDesign } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 import TextInput from "./TextInput";
 import TextInputActionPaste from "./TextInputActionPaste";
-import { WithdrawAssetNavigationProp } from "../types/navigation";
+import { AccountNavigationProp } from "../types/navigation";
 import { useState } from "react";
-import { AccountStore, ContactStore } from "../stores";
+import { AccountStore, ContactStore, NameserverStore } from "../stores";
 import { useHookstate } from "@hookstate/core";
+import TextInputAction from "./TextInputAction";
 
 export default (props: SheetProps<{ selected: string }>) => {
 
+    const navigation = useNavigation<AccountNavigationProp>();
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
     const [address, setAddress] = useState(props.payload?.selected ?? '');
+    const [loading, setLoading] = useState(false);
 
     const _confirm = () => {
         if (address) {
@@ -32,6 +35,25 @@ export default (props: SheetProps<{ selected: string }>) => {
         }
     }
 
+    const _onChange = (v: string) => {
+        setAddress(v);
+
+        if (NameserverStore.getters.validateKapQuery(v) || NameserverStore.getters.validateNicQuery(v)) {
+            setLoading(true);
+            NameserverStore.getters.getAddress(v)
+                .then(addr => {
+                    setLoading(false);
+                    if (addr) {
+                        setAddress(addr);
+                        NameserverStore.actions.add(addr, v);
+                    }
+                })
+                .catch(e => {
+                    setLoading(false);
+                });
+        }
+    }
+
     return (
         <ActionSheet
             id={props.sheetId}
@@ -39,11 +61,22 @@ export default (props: SheetProps<{ selected: string }>) => {
         >
             <ScrollView>
                 <TextInput
+                    loading={loading}
+                    autoFocus={true}
                     multiline={true}
                     value={address}
-                    onChangeText={(v: string) => setAddress(v)}
+                    onChangeText={(v: string) => _onChange(v)}
                     actions={(
-                        <TextInputActionPaste onPaste={(addr: string) => setAddress(addr)} />
+                        <View style={{...styles.directionRow}}>
+                            <TextInputActionPaste onPaste={(addr: string) => setAddress(addr.trim())} />
+                            <TextInputAction
+                                icon={(<AntDesign name="scan1" />)}
+                                onPress={() => {
+                                    SheetManager.hide(props.sheetId);
+                                    navigation.navigate('WithdrawToScan');
+                                }}
+                            />
+                        </View>
                     )}
                 />
 
@@ -58,7 +91,7 @@ export default (props: SheetProps<{ selected: string }>) => {
                 </View>
             </ScrollView>
 
-            <Button title={i18n.t('confirm')} onPress={() => _confirm()}/>
+            <Button title={i18n.t('confirm')} onPress={() => _confirm()} />
 
         </ActionSheet>
     );
@@ -70,7 +103,7 @@ const AccountList = (props: {
 }) => {
     const accounts = useHookstate(AccountStore.state).get();
     const currentAccount = useCurrentAccount();
-   
+
     const { styles } = useTheme();
     const i18n = useI18n();
     const result = Object.values(accounts)
@@ -89,7 +122,12 @@ const AccountList = (props: {
                 </View>
             }
             {data.map(item =>
-                <ToListItem key={item} address={item} selected={props.selected === item} onPress={(address: string) => props.onPressItem(address)} />
+                <ToListItem
+                    key={item}
+                    address={item}
+                    selected={props.selected === item}
+                    onPress={(address: string) => props.onPressItem(address)}
+                />
             )}
         </View>
     );
@@ -101,7 +139,7 @@ const Addressbook = (props: {
 }) => {
     const theme = useTheme();
     const styles = theme.styles;
-    const navigation = useNavigation<WithdrawAssetNavigationProp>();
+    const navigation = useNavigation<AccountNavigationProp>();
     const currentAccount = useCurrentAccount();
     const addressBook = useHookstate(ContactStore.state).get();
     const result = Object.values(addressBook)
@@ -114,14 +152,19 @@ const Addressbook = (props: {
     return (
         <View>
             {data.map(item =>
-                <ToListItem key={item} address={item} selected={props.selected === item} onPress={(address: string) => props.onPressItem(address)} />
+                <ToListItem
+                    key={item}
+                    address={item}
+                    selected={props.selected === item}
+                    onPress={(address: string) => props.onPressItem(address)}
+                />
             )}
 
             <View style={{ ...styles.paddingBase, ...styles.alignCenterColumn }}>
                 <ButtonCircle
                     onPress={() => {
                         SheetManager.hide('recipient');
-                        navigation.navigate('NewContact', {address: props.selected ?? ''})
+                        navigation.navigate('NewContact', { address: props.selected ?? '' })
                     }}
                     icon={(<Feather name="plus" />)}
                     type='secondary'

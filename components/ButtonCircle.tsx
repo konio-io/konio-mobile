@@ -11,7 +11,7 @@ export default (props: {
     type?: string
 }) => {
 
-    const DEFAULT_SIZE = 48;
+    const DEFAULT_SIZE = 36;
 
     const theme = useTheme();
     const styles = createStyles(theme);;
@@ -27,7 +27,7 @@ export default (props: {
             ...props.style
         }}>
             <View style={{...containerStyle, borderRadius: props.size ?? DEFAULT_SIZE}}>
-                <View style={styles.containerInternal}>
+                <View style={{...styles.containerInternal, height: props.size ?? DEFAULT_SIZE}}>
                 {
                     React.cloneElement(props.icon, {
                         size: 22,
@@ -50,8 +50,7 @@ const createStyles = (theme: Theme) => {
             alignItems: 'center',
             justifyContent: 'center',
             flexDirection: 'row', 
-            columnGap: Spacing.base,
-            height: 48
+            columnGap: Spacing.base
         },
         text: {
             fontFamily: FontFamily.sans,

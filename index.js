@@ -5,7 +5,7 @@ import {
     AccountStore,
     CoinStore,
     ContactStore,
-    KapStore,
+    NameserverStore,
     KoinStore,
     LockStore,
     LogStore,
@@ -33,7 +33,7 @@ registerStore('NftCollection', NftCollectionStore);
 registerStore('Nft', NftStore);
 registerStore('Log', LogStore);
 registerStore('Spinner', SpinnerStore);
-registerStore('Kap', KapStore);
+registerStore('Nameserver', NameserverStore);
 registerStore('Mana', ManaStore);
 registerStore('WalletConnect', WalletConnectStore);
 registerStore('Koin', KoinStore);

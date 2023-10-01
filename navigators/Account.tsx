@@ -8,7 +8,7 @@ import { AntDesign } from '@expo/vector-icons';
 import Deposit from "../screens/Deposit";
 import Dapps from "../screens/Dapps";
 import Holdings from "./Holdings";
-import Withdraw from "./Withdraw";
+import Withdraw from "../screens/Withdraw";
 
 const Tab = createBottomTabNavigator();
 export default () => {
@@ -83,7 +83,6 @@ export default () => {
           component={Withdraw}
           options={{
             title: i18n.t('send'),
-            headerShown: false,
             tabBarButton: () => null
           }}
         />

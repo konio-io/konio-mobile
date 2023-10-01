@@ -50,10 +50,7 @@ export default () => {
                             title={i18n.t('send')}
                             onPress={() => {
                                 navigation.navigate('Withdraw', {
-                                    screen: 'WithdrawAsset',
-                                    params: {
-                                        nftId: route.params.nftId
-                                    }
+                                    nftId: route.params.nftId
                                 });
                             }}
                             icon={<Feather name="arrow-up-right" />}

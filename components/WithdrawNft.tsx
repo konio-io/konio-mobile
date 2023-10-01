@@ -6,7 +6,7 @@ import { Feather } from '@expo/vector-icons';
 import AssetNftInput from '../components/AssetNftInput';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { WithdrawAssetNavigationProp } from '../types/navigation';
+import { WithdrawNavigationProp } from '../types/navigation';
 import { useHookstate } from '@hookstate/core';
 import { SettingStore, NftStore, SpinnerStore, LogStore, LockStore } from '../stores';
 import Toast from 'react-native-toast-message';
@@ -14,7 +14,7 @@ import Toast from 'react-native-toast-message';
 export default (props: {
     nftId?: string
 }) => {
-    const navigation = useNavigation<WithdrawAssetNavigationProp>();
+    const navigation = useNavigation<WithdrawNavigationProp>();
     const currentAccountState = useHookstate(SettingStore.state.currentAccountId);
     const currentNetworkState = useHookstate(SettingStore.state.currentNetworkId);
     const i18n = useI18n();

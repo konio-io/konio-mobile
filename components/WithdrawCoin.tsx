@@ -153,7 +153,7 @@ export default (props: {
                         coinId={coinId}
                         value={amount}
                         onChange={(value: number) => setAmount(value)}
-                        opened={coinId ? true : false}
+                        opened={coinId === undefined ? false : true}
                     />
                 }
 

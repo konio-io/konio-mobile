@@ -2,14 +2,14 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { NewContactNavigationProp, NewContactRouteProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen } from '../components';
-import { useI18n, useKapAddress, useKapName } from '../hooks';
+import { useI18n } from '../hooks';
 import { Alert, View } from 'react-native';
 import { useTheme } from '../hooks';
 import { utils } from 'koilib';
 import { isASCIIString } from '../lib/utils';
 import { useState } from 'react';
 import Toast from 'react-native-toast-message';
-import { ContactStore, KapStore } from '../stores';
+import { ContactStore, NameserverStore } from '../stores';
 
 export default () => {
     const navigation = useNavigation<NewContactNavigationProp>();
@@ -19,16 +19,10 @@ export default () => {
     const i18n = useI18n();
     const theme = useTheme();
     const styles = theme.styles;
-    const [addressLoading, setaAddressLoading] = useState(false);
-    const kapAddress = useKapName(address);
-    const kapName = useKapAddress(address);
+    const [loading, setLoading] = useState(false);
 
     const add = () => {
-        const addr = address.includes('.') ? 
-            kapAddress :
-            address;
-
-        if (!addr) {
+        if (!address) {
             Toast.show({
                 type: 'error',
                 text1: i18n.t('missing_address')
@@ -45,7 +39,7 @@ export default () => {
         }
 
         try {
-            const check = utils.isChecksumAddress(addr);
+            const check = utils.isChecksumAddress(address);
             if (!check) {
                 throw "Invalid address";
             }
@@ -58,36 +52,41 @@ export default () => {
         }
 
         ContactStore.actions.addContact({
-            address: addr,
+            address,
             name: name
         });
 
-        navigation.navigate("WithdrawAsset", {
-            to: addr
+        navigation.navigate("Withdraw", {
+            to: address
         })
     };
 
-    const onAddressStopWriting = () => {
-        if (address) {
-            if (!isASCIIString(address)) {
-                Alert.alert(i18n.t('warning'), i18n.t('homograph_attack_warning'), [
-                    { text: i18n.t('ok'), onPress: loadKap },
-                ]);
-            } else {
-                loadKap();
-            }
-        }
-    };
+    const _onChange = (v: string) => {
+        /*if (v && !!isASCIIString(address)) {
+            Alert.alert(i18n.t('warning'), i18n.t('homograph_attack_warning'), [
+                { text: i18n.t('ok'), onPress: loadKap },
+            ]);
+        }*/
 
-    const loadKap = async () => {
-        setaAddressLoading(true);
-        try {
-            await KapStore.actions.refreshKap(address);
-        } catch (e) {
-        }
+        setAddress(v);
 
-        setaAddressLoading(false);
-    };
+        const nsName = NameserverStore.getters.validateKapQuery(v) || NameserverStore.getters.validateNicQuery(v);
+        if (nsName) {
+            setLoading(true);
+            NameserverStore.getters.getAddress(v)
+                .then(addr => {
+                    setLoading(false);
+                    if (addr) {
+                        setAddress(addr);
+                        setName(nsName);
+                        NameserverStore.actions.add(addr, v);
+                    }
+                })
+                .catch(e => {
+                    setLoading(false);
+                });
+        }
+    }
 
     return (
         <Screen keyboardDismiss={true}>
@@ -104,11 +103,10 @@ export default () => {
                 <View style={styles.rowGapSmall}>
                     <TextInput
                         value={address}
-                        onChangeText={(v: string) => setAddress(v.trim())}
+                        onChangeText={(v: string) => _onChange(v.trim())}
                         placeholder={i18n.t('address')}
-                        loading={addressLoading}
-                        onStopWriting={onAddressStopWriting}
-                        note={kapName || kapAddress}
+                        loading={loading}
+                        multiline={true}
                     />
                 </View>
 

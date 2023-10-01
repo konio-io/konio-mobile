@@ -72,7 +72,7 @@ const ItemContent = (props: {
                 </View>
             }
 
-            <View style={{ ...styles.flex1, ...styles.directionRow, ...styles.alignSpaceBetweenRow }}>
+            <View style={{ ...styles.flex1, ...styles.directionRow, ...styles.alignSpaceBetweenRow, ...styles.alignCenterColumn }}>
                 {typeof props.content === 'string' &&
                     <View>
                         <Text style={styles.textMedium}>{props.content}</Text>
