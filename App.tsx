@@ -119,7 +119,7 @@ const Wc = () => {
                       text1: i18n.t('pairing_error'),
                       text2: i18n.t('check_logs')
                   });
-              });2
+              });
       }
   }, [uri, wallet]);
 
