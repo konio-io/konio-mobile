@@ -13,7 +13,7 @@ import Withdraw from "./Withdraw";
 const Tab = createBottomTabNavigator();
 export default () => {
   const theme = useTheme();
-  const { Color, FontFamily, Border } = theme.vars;
+  const { Color, FontFamily, Border, Spacing } = theme.vars;
   const styles = theme.styles;
   const i18n = useI18n();
 
@@ -29,14 +29,19 @@ export default () => {
           tabBarInactiveTintColor: Color.baseContrast,
           tabBarLabelStyle: { fontFamily: FontFamily.sans },
           tabBarShowLabel: true,
+          tabBarItemStyle: {
+            
+          },
           tabBarStyle: {
             backgroundColor: Color.base,
             borderTopColor: Border.color,
-            borderTopWidth: Border.width
+            borderTopWidth: 0,
+            height: 60,
+            shadowColor: 'transparent'
           },
           headerStyle: {
             backgroundColor: Color.base,
-            borderBottomWidth: 0
+            borderBottomWidth: 0,
           },
           headerTitleStyle: {
             fontFamily: FontFamily.sans,
