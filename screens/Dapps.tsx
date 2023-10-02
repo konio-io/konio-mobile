@@ -1,4 +1,4 @@
-import { View, Image, FlatList, StyleSheet } from "react-native";
+import { View, FlatList, StyleSheet } from "react-native";
 import { DAPPS_URL } from "../lib/Constants";
 import { Dapp, Theme } from "../types/ui";
 import { Text, Screen, DrawerToggler, DappLogo } from "../components";
@@ -23,6 +23,11 @@ export default () => {
             .then(response => response.json())
             .then(json => {
                 const list: Array<Dapp> = Object.values(json);
+                for (const item of list) {
+                    if (item.compatible === true) {
+                        item.tags.push('compatible');
+                    }
+                }
                 const sortedList = list
                     .sort((a: Dapp, b: Dapp) => {
                         if (a.compatible && !b.compatible) {
@@ -58,7 +63,7 @@ export default () => {
 
     let filteredData = data;
     if (selectedTag !== 'all') {
-        filteredData = data
+        filteredData = filteredData
             .filter(item => item.tags.includes(selectedTag));
     }
 
@@ -110,7 +115,6 @@ const Tagsbar = (props: {
     const styles = createStyles(theme);
     const tags: Record<string, number> = { all: props.data.length };
 
-
     for (let item of props.data) {
         for (let tag of item.tags) {
             if (!tags[tag]) {
@@ -124,7 +128,7 @@ const Tagsbar = (props: {
     return (
         <View style={{ ...styles.paddingBase, ...styles.directionRow, ...styles.columnGapSmall, ...styles.rowGapSmall, flexWrap: 'wrap' }}>
             {
-                Object.keys(tags).map(tag =>
+                Object.keys(tags).sort().map(tag =>
                     <Tag key={tag} name={tag} count={tags[tag]} selected={props.selected === tag} onPress={(tag: string) => props.onSelect(tag)} />
                 )
             }

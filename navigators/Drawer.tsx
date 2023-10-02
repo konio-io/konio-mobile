@@ -46,7 +46,7 @@ const DrawerContent = (props: any) => {
                 <View style={styles.currentAccountContainer}>
                     <Avatar size={48} address={currentAccount.address} />
                     <View>
-                        <Text style={styles.textLarge}>{currentAccount.name}</Text>
+                        <Text style={styles.textMedium}>{currentAccount.name}</Text>
                         <Address address={currentAccount.address} copiable={true} />
                     </View>
                 </View>

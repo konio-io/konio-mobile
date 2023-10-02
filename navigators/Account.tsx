@@ -9,11 +9,12 @@ import Deposit from "../screens/Deposit";
 import Dapps from "../screens/Dapps";
 import Holdings from "./Holdings";
 import Withdraw from "../screens/Withdraw";
+import { rgba } from "../lib/utils";
 
 const Tab = createBottomTabNavigator();
 export default () => {
   const theme = useTheme();
-  const { Color, FontFamily, Border, Spacing } = theme.vars;
+  const { Color, FontFamily, Border, FontSize } = theme.vars;
   const styles = theme.styles;
   const i18n = useI18n();
 
@@ -26,8 +27,8 @@ export default () => {
       <Tab.Navigator
         screenOptions={{
           tabBarActiveTintColor: Color.primary,
-          tabBarInactiveTintColor: Color.baseContrast,
-          tabBarLabelStyle: { fontFamily: FontFamily.sans },
+          tabBarInactiveTintColor: rgba(Color.baseContrast, 0.5),
+          tabBarLabelStyle: { fontFamily: FontFamily.sans, fontSize: FontSize.small },
           tabBarShowLabel: true,
           tabBarItemStyle: {
             
