@@ -9,6 +9,7 @@ import { Coin, Transaction } from '../types/store';
 import Address from './Address';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { rgba } from '../lib/utils';
+import { AccountStore, ContactStore } from '../stores';
 
 export default (props: {
     transaction: Transaction,
@@ -25,6 +26,14 @@ export default (props: {
     const styles = createStyles(theme);
     const type = transaction.from === currentAccount.address ? TRANSACTION_TYPE_WITHDRAW : TRANSACTION_TYPE_DEPOSIT;
 
+    let name = '';
+    if (type === TRANSACTION_TYPE_WITHDRAW) {
+        name = ContactStore.state.nested(transaction.to)?.ornull?.name?.get() || AccountStore.state.nested(transaction.to)?.ornull?.name?.get() || '';
+    }
+    else if (type === TRANSACTION_TYPE_DEPOSIT) {
+        name = ContactStore.state.nested(transaction.from)?.ornull?.name?.get() || AccountStore.state.nested(transaction.from)?.ornull?.name?.get() || '';
+    }
+
     const openTransactionLink = () => {
         Linking.openURL(`${currentNetwork.explorer}/${props.transaction.transactionId}`);
     };
@@ -32,17 +41,17 @@ export default (props: {
     return (
         <TouchableOpacity onPress={openTransactionLink}>
             <View style={{ marginTop: Spacing.medium }}>
-                <View style={{...styles.directionRow, ...styles.columnGapSmall, alignItems: 'baseline'}}>
+                <View style={{ ...styles.directionRow, ...styles.columnGapSmall, alignItems: 'baseline' }}>
                     {transaction.status === TRANSACTION_STATUS_PENDING &&
                         <ActivityIndicator />
                     }
 
                     {transaction.status === TRANSACTION_STATUS_SUCCESS &&
-                        <AntDesign name="checksquareo" size={14} color={rgba(Color.baseContrast, 0.6)}/>
+                        <AntDesign name="checksquareo" size={14} color={rgba(Color.baseContrast, 0.6)} />
                     }
 
                     {transaction.status === TRANSACTION_STATUS_ERROR &&
-                        <AntDesign name="closesquareo" size={14} color={rgba(Color.baseContrast, 0.6)}/>
+                        <AntDesign name="closesquareo" size={14} color={rgba(Color.baseContrast, 0.6)} />
                     }
                     <Text style={styles.textSmall}>{date} {time} </Text>
                 </View>
@@ -52,11 +61,17 @@ export default (props: {
 
                     <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
                         <TypeIcon type={type} />
-                        <Address address={type === TRANSACTION_TYPE_WITHDRAW ? transaction.to : transaction.from} copiable={true} length={5} />
+                        {name &&
+                            <Text>{name}</Text>
+                        }
+                        {!name &&
+                            <Address address={type === TRANSACTION_TYPE_WITHDRAW ? transaction.to : transaction.from} copiable={true} length={5} />
+                        }
                     </View>
 
                     <Text style={{ ...styles.text, color: type === TRANSACTION_TYPE_WITHDRAW ? Color.error : Color.success }}>
-                        {type === TRANSACTION_TYPE_WITHDRAW ? '+' : '-'}{transaction.value} {props.coin?.symbol}
+                        {type === TRANSACTION_TYPE_WITHDRAW ? '-' : '+'}
+                        {transaction.value ? parseFloat(transaction.value).toFixed(2) : ''} {props.coin?.symbol}
                     </Text>
                 </View>
             </View>

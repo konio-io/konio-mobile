@@ -18,7 +18,9 @@ export default () => {
                     <Text>{i18n.t('scan_to_code')}</Text>
                 </View>
             )}
-            onScan={(to: string) => navigation.navigate('Withdraw', { to })}
+            onScan={(to: string) => {
+                navigation.navigate('Withdraw', { to })
+            }}
             onClose={() => navigation.goBack()}
         />
     );

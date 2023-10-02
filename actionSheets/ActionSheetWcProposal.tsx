@@ -3,10 +3,11 @@ import { ScrollView, View, Image, StyleSheet } from "react-native";
 import { useCurrentAccount, useCurrentNetwork, useI18n, useTheme } from "../hooks";
 import { useEffect, useState } from "react";
 import { Feather } from '@expo/vector-icons';
-import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-sheet";
+import { SheetManager, SheetProps } from "react-native-actions-sheet";
 import type { Theme } from "../types/ui";
 import { NetworkStore, WalletConnectStore, LogStore } from "../stores";
 import Toast from "react-native-toast-message";
+import ActionSheet from "./ActionSheet";
 
 export default (props: SheetProps) => {
     const proposal = props.payload.proposal;

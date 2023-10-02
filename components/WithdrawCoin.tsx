@@ -13,7 +13,8 @@ import { useHookstate } from '@hookstate/core';
 import Toast from 'react-native-toast-message';
 
 export default (props: {
-    coinId?: string
+    coinId?: string,
+    to?: string
 }) => {
     const currentAccountState = useHookstate(SettingStore.state.currentAccountId);
     const currentNetworkState = useHookstate(SettingStore.state.currentNetworkId);
@@ -38,8 +39,13 @@ export default (props: {
     }, [lockState]);
 
     useEffect(() => {
-        setCoinId(props.coinId);
-    }, [props.coinId])
+        if (props.coinId) {
+            setCoinId(props.coinId);
+        }
+        if (props.to) {
+            setTo(props.to);
+        }
+    }, [props]);
 
     const _reset = () => {
         setAmount(0);

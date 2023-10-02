@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import 'text-encoding-polyfill'; //needs for koilib compatibility
 import '@ethersproject/shims'; //needs for etherjs compatibility
-import './components/sheets';
+import './actionSheets';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { DarkTheme, DefaultTheme, NavigationContainer, getStateFromPath } from "@react-navigation/native";

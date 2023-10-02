@@ -1,10 +1,11 @@
 import { ReactElement } from "react";
 import { useTheme } from "../hooks";
 import { FlatList, TouchableOpacity, View, StyleSheet } from "react-native";
-import Text from "./Text";
+import Text from "../components/Text";
 import React from "react";
-import ActionSheet, { SheetManager } from "react-native-actions-sheet";
+import ActionSheet from "./ActionSheet";
 import type { Theme } from "../types/ui";
+import { SheetManager } from "react-native-actions-sheet";
 
 export default (props: {
     sheetId: string,
@@ -72,7 +73,6 @@ const createStyles = (theme: Theme) => {
     return StyleSheet.create({
         ...styles,
         container: {
-            backgroundColor: Color.base,
             paddingBottom: 20
         },
         listItemContainer: {

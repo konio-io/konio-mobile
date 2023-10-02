@@ -12,7 +12,8 @@ import { SettingStore, NftStore, SpinnerStore, LogStore, LockStore } from '../st
 import Toast from 'react-native-toast-message';
 
 export default (props: {
-    nftId?: string
+    nftId?: string,
+    to?: string
 }) => {
     const navigation = useNavigation<WithdrawNavigationProp>();
     const currentAccountState = useHookstate(SettingStore.state.currentAccountId);
@@ -35,8 +36,13 @@ export default (props: {
     }, [lockState]);
 
     useEffect(() => {
-        setNftId(props.nftId);
-    }, [props.nftId])
+        if (props.nftId) {
+            setNftId(props.nftId);
+        }
+        if (props.to) {
+            setTo(props.to);
+        }
+    }, [props])
 
 
     const _reset = () => {

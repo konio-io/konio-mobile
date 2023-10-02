@@ -7,9 +7,10 @@ import { useNavigation } from '@react-navigation/native';
 import { ResetPasswordNavigationProp } from '../types/navigation';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useEffect, useState } from 'react';
-import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-sheet";
+import { SheetManager, SheetProps } from "react-native-actions-sheet";
 import Toast from "react-native-toast-message";
 import { SecureStore, LockStore, SettingStore } from "../stores";
+import ActionSheet from "./ActionSheet";
 
 export default (props: SheetProps) => {
     const navigation = useNavigation<ResetPasswordNavigationProp>();

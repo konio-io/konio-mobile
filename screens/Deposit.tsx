@@ -68,6 +68,7 @@ const createStyles = (theme: Theme) => {
             rowGap: Spacing.base
         },
         qrcodeContainer: {
+            backgroundColor: 'white',
             borderWidth: Border.width,
             borderColor: Border.color,
             borderRadius: Border.radius,

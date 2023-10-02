@@ -1,8 +1,8 @@
 import { SheetProps } from "react-native-actions-sheet";
 import { useI18n } from "../hooks";
-import ActionSheet from "./ActionSheet";
 import { AntDesign } from '@expo/vector-icons';
 import { ContactStore } from "../stores";
+import ActionSheetMenu from "./ActionSheetMenu";
 
 export default (props: SheetProps<{ 
     address: string 
@@ -28,6 +28,6 @@ export default (props: SheetProps<{
     ];
 
     return (
-        <ActionSheet sheetId={props.sheetId} data={data}/>
+        <ActionSheetMenu sheetId={props.sheetId} data={data}/>
     );
 }

@@ -15,6 +15,7 @@ export default () => {
     const [category, setCategory] = useState(CATEGORY_COINS);
     const [coinId, setCoinId] = useState<string|undefined>(undefined);
     const [nftId, setNftId] = useState<string|undefined>(undefined);
+    const [to, setTo] = useState<string|undefined>(undefined);
     const i18n = useI18n();
 
     useEffect(() => {
@@ -34,6 +35,9 @@ export default () => {
             setNftId(route.params.nftId);
             setCategory(CATEGORY_NFTS);
         }
+        if (route.params?.to) {
+            setTo(route.params.to);
+        }
     }, [route.params]);
 
     return (
@@ -44,11 +48,11 @@ export default () => {
 
             {
                 category === CATEGORY_COINS &&
-                <WithdrawCoin coinId={coinId}/>
+                <WithdrawCoin coinId={coinId} to={to}/>
             }
             {
                 category === CATEGORY_NFTS &&
-                <WithdrawNft nftId={nftId}/>
+                <WithdrawNft nftId={nftId} to={to}/>
             }
         </Screen>
     );

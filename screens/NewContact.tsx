@@ -1,18 +1,18 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { NewContactNavigationProp, NewContactRouteProp } from '../types/navigation';
+import { HoldingsNavigationProp, NewContactRouteProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
 import { TextInput, Button, Screen } from '../components';
 import { useI18n } from '../hooks';
-import { Alert, View } from 'react-native';
+import { View } from 'react-native';
 import { useTheme } from '../hooks';
 import { utils } from 'koilib';
-import { isASCIIString } from '../lib/utils';
+//import { isASCIIString } from '../lib/utils';
 import { useState } from 'react';
 import Toast from 'react-native-toast-message';
 import { ContactStore, NameserverStore } from '../stores';
 
 export default () => {
-    const navigation = useNavigation<NewContactNavigationProp>();
+    const navigation = useNavigation<HoldingsNavigationProp>();
     const route = useRoute<NewContactRouteProp>();
     const [address, setAddress] = useState(route.params.address ?? '');
     const [name, setName] = useState('');

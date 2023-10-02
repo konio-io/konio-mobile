@@ -1,11 +1,11 @@
 import { SheetProps } from "react-native-actions-sheet";
 import { useI18n } from "../hooks";
-import ActionSheet from "./ActionSheet";
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 import type { EditAccountNavigationProps } from "../types/navigation";
 import { Alert } from "react-native";
 import { AccountStore, SecureStore } from "../stores";
+import ActionSheetMenu from "./ActionSheetMenu";
 
 export default (props: SheetProps<{ 
   accountId: string 
@@ -54,6 +54,6 @@ export default (props: SheetProps<{
     }
 
     return (
-        <ActionSheet sheetId={props.sheetId} data={data}/>
+        <ActionSheetMenu sheetId={props.sheetId} data={data}/>
     );
 }

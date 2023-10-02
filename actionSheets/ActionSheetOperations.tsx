@@ -1,9 +1,9 @@
 import { SheetProps } from "react-native-actions-sheet";
 import { useI18n } from "../hooks";
-import ActionSheet from "./ActionSheet";
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
+import ActionSheetMenu from "./ActionSheetMenu";
 
 export default (props: SheetProps) => {
     const navigation = useNavigation();
@@ -44,6 +44,6 @@ export default (props: SheetProps) => {
     ];
 
     return (
-        <ActionSheet sheetId={props.sheetId} data={data}/>
+        <ActionSheetMenu sheetId={props.sheetId} data={data}/>
     );
 }

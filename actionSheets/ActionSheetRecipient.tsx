@@ -1,20 +1,14 @@
-import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-sheet";
-import Text from './Text';
-import Button from "./Button";
+import { SheetManager, SheetProps } from "react-native-actions-sheet";
 import { View, ScrollView } from "react-native";
 import { useCurrentAccount, useI18n, useTheme } from "../hooks";
-import ButtonCircle from "./ButtonCircle";
-import ListItem from "./ListItem";
-import AddressListItem from "./AddressListItem";
 import { Feather, AntDesign } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
-import TextInput from "./TextInput";
-import TextInputActionPaste from "./TextInputActionPaste";
 import { AccountNavigationProp } from "../types/navigation";
 import { useState } from "react";
 import { AccountStore, ContactStore, NameserverStore } from "../stores";
 import { useHookstate } from "@hookstate/core";
-import TextInputAction from "./TextInputAction";
+import { Text, Button, ButtonCircle, ListItem, AddressListItem, TextInput, TextInputActionPaste, TextInputAction } from '../components';
+import ActionSheet from './ActionSheet';
 
 export default (props: SheetProps<{ selected: string }>) => {
 

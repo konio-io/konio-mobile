@@ -1,12 +1,11 @@
-import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-sheet";
-import Button from "./Button";
-import Text from "./Text";
+import { SheetManager, SheetProps } from "react-native-actions-sheet";
+import { Button, Text, NftListItem } from "../components";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { useI18n, useTheme } from "../hooks";
-import NftListItem from "./NftListItem";
 import { SettingStore, NftCollectionStore, NftStore } from "../stores";
 import { Nft, NftCollection } from "../types/store";
 import { useState } from "react";
+import ActionSheet from "./ActionSheet";
 
 export default (props: SheetProps<{ 
     nftId?: string 

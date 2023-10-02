@@ -22,7 +22,7 @@ import AccountListItem from './AccountListItem';
 import CoinLogo from './CoinLogo';
 import Screen from './Screen';
 import Link from './Link';
-import ActionSheet from './ActionSheet';
+import ActionSheet from '../actionSheets/ActionSheet';
 import CircleLogo from './CircleLogo';
 import MoreVertical from './MoreVertical';
 import DrawerToggler from './DrawerToggler';
@@ -36,6 +36,7 @@ import Badge from './Badge';
 import WcLogo from './Wclogo';
 import ButtonCircle from './ButtonCircle';
 import SelectedTicker from './SelectedTicker';
+import NftListItem from './NftListItem';
 
 export {
     ActivityIndicator,
@@ -53,6 +54,7 @@ export {
     TransactionListItem,
     Wrapper,
     CoinListItem,
+    NftListItem,
     ListItem,
     Selector,
     Copiable,

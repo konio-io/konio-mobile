@@ -1,11 +1,10 @@
-import ActionSheet, { SheetManager, SheetProps } from "react-native-actions-sheet";
-import Button from "./Button";
-import Text from "./Text";
+import { SheetManager, SheetProps } from "react-native-actions-sheet";
+import { Button, Text, CoinListItem } from "../components";
 import { FlatList, TouchableOpacity, View } from "react-native";
 import { useI18n, useTheme } from "../hooks";
-import CoinListItem from "./CoinListItem";
 import { useState } from "react";
 import { SettingStore, CoinStore } from "../stores";
+import ActionSheet from "./ActionSheet";
 
 export default (props: SheetProps<{
     coinId?: string
