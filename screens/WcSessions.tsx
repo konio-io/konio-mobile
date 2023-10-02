@@ -1,7 +1,7 @@
 import { Screen, Text, Separator, Button, Accordion, Avatar, ButtonCircle } from "../components"
 import { useEffect } from "react";
 import { getSdkError } from "@walletconnect/utils";
-import { ImmutableObject } from "@hookstate/core";
+import { ImmutableObject, useHookstate } from "@hookstate/core";
 import { View, FlatList } from "react-native";
 import { useCurrentAccount, useI18n, useTheme } from "../hooks";
 import Loading from "./Loading";
@@ -18,7 +18,7 @@ export default () => {
         return <Loading />;
     }
 
-    const activeSessions = WalletConnectStore.state.activeSessions.get();
+    const activeSessions = useHookstate(WalletConnectStore.state.activeSessions).get();
     const { styles } = useTheme();
     const navigation = useNavigation<WcSessionsNavigationProp>();
 

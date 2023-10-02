@@ -17,7 +17,7 @@ export default () => {
     const _pair = (uri: string) => {
         WalletConnectStore.actions.pair(uri)
             .then(() => {
-                navigation.navigate('WcSessions');
+                navigation.goBack();
             })
             .catch(e => {
                 LogStore.actions.logError(e);
