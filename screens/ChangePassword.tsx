@@ -1,5 +1,5 @@
 import { Wrapper, Screen, Button, TextInput } from "../components"
-import { useI18n, useTheme } from "../hooks"
+import { useI18n, useLockState, useTheme } from "../hooks"
 import React, { useEffect, useState } from "react";
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
@@ -7,6 +7,7 @@ import { ChangePasswordNavigationProp } from "../types/navigation";
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
 import { LockStore, SecureStore } from "../stores";
+import { AntDesign } from '@expo/vector-icons';
 
 export default () => {
     const navigation = useNavigation<ChangePasswordNavigationProp>();
@@ -15,6 +16,7 @@ export default () => {
     const [passwordConfirm, setPwdConfirm] = useState('');
     const theme = useTheme();
     const styles = theme.styles;
+    const lockState = useLockState();
 
     useEffect(() => {
         LockStore.actions.lock();
@@ -47,30 +49,42 @@ export default () => {
 
     return (
         <Screen keyboardDismiss={true}>
-            <Wrapper>
-                <TextInput
-                    autoFocus={true}
-                    value={password}
-                    onChangeText={(v: string) => setPwd(v.trim())}
-                    placeholder={i18n.t('password')}
-                    secureTextEntry={true}
-                />
+            {
 
-                <TextInput
-                    value={passwordConfirm}
-                    onChangeText={(v: string) => setPwdConfirm(v.trim())}
-                    placeholder={i18n.t('confirm_password')}
-                    secureTextEntry={true}
-                />
-            </Wrapper>
+                lockState.get() === false &&
+                <>
+                    <Wrapper>
+                        <TextInput
+                            autoFocus={true}
+                            value={password}
+                            onChangeText={(v: string) => setPwd(v.trim())}
+                            placeholder={i18n.t('password')}
+                            secureTextEntry={true}
+                        />
 
-            <View style={styles.paddingBase}>
-                <Button
-                    title={i18n.t('set_password')}
-                    icon={<Feather name="arrow-right" />}
-                    onPress={() => savePassword()}
-                />
-            </View>
+                        <TextInput
+                            value={passwordConfirm}
+                            onChangeText={(v: string) => setPwdConfirm(v.trim())}
+                            placeholder={i18n.t('confirm_password')}
+                            secureTextEntry={true}
+                        />
+                    </Wrapper>
+
+                    <View style={styles.paddingBase}>
+                        <Button
+                            title={i18n.t('set_password')}
+                            icon={<Feather name="arrow-right" />}
+                            onPress={() => savePassword()}
+                        />
+                    </View>
+                </>
+            }
+            {
+                lockState.get() === true &&
+                <View style={{ ...styles.alignCenterColumn, ...styles.alignCenterRow, flex: 1 }}>
+                    <AntDesign name="lock1" size={150} color={theme.vars.Border.color} />
+                </View>
+            }
         </Screen>
     );
 }

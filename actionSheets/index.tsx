@@ -11,6 +11,7 @@ import ActionSheetWcRequest from './ActionSheetWcRequest';
 import ActionSheetRecipient from './ActionSheetRecipient';
 import ActionSheetAssetCoin from './ActionSheetAssetCoin';
 import ActionSheetAssetNft from './ActionSheetAssetNft';
+import ActionSheetDapp from './ActionSheetDapp';
  
 registerSheet("coin", ActionSheetCoin);
 registerSheet("account",ActionSheetAccount);
@@ -24,5 +25,6 @@ registerSheet("wc_request", ActionSheetWcRequest);
 registerSheet("recipient", ActionSheetRecipient);
 registerSheet("asset_coin", ActionSheetAssetCoin);
 registerSheet("asset_nft", ActionSheetAssetNft);
+registerSheet("dapp", ActionSheetDapp);
 
 export {};

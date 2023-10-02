@@ -245,5 +245,6 @@
   "transaction_ERROR": "Fehlgeschlagen",
   "no_assets": "Es gibt keine Vermögenswerte",
   "nft_transfer_failed": "NFT-Übertragung fehlgeschlagen",
-  "assets": "Vermögenswerte"
+  "assets": "Vermögenswerte",
+  "open": "Öffnen"
 }

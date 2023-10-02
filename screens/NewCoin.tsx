@@ -103,7 +103,7 @@ const SuggestList = (props: {
       const tokenMap: Array<Token> = await tokenListResponse.json();
       const tokenList = Object.values(tokenMap).filter(token => {
         return token.chainId === currentNetwork.chainId
-          && !Object.keys(currentCoins).includes(token.address)
+          && !currentCoins.map(c => c.contractId).includes(token.address)
           && token.symbol !== "MANA";
       });
 
@@ -138,7 +138,7 @@ const SuggestList = (props: {
         <View>
           <Text style={styles.sectionTitle}>{i18n.t('auto_discovered')}</Text>
 
-          <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
+          <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
             {data.map(coin =>
               <ListItem key={coin.contractId} contractId={coin.contractId} symbol={coin.symbol} onPress={(cId: string) => props.onPressCoin(cId)} />
             )}

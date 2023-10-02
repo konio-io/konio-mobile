@@ -3,6 +3,7 @@ import { Screen, TextInputActionCopy, Text, AddressListItem } from "../component
 import { useLockState, useTheme } from "../hooks"
 import React, { useEffect } from "react";
 import { SecureStore, LockStore, AccountStore } from "../stores";
+import { AntDesign } from '@expo/vector-icons';
 
 export default () => {
     const theme = useTheme();
@@ -23,6 +24,12 @@ export default () => {
                     )}
                 </ScrollView>
             }
+            {
+                lockState.get() === true &&
+                <View style={{...styles.alignCenterColumn, ...styles.alignCenterRow, flex: 1}}>
+                    <AntDesign name="lock1" size={150} color={theme.vars.Border.color} />
+                </View>
+            }
         </Screen>
     );
 }
@@ -36,7 +43,7 @@ const PrivateKey = (props: {
     const styles = theme.styles;
 
     return (
-        <View>
+        <View style={styles.rowGapSmall}>
             <AddressListItem address={props.address} name={account.name} />
             <View style={styles.textInputContainer}>
                 <Text>{props.privateKey}</Text>

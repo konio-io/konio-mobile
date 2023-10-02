@@ -245,5 +245,6 @@
   "transaction_ERROR": "Falha",
   "no_assets": "Não há ativos",
   "nft_transfer_failed": "Falha na transferência de NFT",
-  "assets": "Ativos"
+  "assets": "Ativos",
+  "open": "Abrir"
 }

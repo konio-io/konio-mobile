@@ -17,7 +17,7 @@ const getters: INameserverGetters = {
     validateKapQuery: (query: string) => {
         if (query.toLowerCase().startsWith(KAP_PREFIX)) {
             const name = query.replace(KAP_PREFIX, '');
-            if (name.length > 3 && name.includes('.koin')) {
+            if (name.length >= 3 && name.includes('.koin')) {
                 return query.toLowerCase().replace(KAP_PREFIX, '');
             }
         }
@@ -27,9 +27,8 @@ const getters: INameserverGetters = {
 
     validateNicQuery: (query: string) => {
         if (query.toLowerCase().startsWith(NIC_PREFIX)) {
-            console.log('valid', query)
             const name = query.replace(NIC_PREFIX, '');
-            if (name.length > 3) {
+            if (name.length >= 3) {
                 return query.toLowerCase().replace(NIC_PREFIX, '');
             }
         }
@@ -73,14 +72,11 @@ const getters: INameserverGetters = {
     getNicAddressByName: async (name: string) => {
         if (getStore('Network').getters.isMainnet()) {
             try {
-                console.log('name', name)
                 const contract = await getStore('Koin').getters.fetchContract(NIC_NAMESERVICE_CID);
                 const buffer = new TextEncoder().encode(name);
                 const token_id = "0x" + utils.toHexString(buffer);
-                console.log(token_id);
-                const response = await contract.functions.owner_of<{ value: string; }>({ token_id });
-                console.log('r', response)
-                return response.result?.value;
+                const response = await contract.functions.owner_of<{ account: string; }>({ token_id });
+                return response.result?.account;
             } catch (e) {
                 getStore('Log').actions.logError(String(e));
             }

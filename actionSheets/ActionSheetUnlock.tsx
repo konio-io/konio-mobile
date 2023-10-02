@@ -63,29 +63,35 @@ export default (props: SheetProps) => {
     }, [biometric]);
 
     return (
-        <ActionSheet id={props.sheetId} containerStyle={styles.container} closeOnTouchBackdrop={false}>
-            <View style={{...styles.alignCenterColumn, paddingVertical: 30}}>
-                <Logo />
+        <ActionSheet 
+            id={props.sheetId} 
+            containerStyle={styles.container} 
+            closeOnTouchBackdrop={false} 
+            isModal={false} 
+            closeOnPressBack={false}
+        >
+            <View style={{ ...styles.alignCenterColumn }}>
+                <Logo width={130} height={130} />
             </View>
 
-            <TextInput
-                value={password}
-                onChangeText={(v: string) => setPwd(v)}
-                placeholder={i18n.t('password')}
-                secureTextEntry={true}
-            />
-            <View style={styles.alignCenterColumn}>
-                <Pressable onPress={() => navigation.navigate('ResetPassword')}>
-                    <Text>{i18n.t('forgot_password')}</Text>
-                </Pressable>
-            </View>
-
-            <View style={styles.paddingBase}>
+            <View style={styles.rowGapSmall}>
+                <TextInput
+                    value={password}
+                    onChangeText={(v: string) => setPwd(v)}
+                    placeholder={i18n.t('password')}
+                    secureTextEntry={true}
+                />
                 <Button
                     title={i18n.t('unlock')}
                     icon={<Feather name="unlock" />}
                     onPress={unlockPassword}
                 />
+            </View>
+
+            <View style={styles.alignCenterColumn}>
+                <Pressable onPress={() => navigation.navigate('ResetPassword')}>
+                    <Text>{i18n.t('forgot_password')}</Text>
+                </Pressable>
             </View>
         </ActionSheet>
     );
@@ -100,8 +106,8 @@ const createStyles = (theme: Theme) => {
         container: {
             backgroundColor: Color.base,
             ...styles.alignCenterRow,
-            ...styles.paddingBase,
-            ...styles.rowGapBase,
+            ...styles.paddingLarge,
+            ...styles.rowGapMedium,
             flex: 1
         }
     });

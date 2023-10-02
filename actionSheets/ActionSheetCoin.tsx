@@ -1,8 +1,8 @@
 import { SheetProps } from "react-native-actions-sheet";
 import { useI18n } from "../hooks";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
-import { AssetsNavigationProp } from "../types/navigation";
+import { HoldingsNavigationProp } from "../types/navigation";
 import * as Clipboard from 'expo-clipboard';
 import { CoinStore } from "../stores";
 import Toast from "react-native-toast-message";
@@ -18,11 +18,13 @@ export default (props: SheetProps<{
     
     const coinId = props.payload.coinId;
     const i18n = useI18n();
-    const navigation = useNavigation<AssetsNavigationProp>();
+    const navigation = useNavigation<HoldingsNavigationProp>();
     const coin = CoinStore.state.nested(coinId).get();
     
     const _delete = () => {
-        navigation.navigate('Assets');
+        navigation.navigate('Holdings', {
+            screen: 'Assets'
+        });
         setTimeout(() => {
             CoinStore.actions.deleteCoin(coinId);
         }, 1000)
@@ -42,6 +44,16 @@ export default (props: SheetProps<{
             description: coin.contractId,
             icon: <AntDesign name="codesquareo"/>,
             onPress: () => _copyContractId()
+        },
+        {
+            title: i18n.t('send'),
+            icon: <Feather name="arrow-up-right" />,
+            onPress: () => navigation.navigate('Withdraw', { coinId: coin.id })
+        },
+        {
+            title: i18n.t('receive'),
+            icon: <Feather name="arrow-down-right" />,
+            onPress: () => navigation.navigate('Deposit')
         }
     ];
 

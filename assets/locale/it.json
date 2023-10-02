@@ -245,5 +245,6 @@
   "transaction_ERROR":"Fallita",
   "no_assets":"Non ci sono assets",
   "nft_transfer_failed":"Trasferimento NFT fallito",
-  "assets":"Assets"
+  "assets":"Assets",
+  "open":"Apri"
 }

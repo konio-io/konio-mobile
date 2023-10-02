@@ -13,7 +13,7 @@ export default () => {
         <Screen>
             <Wrapper>
                 <View style={styles.alignCenterColumn}>
-                    <Logo />
+                    <Logo width={130} height={130}/>
                 </View>
 
                 <View style={styles.alignCenterColumn}>

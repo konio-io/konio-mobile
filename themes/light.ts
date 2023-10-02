@@ -26,7 +26,7 @@ export const getTheme = () : Theme => {
     const Color = {
         base: 'rgba(255,255,255,1)',
         baseContrast: 'rgba(10,10,10,1)',
-        primary: 'rgba(111,0,246,1)',
+        primary: 'rgba(120,1,246,1)',
         primaryContrast: 'rgba(244,255,255,1)',
         error: 'rgba(204,63,63,1)',
         warning: 'rgba(255,142,36,1)',

@@ -1,15 +1,16 @@
-import { View, Image, FlatList, Linking, StyleSheet } from "react-native";
+import { View, Image, FlatList, StyleSheet } from "react-native";
 import { DAPPS_URL } from "../lib/Constants";
 import { Dapp, Theme } from "../types/ui";
-import { Text, Screen, DrawerToggler } from "../components";
+import { Text, Screen, DrawerToggler, DappLogo } from "../components";
 import { useTheme } from "../hooks";
 import { useEffect, useState } from "react";
 import { rgba } from "../lib/utils";
 import { useNavigation } from "@react-navigation/native";
 import { DappsNavigationProp, RootNavigationProp } from "../types/navigation";
 import { AntDesign } from '@expo/vector-icons';
-import { TouchableOpacity, TouchableWithoutFeedback  } from "react-native";
+import { TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { LogStore, SpinnerStore } from "../stores";
+import { SheetManager } from "react-native-actions-sheet";
 
 export default () => {
     const navigation = useNavigation<DappsNavigationProp>();
@@ -22,7 +23,18 @@ export default () => {
             .then(response => response.json())
             .then(json => {
                 const list: Array<Dapp> = Object.values(json);
-                setData(list);
+                const sortedList = list
+                    .sort((a: Dapp, b: Dapp) => {
+                        if (a.compatible && !b.compatible) {
+                            return -1;
+                        }
+                        if (!a.compatible && b.compatible) {
+                            return 1;
+                        }
+                
+                        return a.name.localeCompare(b.name);
+                    });
+                setData(sortedList);
                 SpinnerStore.actions.hideSpinner();
             })
             .catch(e => {
@@ -46,16 +58,22 @@ export default () => {
 
     let filteredData = data;
     if (selectedTag !== 'all') {
-        filteredData = data.filter(item => item.tags.includes(selectedTag));
+        filteredData = data
+            .filter(item => item.tags.includes(selectedTag));
     }
 
     return (
         <Screen>
-            <Tagsbar data={data} selected={selectedTag} onSelect={(tag: string) => setSelectedTag(tag)} />
-            <FlatList
-                data={filteredData}
-                renderItem={({ item }) => <Item key={item.name} item={item} />}
-            />
+            {
+                filteredData.length > 0 &&
+                <>
+                    <Tagsbar data={data} selected={selectedTag} onSelect={(tag: string) => setSelectedTag(tag)} />
+                    <FlatList
+                        data={filteredData}
+                        renderItem={({ item }) => <Item key={item.name} item={item} />}
+                    />
+                </>
+            }
         </Screen>
     )
 }
@@ -140,18 +158,19 @@ const Item = (props: {
     const styles = createStyles(theme);
 
     return (
-        <View style={styles.paddingVerticalSmall}>
-            <View style={{ ...styles.directionRow, ...styles.columnGapBase, ...styles.paddingHorizontalBase }}>
-                <TouchableWithoutFeedback onPress={() => Linking.openURL(props.item.url)}>
-                    <Image style={styles.itemIcon} source={{ uri: props.item.icon }} />
-                </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={() => SheetManager.show('dapp', { payload: { dapp: props.item } })}>
+            <View style={styles.paddingVerticalSmall}>
+                <View style={{ ...styles.directionRow, ...styles.columnGapBase, ...styles.paddingHorizontalBase }}>
 
-                <View>
-                    <Text style={styles.textMedium}>{props.item.name}</Text>
-                    <Text style={styles.textSmall}>{props.item.summary}</Text>
+                    <DappLogo dapp={props.item}/>
+
+                    <View>
+                        <Text style={styles.textMedium}>{props.item.name}</Text>
+                        <Text style={styles.textSmall}>{props.item.summary}</Text>
+                    </View>
                 </View>
             </View>
-        </View>
+        </TouchableWithoutFeedback>
     )
 }
 

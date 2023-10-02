@@ -141,11 +141,11 @@ const DrawerContent = (props: any) => {
             </ScrollView>
 
             <View style={styles.drawerFooterContainer}>
-                <Logo width={150} height={34} />
+                <Logo width={74} height={74} />
 
                 <View style={styles.authorContainer}>
-                    <Text style={styles.textVersion}>v{Constants.expoConfig?.version}</Text>
                     <Link text="https://konio.io" onPress={() => Linking.openURL('https://konio.io')} />
+                    <Text style={styles.textVersion}>v{Constants.expoConfig?.version}</Text>
                 </View>
             </View>
 
@@ -155,7 +155,7 @@ const DrawerContent = (props: any) => {
 
 
 const createStyles = (theme: Theme) => {
-    const { Spacing } = theme.vars;
+    const { Spacing, FontSize } = theme.vars;
 
     return StyleSheet.create({
         ...theme.styles,
@@ -175,7 +175,7 @@ const createStyles = (theme: Theme) => {
         textVersion: {
             ...theme.styles.textCenter,
             ...theme.styles.text,
-            fontWeight: 'bold'
+            fontSize: FontSize.small
         },
         drawerIconContainer: {
             alignItems: 'center',

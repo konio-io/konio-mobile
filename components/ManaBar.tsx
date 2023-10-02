@@ -52,9 +52,7 @@ export default () => {
     }, [mana, koinBalance]);
 
     const theme = useTheme();
-    const styles = theme.styles;
-    const { Color, Border } = theme.vars;
-    const UnloadedColor = Border.color;
+    const { Color } = theme.vars;
     const LoadedColor = Color.success;
 
     return (

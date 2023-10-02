@@ -245,5 +245,6 @@
     "transaction_ERROR": "Başarısız",
     "no_assets": "Varlık yok",
     "nft_transfer_failed": "NFT transferi başarısız oldu",
-    "assets": "Varlıklar"
+    "assets": "Varlıklar",
+    "open": "Açmak"
 }

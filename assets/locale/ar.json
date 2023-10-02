@@ -244,5 +244,6 @@
     "transaction_ERROR": "فشل",
     "no_assets": "لا توجد أصول",
     "nft_transfer_failed": "فشل نقل NFT",
-    "assets": "الأصول"
+    "assets": "الأصول",
+    "open": "فتح"
 }

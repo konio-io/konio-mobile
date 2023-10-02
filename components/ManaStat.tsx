@@ -38,7 +38,7 @@ export default (props: {
 
             <View>
                 <Text style={styles.title}>{i18n.t('balance')}</Text>
-                <Text style={{ ...styles.textCenter, ...styles.text }}>{props.balance.toString()}</Text>
+                <Text style={{ ...styles.textCenter, ...styles.text }}>{props.balance.toString()} MANA</Text>
             </View>
             
             {

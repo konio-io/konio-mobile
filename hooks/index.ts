@@ -133,9 +133,9 @@ export const useCoins = () => {
     const currentNetworkId = useHookstate(SettingStore.state.currentNetworkId).get();
     const coins = useHookstate(CoinStore.state).get();
 
-    return Object.values(coins).filter(
-        coin => coin.networkId === currentNetworkId &&
-            coin.accountId === currentAccountId
+    return Object.values(coins).filter(coin => 
+        coin.networkId === currentNetworkId
+        && coin.accountId === currentAccountId
     );
 }
 

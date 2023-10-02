@@ -245,5 +245,6 @@
   "transaction_ERROR": "失败",
   "no_assets": "没有资产",
   "nft_transfer_failed": "NFT转账失败",
-  "assets": "资产"
+  "assets": "资产",
+  "open": "打开"
 }

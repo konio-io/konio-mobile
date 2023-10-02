@@ -245,5 +245,6 @@
     "transaction_ERROR": "失敗",
     "no_assets": "資産がありません",
     "nft_transfer_failed": "NFTの転送に失敗しました",
-    "assets": "資産"
+    "assets": "資産",
+    "open": "開く"
 }

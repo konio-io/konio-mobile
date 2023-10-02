@@ -245,5 +245,6 @@
   "transaction_ERROR": "Не выполнено",
   "no_assets": "Нет активов",
   "nft_transfer_failed": "Ошибка при передаче NFT",
-  "assets": "Активы"
+  "assets": "Активы",
+  "open": "Открыть"
 }

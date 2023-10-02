@@ -245,5 +245,6 @@
   "transaction_ERROR": "ناموفق",
   "no_assets": "دارای دارایی نیست",
   "nft_transfer_failed": "انتقال NFT ناموفق بود",
-  "assets": "دارایی‌ها"
+  "assets": "دارایی‌ها",
+  "open": "باز کردن"
 }

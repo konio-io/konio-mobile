@@ -2,7 +2,7 @@
   "expo": {
     "name": "Konio",
     "slug": "konio",
-    "version": "1.10.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -19,12 +19,7 @@
       "splash": {
         "image": "./assets/splash.png",
         "resizeMode": "cover",
-        "backgroundColor": "#ffffff",
-        "dark": {
-          "image": "./assets/splash.png",
-          "resizeMode": "cover",
-          "backgroundColor": "#000000"
-        }
+        "backgroundColor": "#7000f6"
       },
       "appStoreUrl": "https://apps.apple.com/app/konio/id6453561342",
       "buildNumber": "10"
@@ -64,12 +59,7 @@
       "splash": {
         "image": "./assets/splash.png",
         "resizeMode": "cover",
-        "backgroundColor": "#ffffff",
-        "dark": {
-          "image": "./assets/splash.png",
-          "resizeMode": "cover",
-          "backgroundColor": "#000000"
-        }
+        "backgroundColor": "#7000f6"
       },
       "playStoreUrl": "https://play.google.com/store/apps/details?id=konio.io",
       "versionCode": 10
@@ -84,7 +74,6 @@
     },
     "plugins": [
       "expo-localization",
-      "./fix-night-colors",
       [
         "expo-barcode-scanner",
         {

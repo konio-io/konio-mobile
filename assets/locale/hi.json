@@ -245,5 +245,6 @@
     "transaction_ERROR": "असफल",
     "no_assets": "कोई ऐसेट नहीं हैं",
     "nft_transfer_failed": "NFT स्थानांतरण असफल रहा",
-    "assets": "ऐसेट"
+    "assets": "ऐसेट",
+    "open": "खोलें"
 }

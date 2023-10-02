@@ -245,5 +245,6 @@
     "transaction_ERROR": "ব্যর্থ",
     "no_assets": "কোন সম্পদ নেই",
     "nft_transfer_failed": "NFT স্থানান্তর ব্যর্থ হয়েছে",
-    "assets": "সম্পদ"
+    "assets": "সম্পদ",
+    "open": "খোলা"
 }
