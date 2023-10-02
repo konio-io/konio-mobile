@@ -73,7 +73,7 @@ const millisecondsToString = (milliseconds: number) => {
 
 
 const createStyles = (theme: Theme) => {
-    const { Spacing, FontFamily, Color } = theme.vars;
+    const { Spacing, FontFamily, Color, FontSize } = theme.vars;
     return StyleSheet.create({
         ...theme.styles,
         wrapper: {
@@ -84,12 +84,14 @@ const createStyles = (theme: Theme) => {
         },
         title: {
             fontFamily: FontFamily.sans,
+            fontSize: FontSize.base,
             fontWeight: 'bold',
             color: Color.baseContrast,
             textAlign: 'center'
         },
         text: {
             fontFamily: FontFamily.sans,
+            fontSize: FontSize.base,
             color: Color.baseContrast,
             textAlign: 'center'
         }
