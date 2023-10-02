@@ -44,7 +44,7 @@ export default () => {
             text2: i18n.t('check_seed'),
           });
         })
-    }, 2000);
+    }, 1000);
 
   };
 

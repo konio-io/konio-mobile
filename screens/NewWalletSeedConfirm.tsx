@@ -37,23 +37,26 @@ export default () => {
 
         SpinnerStore.actions.showSpinner();
 
-        AccountStore.actions.addSeed({
-            name: name,
-            seed: seed
-        })
-            .then(address => {
-                SpinnerStore.actions.hideSpinner();
-                SettingStore.actions.setCurrentAccount(address);
+        setTimeout(() => {
+            AccountStore.actions.addSeed({
+                name: name,
+                seed: seed
             })
-            .catch(e => {
-                SpinnerStore.actions.hideSpinner();
-                LogStore.actions.logError(e);
-                Toast.show({
-                    type: 'error',
-                    text1: i18n.t('unable_to_add_wallet'),
-                    text2: i18n.t('generate_new_one')
+                .then(address => {
+                    SpinnerStore.actions.hideSpinner();
+                    SettingStore.actions.setCurrentAccount(address);
+                })
+                .catch(e => {
+                    SpinnerStore.actions.hideSpinner();
+                    LogStore.actions.logError(e);
+                    Toast.show({
+                        type: 'error',
+                        text1: i18n.t('unable_to_add_wallet'),
+                        text2: i18n.t('generate_new_one')
+                    });
                 });
-            });
+        }, 1000);
+
     };
 
     const words = seed.split(' ');

@@ -5,10 +5,10 @@ import { Feather } from '@expo/vector-icons';
 import { useI18n, useTheme } from '../hooks';
 import { View } from 'react-native';
 import { useEffect, useState } from 'react';
-import * as LocalAuthentication from "expo-local-authentication";
 import Toast from 'react-native-toast-message';
 import { SettingStore, SecureStore } from '../stores';
 import { useHookstate } from '@hookstate/core';
+import * as LocalAuthentication from 'expo-local-authentication';
 
 export default () => {
     const navigation = useNavigation<IntroNavigationProp>();
@@ -32,6 +32,28 @@ export default () => {
         })();
     }, []);
 
+    const unlockBiometric = async () => {
+        if (SettingStore.state.biometric.get() === true) {
+            SettingStore.actions.setBiometric(false);
+        } else {
+            try {
+                const biometricAuth = await LocalAuthentication.authenticateAsync({
+                    promptMessage: i18n.t('biometric_unlock'),
+                    disableDeviceFallback: true,
+                    cancelLabel: i18n.t('cancel'),
+                });
+                if (biometricAuth.success) {
+                    SettingStore.actions.setBiometric(true);
+                }
+            } catch (error) {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('wrong_biometric')
+                });
+            }
+        }
+    };
+
     const savePassword = () => {
         if (!password) {
             Toast.show({
@@ -51,7 +73,7 @@ export default () => {
 
         SecureStore.actions.setPassword(password);
         navigation.navigate("NewWallet");
-    }
+    };
 
     return (
         <Screen keyboardDismiss={true}>
@@ -83,7 +105,7 @@ export default () => {
 
 
                         <Switch
-                            onValueChange={() => SettingStore.actions.setBiometric(!biometric)}
+                            onValueChange={(v: boolean) => unlockBiometric()}
                             value={biometric}
                         />
 

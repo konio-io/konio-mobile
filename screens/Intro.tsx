@@ -18,7 +18,7 @@ export default () => {
 
             <Wrapper>
                 <View style={{ marginBottom: Spacing.medium, alignItems: 'center' }}>
-                    <Logo />
+                    <Logo width={130} height={130}/>
                 </View>
 
                 <View>
