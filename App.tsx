@@ -23,6 +23,7 @@ import { View } from 'react-native';
 import { useHydrated } from './hooks';
 import { CoinStore, WalletConnectStore, LogStore, ManaStore } from './stores';
 import Toast from 'react-native-toast-message';
+import { executeMigration } from './stores/migrations';
 
 export default function App() {
   const theme = useTheme();
@@ -81,8 +82,9 @@ const Main = () => {
   }
 
   try {
-    executeMigrations();
+    executeMigration();
   } catch (e) {
+    LogStore.actions.logError(String(e));
     return <ErrorMigration />;
   }
 
@@ -228,8 +230,4 @@ const Lock = () => {
   }, [nextAppState, autoLock, lock]);
 
   return <></>
-}
-
-function executeMigrations() {
-  throw new Error('Function not implemented.');
 }

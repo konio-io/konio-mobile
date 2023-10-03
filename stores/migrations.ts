@@ -1,161 +1,98 @@
-import { none } from "@hookstate/core";
-import { UserStore, UserStoreDefault } from ".";
-import { DEFAULT_NETWORK, DEFAULT_NETWORKS, DONATION_ADDRESS } from "../lib/Constants";
-import { refreshCoins } from '../actions/index';
-import { getContractInfo } from "../lib/utils";
 
-const migrations : Record<string,Function> = {
-    '20230701': () => {},
-    '20230704': () => {
-        UserStore.rcLimit.set(UserStoreDefault.rcLimit);
+import SettingStore from './SettingStore';
+import ContactStore from './ContactStore';
+import NetworkStore from './NetworkStore';
+import { DEFAULT_NETWORKS } from '../lib/Constants';
+import AccountStore from './AccountStore';
+import SecureStore from './SecureStore';
+import CoinStore from './CoinStore';
+import { UserStore, EncryptedStore } from './OldStore';
 
-        for (const contractId in UserStoreDefault.coins) {
-            if (!Object.keys(UserStore.coins).includes(contractId)) {
-                UserStore.coins.merge({ [contractId]: UserStoreDefault.coins[contractId] });
+const migrations: Record<string, Function> = {
+    '20231003': () => {
+        const store = {
+            setting: {},
+            network: {},
+            account: {},
+            secure: {
+                accounts: {},
+                password: ''
+            },
+            coin: {},
+            contact: {}
+        };
+
+        store.setting.currentAccountId = UserStore.currentAddress.get({noproxy: true});
+        store.setting.currentNetworkId = UserStore.currentNetworkId.get({noproxy: true});
+        store.setting.locale = UserStore.locale.get({noproxy: true});
+        store.setting.theme = UserStore.theme.get({noproxy: true});
+        store.setting.biometric = UserStore.biometric.get({noproxy: true});
+        store.setting.autolock = UserStore.autolock.get({noproxy: true});
+
+        store.contact = UserStore.addressbook.get({noproxy: true});
+
+        store.network = DEFAULT_NETWORKS;
+
+        const secure = EncryptedStore.get({noproxy: true});
+        for (const accountSecure of Object.values(secure.accounts)) {
+            store.secure.accounts[accountSecure.address] = {
+                id: accountSecure.address,
+                ...accountSecure
             }
+        }
+        store.secure.password = secure.password;
 
-            for (const address in UserStore.accounts) {
-                const accountCoins = UserStore.accounts[address].coins;
-                if (!accountCoins.get().includes(contractId)) {
-                    accountCoins.merge([contractId]);
-                }
+        
+        for (const account of Object.values(UserStore.accounts.get({noproxy: true}))) {
+            store.account[account.address] = {
+                id: account.address,
+                address: account.address,
+                name: account.name
             }
-        }
-
-        UserStore.networks.set({ ...DEFAULT_NETWORKS });
-    },
-    '20230705': () => {
-        UserStore.addressbook.merge({
-            [DONATION_ADDRESS]: {
-                name: 'Adrihoke',
-                address: DONATION_ADDRESS
-            }
-        });
-        UserStore.rcLimit.set('95');
-    },
-    '20230708': () => {
-        UserStore.addressbook.merge({
-            [DONATION_ADDRESS]: {
-                name: 'Konio Donations',
-                address: DONATION_ADDRESS
-            }
-        });
-    },
-    '20230717': () => {
-        const wallets = Object.assign({}, UserStore.wallets.get({noproxy: true}));
-        UserStore.merge({accounts: wallets});
-        UserStore.wallets.set(none);
-    },
-    '20230718': () => {
-        const oldTestnetChainId = 'EiAAKqFi-puoXnuJTdn7qBGGJa8yd-dcS2P0ciODe4wupQ==';
-        if (UserStore.networks[oldTestnetChainId].get()) {
-            UserStore.networks[oldTestnetChainId].set(none);
-        }
-
-        const newTestnetChainId = 'EiBncD4pKRIQWco_WRqo5Q-xnXR7JuO3PtZv983mKdKHSQ==';
-        UserStore.networks.merge({
-            [newTestnetChainId]: DEFAULT_NETWORKS[newTestnetChainId]
-        });
-
-        UserStore.currentNetworkId.set(DEFAULT_NETWORK);
-        UserStore.coins.merge({
-            [DEFAULT_NETWORKS[newTestnetChainId].coins.KOIN.contractId]: DEFAULT_NETWORKS[newTestnetChainId].coins.KOIN,
-            [DEFAULT_NETWORKS[newTestnetChainId].coins.VHP.contractId]: DEFAULT_NETWORKS[newTestnetChainId].coins.VHP,
-        })
-
-        for (const address in UserStore.accounts) {
-            UserStore.accounts[address].coins.merge([
-                DEFAULT_NETWORKS[newTestnetChainId].coins.KOIN.contractId,
-                DEFAULT_NETWORKS[newTestnetChainId].coins.VHP.contractId,
-            ])
-        }
-    },
-    '20230719': () => {
-        for (const networkId in UserStore.networks) {
-            UserStore.networks[networkId].explorer.set('https://koiner.app/transactions');
-        }
-    },
-    '20230721': () => {
-        UserStore.logs.set([]);
-    },
-    '20230802': () => {
-        UserStore.addressbook.set({}); 
-    },
-    '20230904': () => {
-        type itemC = {
-            contractId: string,
-            networkId: string,
-            address: string
-        }
-        const coinToRefresh : Array<itemC> = [];
-        for (const accountId in UserStore.accounts) {
-            const account = UserStore.accounts[accountId];
-            const accountAssets = {};
             
-            for (const contractId of account.coins.get()) {
-                const coin = UserStore.coins[contractId].get();
-                if (!coin) {
-                    continue;
-                }
-
-                if (!accountAssets[coin.networkId]) {
-                    accountAssets[coin.networkId] = {
-                        coins: {},
-                        nfts: {}
-                    };
-                }
-
-                accountAssets[coin.networkId].coins[contractId] = {
-                    contractId: contractId,
-                    symbol: coin.symbol,
-                    decimal: coin.decimal,
-                    transactions: {}
-                }
-
-                /*for (const transactionId of coin.transactions) {
-                    const transaction = UserStore.transactions[transactionId].get();
-                    if (!transaction) {
-                        continue;
-                    }
-
-                    accountAssets[coin.networkId].coins[contractId].transactions[transactionId] = transaction;
-                }*/
-
-                coinToRefresh.push({
+            for (const contractId of account.coins) {
+                const coin = UserStore.coins[contractId].get({noproxy: true});
+                const coinId = CoinStore.getters.coinId(account.address, coin.networkId, contractId);
+                
+                store.coin[coinId] = {
+                    id: coinId,
                     contractId,
                     networkId: coin.networkId,
-                    address: accountId
-                })
+                    accountId: account.address,
+                    symbol: coin.symbol,
+                    decimal: coin.decimal,
+                }
             }
 
-            account.merge({ assets: accountAssets });
-            account.coins.set(none);
         }
 
-        for (const item of coinToRefresh) {
-            getContractInfo(item.contractId).then(info => {
-                if (info.logo) {
-                    UserStore.accounts[item.address].assets[item.networkId].coins[item.contractId].merge({
-                        logo: info.logo
-                    });
-                }
-                if (info.name) {
-                    UserStore.accounts[item.address].assets[item.networkId].coins[item.contractId].merge({
-                        name: info.name
-                    });
-                }
-            });
-        }
-
-        UserStore.coins.set(none);
-        UserStore.transactions.set(none);
-    },
-    '20230908': () => {
-        UserStore.networks.set({ ...DEFAULT_NETWORKS });
-    },
-    '20230910': () => {
-        UserStore.merge({askReview: false});
+        SettingStore.state.merge(store.setting);
+        NetworkStore.state.set(store.network);
+        AccountStore.state.set(store.account);
+        SecureStore.state.set(store.secure);
+        CoinStore.state.set(store.coin);
+        ContactStore.state.set(store.contact);
     }
 }
 
-export default migrations;
+export const executeMigration = () => {
+    const sortedMigrations = Object.keys(migrations).sort();
+    const latestVersion = sortedMigrations.reverse()[0];
+    const currentVersion = SettingStore.state.version.get();
+    const migrationsToExecute = [];
+    
+    if (currentVersion < latestVersion) {
+        for (const date of sortedMigrations) {
+            if (currentVersion < date) {
+                migrationsToExecute.push(date);
+            }
+        }
+    }
+    
+    if (migrationsToExecute.length > 0) {
+        for (const date of migrationsToExecute.reverse()) {
+            migrations[date]();
+            SettingStore.state.version.set(date);
+        }
+    }
+}

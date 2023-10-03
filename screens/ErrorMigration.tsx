@@ -1,6 +1,7 @@
 import { Logo, Text, Wrapper } from "../components"
 import { useI18n, useTheme } from "../hooks"
 import { View } from "react-native";
+import { LogStore } from "../stores";
 
 export default () => {
     const theme = useTheme();
@@ -10,7 +11,7 @@ export default () => {
     return (
         <Wrapper>
             <View style={styles.alignCenterColumn}>
-                <Logo/>
+                <Logo width={130} height={130}/>
             </View>
 
             <View style={styles.alignCenterColumn}>
@@ -19,6 +20,7 @@ export default () => {
                 </Text>
                 <Text style={{ ...styles.text, ...styles.textCenter }}>
                     {i18n.t('migration_error_desc')}
+                    {LogStore.state.get()}
                 </Text>
             </View>
         </Wrapper>
