@@ -80,14 +80,14 @@ const Main = () => {
     return <Loading />;
   }
 
-  if (currentAccountId === '') {
-    return <Intro />
-  }
-
   try {
-    //executeMigrations();
+    executeMigrations();
   } catch (e) {
     return <ErrorMigration />;
+  }
+
+  if (currentAccountId === '') {
+    return <Intro />
   }
 
   return (
@@ -228,4 +228,8 @@ const Lock = () => {
   }, [nextAppState, autoLock, lock]);
 
   return <></>
+}
+
+function executeMigrations() {
+  throw new Error('Function not implemented.');
 }
