@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { SheetManager } from "react-native-actions-sheet";
 import { NftCollectionStore, NftStore } from '../stores';
 import { Feather } from '@expo/vector-icons';
+import { utils } from 'koilib';
 
 export default () => {
     const navigation = useNavigation<HoldingsNavigationProp>();
@@ -20,7 +21,7 @@ export default () => {
 
     useEffect(() => {
         navigation.setOptions({
-            title: nft.tokenId,
+            title: `#${nft.tokenId}`,
             headerRight: () => {
                 return (
                     <MoreVertical onPress={() => {

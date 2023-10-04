@@ -35,7 +35,7 @@ const actions: ITransactionActions = {
 
         console.log(`refreshing transactions ${coinId}`);
         await getters.getTransactionHistory({coinId: coinId, cb: cb});
-    },
+    }
 }
 
 const getters: ITransactionGetters = {

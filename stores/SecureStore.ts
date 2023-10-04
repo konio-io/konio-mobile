@@ -1,7 +1,8 @@
 import { hookstate, none } from "@hookstate/core";
 import { AccountSecure, ISecureActions, ISecureGetters, SecureState } from "../types/store";
 import * as ExpoSecureStore from 'expo-secure-store';
-import { localstored } from '@hookstate/localstored';
+import { localstored } from "../lib/localstored";
+import { loadedState } from "./registry";
 
 const state = hookstate<SecureState>(
     {
@@ -9,7 +10,7 @@ const state = hookstate<SecureState>(
         password: ''
     }, 
     localstored({
-        key: 'encryptedStore',
+        key: 'secure',
         engine: {
             getItem: (key: string) => {
                 return ExpoSecureStore.getItemAsync(key);
@@ -20,7 +21,8 @@ const state = hookstate<SecureState>(
             removeItem: (key: string) => {
                 return ExpoSecureStore.deleteItemAsync(key);
             }
-        }
+        },
+        loadedState: loadedState.secure
     })
 );
 

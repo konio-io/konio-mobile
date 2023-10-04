@@ -238,7 +238,7 @@
   "missing_token_id": "缺少令牌ID",
   "unable_to_add_nft": "无法添加NFT",
   "migration_error": "迁移数据错误",
-  "migration_error_desc": "清除应用程序数据并重新启动Konio",
+  "migration_error_desc": "卸载并重新安装应用程序，或联系 support@konio.io。",
   "about": "About",
   "transaction_SUCCESS": "完成",
   "transaction_PENDING": "待处理",
@@ -246,5 +246,8 @@
   "no_assets": "没有资产",
   "nft_transfer_failed": "NFT转账失败",
   "assets": "资产",
-  "open": "打开"
+  "open": "打开",
+  "migrate_data_need": "Konio 需要更新本地数据。",
+  "migrate_data": "更新数据",
+  "migration_success": "升级完成。请重新启动应用程序。"
 }

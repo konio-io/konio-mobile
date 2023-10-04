@@ -1,14 +1,14 @@
-import { FlatList, RefreshControl, View } from 'react-native';
+import { FlatList, Linking, RefreshControl, View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { CoinRouteProp, HoldingsNavigationProp } from '../types/navigation';
-import { Button, Screen, MoreVertical, Text, CoinLogo, TransactionListItem } from '../components';
-import { useCurrentAccount, useCurrentNetworkId, useI18n, useTheme } from '../hooks';
+import { Button, Screen, MoreVertical, Text, CoinLogo, TransactionListItem, ButtonCircle } from '../components';
+import { useCurrentAccount, useCurrentNetwork, useI18n, useTheme } from '../hooks';
 import { Feather } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import { SheetManager } from "react-native-actions-sheet";
 import Loading from './Loading';
 import { useHookstate } from '@hookstate/core';
-import { CoinStore, TransactionStore } from '../stores';
+import { CoinStore, SpinnerStore, TransactionStore } from '../stores';
 import { Coin } from '../types/store';
 
 export default () => {
@@ -42,25 +42,22 @@ export default () => {
         <Screen>
             <View style={{ ...styles.paddingBase, ...styles.rowGapLarge }}>
 
-                <View style={{ ...styles.directionRow, ...styles.alignSpaceBetweenRow, ...styles.alignCenterColumn }}>
-                    <View>
-                        {
-                            coin.balance !== undefined && coin.balance >= 0 &&
-                            <View>
-                                {coin.price !== undefined &&
-                                    <Text style={styles.textXlarge}>
-                                        {(coin.balance * coin.price).toFixed(2)} USD
-                                    </Text>
-                                }
+                <View style={{ ...styles.alignCenterColumn, ...styles.rowGapSmall }}>
+                    <CoinLogo size={80} coinId={route.params.coinId} />
+                    {
+                        coin.balance !== undefined && coin.balance >= 0 &&
+                        <View>
+                            <Text style={{ ...styles.textMedium, ...styles.textCenter }}>
+                                {coin.balance} {coin.symbol}
+                            </Text>
 
-                                <Text style={styles.textMedium}>{coin.balance} {coin.symbol}</Text>
-                            </View>
-                        }
-                    </View>
-
-                    <View style={{ ...styles.alignCenterColumn, ...styles.rowGapSmall }}>
-                        <CoinLogo size={48} coinId={route.params.coinId} />
-                    </View>
+                            {coin.price !== undefined &&
+                                <Text style={{ ...styles.text, ...styles.textCenter }}>
+                                    {(coin.balance * coin.price).toFixed(2)} USD
+                                </Text>
+                            }
+                        </View>
+                    }
                 </View>
 
                 {coin.symbol !== 'VHP' &&
@@ -98,18 +95,29 @@ export default () => {
 const TransactionList = (props: {
     coin: Coin
 }) => {
+    const { styles } = useTheme();
+
     const [refreshing, setRefreshing] = useState(false)
     const currentAccount = useCurrentAccount();
-    const currentNetworkId = useCurrentNetworkId();
-    const transactions = useHookstate(TransactionStore.state).get();
+    const currentNetwork = useCurrentNetwork();
 
+    const transactions = useHookstate(TransactionStore.state).get();
     const data = Object.values(transactions)
         .filter(transaction =>
             transaction.contractId === props.coin.contractId &&
             (transaction.from === currentAccount.address || transaction.to === currentAccount.address) &&
-            transaction.networkId === currentNetworkId
+            transaction.networkId === currentNetwork.id
         ).sort((a, b) => (b.timestamp ?? 0) - (a.timestamp ?? 0));
     ;
+
+    useEffect(() => {
+        if (data.length === 0) {
+            SpinnerStore.actions.showSpinner();
+            TransactionStore.actions.refreshTransactions(props.coin.id)
+                .then(() => SpinnerStore.actions.hideSpinner())
+                .catch(e => SpinnerStore.actions.hideSpinner());
+        }
+    }, [data]);
 
     const _refresh = async () => {
         setRefreshing(true);
@@ -124,6 +132,15 @@ const TransactionList = (props: {
             refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={_refresh} />
             }
+            ListFooterComponent={(
+                <View style={{ ...styles.alignCenterColumn, ...styles.paddingBase }}>
+                    <ButtonCircle
+                        onPress={() => Linking.openURL(`https://koiner.app/mobile/addresses/${currentAccount.address}/history`)}
+                        icon={(<Feather name="more-horizontal" />)}
+                        type='secondary'
+                    />
+                </View>
+            )}
         />
     )
 }

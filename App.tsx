@@ -8,7 +8,6 @@ import { DarkTheme, DefaultTheme, NavigationContainer, getStateFromPath } from "
 import { SheetProvider } from "react-native-actions-sheet";
 import Loading from './screens/Loading';
 import Intro from './navigators/Intro';
-import ErrorMigration from './screens/ErrorMigration';
 import Spinner from './components/Spinner';
 import Drawer from './navigators/Drawer';
 import { useEffect, useState } from 'react';
@@ -21,12 +20,32 @@ import { useHookstate } from '@hookstate/core';
 import { Toast as MyToast } from './components';
 import { View } from 'react-native';
 import { useHydrated } from './hooks';
-import { CoinStore, WalletConnectStore, LogStore, ManaStore } from './stores';
+import { CoinStore, WalletConnectStore, LogStore, ManaStore, SecureStore } from './stores';
 import Toast from 'react-native-toast-message';
-import { executeMigration } from './stores/migrations';
+import { needMigration } from './stores/migrations';
+import Migration from './screens/Migration';
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    'Poppins': require('./assets/Poppins-Regular.otf'),
+    'Poppins_bold': require('./assets/Poppins_bold.otf')
+  });
+
+  const hydrated = useHydrated();
+  if (!hydrated || !fontsLoaded) {
+    return <Loading/>;
+  }
+ 
+  if (needMigration()) {
+    return <Migration/>;
+  }
+
+  return <Loaded/>;
+}
+
+const Loaded = () => {
   const theme = useTheme();
+
   // @ts-ignore
   const PolyfillCrypto = global.PolyfillCrypto;
   const navigationTheme = theme.name === 'dark' ? DarkTheme : DefaultTheme;
@@ -70,26 +89,10 @@ export default function App() {
 }
 
 const Main = () => {
-  const [fontsLoaded] = useFonts({
-    'Poppins': require('./assets/Poppins-Regular.otf'),
-    'Poppins_bold': require('./assets/Poppins_bold.otf')
-  });
-  const hydrated = useHydrated();
   const currentAccountId = useCurrentAccountId();
 
-  if (!hydrated || !fontsLoaded) {
-    return <Loading />;
-  }
-
-  try {
-    executeMigration();
-  } catch (e) {
-    LogStore.actions.logError(String(e));
-    return <ErrorMigration />;
-  }
-
   if (currentAccountId === '') {
-    return <Intro />
+    return <Intro/>
   }
 
   return (

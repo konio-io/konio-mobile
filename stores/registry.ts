@@ -1,3 +1,4 @@
+import { hookstate } from "@hookstate/core";
 import { StoreRegistry } from "../types/store";
 
 const stores: StoreRegistry = {} as StoreRegistry;
@@ -14,5 +15,13 @@ export const getStore = <T extends keyof StoreRegistry>(
 ): StoreRegistry[T] => {
   return stores[storeName];
 };
+
+export const loadedState = hookstate({
+  setting: false,
+  secure: false,
+  account: false,
+  coin: false,
+  network: false
+});
 
 export default stores;

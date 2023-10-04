@@ -1,11 +1,10 @@
-import { Button, Text, TextInput } from '../components';
+import { Button, Text, TextInput, ActionSheet } from '../components';
 import { View, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { useI18n, useTheme } from '../hooks';
 import { useEffect, useState } from "react";
 import { Theme } from '../types/ui';
 import TextInputContainer from './TextInputContainer';
-import ActionSheet, { SheetManager, SheetProps, registerSheet } from 'react-native-actions-sheet';
-import { useHookstate } from '@hookstate/core';
+import { SheetManager, SheetProps, registerSheet } from 'react-native-actions-sheet';
 import { CoinStore } from '../stores';
 
 export default (props: {

@@ -1,4 +1,4 @@
-import { SheetProps } from "react-native-actions-sheet";
+import { SheetManager, SheetProps } from "react-native-actions-sheet";
 import ActionSheet from "./ActionSheet";
 import { Dapp, Theme } from "../types/ui";
 import { Button, DappLogo, Text } from "../components"
@@ -31,7 +31,10 @@ export default (props: SheetProps<{
                 <Button 
                     type="primary" 
                     title={i18n.t('open')} 
-                    onPress={() => Linking.openURL(props.payload?.dapp.url ?? 'https://konio.io')}
+                    onPress={() => {
+                        Linking.openURL(props.payload?.dapp.url ?? 'https://konio.io');
+                        SheetManager.hide(props.sheetId)
+                    }}
                     icon={(<Feather name="external-link"/>)}
                 />
             }

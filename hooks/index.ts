@@ -7,6 +7,7 @@ import { I18n } from 'i18n-js';
 import { getLocales } from 'expo-localization';
 import { useEffect, useState } from "react";
 import { SettingStore, SecureStore, CoinStore, AccountStore, NetworkStore, NameserverStore, LockStore, NftCollectionStore } from "../stores";
+import { loadedState } from "../stores/registry";
 
 export const useTheme = () => {
     const storeTheme = useHookstate(SettingStore.state.theme).get();
@@ -106,24 +107,20 @@ export const useCurrentNetworkId = () => {
 }
 
 export const useHydrated = () => {
-    const setting = useHookstate(SettingStore.state);
-    const secure = useHookstate(SecureStore.state);
-    const account = useHookstate(AccountStore.state);
-    const coin = useHookstate(CoinStore.state);
-    const network = useHookstate(NetworkStore.state);
+    const loaded = useHookstate(loadedState);
     const [state, setState] = useState(false);
 
     useEffect(() => {
         if (
-            setting?.ornull?.get()
-            && secure?.ornull?.get()
-            && account?.ornull?.get()
-            && coin?.ornull?.get()
-            && network?.ornull?.get()
+            loaded.get().setting === true
+            && loaded.get().secure === true
+            && loaded.get().account === true
+            && loaded.get().coin === true
+            && loaded.get().network === true
         ) {
             setState(true);
         }
-    }, [setting, secure, account, coin, network])
+    }, [loaded])
 
     return state;
 }

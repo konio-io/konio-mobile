@@ -1,16 +1,17 @@
 import { hookstate, none } from "@hookstate/core";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { localstored } from '@hookstate/localstored';
+import { localstored } from "../lib/localstored";
 import { Signer } from "koilib";
 import { Account, AccountSecure, AccountState, Coin, IAccountActions } from "../types/store";
-import { getStore } from "./registry";
+import { getStore, loadedState } from "./registry";
 import { createWallet } from "../lib/utils";
 
 export const state = hookstate<AccountState>(
     {},
     localstored({
         key: 'account',
-        engine: AsyncStorage
+        engine: AsyncStorage,
+        loadedState: loadedState.account
     })
 )
 

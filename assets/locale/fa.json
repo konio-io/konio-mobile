@@ -155,7 +155,7 @@
   "edit_account": "ویرایش حساب",
   "default": "پیش‌فرض",
   "total_balance": "موجودی کل",
-  "transactions": "آخرین معاملات" ,
+  "transactions": "آخرین معاملات",
   "add_contact": "افزودن مخاطب",
   "add_to_addressbook": "افزودن به دفترچه آدرس",
   "max_accounts_reached": "حداکثر تعداد حساب رسیده است ({{max}})",
@@ -238,7 +238,7 @@
   "missing_token_id": "شناسه توکن گم‌شده",
   "unable_to_add_nft": "افزودن NFT امکان‌پذیر نیست",
   "migration_error": "خطای مهاجرت داده",
-  "migration_error_desc": "داده‌های برنامه را پاک کنید و Konio را دوباره راه‌اندازی کنید",
+  "migration_error_desc": "برنامه را حذف کنید و دوباره نصب کنید یا با support@konio.io تماس بگیرید.",
   "about": "About",
   "transaction_SUCCESS": "کامل شده",
   "transaction_PENDING": "در انتظار",
@@ -246,5 +246,8 @@
   "no_assets": "دارای دارایی نیست",
   "nft_transfer_failed": "انتقال NFT ناموفق بود",
   "assets": "دارایی‌ها",
-  "open": "باز کردن"
+  "open": "باز کردن",
+  "migrate_data_need": "کونیو نیاز به به‌روزرسانی داده‌های محلی دارد.",
+  "migrate_data": "به‌روزرسانی داده",
+  "migration_success": "به‌روزرسانی با موفقیت انجام شد. برنامه را دوباره راه‌اندازی کنید."
 }

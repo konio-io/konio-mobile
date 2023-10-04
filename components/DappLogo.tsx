@@ -17,7 +17,7 @@ export default (props: {
             <Image style={{...styles.itemIcon, height: size, width: size}} source={{ uri: props.dapp.icon }} />
             {
                 props.dapp.compatible &&
-                <View style={{ position: 'absolute', bottom: -5, right: -5, backgroundColor: 'white', width: 24, height: 24, borderRadius: 24 }}>
+                <View style={{ position: 'absolute', bottom: -5, right: -5, backgroundColor: theme.vars.Color.base, width: 24, height: 24, borderRadius: 24 }}>
                     <MaterialCommunityIcons name="check-decagram" size={24} color={'#1ea1f3'} />
                 </View>
             }

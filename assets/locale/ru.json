@@ -238,7 +238,7 @@
   "missing_token_id": "Отсутствует идентификатор токена",
   "unable_to_add_nft": "Невозможно добавить NFT",
   "migration_error": "Ошибка миграции данных",
-  "migration_error_desc": "Удалите данные приложения и перезапустите Konio",
+  "migration_error_desc": "Удалите и переустановите приложение или свяжитесь с support@konio.io.",
   "about": "About",
   "transaction_SUCCESS": "Завершено",
   "transaction_PENDING": "В ожидании",
@@ -246,5 +246,8 @@
   "no_assets": "Нет активов",
   "nft_transfer_failed": "Ошибка при передаче NFT",
   "assets": "Активы",
-  "open": "Открыть"
+  "open": "Открыть",
+  "migrate_data_need": "Конио должен обновить локальные данные.",
+  "migrate_data": "Обновить данные",
+  "migration_success": "Обновление завершено.\nПерезапустите приложение."
 }

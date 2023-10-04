@@ -1,18 +1,19 @@
 
 import SettingStore from './SettingStore';
 import ContactStore from './ContactStore';
-import NetworkStore from './NetworkStore';
-import { DEFAULT_NETWORKS } from '../lib/Constants';
 import AccountStore from './AccountStore';
 import SecureStore from './SecureStore';
 import CoinStore from './CoinStore';
-import { UserStore, EncryptedStore } from './OldStore';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ExpoSecureStore from 'expo-secure-store';
 
 const migrations: Record<string, Function> = {
-    '20231003': () => {
+    '20231003': async () => {
+        const userStore = JSON.parse(await AsyncStorage.getItem('store') ?? '{}');
+        const encryptedStore = JSON.parse(await ExpoSecureStore.getItemAsync('encryptedStore') ?? '{}');
+
         const store = {
             setting: {},
-            network: {},
             account: {},
             secure: {
                 accounts: {},
@@ -22,18 +23,16 @@ const migrations: Record<string, Function> = {
             contact: {}
         };
 
-        store.setting.currentAccountId = UserStore.currentAddress.get({noproxy: true});
-        store.setting.currentNetworkId = UserStore.currentNetworkId.get({noproxy: true});
-        store.setting.locale = UserStore.locale.get({noproxy: true});
-        store.setting.theme = UserStore.theme.get({noproxy: true});
-        store.setting.biometric = UserStore.biometric.get({noproxy: true});
-        store.setting.autolock = UserStore.autolock.get({noproxy: true});
+        store.setting.currentAccountId = userStore.currentAddress;
+        store.setting.currentNetworkId = userStore.currentNetworkId;
+        store.setting.locale = userStore.locale;
+        store.setting.theme = userStore.theme;
+        store.setting.biometric = userStore.biometric;
+        store.setting.autolock = userStore.autolock;
 
-        store.contact = UserStore.addressbook.get({noproxy: true});
+        store.contact = userStore.addressbook ?? {};
 
-        store.network = DEFAULT_NETWORKS;
-
-        const secure = EncryptedStore.get({noproxy: true});
+        const secure = encryptedStore;
         for (const accountSecure of Object.values(secure.accounts)) {
             store.secure.accounts[accountSecure.address] = {
                 id: accountSecure.address,
@@ -42,18 +41,17 @@ const migrations: Record<string, Function> = {
         }
         store.secure.password = secure.password;
 
-        
-        for (const account of Object.values(UserStore.accounts.get({noproxy: true}))) {
+        for (const account of Object.values(userStore.accounts)) {
             store.account[account.address] = {
                 id: account.address,
                 address: account.address,
                 name: account.name
             }
-            
+
             for (const contractId of account.coins) {
-                const coin = UserStore.coins[contractId].get({noproxy: true});
+                const coin = userStore.coins[contractId];
                 const coinId = CoinStore.getters.coinId(account.address, coin.networkId, contractId);
-                
+
                 store.coin[coinId] = {
                     id: coinId,
                     contractId,
@@ -63,36 +61,48 @@ const migrations: Record<string, Function> = {
                     decimal: coin.decimal,
                 }
             }
-
         }
 
         SettingStore.state.merge(store.setting);
-        NetworkStore.state.set(store.network);
-        AccountStore.state.set(store.account);
-        SecureStore.state.set(store.secure);
-        CoinStore.state.set(store.coin);
-        ContactStore.state.set(store.contact);
-    }
+        AccountStore.state.merge(store.account);
+        SecureStore.state.merge(store.secure);
+        CoinStore.state.merge(store.coin);
+        ContactStore.state.merge(store.contact);
+    },
+    '20231004': async () => {
+        await AsyncStorage.removeItem('store');
+        await ExpoSecureStore.deleteItemAsync('encryptedStore');
+        await CoinStore.actions.refreshCoins({ info: true });
+    },
 }
 
-export const executeMigration = () => {
+export const needMigration = () => {
     const sortedMigrations = Object.keys(migrations).sort();
     const latestVersion = sortedMigrations.reverse()[0];
     const currentVersion = SettingStore.state.version.get();
+    return currentVersion < latestVersion;
+}
+
+export const executeMigration = async () => {
+    const sortedMigrations = Object.keys(migrations).sort();
+    const currentVersion = SettingStore.state.version.get();
     const migrationsToExecute = [];
-    
-    if (currentVersion < latestVersion) {
-        for (const date of sortedMigrations) {
-            if (currentVersion < date) {
-                migrationsToExecute.push(date);
-            }
+
+    for (const date of sortedMigrations) {
+        if (currentVersion < date) {
+            migrationsToExecute.push(date);
         }
     }
-    
+
     if (migrationsToExecute.length > 0) {
-        for (const date of migrationsToExecute.reverse()) {
-            migrations[date]();
-            SettingStore.state.version.set(date);
+        for (const date of migrationsToExecute) {
+            try {
+                await migrations[date]();
+                SettingStore.state.version.set(date);
+            } catch (e) {
+                let error = e instanceof Error ? e.message : String(e);
+                throw `${date} - ${error}`;
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ import { useHookstate } from '@hookstate/core';
 export default () => {
     const theme = useTheme();
     const styles = theme.styles;
-    const { Border } = theme.vars;
+    const { Border, Color } = theme.vars;
     const spinner = useHookstate(SpinnerStore.state).get();
 
     if (spinner === true) {
@@ -25,7 +25,7 @@ export default () => {
                     borderRadius: Border.radius,
                     width: 100, 
                     height: 100, 
-                    backgroundColor: 'white', 
+                    backgroundColor: Color.base, 
                     ...styles.alignCenterColumn, 
                     ...styles.alignCenterRow
                 }}>

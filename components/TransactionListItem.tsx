@@ -1,7 +1,7 @@
 import { Linking, View, StyleSheet } from 'react-native';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_SUCCESS, TRANSACTION_TYPE_DEPOSIT, TRANSACTION_TYPE_WITHDRAW } from '../lib/Constants';
-import { useTheme, useCurrentAccount, useCurrentNetwork } from '../hooks';
+import { useTheme, useCurrentAccount } from '../hooks';
 import ActivityIndicator from './ActivityIndicator';
 import Text from './Text';
 import type { Theme } from '../types/ui';
@@ -17,7 +17,6 @@ export default (props: {
 }) => {
     const transaction = props.transaction;
     const currentAccount = useCurrentAccount();
-    const currentNetwork = useCurrentNetwork();
 
     const date = transaction.timestamp ? new Date(transaction.timestamp).toLocaleDateString() : '';
     const time = transaction.timestamp ? new Date(transaction.timestamp).toLocaleTimeString() : '';
@@ -35,7 +34,7 @@ export default (props: {
     }
 
     const openTransactionLink = () => {
-        Linking.openURL(`${currentNetwork.explorer}/${props.transaction.transactionId}`);
+        Linking.openURL(`https://koiner.app/mobile/transactions/${props.transaction.transactionId}`);
     };
 
     return (

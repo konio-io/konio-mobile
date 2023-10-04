@@ -238,7 +238,7 @@
   "missing_token_id": "ID do Token Ausente",
   "unable_to_add_nft": "Incapaz de adicionar NFT",
   "migration_error": "Erro na migração de dados",
-  "migration_error_desc": "Apague os dados do aplicativo e reinicie o Konio",
+  "migration_error_desc": "Desinstale e reinstale o aplicativo ou entre em contato com support@konio.io.",
   "about": "About",
   "transaction_SUCCESS": "Concluído",
   "transaction_PENDING": "Pendente",
@@ -246,5 +246,8 @@
   "no_assets": "Não há ativos",
   "nft_transfer_failed": "Falha na transferência de NFT",
   "assets": "Ativos",
-  "open": "Abrir"
+  "open": "Abrir",
+  "migrate_data_need": "Konio precisa atualizar os dados locais.",
+  "migrate_data": "Atualizar dados",
+  "migration_success": "Atualização concluída.\nReinicie o aplicativo."
 }

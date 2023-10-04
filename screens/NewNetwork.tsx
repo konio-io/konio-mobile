@@ -10,7 +10,7 @@ import { DEFAULT_NETWORKS } from '../lib/Constants';
 import { Provider } from 'koilib';
 import { useState } from 'react';
 import Toast from 'react-native-toast-message';
-import { useStore } from '../stores';
+import { NetworkStore } from '../stores';
 
 export default () => {
   const DEFAULT_NETWORK = Object.values(DEFAULT_NETWORKS)[0];
@@ -20,9 +20,7 @@ export default () => {
   const styles = theme.styles;
   const [name, setName] = useState('');
   const [rpcNode, setRpcNode] = useState('');
-  const [explorer, setExplorer] = useState('');
   const [koinContractId, setKoinContractId] = useState('');
-  const { Network } = useStore();
 
   const showAlert = () => {
     return Alert.alert(
@@ -41,7 +39,7 @@ export default () => {
   };
 
   const add = async (replace = false) => {
-    if (!name || !rpcNode || !explorer) {
+    if (!name || !rpcNode) {
       Toast.show({
         type: 'error',
         text1: i18n.t('missing_data')
@@ -60,7 +58,7 @@ export default () => {
       return;
     }
 
-    if (Network.state.nested(chainId) && replace === false) {
+    if (NetworkStore.state.nested(chainId) && replace === false) {
       showAlert();
       return;
     }
@@ -70,18 +68,16 @@ export default () => {
       name: name,
       chainId: chainId,
       rpcNodes: [rpcNode],
-      koinContractId: koinContractId,
-      explorer: explorer
+      koinContractId: koinContractId
     };
 
-    Network.actions.addNetwork(network);
+    NetworkStore.actions.addNetwork(network);
     navigation.navigate('ChangeNetwork')
   };
 
   const reset = () => {
     setName(DEFAULT_NETWORK.name);
     setRpcNode(DEFAULT_NETWORK.rpcNodes[0]);
-    setExplorer(DEFAULT_NETWORK.explorer);
     setKoinContractId(DEFAULT_NETWORK.koinContractId);
   };
 
@@ -103,13 +99,6 @@ export default () => {
               onChangeText={(v: string) => setRpcNode(v)}
               placeholder={'rpc node'}
               note={`Ex: ${DEFAULT_NETWORK.rpcNodes[0]}`}
-            />
-
-            <TextInput
-              value={explorer}
-              onChangeText={(v: string) => setExplorer(v)}
-              placeholder={'explorer'}
-              note={`Ex: ${DEFAULT_NETWORK.explorer}`}
             />
 
             <TextInput

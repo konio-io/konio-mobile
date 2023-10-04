@@ -11,7 +11,6 @@ export const DEFAULT_NETWORKS: Record<string, Network> = {
             "https://api.koinos.io",
             "https://api.koinosblocks.com"
         ],
-        explorer: "https://koiner.app/transactions",
         koinContractId: "15DJN4a8SgrbGhhGksSBASiSYjGnMU8dGL"
     },
     "EiBncD4pKRIQWco_WRqo5Q-xnXR7JuO3PtZv983mKdKHSQ==": {
@@ -22,7 +21,6 @@ export const DEFAULT_NETWORKS: Record<string, Network> = {
             "https://harbinger-api.koinos.io",
             "https://testnet.koinosblocks.com",
         ],
-        explorer: "https://koiner.app/transactions",
         koinContractId: "1FaSvLjQJsCJKq5ybmGsMMQs8RQYyVv8ju"
     }
 }

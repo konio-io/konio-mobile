@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { localstored } from '@hookstate/localstored';
 import { convertIpfsToHttps } from "../lib/utils";
 import { getStore } from "./registry";
+import { utils } from "koilib";
 
 const state = hookstate<NftState>(
     {}, 
@@ -66,13 +67,14 @@ const actions : INftActions = {
         const currentAccountId = getStore('Setting').state.currentAccountId.get();
         const currentAddress = getStore('Account').state.nested(currentAccountId).address.get();
         const nft = state.nested(args.id).get();
-    
+        
         const contract = await getStore('Koin').getters.fetchContract(nft.contractId);
+        const tokenIdHex = "0x" + utils.toHexString(new TextEncoder().encode(nft.tokenId));
     
         return contract.functions.transfer({
             from: currentAddress,
             to: args.to,
-            token_id: nft.tokenId
+            token_id: tokenIdHex
         });
     },
     
@@ -89,8 +91,9 @@ const getters : INftGetters = {
     }) => {
         const { uri, tokenId } = args;
         const url = convertIpfsToHttps(uri);
+        const tokenIdHex = "0x" + utils.toHexString(new TextEncoder().encode(tokenId));
     
-        const dataResponse = await fetch(`${url}/${tokenId}`);
+        const dataResponse = await fetch(`${url}/${tokenIdHex}`);
         if (!dataResponse) {
             throw new Error(`Unable to retrieve NFT url ${url}/${tokenId}`);
         }

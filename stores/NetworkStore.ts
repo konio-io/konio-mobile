@@ -1,15 +1,16 @@
 import { hookstate, none } from "@hookstate/core";
 import { Network, INetworkActions, INetworkGetters, NetworkState } from "../types/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { localstored } from '@hookstate/localstored';
+import { localstored } from "../lib/localstored";
 import { DEFAULT_NETWORKS, MAINNET } from "../lib/Constants";
-import { getStore } from "./registry";
+import { getStore, loadedState } from "./registry";
 
 const state = hookstate<NetworkState>(
     DEFAULT_NETWORKS, 
     localstored({
         key: 'network',
         engine: AsyncStorage,
+        loadedState: loadedState.network
     })
 )
 

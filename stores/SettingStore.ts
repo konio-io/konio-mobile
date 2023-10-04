@@ -1,10 +1,10 @@
 import { State, hookstate } from "@hookstate/core";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { localstored } from '@hookstate/localstored';
+import { localstored } from "../lib/localstored";
 import { DEFAULT_NETWORK, OS_LOCALE, OS_THEME } from "../lib/Constants";
 import * as StoreReview from 'expo-store-review';
 import type { SettingState, ISettingActions } from "../types/store";
-import { getStore } from "./registry";
+import { getStore, loadedState } from "./registry";
 
 export const SETTING_STORE_DEFAULT = {
     currentNetworkId: DEFAULT_NETWORK,
@@ -14,7 +14,7 @@ export const SETTING_STORE_DEFAULT = {
     biometric: false,
     autolock: -1,
     rcLimit: '95',
-    version: '20231003',
+    version: '20231004',
     askReview: false
 };
 
@@ -22,7 +22,8 @@ const state : State<SettingState> = hookstate<SettingState>(
     SETTING_STORE_DEFAULT,
     localstored({
         key: 'setting',
-        engine: AsyncStorage
+        engine: AsyncStorage,
+        loadedState: loadedState.setting
     })
 );
 

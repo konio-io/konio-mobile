@@ -1,18 +1,19 @@
 import { hookstate, none } from "@hookstate/core";
 import { Coin, ICoinActions, ICoinGetters, CoinState, Transaction } from "../types/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { localstored } from '@hookstate/localstored';
+import { localstored } from "../lib/localstored";
 import { utils } from "koilib";
 import { TransactionJsonWait } from "koilib/lib/interface";
 import { TRANSACTION_STATUS_PENDING, TRANSACTION_STATUS_ERROR, TRANSACTION_STATUS_SUCCESS, TOKENS_URL } from "../lib/Constants";
 import { accessPropertyValue } from "../lib/utils";
-import { getStore } from "./registry";
+import { getStore, loadedState } from "./registry";
 
 const state = hookstate<CoinState>(
     {},
     localstored({
         key: 'coin',
-        engine: AsyncStorage
+        engine: AsyncStorage,
+        loadedState: loadedState.coin
     })
 );
 
@@ -295,12 +296,24 @@ const getters : ICoinGetters = {
     
     fetchCoinPrice: async (contractId: string) => {
         const response = await getters.fetchContractInfo(contractId)
-        if (response.priceUrl && response.pricePath) {
-            const priceResponse = await fetch(response.priceUrl);
-            const price = await priceResponse.json();
-    
-            if (price) {
-                return accessPropertyValue(price, response.pricePath);
+        if (response.priceUrl && response.pricePath && response.priceUnit) {
+            const priceResponse = await (await fetch(response.priceUrl)).json();
+            if (priceResponse) {
+                const price = accessPropertyValue(priceResponse, response.pricePath);
+                console.log('p', price);
+
+                if (response.priceUnit === 'USD') {
+                    return price;
+                } else if (response.priceUnit === 'KOIN') {
+                    const {currentAccountId, currentNetworkId} = getStore('Setting').state.get();
+                    const koinContractId = getStore('Network').state.nested(currentNetworkId)?.koinContractId?.get();
+                    if (koinContractId) {
+                        const koinId = getters.coinId(currentAccountId, currentNetworkId, koinContractId);
+                        const koinPrice = state.nested(koinId).price?.get() ?? 0;
+                        return (koinPrice * price);
+                    }
+                }
+
             }
         }
     

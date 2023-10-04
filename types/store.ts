@@ -285,7 +285,6 @@ export type Network = {
     name: string,
     chainId: string,
     rpcNodes: Array<string>,
-    explorer: string,
     koinContractId: string
 }
 
@@ -328,7 +327,7 @@ export type TransactionState = Record<string, Transaction>
 export interface ITransactionActions {
     addTransaction: (Transaction: Transaction) => void;
     updateTransaction: (transactionId: string, data: any) => void;
-    refreshTransactions: (coinId: string) => Promise<void>
+    refreshTransactions: (coinId: string) => Promise<void>;
 }
 
 export interface ITransactionGetters {

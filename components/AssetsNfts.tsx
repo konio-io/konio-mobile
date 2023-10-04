@@ -42,13 +42,14 @@ export default () => {
 const NftCollectionListItem = (props: {
   nftCollection: NftCollection
 }) => {
-  const { styles } = useTheme();
+  const { styles, vars } = useTheme();
   const nfts = useHookstate(NftStore.state).get();
   const data = Object.values(nfts).filter(nft => nft.nftCollectionId === props.nftCollection.id);
 
   return (
     <View style={{
       width: 330,
+      paddingTop: vars.Spacing.base,
       ...styles.rowGapSmall
     }}>
       <Text style={{ ...styles.textMedium, ...styles.textBold }}>
