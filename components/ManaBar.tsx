@@ -53,7 +53,13 @@ export default () => {
 
     const theme = useTheme();
     const { Color } = theme.vars;
-    const LoadedColor = Color.success;
+
+    let loadedColor = Color.success;
+    if (currentPercent < 20) {
+        loadedColor = Color.error;
+    } else if (currentPercent < 50) {
+        loadedColor = Color.warning;
+    }
 
     return (
         <View>
@@ -67,32 +73,12 @@ export default () => {
                 })
             }>
                 <View style={{width: 200, alignItems: 'center'}}>
-                    
-                    {/*
-                    <View style={{
-                        width: '100%',
-                        height: 4,
-                        backgroundColor: UnloadedColor,
-                        borderRadius: 4
-                    }}>
-                        <View style={{
-                            position: 'absolute',
-                            width: `${currentPercent}%`,
-                            height: '100%',
-                            top: 0,
-                            left: 0,
-                            backgroundColor: LoadedColor,
-                            borderRadius: 4
-                        }}/>
-                    </View>
-
-                    */}
 
                     <View style={{ ...theme.styles.directionRow, columnGap: 2 }}>
-                        <Ionicons name="timer-outline" size={14} color={LoadedColor} />
-                        <Text style={{ ...theme.styles.text, color: LoadedColor, fontSize: 12, lineHeight: 16 }}>MANA</Text>
-                        <Text style={{ ...theme.styles.text, color: LoadedColor, fontSize: 12, lineHeight: 16 }}> {currentPercent}</Text>
-                        <Text style={{ ...theme.styles.text, color: LoadedColor, fontSize: 10, lineHeight: 16 }}>%</Text>
+                        <Ionicons name="timer-outline" size={14} color={loadedColor} />
+                        <Text style={{ ...theme.styles.text, color: loadedColor, fontSize: 12, lineHeight: 16 }}>MANA</Text>
+                        <Text style={{ ...theme.styles.text, color: loadedColor, fontSize: 12, lineHeight: 16 }}> {currentPercent}</Text>
+                        <Text style={{ ...theme.styles.text, color: loadedColor, fontSize: 10, lineHeight: 16 }}>%</Text>
                     </View>
 
                 </View>

@@ -1,10 +1,11 @@
 import { useTheme } from "../hooks";
-import { View, TouchableWithoutFeedback, Image } from "react-native";
+import { View, TouchableWithoutFeedback } from "react-native";
 import Text from './Text';
 import { SheetManager } from "react-native-actions-sheet";
 import { useEffect } from "react";
 import TextInputContainer from "./TextInputContainer";
 import { NftCollectionStore, NftStore } from "../stores";
+import NftImage from "./NftImage";
 
 export default (props: {
     nftId?: string,
@@ -65,17 +66,11 @@ const Nft = (props: {
 
     return (
         <View style={{...styles.directionRow, ...styles.columnGapBase}}>
-            <Image source={{ uri: nft.image }} resizeMode="contain" style={{
-                width: 50,
-                height: 50,
-                borderRadius: Border.radius,
-                borderWidth: Border.width,
-                borderColor: Border.color
-            }} />
+            <NftImage nft={nft} width={50} height={50}/>
 
             <View>
                 <Text>{nftCollection.name}</Text>
-                <Text>{nft.tokenId}</Text>
+                <Text>#{nft.tokenId}</Text>
             </View>
         </View>
     );

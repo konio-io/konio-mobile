@@ -47,7 +47,7 @@ export default () => {
                     {
                         coin.balance !== undefined && coin.balance >= 0 &&
                         <View>
-                            <Text style={{ ...styles.textMedium, ...styles.textCenter }}>
+                            <Text style={{ ...styles.textLarge, ...styles.textCenter }}>
                                 {coin.balance} {coin.symbol}
                             </Text>
 

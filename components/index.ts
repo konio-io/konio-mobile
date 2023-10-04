@@ -38,6 +38,7 @@ import ButtonCircle from './ButtonCircle';
 import SelectedTicker from './SelectedTicker';
 import NftListItem from './NftListItem';
 import DappLogo from './DappLogo';
+import NftImage from './NftImage';
 
 export {
     ActivityIndicator,
@@ -79,5 +80,6 @@ export {
     Badge,
     WcLogo,
     SelectedTicker,
-    DappLogo
+    DappLogo,
+    NftImage
 }

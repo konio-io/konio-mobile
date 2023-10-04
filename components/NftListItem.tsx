@@ -1,9 +1,10 @@
 import { useTheme } from "../hooks";
-import { Image, View } from 'react-native';
+import { View } from 'react-native';
 import { useEffect, useState } from "react";
 import { rgba } from "../lib/utils";
 import { Feather } from '@expo/vector-icons';
 import { Nft } from "../types/store";
+import NftImage from "./NftImage";
 
 export default (props: {
     nft: Nft,
@@ -25,14 +26,7 @@ export default (props: {
                 borderRadius: Border.radius
             }}
         >
-            <Image source={{ uri: props.nft.image }} resizeMode="contain" style={{
-                width: 100,
-                height: 100,
-                borderRadius: Border.radius,
-                borderWidth: Border.width,
-                borderColor: Border.color,
-                backgroundColor: Color.base,
-            }} />
+            <NftImage nft={props.nft} width={100} height={100}/>
 
             {
                 selected === true &&

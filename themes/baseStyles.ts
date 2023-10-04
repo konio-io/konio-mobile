@@ -38,7 +38,7 @@ export const getStyles = (themeVars : ThemeVars) => {
         },
         textInputContainer: {
             fontFamily: FontFamily.sans,
-            backgroundColor: rgba(Color.baseContrast, 0.025),
+            backgroundColor: rgba(Color.baseContrast, 0.03),
             color: Color.baseContrast,
             borderRadius: Border.radius,
             padding: Spacing.base

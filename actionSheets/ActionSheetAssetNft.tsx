@@ -87,14 +87,15 @@ const NftCollectionListItem = (props: {
     nftCollection: NftCollection,
     renderItem: Function
   }) => {
-    const { styles } = useTheme();
+    const { styles, vars } = useTheme();
     const nfts = NftStore.state.get();
     const data = Object.values(nfts).filter(nft => nft.nftCollectionId === props.nftCollection.id);
   
     return (
       <View style={{
         width: 330,
-        ...styles.rowGapSmall
+        ...styles.rowGapSmall,
+        marginTop: vars.Spacing.base
       }}>
         <Text style={{ ...styles.textMedium, ...styles.textBold }}>
           {props.nftCollection.name}
