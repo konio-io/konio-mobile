@@ -95,7 +95,6 @@ const getters: ITransactionGetters = {
 
                     //@ts-ignore
                     const opArgs : OperationArgs = decodedOperation.args;
-                    console.log(opArgs)
 
                     const transaction : Transaction = {
                         id,

@@ -7,7 +7,7 @@ import CoinStore from './CoinStore';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ExpoSecureStore from 'expo-secure-store';
 
-const migrations: Record<string, Function> = {
+export const migrations: Record<string, Function> = {
     '20231003': async () => {
         const userStore = JSON.parse(await AsyncStorage.getItem('store') ?? '{}');
         const encryptedStore = JSON.parse(await ExpoSecureStore.getItemAsync('encryptedStore') ?? '{}');
@@ -74,13 +74,6 @@ const migrations: Record<string, Function> = {
         await ExpoSecureStore.deleteItemAsync('encryptedStore');
         await CoinStore.actions.refreshCoins({ info: true });
     },
-}
-
-export const needMigration = () => {
-    const sortedMigrations = Object.keys(migrations).sort();
-    const latestVersion = sortedMigrations.reverse()[0];
-    const currentVersion = SettingStore.state.version.get();
-    return currentVersion < latestVersion;
 }
 
 export const executeMigration = async () => {

@@ -8,6 +8,8 @@ import { getLocales } from 'expo-localization';
 import { useEffect, useState } from "react";
 import { SettingStore, SecureStore, CoinStore, AccountStore, NetworkStore, NameserverStore, LockStore, NftCollectionStore } from "../stores";
 import { loadedState } from "../stores/registry";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { migrations } from "../stores/migrations";
 
 export const useTheme = () => {
     const storeTheme = useHookstate(SettingStore.state.theme).get();
@@ -121,6 +123,34 @@ export const useHydrated = () => {
             setState(true);
         }
     }, [loaded])
+
+    return state;
+}
+
+export const useNeedMigration = (hydrated: boolean) => {
+    const [state, setState] = useState(false);
+
+    useEffect(() => {
+        if (hydrated) {
+
+            //ToDo: remove it in the next releases
+            AsyncStorage.getItem('store').then(contentStr => {
+                if (contentStr) {
+                    const content = JSON.parse(contentStr);
+                    if (content.version) {
+                        SettingStore.state.version.set(content.version);
+                    }
+                }
+
+                const currentVersion = SettingStore.state.version.get();
+                const sortedMigrations = Object.keys(migrations).sort();
+                const latestVersion = sortedMigrations.reverse()[0];
+                if (currentVersion < latestVersion) {
+                    setState(true);
+                }
+            });
+        }
+    },[hydrated]);
 
     return state;
 }

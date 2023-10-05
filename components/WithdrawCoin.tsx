@@ -72,7 +72,6 @@ export default (props: {
             note: ''
         })
             .then(transaction => {
-                console.log('t',transaction);
                 if (!transaction) {
                     throw new Error("Unable to return transaction");
                 }

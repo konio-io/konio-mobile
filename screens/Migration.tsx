@@ -1,7 +1,6 @@
 import { Button, Logo, Text, Wrapper } from "../components"
 import { useI18n, useTheme } from "../hooks"
 import { View } from "react-native";
-import { SpinnerStore } from "../stores";
 import { useState } from "react";
 import { executeMigration } from "../stores/migrations";
 
@@ -14,14 +13,11 @@ export default () => {
 
     const _execute = async () => {
         try {
-            SpinnerStore.actions.showSpinner();
             await executeMigration();
             setResult(1);
-            SpinnerStore.actions.hideSpinner();
         } catch (e) {
             setErrors(e instanceof Error ? e.message : String(e));
             setResult(0);
-            SpinnerStore.actions.hideSpinner();
         }
     }
 

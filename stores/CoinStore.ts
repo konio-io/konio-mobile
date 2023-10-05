@@ -300,7 +300,6 @@ const getters : ICoinGetters = {
             const priceResponse = await (await fetch(response.priceUrl)).json();
             if (priceResponse) {
                 const price = accessPropertyValue(priceResponse, response.pricePath);
-                console.log('p', price);
 
                 if (response.priceUnit === 'USD') {
                     return price;

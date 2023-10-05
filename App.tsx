@@ -6,49 +6,57 @@ import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { DarkTheme, DefaultTheme, NavigationContainer, getStateFromPath } from "@react-navigation/native";
 import { SheetProvider } from "react-native-actions-sheet";
-import Loading from './screens/Loading';
 import Intro from './navigators/Intro';
 import Spinner from './components/Spinner';
 import Drawer from './navigators/Drawer';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { SheetManager } from 'react-native-actions-sheet';
 import { WC_SECURE_METHODS } from './lib/Constants';
 import NetInfo from '@react-native-community/netinfo';
 import { SignClientTypes } from "@walletconnect/types";
-import { useI18n, useTheme, useLockState, useAppState, useAutolock, useCurrentAccountId } from './hooks';
+import { useI18n, useTheme, useLockState, useAppState, useAutolock, useCurrentAccountId, useNeedMigration } from './hooks';
 import { useHookstate } from '@hookstate/core';
 import { Toast as MyToast } from './components';
 import { View } from 'react-native';
 import { useHydrated } from './hooks';
 import { CoinStore, WalletConnectStore, LogStore, ManaStore, SecureStore } from './stores';
 import Toast from 'react-native-toast-message';
-import { needMigration } from './stores/migrations';
 import Migration from './screens/Migration';
+import * as SplashScreen from 'expo-splash-screen';
 
 export default function App() {
+  const theme = useTheme();
   const [fontsLoaded] = useFonts({
     'Poppins': require('./assets/Poppins-Regular.otf'),
     'Poppins_bold': require('./assets/Poppins_bold.otf')
   });
-
   const hydrated = useHydrated();
-  if (!hydrated || !fontsLoaded) {
-    return <Loading/>;
-  }
- 
-  if (needMigration()) {
-    return <Migration/>;
-  }
+  const needMigration = useNeedMigration(hydrated);
+  const [appIsReady, setAppIsReady] = useState(false);
 
-  return <Loaded/>;
-}
-
-const Loaded = () => {
-  const theme = useTheme();
+  useEffect(() => {
+    if (fontsLoaded && hydrated) {
+      setAppIsReady(true);
+    }
+  }, [fontsLoaded, hydrated]);
 
   // @ts-ignore
   const PolyfillCrypto = global.PolyfillCrypto;
   const navigationTheme = theme.name === 'dark' ? DarkTheme : DefaultTheme;
+
+  const onReady = useCallback(async () => {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
+  }
+
+  if (needMigration) {
+    return <Migration />;
+  }
 
   const linking = {
     prefixes: ['wc://', 'konio://'],
@@ -74,7 +82,7 @@ const Loaded = () => {
 
   return (
     //@ts-ignore
-    <NavigationContainer theme={navigationTheme} linking={linking} fallback={<Loading />}>
+    <NavigationContainer theme={navigationTheme} linking={linking} onReady={onReady}>
       <PolyfillCrypto />
 
       <SheetProvider>
@@ -92,7 +100,7 @@ const Main = () => {
   const currentAccountId = useCurrentAccountId();
 
   if (currentAccountId === '') {
-    return <Intro/>
+    return <Intro />
   }
 
   return (

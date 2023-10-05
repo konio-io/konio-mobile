@@ -10,6 +10,9 @@
       "**/*"
     ],
     "primaryColor": "#6f00f6",
+    "androidStatusBar": {
+      "transparent": false
+    },
     "ios": {
       "config": {
         "usesNonExemptEncryption": false
@@ -22,7 +25,7 @@
         "backgroundColor": "#7000f6"
       },
       "appStoreUrl": "https://apps.apple.com/app/konio/id6453561342",
-      "buildNumber": "10"
+      "buildNumber": "11"
     },
     "android": {
       "adaptiveIcon": {
@@ -62,7 +65,7 @@
         "backgroundColor": "#7000f6"
       },
       "playStoreUrl": "https://play.google.com/store/apps/details?id=konio.io",
-      "versionCode": 10
+      "versionCode": 11
     },
     "web": {
       "favicon": "./assets/favicon.png"
