@@ -110,7 +110,7 @@ const SuggestList = (props: {
       for (const token of tokenList) {
         const value = await CoinStore.getters.fetchCoinBalance(token.address);
         
-        //if (value && value > 0) {
+        if (value && value > 0) {
           setCoinList(current => [
             ...current,
             {
@@ -119,7 +119,7 @@ const SuggestList = (props: {
               ...coinList
             }
           ])
-        //}
+        }
       }
     } catch (e) {
       LogStore.actions.logError(String(e));
