@@ -1,18 +1,97 @@
 import { View, FlatList, StyleSheet } from "react-native";
 import { DAPPS_URL } from "../lib/Constants";
 import { Dapp, Theme } from "../types/ui";
-import { Text, Screen, DrawerToggler, DappLogo } from "../components";
+import { Text, Screen, DrawerToggler, DappLogo, ButtonCircle } from "../components";
 import { useTheme } from "../hooks";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { rgba } from "../lib/utils";
 import { useNavigation } from "@react-navigation/native";
 import { DappsNavigationProp, RootNavigationProp } from "../types/navigation";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { LogStore, SpinnerStore } from "../stores";
 import { SheetManager } from "react-native-actions-sheet";
+import WebView from "react-native-webview";
 
 export default () => {
+    const navigation = useNavigation<DappsNavigationProp>();
+    const theme = useTheme();
+    const styles = theme.styles;
+    const [uri, setUri] = useState('');
+    const webViewRef = useRef<WebView>(null);
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => (<DrawerToggler />),
+            headerRight: () => (
+                <View style={{ paddingRight: theme.vars.Spacing.small }}>
+                    {
+                        uri === '' &&
+                        <ScanButton />
+                    }
+                    {
+                        uri !== '' &&
+                        <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
+                            <ButtonCircle
+                                size={40}
+                                onPress={() => setUri('')}
+                                icon={(<Feather name="home" />)}
+                                iconSize={20}
+                                type='secondary'
+                            />
+                            <ButtonCircle
+                                size={40}
+                                onPress={() => webViewRef.current?.goBack()}
+                                icon={(<Feather name="arrow-left" />)}
+                                iconSize={20}
+                                type='secondary'
+                            />
+                            {/*
+                            <ButtonCircle
+                                size={40}
+                                onPress={() => webViewRef.current?.goForward()}
+                                icon={(<Feather name="arrow-right" />)}
+                                iconSize={20}
+                                type='secondary'
+                            />
+                            */}
+                        </View>
+                    }
+                </View>
+            ),
+        });
+    }, [navigation, theme, uri]);
+
+    return (
+        <Screen>
+            {
+                uri !== '' &&
+                <WebView
+                    ref={webViewRef}
+                    source={{ uri }}
+                />
+            }
+            {
+                uri === '' &&
+                <Dapps onItemClick={(item: Dapp) => {
+                    if (item.compatible === true) {
+                        setUri(item.url);
+                    } else {
+                        SheetManager.show('dapp', { payload: { dapp: item } })
+                    }
+                }} />
+            }
+
+        </Screen>
+    )
+}
+
+
+const Dapps = (props: {
+    onItemClick: Function
+}) => {
     const navigation = useNavigation<DappsNavigationProp>();
     const [data, setData] = useState<Array<Dapp>>([]);
     const [selectedTag, setSelectedTag] = useState('all');
@@ -36,7 +115,7 @@ export default () => {
                         if (!a.compatible && b.compatible) {
                             return 1;
                         }
-                
+
                         return a.name.localeCompare(b.name);
                     });
                 setData(sortedList);
@@ -52,14 +131,6 @@ export default () => {
         load();
     }, []);
 
-    useEffect(() => {
-        navigation.setOptions({
-            headerShadowVisible: false,
-            headerTitleAlign: 'center',
-            headerLeft: () => (<DrawerToggler />),
-            headerRight: () => (<ScanButton />)
-        });
-    }, [navigation]);
 
     let filteredData = data;
     if (selectedTag !== 'all') {
@@ -68,18 +139,18 @@ export default () => {
     }
 
     return (
-        <Screen>
+        <View>
             {
                 filteredData.length > 0 &&
                 <>
                     <Tagsbar data={data} selected={selectedTag} onSelect={(tag: string) => setSelectedTag(tag)} />
                     <FlatList
                         data={filteredData}
-                        renderItem={({ item }) => <Item key={item.name} item={item} />}
+                        renderItem={({ item }) => <Item key={item.name} item={item} onClick={() => props.onItemClick(item)} />}
                     />
                 </>
             }
-        </Screen>
+        </View>
     )
 }
 
@@ -155,18 +226,19 @@ const Tag = (props: {
 }
 
 const Item = (props: {
-    item: Dapp
+    item: Dapp,
+    onClick: Function
 }) => {
 
     const theme = useTheme();
     const styles = createStyles(theme);
 
     return (
-        <TouchableWithoutFeedback onPress={() => SheetManager.show('dapp', { payload: { dapp: props.item } })}>
+        <TouchableWithoutFeedback onPress={() => props.onClick(props.item)}>
             <View style={styles.paddingVerticalSmall}>
                 <View style={{ ...styles.directionRow, ...styles.columnGapBase, ...styles.paddingHorizontalBase }}>
 
-                    <DappLogo dapp={props.item}/>
+                    <DappLogo dapp={props.item} />
 
                     <View>
                         <Text style={styles.textMedium}>{props.item.name}</Text>

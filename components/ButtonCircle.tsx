@@ -7,6 +7,7 @@ export default (props: {
     onPress: Function,
     size?: number,
     icon: ReactElement,
+    iconSize?: number,
     style?: Object,
     type?: string
 }) => {
@@ -30,7 +31,7 @@ export default (props: {
                 <View style={{...styles.containerInternal, height: props.size ?? DEFAULT_SIZE}}>
                 {
                     React.cloneElement(props.icon, {
-                        size: 16,
+                        size: props.iconSize ?? 16,
                         color: iconColor
                     })
                 }
