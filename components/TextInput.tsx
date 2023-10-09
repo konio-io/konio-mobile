@@ -2,7 +2,7 @@ import { TextInput, View } from 'react-native';
 import { useTheme } from '../hooks';
 import { rgba } from '../lib/utils';
 import { Feather } from '@expo/vector-icons';
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import TextInputAction from './TextInputAction';
 import TextInputContainer from './TextInputContainer';
 
@@ -31,17 +31,17 @@ export default (props: {
     const { Color } = theme.vars;
     const styles = theme.styles;
 
-    if (props.onStopWriting) {
-        useEffect(() => {
-            const delayDebounceFn = setTimeout(() => {
+    useEffect(() => {
+        if (props.onStopWriting) {
+            const timeout = setTimeout(() => {
                 if (props.onStopWriting) {
-                    props.onStopWriting();
+                    props.onStopWriting(props.value);
                 }
-            }, 1000)
+            }, 1000);
 
-            return () => clearTimeout(delayDebounceFn)
-        }, [props.value])
-    }
+            return () => clearTimeout(timeout)
+        }
+    }, [props.value]);
 
     return (
         <TextInputContainer style={props.containerStyle}

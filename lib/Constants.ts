@@ -79,3 +79,4 @@ export const NIC_NAMESERVICE_CID = "1KD9Es7LBBjA1FY3ViCgQJ7e6WH1ipKbhz";
 export const NIC_PREFIX = '@';
 export const CATEGORY_COINS = 'coins';
 export const CATEGORY_NFTS = 'nfts';
+export const DEFAULT_IPFS_GATEWAY = 'https://${ipfsHash}.ipfs.nftstorage.link';

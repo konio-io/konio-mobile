@@ -7,7 +7,7 @@ import { View, Keyboard } from 'react-native';
 import { useTheme } from '../hooks';
 import { useState } from 'react';
 import Toast from 'react-native-toast-message';
-import { LogStore, SettingStore, SpinnerStore, NftStore, NftCollectionStore } from '../stores';
+import { LogStore, SettingStore, SpinnerStore, NftStore, NftCollectionStore, NameserverStore } from '../stores';
 
 export default () => {
   const navigation = useNavigation<NewCoinNavigationProp>();
@@ -16,6 +16,7 @@ export default () => {
   const i18n = useI18n();
   const theme = useTheme();
   const styles = theme.styles;
+  const [textLoading, setTextLoading] = useState(false);
 
   const add = async () => {
     Keyboard.dismiss();
@@ -58,6 +59,27 @@ export default () => {
     }
   };
 
+  const _onChange = (v: string) => {
+    setContractId(v)
+  };
+
+  const _onStopWriting = (v: string) => {
+    if (NameserverStore.getters.validateNicQuery(v)) {
+      setTextLoading(true);
+      NameserverStore.getters.getAddress(v)
+        .then(addr => {
+          setTextLoading(false);
+          if (addr) {
+            setContractId(addr);
+            NameserverStore.actions.add(addr, v);
+          }
+        })
+        .catch(e => {
+          setTextLoading(false);
+        });
+    }
+  };
+
   return (
     <Screen keyboardDismiss={true}>
       <View style={{ ...styles.paddingBase, ...styles.rowGapBase }}>
@@ -65,8 +87,10 @@ export default () => {
           multiline={true}
           autoFocus={true}
           value={contractId}
-          onChangeText={(v: string) => setContractId(v.trim())}
+          onChangeText={(v: string) => _onChange(v.trim())}
           placeholder={i18n.t('contract_address')}
+          onStopWriting={(v: string) => _onStopWriting(v.trim())}
+          loading={textLoading}
         />
         <TextInput
           value={tokenId}

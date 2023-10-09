@@ -13,11 +13,18 @@ export const isASCIIString = (str: string) => {
     return !nonASCIIRegex.test(str);
 }
 
-export const convertIpfsToHttps = (ipfsLink: string) => {
+export const convertIpfsToHttps = (ipfsLink: string, ipfsGateway: string) => {
     if (ipfsLink.startsWith("ipfs://")) {
-        const ipfsHash = ipfsLink.slice(7);
-        const httpsLink = `https://ipfs.io/ipfs/${ipfsHash}`;
-        return httpsLink;
+        const regex = /ipfs:\/\/([^\/]+)(.*)/;
+        const match = ipfsLink.match(regex);
+
+        if (match) {
+            const ipfsHash = match[1];
+            const path = match.length > 1 ? match[2] : '/';
+            return ipfsGateway.replace('${ipfsHash}', ipfsHash) + path;
+        } else {
+            return ipfsLink;
+        }
     } else {
         return ipfsLink;
     }
@@ -62,6 +69,6 @@ export const createWallet = (mnemonic: string, index: number) => {
     };
 }
 
-export const compactString = (word: string, length: number) : string => {
+export const compactString = (word: string, length: number): string => {
     return `${word.substring(0, length)} ... ${word.substring(word.length - length, word.length)}`;
 }

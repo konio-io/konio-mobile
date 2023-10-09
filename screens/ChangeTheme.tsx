@@ -1,5 +1,5 @@
 import { FlatList, View } from 'react-native';
-import { useI18n, useTheme } from '../hooks';
+import { useI18n } from '../hooks';
 import { ListItem, Text, Screen } from '../components';
 import { Themes } from '../themes';
 import { OS_THEME } from '../lib/Constants';

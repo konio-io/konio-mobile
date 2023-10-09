@@ -68,11 +68,6 @@ export default (props: SheetProps<{
             title: i18n.t('send'),
             icon: <Feather name="arrow-up-right" />,
             onPress: () => navigation.navigate('Withdraw', { nftId: nft.id })
-        },
-        {
-            title: i18n.t('receive'),
-            icon: <Feather name="arrow-down-right" />,
-            onPress: () => navigation.navigate('Deposit')
         }
     ];
 

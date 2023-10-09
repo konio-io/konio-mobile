@@ -1,7 +1,7 @@
 {
   "wallet": "Wallet",
   "swap": "Swap",
-  "dapps": "Dapps",
+  "dapps": "Dapps Browser",
   "settings": "Settings",
   "donate": "Donate",
   "missing_contract_address": "Missing contract address",

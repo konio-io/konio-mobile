@@ -67,9 +67,10 @@ export default () => {
                 { text: i18n.t('ok'), onPress: loadKap },
             ]);
         }*/
-
         setAddress(v);
+    };
 
+    const _onStopWriting = (v: string) => {
         const nsName = NameserverStore.getters.validateKapQuery(v) || NameserverStore.getters.validateNicQuery(v);
         if (nsName) {
             setLoading(true);
@@ -86,7 +87,7 @@ export default () => {
                     setLoading(false);
                 });
         }
-    }
+    };
 
     return (
         <Screen keyboardDismiss={true}>
@@ -104,6 +105,7 @@ export default () => {
                     <TextInput
                         value={address}
                         onChangeText={(v: string) => _onChange(v.trim())}
+                        onStopWriting={(v: string) => _onStopWriting(v.trim())}
                         placeholder={i18n.t('address')}
                         loading={loading}
                         multiline={true}

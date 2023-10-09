@@ -5,6 +5,7 @@ import { localstored } from '@hookstate/localstored';
 import { convertIpfsToHttps } from "../lib/utils";
 import { getStore } from "./registry";
 import { utils } from "koilib";
+import { DEFAULT_IPFS_GATEWAY } from "../lib/Constants";
 
 const state = hookstate<NftState>(
     {}, 
@@ -42,7 +43,7 @@ const actions : INftActions = {
             accountId,
             nftCollectionId: collectionId,
             description: token.description ?? 'unknown',
-            image: token.image ?? 'unknown',
+            image: token.image ? convertIpfsToHttps(token.image, DEFAULT_IPFS_GATEWAY) : 'unknown',
         };
     
         state.merge({ [id]: nft });
@@ -90,7 +91,7 @@ const getters : INftGetters = {
         tokenId: string
     }) => {
         const { uri, tokenId } = args;
-        const url = convertIpfsToHttps(uri);
+        const url = convertIpfsToHttps(uri, DEFAULT_IPFS_GATEWAY);
         const tokenIdHex = "0x" + utils.toHexString(new TextEncoder().encode(tokenId));
     
         const dataResponse = await fetch(`${url}/${tokenIdHex}`);

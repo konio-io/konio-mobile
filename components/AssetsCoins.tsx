@@ -20,7 +20,6 @@ export default () => {
   };
 
   return (
-    <View>
       <FlatList
           data={coins}
           renderItem={({ item }) => <TouchableCoinListItem coin={item} />}
@@ -29,7 +28,6 @@ export default () => {
           }
           ListFooterComponent={<Footer />}
       />
-    </View>
   );
 }
 
@@ -37,8 +35,6 @@ const TouchableCoinListItem = (props: {
   coin: Coin,
 }) => {
   const navigation = useNavigation<AssetsNavigationProp>();
-  const theme = useTheme();
-  const styles = theme.styles;
 
   return (
     <TouchableOpacity

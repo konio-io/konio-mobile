@@ -17,24 +17,20 @@ export default () => {
   const data = useNftCollections();
 
   return (
-    <ScrollView>
-
-      <ScrollView
-        contentContainerStyle={{
-          ...styles.alignCenterColumn
-        }}>
-        {
-          data.map(collection =>
-            <NftCollectionListItem
-              key={collection.id}
-              nftCollection={collection}
-            />
-          )
-        }
-      </ScrollView>
+    <ScrollView
+      contentContainerStyle={{
+        ...styles.alignCenterColumn
+      }}>
+      {
+        data.map(collection =>
+          <NftCollectionListItem
+            key={collection.id}
+            nftCollection={collection}
+          />
+        )
+      }
 
       <Footer />
-
     </ScrollView>
   );
 }
@@ -63,7 +59,7 @@ const NftCollectionListItem = (props: {
         flexWrap: 'wrap'
       }}>
         {
-          data.map(nft => <TouchableNftListItem key={nft.id} nft={nft}/>)
+          data.map(nft => <TouchableNftListItem key={nft.id} nft={nft} />)
         }
       </View>
     </View>
@@ -82,7 +78,7 @@ const TouchableNftListItem = (props: {
         SheetManager.show('nft', { payload: { nftId: props.nft.id } });
       }}
     >
-      <NftListItem nft={props.nft}/>
+      <NftListItem nft={props.nft} />
     </TouchableOpacity>
   )
 }

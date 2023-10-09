@@ -2,7 +2,6 @@ import { TouchableOpacity, View } from "react-native";
 import Text from "./Text";
 import { useTheme } from "../hooks";
 import React, { ReactElement, useEffect, useState, } from "react";
-import { Feather } from '@expo/vector-icons';
 import SelectedTicker from "./SelectedTicker";
 
 export default (props: {

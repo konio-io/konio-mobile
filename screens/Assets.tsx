@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useTheme, useI18n, useAccountValue, useCurrentAccount } from '../hooks';
-import { Screen, DrawerToggler, MoreVertical, Text, Address, ManaBar } from '../components';
+import { useTheme, useAccountValue, useCurrentAccount } from '../hooks';
+import { Screen, DrawerToggler, MoreVertical, Text, ManaBar } from '../components';
 import { AssetsNavigationProp, } from '../types/navigation';
 import { SheetManager } from "react-native-actions-sheet";
 import { useEffect, useState } from 'react';
@@ -20,15 +20,15 @@ export default () => {
 
   const currentAddressState = useHookstate(SettingStore.state.currentAccountId);
   const account = useCurrentAccount();
-  
+
   useEffect(() => {
     navigation.setOptions({
       title: account?.name,
       headerTitleAlign: 'center',
       headerLeft: () => (<DrawerToggler />),
       headerRight: () => (
-        <MoreVertical 
-          onPress={() => SheetManager.show('account', { payload: { accountId: account.id } })} 
+        <MoreVertical
+          onPress={() => SheetManager.show('account', { payload: { accountId: account.id } })}
         />),
       headerTitle: () => (
         <View style={styles.alignCenterColumn}>
@@ -40,7 +40,7 @@ export default () => {
 
   return (
     <Screen>
-      <View style={{paddingVertical: Spacing.base, ...styles.alignCenterColumn }}>
+      <View style={{ paddingVertical: Spacing.base, ...styles.alignCenterColumn }}>
         <Summary />
         <ManaBar />
       </View>
@@ -55,15 +55,15 @@ const Body = () => {
   const [category, setCategory] = useState(CATEGORY_COINS);
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <AssetToggler selected={category} onChange={(value: string) => setCategory(value)} />
       {
         category === CATEGORY_COINS &&
-        <AssetsCoins/>
+        <AssetsCoins />
       }
       {
         category === CATEGORY_NFTS &&
-        <AssetsNfts/>
+        <AssetsNfts />
       }
     </View>
   );
@@ -75,6 +75,6 @@ const Summary = () => {
   const total = useAccountValue();
 
   return (
-    <Text style={{...styles.textXlarge, lineHeight: 30}}>{total.toFixed(2)} USD</Text>
+    <Text style={{ ...styles.textXlarge, lineHeight: 30 }}>{total.toFixed(2)} USD</Text>
   )
 }

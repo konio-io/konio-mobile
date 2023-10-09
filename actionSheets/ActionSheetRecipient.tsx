@@ -27,11 +27,13 @@ export default (props: SheetProps<{ selected: string }>) => {
                 }
             });
         }
-    }
+    };
 
     const _onChange = (v: string) => {
         setAddress(v);
+    };
 
+    const _onStopWriting = (v: string) => {
         if (NameserverStore.getters.validateKapQuery(v) || NameserverStore.getters.validateNicQuery(v)) {
             setLoading(true);
             NameserverStore.getters.getAddress(v)
@@ -46,7 +48,7 @@ export default (props: SheetProps<{ selected: string }>) => {
                     setLoading(false);
                 });
         }
-    }
+    };
 
     return (
         <ActionSheet
@@ -60,8 +62,9 @@ export default (props: SheetProps<{ selected: string }>) => {
                     multiline={true}
                     value={address}
                     onChangeText={(v: string) => _onChange(v)}
+                    onStopWriting={(v: string) => _onStopWriting(v)}
                     actions={(
-                        <View style={{...styles.directionRow}}>
+                        <View style={{...styles.directionRow, ...styles.columnGapBase}}>
                             <TextInputActionPaste onPaste={(addr: string) => setAddress(addr.trim())} />
                             <TextInputAction
                                 icon={(<AntDesign name="scan1" />)}

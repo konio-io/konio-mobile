@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View } from "react-native";
-import Svg, { Defs, ClipPath, Use, G, Path, LinearGradient, Stop } from "react-native-svg";
+import Svg, { G, Path, LinearGradient, Stop } from "react-native-svg";
 import { useTheme } from "../hooks";
 
 export default (props: {

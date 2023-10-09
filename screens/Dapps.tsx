@@ -10,15 +10,19 @@ import { DappsNavigationProp, RootNavigationProp } from "../types/navigation";
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { LogStore, SpinnerStore } from "../stores";
-import { SheetManager } from "react-native-actions-sheet";
-import WebView from "react-native-webview";
+import WebView, { WebViewNavigation } from "react-native-webview";
 
 export default () => {
     const navigation = useNavigation<DappsNavigationProp>();
     const theme = useTheme();
     const styles = theme.styles;
     const [uri, setUri] = useState('');
+    const [canGoBack, setCanGoBack] = useState(false);
+
     const webViewRef = useRef<WebView>(null);
+    const onWebviewChange = (ev: WebViewNavigation) => {
+        setCanGoBack(ev.canGoBack);
+    }
 
     useEffect(() => {
         navigation.setOptions({
@@ -34,54 +38,46 @@ export default () => {
                     {
                         uri !== '' &&
                         <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
-                            <ButtonCircle
-                                size={40}
-                                onPress={() => setUri('')}
-                                icon={(<Feather name="home" />)}
-                                iconSize={20}
-                                type='secondary'
-                            />
-                            <ButtonCircle
-                                size={40}
-                                onPress={() => webViewRef.current?.goBack()}
-                                icon={(<Feather name="arrow-left" />)}
-                                iconSize={20}
-                                type='secondary'
-                            />
-                            {/*
-                            <ButtonCircle
-                                size={40}
-                                onPress={() => webViewRef.current?.goForward()}
-                                icon={(<Feather name="arrow-right" />)}
-                                iconSize={20}
-                                type='secondary'
-                            />
-                            */}
+                            {
+                                canGoBack === false &&
+                                <ButtonCircle
+                                    size={40}
+                                    onPress={() => setUri('')}
+                                    icon={(<Feather name="arrow-left" />)}
+                                    iconSize={20}
+                                    type='secondary'
+                                />
+                            }
+                            {
+                                canGoBack !== false &&
+                                <ButtonCircle
+                                    size={40}
+                                    onPress={() => webViewRef.current?.goBack()}
+                                    icon={(<Feather name="arrow-left" />)}
+                                    iconSize={20}
+                                    type='secondary'
+                                />
+                            }
                         </View>
                     }
                 </View>
             ),
         });
-    }, [navigation, theme, uri]);
+    }, [navigation, theme, uri, canGoBack]);
 
     return (
         <Screen>
             {
                 uri !== '' &&
                 <WebView
+                    onNavigationStateChange={onWebviewChange}
                     ref={webViewRef}
                     source={{ uri }}
                 />
             }
             {
                 uri === '' &&
-                <Dapps onItemClick={(item: Dapp) => {
-                    if (item.compatible === true) {
-                        setUri(item.url);
-                    } else {
-                        SheetManager.show('dapp', { payload: { dapp: item } })
-                    }
-                }} />
+                <Dapps onItemClick={(item: Dapp) => setUri(item.url)} />
             }
 
         </Screen>
@@ -92,7 +88,6 @@ export default () => {
 const Dapps = (props: {
     onItemClick: Function
 }) => {
-    const navigation = useNavigation<DappsNavigationProp>();
     const [data, setData] = useState<Array<Dapp>>([]);
     const [selectedTag, setSelectedTag] = useState('all');
 
@@ -102,17 +97,12 @@ const Dapps = (props: {
             .then(response => response.json())
             .then(json => {
                 const list: Array<Dapp> = Object.values(json);
-                for (const item of list) {
-                    if (item.compatible === true) {
-                        item.tags.push('compatible');
-                    }
-                }
                 const sortedList = list
                     .sort((a: Dapp, b: Dapp) => {
-                        if (a.compatible && !b.compatible) {
+                        if (a.name && !b.name) {
                             return -1;
                         }
-                        if (!a.compatible && b.compatible) {
+                        if (!a.name && b.name) {
                             return 1;
                         }
 
