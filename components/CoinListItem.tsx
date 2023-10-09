@@ -68,8 +68,10 @@ const Balance = (props: {
                             {(balance * price).toFixed(2)} USD
                         </Text>
                     }
+                    {price === undefined &&
+                        <View style={{height: 24 }}/>
+                    }
 
-                    
                 </View>
             }
         </View>
