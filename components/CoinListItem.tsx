@@ -27,10 +27,9 @@ export default (props: {
                 <CoinLogo coinId={props.coin.id} size={48} />
 
                 <View>
-                    <Text style={{ ...styles.text, ...styles.textBold }}>{props.coin.name}</Text>
+                    <Text style={styles.textMedium}>{props.coin.name}</Text>
                     <Price coin={props.coin} />
                 </View>
-
             </View>
 
             {
@@ -76,7 +75,9 @@ const Balance = (props: {
         <View>
             {balance !== undefined && balance >= 0 &&
                 <View>
-                    <Text style={{ ...styles.text, ...styles.textRight }}>{balance.toFixed(2)} {props.coin.symbol}</Text>
+                    <Text style={{ ...styles.text, ...styles.textRight }}>
+                        {balance.toFixed(2)} {props.coin.symbol}
+                    </Text>
 
                     {price !== undefined &&
                         <Text style={{ ...styles.textSmall, ...styles.textRight }}>
@@ -102,9 +103,7 @@ const createStyles = (theme: Theme) => {
             flex: 1,
             flexDirection: 'row',
             justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingVertical: Spacing.small,
-            paddingHorizontal: Spacing.base
+            alignItems: 'center'
         },
         leftContainer: {
             flexDirection: 'row',

@@ -53,10 +53,14 @@ export default () => {
 
 const Body = () => {
   const [category, setCategory] = useState(CATEGORY_COINS);
+  const { vars } = useTheme();
 
   return (
     <View style={{ flex: 1 }}>
-      <AssetToggler selected={category} onChange={(value: string) => setCategory(value)} />
+      <View style={{marginBottom: vars.Spacing.base}}>
+        <AssetToggler selected={category} onChange={(value: string) => setCategory(value)} />
+      </View>
+
       {
         category === CATEGORY_COINS &&
         <AssetsCoins />
@@ -65,6 +69,7 @@ const Body = () => {
         category === CATEGORY_NFTS &&
         <AssetsNfts />
       }
+
     </View>
   );
 }

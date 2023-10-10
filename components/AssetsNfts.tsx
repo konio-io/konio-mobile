@@ -27,7 +27,8 @@ export default () => {
   return (
     <ScrollView
       contentContainerStyle={{
-        ...styles.alignCenterColumn
+        ...styles.alignCenterColumn,
+        rowGap: theme.vars.Spacing.medium
       }}>
       {
         data
@@ -54,10 +55,9 @@ const NftCollectionListItem = (props: {
   return (
     <View style={{
       width: 330,
-      paddingTop: vars.Spacing.base,
       ...styles.rowGapSmall
     }}>
-      <Text style={{ ...styles.textMedium, ...styles.textBold }}>
+      <Text style={styles.textMedium}>
         {props.nftCollection.name}
       </Text>
 

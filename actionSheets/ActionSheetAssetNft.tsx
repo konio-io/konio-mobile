@@ -56,7 +56,7 @@ export default (props: SheetProps<{
 
             {
                 data.length > 0 &&
-                <ScrollView>
+                <ScrollView contentContainerStyle={{rowGap: theme.vars.Spacing.medium}}>
                     {
                         data.map(collection =>
 
@@ -98,10 +98,9 @@ const NftCollectionListItem = (props: {
     return (
         <View style={{
             width: 330,
-            ...styles.rowGapSmall,
-            marginTop: vars.Spacing.base
+            ...styles.rowGapSmall
         }}>
-            <Text style={{ ...styles.textMedium, ...styles.textBold }}>
+            <Text style={styles.textMedium}>
                 {props.nftCollection.name}
             </Text>
 

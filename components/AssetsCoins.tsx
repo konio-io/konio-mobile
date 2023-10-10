@@ -12,6 +12,7 @@ import CoinStore from '../stores/CoinStore';
 export default () => {
   const [refreshing, setRefreshing] = useState(false);
   const coins = useCoins();
+  const { vars } = useTheme();
 
   const _refresh = async () => {
       setRefreshing(true);
@@ -21,12 +22,14 @@ export default () => {
 
   return (
       <FlatList
+          style={{paddingHorizontal: vars.Spacing.base}}
           data={coins}
           renderItem={({ item }) => <TouchableCoinListItem coin={item} />}
           refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={_refresh} />
           }
           ListFooterComponent={<Footer />}
+          ItemSeparatorComponent={() => <View style={{height: vars.Spacing.medium}}/>}
       />
   );
 }
@@ -54,7 +57,7 @@ const Footer = () => {
   const styles = theme.styles;
 
   return (
-    <View style={{ ...styles.alignCenterColumn, ...styles.paddingSmall }}>
+    <View style={{ ...styles.alignCenterColumn, ...styles.paddingBase }}>
       <ButtonCircle
         onPress={() => navigation.navigate('NewCoin')}
         icon={(<Feather name="plus" />)}

@@ -90,6 +90,7 @@ const Dapps = (props: {
 }) => {
     const [data, setData] = useState<Array<Dapp>>([]);
     const [selectedTag, setSelectedTag] = useState('all');
+    const { vars } = useTheme();
 
     const load = () => {
         SpinnerStore.actions.showSpinner();
@@ -133,10 +134,14 @@ const Dapps = (props: {
             {
                 filteredData.length > 0 &&
                 <>
-                    <Tagsbar data={data} selected={selectedTag} onSelect={(tag: string) => setSelectedTag(tag)} />
+                    <View style={{ marginBottom: vars.Spacing.base }}>
+                        <Tagsbar data={data} selected={selectedTag} onSelect={(tag: string) => setSelectedTag(tag)} />
+                    </View>
+
                     <FlatList
                         data={filteredData}
                         renderItem={({ item }) => <Item key={item.name} item={item} onClick={() => props.onItemClick(item)} />}
+                        ItemSeparatorComponent={() => <View style={{ height: vars.Spacing.medium }} />}
                     />
                 </>
             }
@@ -225,17 +230,17 @@ const Item = (props: {
 
     return (
         <TouchableWithoutFeedback onPress={() => props.onClick(props.item)}>
-            <View style={styles.paddingVerticalSmall}>
-                <View style={{ ...styles.directionRow, ...styles.columnGapBase, ...styles.paddingHorizontalBase }}>
 
-                    <DappLogo dapp={props.item} />
+            <View style={{ ...styles.directionRow, ...styles.columnGapBase, ...styles.paddingHorizontalBase }}>
 
-                    <View>
-                        <Text>{props.item.name}</Text>
-                        <Text style={styles.textSmall}>{props.item.summary}</Text>
-                    </View>
+                <DappLogo dapp={props.item} />
+
+                <View>
+                    <Text style={{ ...styles.textMedium }}>{props.item.name}</Text>
+                    <Text style={styles.textSmall}>{props.item.summary}</Text>
                 </View>
             </View>
+
         </TouchableWithoutFeedback>
     )
 }
