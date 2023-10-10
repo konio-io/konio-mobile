@@ -27,8 +27,8 @@ export default (props: {
                 <CoinLogo coinId={props.coin.id} size={48} />
 
                 <View>
-                    <Text style={styles.symbol}>{props.coin.symbol}</Text>
-                    <Text>{props.coin.name}</Text>
+                    <Text style={{ ...styles.text, ...styles.textBold }}>{props.coin.name}</Text>
+                    <Price coin={props.coin} />
                 </View>
 
             </View>
@@ -36,13 +36,13 @@ export default (props: {
             {
                 selected !== undefined &&
                 <View>
-                    <SelectedTicker selected={selected}/>
+                    <SelectedTicker selected={selected} />
                 </View>
             }
             {
                 selected === undefined &&
                 <View>
-                    <Balance coinId={props.coin.id} />
+                    <Balance coin={props.coin} />
                 </View>
             }
 
@@ -50,28 +50,39 @@ export default (props: {
     );
 }
 
-const Balance = (props: {
-    coinId: string
+const Price = (props: {
+    coin: Coin
 }) => {
-    const balance = useHookstate(CoinStore.state.nested(props.coinId).balance).get();
-    const price = useHookstate(CoinStore.state.nested(props.coinId).price).get();
+    const price = useHookstate(CoinStore.state.nested(props.coin.id).price).get();
     const { styles } = useTheme();
-    
+
+    return (
+        <View>
+            {price !== undefined &&
+                <Text style={{ ...styles.textSmall }}>{price.toFixed(2)} USD</Text>
+            }
+        </View>
+    )
+}
+
+const Balance = (props: {
+    coin: Coin
+}) => {
+    const balance = useHookstate(CoinStore.state.nested(props.coin.id).balance).get();
+    const price = useHookstate(CoinStore.state.nested(props.coin.id).price).get();
+    const { styles } = useTheme();
+
     return (
         <View>
             {balance !== undefined && balance >= 0 &&
                 <View>
-                    <Text style={{ ...styles.text, ...styles.textRight }}>{balance.toFixed(2)}</Text>
+                    <Text style={{ ...styles.text, ...styles.textRight }}>{balance.toFixed(2)} {props.coin.symbol}</Text>
 
                     {price !== undefined &&
-                        <Text style={{ ...styles.text, ...styles.textRight }}>
+                        <Text style={{ ...styles.textSmall, ...styles.textRight }}>
                             {(balance * price).toFixed(2)} USD
                         </Text>
                     }
-                    {price === undefined &&
-                        <View style={{height: 24 }}/>
-                    }
-
                 </View>
             }
         </View>

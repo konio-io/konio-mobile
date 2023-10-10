@@ -26,14 +26,14 @@ export default (props: {
                 borderRadius: Border.radius
             }}
         >
-            <NftImage nft={props.nft} width={100} height={100}/>
+            <NftImage nft={props.nft} width={100} height={100} showId={true}/>
 
             {
                 selected === true &&
                 <View style={{
                     position: 'absolute',
-                    width: 100,
-                    height: 100,
+                    width: '100%',
+                    height: '100%',
                     backgroundColor: rgba(Color.primary, 0.6),
                     borderRadius: Border.radius,
                     ...styles.alignCenterColumn,

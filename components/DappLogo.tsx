@@ -7,7 +7,7 @@ export default (props: {
     size?: number
 }) => {
 
-    const size = props.size ?? 60;
+    const size = props.size ?? 48;
     const theme = useTheme();
     const styles = createStyles(theme);
 

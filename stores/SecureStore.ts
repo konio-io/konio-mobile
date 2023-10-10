@@ -51,10 +51,12 @@ const actions : ISecureActions = {
 
     deleteAccount: (id: string) => {
         const account = state.accounts.nested(id);
-        account.set(none);
+        if (account) {
+            if (!account.accountIndex?.get()) {
+                actions.deIncrementIndex();
+            }
 
-        if (!account.accountIndex.get()) {
-            actions.deIncrementIndex();
+            account.set(none);
         }
     },
     

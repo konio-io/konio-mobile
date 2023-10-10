@@ -16,18 +16,27 @@ export default () => {
   const styles = theme.styles;
   const data = useNftCollections();
 
+  if (data.length === 0) {
+    return <View></View>;
+  }
+
+  data.sort((a, b) => {
+    return (a.name?.toUpperCase() ?? '') < (b.name?.toUpperCase() ?? '') ? -1 : 1;
+  });
+
   return (
     <ScrollView
       contentContainerStyle={{
         ...styles.alignCenterColumn
       }}>
       {
-        data.map(collection =>
-          <NftCollectionListItem
-            key={collection.id}
-            nftCollection={collection}
-          />
-        )
+        data
+          .map(collection =>
+            <NftCollectionListItem
+              key={collection.id}
+              nftCollection={collection}
+            />
+          )
       }
 
       <Footer />

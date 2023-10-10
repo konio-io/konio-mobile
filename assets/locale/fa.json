@@ -1,7 +1,7 @@
 {
   "wallet": "کیف پول",
   "swap": "تبادل",
-  "dapps": "Dapps Browser",
+  "dapps": "Dapps",
   "settings": "تنظیمات",
   "donate": "کمک کردن",
   "missing_contract_address": "آدرس قرارداد گم شده است",
@@ -124,7 +124,7 @@
   "seconds": "ثانیه",
   "minute": "دقیقه",
   "minutes": "دقیقه",
-  "immediatly": "فوراً",
+  "immediately": "فوراً",
   "after": "بعد از",
   "never": "هرگز",
   "save": "ذخیره",

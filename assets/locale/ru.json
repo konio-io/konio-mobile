@@ -1,7 +1,7 @@
 {
   "wallet": "Кошелек",
   "swap": "Обмен",
-  "dapps": "Dapps Browser",
+  "dapps": "Dapps",
   "settings": "Настройки",
   "donate": "Пожертвовать",
   "missing_contract_address": "Отсутствует адрес контракта",
@@ -124,7 +124,7 @@
   "seconds": "секунд",
   "minute": "минута",
   "minutes": "минут",
-  "immediatly": "Немедленно",
+  "immediately": "Немедленно",
   "after": "После",
   "never": "Никогда",
   "save": "Сохранить",

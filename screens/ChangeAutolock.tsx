@@ -40,7 +40,7 @@ export const AutolockListItem = (props: {
       return i18n.t('never');
     }
     else if (ms === 0) {
-      return i18n.t('immediatly');
+      return i18n.t('immediately');
     }
 
     const seconds = Math.floor(ms / 1000);

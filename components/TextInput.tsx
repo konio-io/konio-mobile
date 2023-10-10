@@ -37,7 +37,7 @@ export default (props: {
                 if (props.onStopWriting) {
                     props.onStopWriting(props.value);
                 }
-            }, 1000);
+            }, 2000);
 
             return () => clearTimeout(timeout)
         }

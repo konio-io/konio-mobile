@@ -53,7 +53,6 @@ const Nft = (props: {
 }) => {
     const theme = useTheme();
     const styles = theme.styles;
-    const { Border } = theme.vars;
     const nft = NftStore.state.nested(props.nftId).get();
     if (!nft) {
         return <></>;
@@ -65,8 +64,10 @@ const Nft = (props: {
     }
 
     return (
-        <View style={{...styles.directionRow, ...styles.columnGapBase}}>
-            <NftImage nft={nft} width={50} height={50}/>
+        <View style={{ ...styles.directionRow, ...styles.columnGapBase }}>
+            <View>
+                <NftImage nft={nft} width={50} height={50} />
+            </View>
 
             <View>
                 <Text>{nftCollection.name}</Text>

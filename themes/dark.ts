@@ -12,7 +12,7 @@ export const getTheme = () : Theme => {
     };
 
     const FontSize = {
-        small: 12,
+        small: 13,
         base: 16,
         medium: 18,
         large: 24,

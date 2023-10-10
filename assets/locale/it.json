@@ -1,7 +1,7 @@
 {
   "wallet": "Portafoglio",
   "swap": "Scambio",
-  "dapps": "Dapps Browser",
+  "dapps": "Dapps",
   "settings": "Impostazioni",
   "donate": "Donazione",
   "missing_contract_address": "Indirizzo contratto mancante",
@@ -124,7 +124,7 @@
   "seconds": "secondi",
   "minute": "minuto",
   "minutes": "minuti",
-  "immediatly": "Immeditamente",
+  "immediately": "Immeditamente",
   "after": "Dopo",
   "never": "Mai",
   "save": "Salva",

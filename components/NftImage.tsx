@@ -5,8 +5,9 @@ import Text from "./Text";
 
 export default (props: {
     nft: Nft,
-    width: number,
-    height: number
+    height: number,
+    width?: number,
+    showId?: boolean
 }) => {
     const { styles, vars } = useTheme();
     const { Border, Color} = vars;
@@ -20,19 +21,23 @@ export default (props: {
                 borderWidth: Border.width,
                 borderColor: Border.color
             }} />
-            <View style={{
-                backgroundColor: Color.baseContrast,
-                position: 'absolute',
-                right: 0,
-                bottom: 0,
-                padding: 3,
-                borderTopLeftRadius: Border.radius,
-                borderBottomRightRadius: Border.radius
-            }}>
-                <Text style={{...styles.Text, color: Color.base}}>
-                    #{props.nft.tokenId}
-                </Text>
-            </View>
+
+            {
+                props.showId === true &&
+                    <View style={{
+                        backgroundColor: Color.baseContrast,
+                        position: 'absolute',
+                        right: 1,
+                        bottom: 1,
+                        padding: 3,
+                        borderTopLeftRadius: Border.radius,
+                        borderBottomRightRadius: Border.radius
+                    }}>
+                        <Text style={{ ...styles.Text, color: Color.base }}>
+                            #{props.nft.tokenId}
+                        </Text>
+                    </View>
+            }
         </View>
 
     );

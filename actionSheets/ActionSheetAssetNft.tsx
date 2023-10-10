@@ -7,8 +7,8 @@ import { Nft, NftCollection } from "../types/store";
 import { useState } from "react";
 import ActionSheet from "./ActionSheet";
 
-export default (props: SheetProps<{ 
-    nftId?: string 
+export default (props: SheetProps<{
+    nftId?: string
 }>) => {
     const [nftId, setNftId] = useState(props.payload?.nftId ?? '');
     const theme = useTheme();
@@ -19,10 +19,14 @@ export default (props: SheetProps<{
     const currentNetworkId = SettingStore.state.currentNetworkId.get();
     const nftCollections = NftCollectionStore.state.get();
 
-    const data = Object.values(nftCollections).filter(nft => 
+    const data = Object.values(nftCollections).filter(nft =>
         nft.networkId === currentNetworkId &&
         nft.accountId === currentAccountId
     );
+
+    data.sort((a, b) => {
+        return (a.name?.toUpperCase() ?? '') < (b.name?.toUpperCase() ?? '') ? -1 : 1;
+    });
 
     const _select = (data: any) => {
         setNftId(data.nftId);
@@ -86,31 +90,31 @@ export default (props: SheetProps<{
 const NftCollectionListItem = (props: {
     nftCollection: NftCollection,
     renderItem: Function
-  }) => {
+}) => {
     const { styles, vars } = useTheme();
     const nfts = NftStore.state.get();
     const data = Object.values(nfts).filter(nft => nft.nftCollectionId === props.nftCollection.id);
-  
+
     return (
-      <View style={{
-        width: 330,
-        ...styles.rowGapSmall,
-        marginTop: vars.Spacing.base
-      }}>
-        <Text style={{ ...styles.textMedium, ...styles.textBold }}>
-          {props.nftCollection.name}
-        </Text>
-  
         <View style={{
-          ...styles.directionRow,
-          ...styles.columnGapBase,
-          ...styles.rowGapBase,
-          flexWrap: 'wrap'
+            width: 330,
+            ...styles.rowGapSmall,
+            marginTop: vars.Spacing.base
         }}>
-          {
-            data.map(nft => props.renderItem(nft))
-          }
+            <Text style={{ ...styles.textMedium, ...styles.textBold }}>
+                {props.nftCollection.name}
+            </Text>
+
+            <View style={{
+                ...styles.directionRow,
+                ...styles.columnGapBase,
+                ...styles.rowGapBase,
+                flexWrap: 'wrap'
+            }}>
+                {
+                    data.map(nft => props.renderItem(nft))
+                }
+            </View>
         </View>
-      </View>
     )
-  }
+}

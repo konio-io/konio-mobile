@@ -1,7 +1,7 @@
 {
   "wallet": "Carteira",
   "swap": "Troca",
-  "dapps": "Dapps Browser",
+  "dapps": "Dapps",
   "settings": "Configurações",
   "donate": "Doar",
   "missing_contract_address": "Endereço do contrato ausente",
@@ -124,7 +124,7 @@
   "seconds": "segundos",
   "minute": "minuto",
   "minutes": "minutos",
-  "immediatly": "Imediatamente",
+  "immediately": "Imediatamente",
   "after": "Depois",
   "never": "Nunca",
   "save": "Salvar",

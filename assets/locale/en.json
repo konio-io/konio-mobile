@@ -1,7 +1,7 @@
 {
   "wallet": "Wallet",
   "swap": "Swap",
-  "dapps": "Dapps Browser",
+  "dapps": "Dapps",
   "settings": "Settings",
   "donate": "Donate",
   "missing_contract_address": "Missing contract address",
@@ -124,7 +124,7 @@
   "seconds": "seconds",
   "minute": "minute",
   "minutes": "minutes",
-  "immediatly": "Immediatly",
+  "immediately": "Immediately",
   "after": "After",
   "never": "Never",
   "save": "Save",

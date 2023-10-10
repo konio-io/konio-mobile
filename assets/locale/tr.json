@@ -1,7 +1,7 @@
 {
     "wallet": "Cüzdan",
     "swap": "Takas",
-    "dapps": "Dapps Browser",
+    "dapps": "Dapps",
     "settings": "Ayarlar",
     "donate": "Bağış yapmak",
     "missing_contract_address": "Eksik sözleşme adresi",
@@ -124,7 +124,7 @@
     "seconds": "saniye",
     "minute": "dakika",
     "minutes": "dakika",
-    "immediatly": "Hemen",
+    "immediately": "Hemen",
     "after": "Sonra",
     "never": "Asla",
     "save": "Kaydet",

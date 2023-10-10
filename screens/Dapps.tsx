@@ -231,7 +231,7 @@ const Item = (props: {
                     <DappLogo dapp={props.item} />
 
                     <View>
-                        <Text style={styles.textMedium}>{props.item.name}</Text>
+                        <Text>{props.item.name}</Text>
                         <Text style={styles.textSmall}>{props.item.summary}</Text>
                     </View>
                 </View>
@@ -242,26 +242,9 @@ const Item = (props: {
 
 const createStyles = (theme: Theme) => {
     const { Color, FontSize, FontFamily, Spacing, Border } = theme.vars;
-    const styles = theme.styles;
 
     return StyleSheet.create({
         ...theme.styles,
-        itemIcon: {
-            padding: 1,
-            width: 60,
-            height: 60,
-            borderRadius: Border.radius,
-            borderWidth: Border.width,
-            borderColor: Border.color
-        },
-        itemRightContainer: {
-            flexGrow: 1
-        },
-        itemDescription: {
-            ...styles.text,
-            flex: 1,
-            flexWrap: 'wrap'
-        },
         tagSelected: {
             backgroundColor: Color.secondary,
             color: Color.base,
