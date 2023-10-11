@@ -17,7 +17,7 @@ export default () => {
   const data = useNftCollections();
 
   if (data.length === 0) {
-    return <View></View>;
+    return <Footer/>;
   }
 
   data.sort((a, b) => {
