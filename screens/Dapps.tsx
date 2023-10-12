@@ -31,55 +31,72 @@ export default () => {
             headerLeft: () => (<DrawerToggler />),
             headerRight: () => (
                 <View style={{ paddingRight: theme.vars.Spacing.small }}>
-                    {
-                        uri === '' &&
-                        <ScanButton />
-                    }
-                    {
-                        uri !== '' &&
-                        <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
-                            {
-                                canGoBack === false &&
-                                <ButtonCircle
-                                    size={40}
-                                    onPress={() => setUri('')}
-                                    icon={(<Feather name="arrow-left" />)}
-                                    iconSize={20}
-                                    type='secondary'
-                                />
-                            }
-                            {
-                                canGoBack !== false &&
-                                <ButtonCircle
-                                    size={40}
-                                    onPress={() => webViewRef.current?.goBack()}
-                                    icon={(<Feather name="arrow-left" />)}
-                                    iconSize={20}
-                                    type='secondary'
-                                />
-                            }
-                        </View>
-                    }
+                    <ScanButton />
                 </View>
             ),
         });
-    }, [navigation, theme, uri, canGoBack]);
+    }, [navigation, theme]);
 
     return (
         <Screen>
-            {
-                uri !== '' &&
-                <WebView
-                    onNavigationStateChange={onWebviewChange}
-                    ref={webViewRef}
-                    source={{ uri }}
-                />
-            }
-            {
-                uri === '' &&
-                <Dapps onItemClick={(item: Dapp) => setUri(item.url)} />
-            }
+            <View style={{
+                ...styles.directionRow,
+                ...styles.columnGapBase,
+                ...styles.alignCenterRow,
+                paddingHorizontal: theme.vars.Spacing.base,
+                paddingVertical: theme.vars.Spacing.small
+            }}>
+                <View style={{...styles.directionRow, ...styles.columnGapSmall}}>
+                    <ButtonCircle
+                        size={40}
+                        onPress={() => canGoBack ? webViewRef.current?.goBack() : setUri('')}
+                        icon={(<Feather name="arrow-left" />)}
+                        iconSize={20}
+                        type='secondary'
+                    />
+                    <ButtonCircle
+                        size={40}
+                        onPress={() => webViewRef.current?.goForward()}
+                        icon={(<Feather name="arrow-right" />)}
+                        iconSize={20}
+                        type='secondary'
+                    />
+                </View>
 
+                <ButtonCircle
+                    size={40}
+                    onPress={() => setUri('')}
+                    icon={(<Feather name="home" />)}
+                    iconSize={20}
+                    type='secondary'
+                />
+                <ButtonCircle
+                    size={40}
+                    onPress={() => webViewRef.current?.reload()}
+                    icon={(<Feather name="refresh-cw" />)}
+                    iconSize={20}
+                    type='secondary'
+                />
+
+            </View>
+            <View style={{
+                borderWidth: theme.vars.Border.width,
+                borderColor: theme.vars.Border.color,
+                flex: 1
+            }}>
+                {
+                    uri !== '' &&
+                    <WebView
+                        onNavigationStateChange={onWebviewChange}
+                        ref={webViewRef}
+                        source={{ uri }}
+                    />
+                }
+                {
+                    uri === '' &&
+                    <Dapps onItemClick={(item: Dapp) => setUri(item.url)} />
+                }
+            </View>
         </Screen>
     )
 }
@@ -130,7 +147,7 @@ const Dapps = (props: {
     }
 
     return (
-        <View>
+        <View style={{paddingBottom: vars.Spacing.base}}>
             {
                 filteredData.length > 0 &&
                 <>

@@ -99,7 +99,7 @@ export default () => {
           name="Dapps"
           component={Dapps}
           options={{
-            title: i18n.t('dapps'),
+            title: i18n.t('browser'),
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="appstore-o" size={size} color={color} />
             )
