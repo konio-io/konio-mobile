@@ -80,8 +80,6 @@ export default () => {
 
             </View>
             <View style={{
-                borderWidth: theme.vars.Border.width,
-                borderColor: theme.vars.Border.color,
                 flex: 1
             }}>
                 {
