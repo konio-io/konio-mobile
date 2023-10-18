@@ -145,7 +145,7 @@ const Dapps = (props: {
     }
 
     return (
-        <View style={{paddingBottom: vars.Spacing.base}}>
+        <View style={{paddingBottom: vars.Spacing.base, flex: 1}}>
             {
                 filteredData.length > 0 &&
                 <>

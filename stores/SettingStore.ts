@@ -14,7 +14,7 @@ export const SETTING_STORE_DEFAULT = {
     biometric: false,
     autolock: -1,
     rcLimit: '95',
-    version: '20231012',
+    version: '20231018',
     askReview: false
 };
 
