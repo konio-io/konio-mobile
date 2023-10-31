@@ -24,9 +24,10 @@ export default (props: {
     placeholder?: string
     textAlign?: any
     secureTextEntry?: boolean,
-    numberOfLines?: number
+    numberOfLines?: number,
+    onSubmitEditing?: Function
 }) => {
-
+2
     const theme = useTheme();
     const { Color } = theme.vars;
     const styles = theme.styles;
@@ -84,6 +85,7 @@ export default (props: {
                 secureTextEntry={props.secureTextEntry}
                 multiline={props.multiline}
                 numberOfLines={props.numberOfLines}
+                onSubmitEditing={props.onSubmitEditing}
             />
         </TextInputContainer>
     );
