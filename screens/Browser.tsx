@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { BrowserNavigationProp, RootNavigationProp } from "../types/navigation";
 import { AntDesign, Feather } from '@expo/vector-icons';
-import { TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { TouchableOpacity } from "react-native";
 import WebView, { WebViewNavigation } from "react-native-webview";
 
 export default () => {
