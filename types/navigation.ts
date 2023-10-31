@@ -64,7 +64,7 @@ export type WcSessionsRouteProp = RouteProp<WalletConnectParamList, 'WcSessions'
 /** Account */
 export type AccountParamList = {
     Holdings: NavigatorScreenParams<HoldingsParamList>,
-    Dapps: undefined,
+    Browser: undefined,
     Withdraw: {
         to?: string,
         coinId?: string
@@ -75,8 +75,8 @@ export type AccountParamList = {
 }
 export type HoldingsNavigationProp = StackNavigationProp<AccountParamList, 'Holdings'>;
 export type HoldingsRouteProp = RouteProp<AccountParamList, 'Holdings'>;
-export type DappsNavigationProp = StackNavigationProp<AccountParamList, 'Dapps'>;
-export type DappsRouteProp = RouteProp<AccountParamList, 'Dapps'>;
+export type BrowserNavigationProp = StackNavigationProp<AccountParamList, 'Browser'>;
+export type BrowserRouteProp = RouteProp<AccountParamList, 'Browser'>;
 export type WithdrawNavigationProp = StackNavigationProp<AccountParamList, 'Withdraw'>;
 export type WithdrawRouteProp = RouteProp<AccountParamList, 'Withdraw'>;
 export type DepositNavigationProp = StackNavigationProp<AccountParamList, 'Deposit'>;

@@ -41,7 +41,7 @@ export default () => {
         <Screen>
             <FlatList
                 data={data}
-                renderItem={({ item }) => <DappSession item={item} onPress={(topic: string) => disconnect(topic)} />}
+                renderItem={({ item }) => <WcSession item={item} onPress={(topic: string) => disconnect(topic)} />}
                 ItemSeparatorComponent={() => <Separator />}
             />
 
@@ -56,7 +56,7 @@ export default () => {
     );
 }
 
-const DappSession = (props: {
+const WcSession = (props: {
     item: ImmutableObject<SessionTypes.Struct>
     onPress: Function
 }) => {
