@@ -70,7 +70,7 @@ export default () => {
             title: i18n.t('operations'),
             headerShown: false,
             tabBarIcon: ({ color, size }) => (
-              <AntDesign name="swap" size={302} color={color} />
+              <AntDesign name="swap" size={30} color={color} />
             ),
             tabBarButton: (props) => {
               props.onPress = () => SheetManager.show('operations');
