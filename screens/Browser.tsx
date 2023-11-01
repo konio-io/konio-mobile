@@ -22,6 +22,10 @@ export default () => {
     const onWebviewChange = (ev: WebViewNavigation) => {
         setCanGoBack(ev.canGoBack);
         setCanGoForward(ev.canGoForward);
+    
+        if (ev.url !== searchUri) {
+            setSearchUri(ev.url);
+        }
     }
 
     useEffect(() => {
