@@ -33,14 +33,14 @@ export default (props: SheetProps) => {
             icon: <Feather name="arrow-down-right"/>,
             onPress: () => _navigate('Deposit')
         },
-        {
+        /*{
             title: i18n.t('swap'),
             icon: <AntDesign name="swap"/>,
             onPress: () => Toast.show({
                 type: 'info',
                 text1: i18n.t('available_soon')
             })
-        }
+        }*/
     ];
 
     return (
