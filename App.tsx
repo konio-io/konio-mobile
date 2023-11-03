@@ -23,6 +23,7 @@ import { CoinStore, WalletConnectStore, LogStore, ManaStore, SecureStore } from 
 import Toast from 'react-native-toast-message';
 import Migration from './screens/Migration';
 import * as SplashScreen from 'expo-splash-screen';
+import * as Linking from 'expo-linking';
 
 export default function App() {
   const theme = useTheme();
@@ -58,31 +59,9 @@ export default function App() {
     return <Migration />;
   }
 
-  const linking = {
-    prefixes: ['wc://', 'konio://'],
-    config: {
-      screens: {
-        Root: {
-          initialRouteName: 'Account',
-          screens: {
-            Account: 'account',
-            Settings: 'settings'
-          }
-        }
-      }
-    },
-    getStateFromPath: (path: string, options: any) => {
-      if (path.includes('@2') && !path.includes('requestId')) {
-        WalletConnectStore.actions.setUri(`wc:${path}`);
-      }
-
-      return getStateFromPath(path, options);
-    },
-  };
-
   return (
     //@ts-ignore
-    <NavigationContainer theme={navigationTheme} linking={linking} onReady={onReady}>
+    <NavigationContainer theme={navigationTheme} onReady={onReady}>
       <PolyfillCrypto />
 
       <SheetProvider>
@@ -117,6 +96,33 @@ const Wc = () => {
   const uri = useHookstate(WalletConnectStore.state.uri).get();
   const wallet = useHookstate(WalletConnectStore.state.wallet).get();
   const i18n = useI18n();
+  const url = Linking.useURL();
+
+  //
+  /**
+   * intercept walletConnect mobile linking
+   * android: wc://$uri
+   * ios: konio://wc?uri=$uri, https://konio.io/wc?uri=$uri
+   */
+  useEffect(() => {
+    let wcUri = '';
+
+    if (url?.startsWith('konio://wc?uri=')) {
+      wcUri = url.replace('konio://wc?uri=', '');
+      wcUri = decodeURIComponent(wcUri);
+    } else if (url?.startsWith('https://konio.io/wc?uri=')) {
+      wcUri = url.replace('https://konio.io/wc?uri=', '');
+      wcUri = decodeURIComponent(wcUri);
+    } else if (url?.startsWith('wc:')) {
+      wcUri = url;
+    }
+
+    console.log('wcURI_______', wcUri)
+
+    if (wcUri.includes('symKey=')) {
+      WalletConnectStore.actions.setUri(wcUri);
+    }
+  }, [url]);
 
   //intercept walletconnectStore wallet/uri set
   useEffect(() => {

@@ -27,12 +27,13 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
+          <string>konio</string>
           <string>konio.io</string>
         </array>
       </dict>
     </array>
     <key>CFBundleVersion</key>
-    <string>23</string>
+    <string>24</string>
     <key>ITSAppUsesNonExemptEncryption</key>
     <false/>
     <key>LSRequiresIPhoneOS</key>
