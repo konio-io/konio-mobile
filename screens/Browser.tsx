@@ -15,14 +15,13 @@ export default () => {
     const styles = theme.styles;
     const [uri, setUri] = useState(BROWSER_HOME_URL);
     const [searchUri, setSearchUri] = useState('');
-    const [canGoBack, setCanGoBack] = useState(false);
-    const [canGoForward, setCanGoForward] = useState(false);
+    //const [canGoBack, setCanGoBack] = useState(false);
+    //const [canGoForward, setCanGoForward] = useState(false);
 
     const webViewRef = useRef<WebView>(null);
     const onWebviewChange = (ev: WebViewNavigation) => {
-        setCanGoBack(ev.canGoBack);
-        setCanGoForward(ev.canGoForward);
-    
+        //setCanGoBack(ev.canGoBack);
+        //setCanGoForward(ev.canGoForward);
         if (ev.url !== searchUri) {
             setSearchUri(ev.url);
         }
@@ -53,11 +52,12 @@ export default () => {
                     value={searchUri} 
                     onChangeText={(v:string) => setSearchUri(v)} 
                     keyboardType="url" 
-                    onSubmitEditing={e => {
-                        if (searchUri.startsWith('http')) {
-                            setUri(searchUri);
+                    onSubmitEditing={() => {
+                        const searchUriLower = searchUri.toLowerCase();
+                        if (searchUriLower.startsWith('http')) {
+                            setUri(searchUriLower);
                         } else {
-                            setUri(BROWSER_SEARCH_URL + searchUri);
+                            setUri(BROWSER_SEARCH_URL + searchUriLower);
                         }
                     }}/>
             </View>

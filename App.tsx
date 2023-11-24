@@ -110,14 +110,18 @@ const Wc = () => {
     if (url?.startsWith('konio://wc?uri=')) {
       wcUri = url.replace('konio://wc?uri=', '');
       wcUri = decodeURIComponent(wcUri);
-    } else if (url?.startsWith('https://konio.io/wc?uri=')) {
+    } 
+    else if (url?.startsWith('konio.io://wc?uri=')) {
+      wcUri = url.replace('konio.io://wc?uri=', '');
+      wcUri = decodeURIComponent(wcUri);
+    }
+    else if (url?.startsWith('https://konio.io/wc?uri=')) {
       wcUri = url.replace('https://konio.io/wc?uri=', '');
       wcUri = decodeURIComponent(wcUri);
-    } else if (url?.startsWith('wc:')) {
+    }
+    else if (url?.startsWith('wc:')) {
       wcUri = url;
     }
-
-    console.log('wcURI_______', wcUri)
 
     if (wcUri.includes('symKey=')) {
       WalletConnectStore.actions.setUri(wcUri);

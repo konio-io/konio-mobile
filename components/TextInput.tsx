@@ -1,4 +1,4 @@
-import { TextInput, View } from 'react-native';
+import { NativeSyntheticEvent, TextInput, TextInputSubmitEditingEventData, View } from 'react-native';
 import { useTheme } from '../hooks';
 import { rgba } from '../lib/utils';
 import { Feather } from '@expo/vector-icons';
@@ -25,7 +25,7 @@ export default (props: {
     textAlign?: any
     secureTextEntry?: boolean,
     numberOfLines?: number,
-    onSubmitEditing?: Function
+    onSubmitEditing?: ((e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void)
 }) => {
 2
     const theme = useTheme();
