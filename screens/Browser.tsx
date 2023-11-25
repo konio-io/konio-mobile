@@ -100,7 +100,7 @@ export default () => {
 
                 <ButtonCircle
                     size={40}
-                    onPress={() => setUri(BROWSER_HOME_URL)}
+                    onPress={() => setUri(BROWSER_HOME_URL + `?t=` + Date.now())}
                     icon={(<Feather name="home" />)}
                     iconSize={20}
                     type='secondary'
