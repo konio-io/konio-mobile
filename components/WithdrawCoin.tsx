@@ -1,5 +1,5 @@
 import { Button } from '../components';
-import { ScrollView, View } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 import { useI18n, useLockState, useTheme } from '../hooks';
 import RecipientInput from '../components/RecipientInput';
 import AmountInput from '../components/AmountInput';
@@ -53,9 +53,42 @@ export default (props: {
         setTo(undefined);
     };
 
-    const _confirm = () => {
+    const _lock = () => {
         LockStore.actions.lock();
         setSendRequest(true);
+    };
+
+    const _confirm = () => {
+        if (!to || !coinId || !amount) {
+            return;
+        }
+    
+        //check if "to" is valid (not valid if it is a contractId)
+        const existentContractIds = Object.values(CoinStore.state.get()).map(item => item.contractId);
+        if (to && existentContractIds.includes(to)) {
+            Alert.alert(
+                i18n.t('warning'),
+                i18n.t('contract_as_to'),
+                [
+                    {
+                        text: i18n.t('cancel'),
+                        //onPress: () => console.log('cancel'),
+                        style: 'cancel',
+                    },
+                    {
+                        text: i18n.t('confirm'),
+                        onPress: () => {
+                            _lock();
+                        }
+                    },
+                ],
+                {
+                    cancelable: true
+                },
+            );
+        } else {
+            _lock();
+        }
     };
 
     const _send = () => {
