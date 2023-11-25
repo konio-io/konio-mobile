@@ -45,7 +45,7 @@ export const BROWSER_HOME_URL = 'https://konio.io/browser';
 export const TOKENS_URL = 'https://tokens.konio.io';
 export const TERMS_URL = 'https://konio.io/terms/';
 export const PRIVACY_URL = 'https://konio.io/privacy-policy/';
-export const FAQ_URL = 'https://konio.io/assets/faq/';
+export const FAQ_URL = 'https://konio.io/faq/';
 export const WC_METHODS = {
     SIGN_MESSAGE: 'koinos_signMessage',
     SIGN_HASH: 'koinos_signHash',
