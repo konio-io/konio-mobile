@@ -249,5 +249,6 @@
   "open": "Ouvrir",
   "migrate_data_need": "Konio a besoin de mettre à jour les données locales.",
   "migrate_data": "Mettre à jour les données",
-  "migration_success": "Mise à jour terminée.\nRedémarrez l'application."
+  "migration_success": "Mise à jour terminée.\nRedémarrez l'application.",
+  "contract_as_to": "L'adresse de destination semble correspondre au contrat d'une pièce. Êtes-vous sûr de vouloir continuer ?"
 }

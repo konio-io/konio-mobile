@@ -249,5 +249,6 @@
     "open": "Açmak",
     "migrate_data_need": "Konio yerel verileri güncellemelidir.",
     "migrate_data": "Verileri güncelle",
-    "migration_success": "Güncelleme tamamlandı.\nUygulamayı yeniden başlatın."
+    "migration_success": "Güncelleme tamamlandı.\nUygulamayı yeniden başlatın.",
+    "contract_as_to": "Hedef adres, bir sikke sözleşmesiyle eşleşiyor gibi görünüyor. Devam etmek istediğinizden emin misiniz?"
 }

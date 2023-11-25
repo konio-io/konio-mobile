@@ -249,5 +249,6 @@
   "open": "Open",
   "migrate_data_need": "Konio needs to update local data.",
   "migrate_data": "Update data",
-  "migration_success": "Update completed.\nRestart the app."
+  "migration_success": "Update completed.\nRestart the app.",
+  "contract_as_to": "The destination address seems to coincide with the contract of a coin. Are you sure you want to continue?"
 }

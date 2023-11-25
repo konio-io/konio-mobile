@@ -249,5 +249,6 @@
   "open": "Öffnen",
   "migrate_data_need": "Konio muss lokale Daten aktualisieren.",
   "migrate_data": "Daten aktualisieren",
-  "migration_success": "Aktualisierung abgeschlossen.\nStarte die App neu."
+  "migration_success": "Aktualisierung abgeschlossen.\nStarte die App neu.",
+  "contract_as_to": "Die Zieladresse scheint mit dem Vertrag einer Münze übereinzustimmen. Sind Sie sicher, dass Sie fortfahren möchten?"
 }

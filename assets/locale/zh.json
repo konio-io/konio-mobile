@@ -249,5 +249,6 @@
   "open": "打开",
   "migrate_data_need": "Konio 需要更新本地数据。",
   "migrate_data": "更新数据",
-  "migration_success": "升级完成。请重新启动应用程序。"
+  "migration_success": "升级完成。请重新启动应用程序。",
+  "contract_as_to": "目的地地址似乎与硬币的合同相匹配。您确定要继续吗？"
 }

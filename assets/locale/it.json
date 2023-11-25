@@ -249,5 +249,6 @@
   "open": "Apri",
   "migrate_data_need": "Konio ha bisogno di aggiornare i dati locali.",
   "migrate_data": "Aggiorna dati",
-  "migration_success":"Aggiornamento completato.\nRiavvia l'app."
+  "migration_success":"Aggiornamento completato.\nRiavvia l'app.",
+  "contract_as_to":"L'indirizzo di destinazione sembra coincidere con il contratto di una coin. Sei sicuro di voler continuare?"
 }
