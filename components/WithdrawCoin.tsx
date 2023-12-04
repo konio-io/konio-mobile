@@ -1,4 +1,4 @@
-import { Button } from '../components';
+import { Button, Link } from '../components';
 import { Alert, ScrollView, View } from "react-native";
 import { useI18n, useLockState, useTheme } from '../hooks';
 import RecipientInput from '../components/RecipientInput';
@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { SettingStore, LockStore, SpinnerStore, CoinStore, LogStore } from '../stores';
 import { useHookstate } from '@hookstate/core';
 import Toast from 'react-native-toast-message';
+import { SheetManager } from 'react-native-actions-sheet';
 
 export default (props: {
     coinId?: string,
@@ -19,8 +20,8 @@ export default (props: {
     const currentAccountState = useHookstate(SettingStore.state.currentAccountId);
     const currentNetworkState = useHookstate(SettingStore.state.currentNetworkId);
 
-    const [to, setTo] = useState<string|undefined>(undefined);
-    const [coinId, setCoinId] = useState<string|undefined>(undefined);
+    const [to, setTo] = useState<string | undefined>(undefined);
+    const [coinId, setCoinId] = useState<string | undefined>(undefined);
     const [amount, setAmount] = useState(0);
     const [sendRequest, setSendRequest] = useState(false);
     const i18n = useI18n();
@@ -62,7 +63,7 @@ export default (props: {
         if (!to || !coinId || !amount) {
             return;
         }
-    
+
         //check if "to" is valid (not valid if it is a contractId)
         const existentContractIds = Object.values(CoinStore.state.get()).map(item => item.contractId);
         if (to && existentContractIds.includes(to)) {
@@ -160,8 +161,8 @@ export default (props: {
                     });
             })
             .catch(e => {
-                SpinnerStore.actions.hideSpinner();
                 LogStore.actions.logError(e);
+                SpinnerStore.actions.hideSpinner();
                 Toast.show({
                     type: 'error',
                     text1: i18n.t('transaction_commit_failed'),
@@ -169,7 +170,7 @@ export default (props: {
                 });
             });
     };
-    
+
     return (
         <View style={{ flex: 1, ...theme.styles.paddingBase }}>
             <ScrollView contentContainerStyle={theme.styles.rowGapBase}>
@@ -194,6 +195,10 @@ export default (props: {
                         opened={coinId === undefined ? false : true}
                     />
                 }
+
+                <View style={theme.styles.alignCenterColumn}>
+                    <Link text={i18n.t('advanced_options')} onPress={() => SheetManager.show("fee")}/>
+                </View>
 
             </ScrollView>
 

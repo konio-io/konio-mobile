@@ -1,4 +1,4 @@
-import { Button } from '../components';
+import { Button, Link } from '../components';
 import { ScrollView, View } from "react-native";
 import { useI18n, useLockState, useTheme } from '../hooks';
 import RecipientInput from '../components/RecipientInput';
@@ -10,6 +10,7 @@ import { WithdrawNavigationProp } from '../types/navigation';
 import { useHookstate } from '@hookstate/core';
 import { SettingStore, NftStore, SpinnerStore, LogStore, LockStore } from '../stores';
 import Toast from 'react-native-toast-message';
+import { SheetManager } from 'react-native-actions-sheet';
 
 export default (props: {
     nftId?: string,
@@ -114,6 +115,11 @@ export default (props: {
                     onChange={(value: string) => setNftId(value)}
                     opened={to !== undefined && nftId === undefined}
                 />
+
+                <View style={theme.styles.alignCenterColumn}>
+                    <Link text={i18n.t('advanced_options')} onPress={() => SheetManager.show("fee")}/>
+                </View>
+
             </ScrollView>
 
             {

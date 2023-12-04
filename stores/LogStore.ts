@@ -16,6 +16,8 @@ const actions : ILogActions = {
         console.error(error);
         if (typeof error === 'string') {
             state.merge([error]);
+        } else {
+            state.merge([error.toString()]);
         }
     },
     

@@ -147,7 +147,7 @@
     "advanced": "Gelişmiş",
     "advanced_desc": "Gelişmiş ayarlar. Uyarı.",
     "rc_limit": "Şarj limiti",
-    "rc_limit_desc": "0-100 aralığı",
+    "rc_limit_desc": "$MANA kullanım limitini belirleyin",
     "add_network": "Ağ ekle",
     "missing_data": "Bazı değerler eksik",
     "are_you_sure": "Emin misiniz?",
@@ -250,5 +250,8 @@
     "migrate_data_need": "Konio yerel verileri güncellemelidir.",
     "migrate_data": "Verileri güncelle",
     "migration_success": "Güncelleme tamamlandı.\nUygulamayı yeniden başlatın.",
-    "contract_as_to": "Hedef adres, bir sikke sözleşmesiyle eşleşiyor gibi görünüyor. Devam etmek istediğinizden emin misiniz?"
+    "contract_as_to": "Hedef adres, bir sikke sözleşmesiyle eşleşiyor gibi görünüyor. Devam etmek istediğinizden emin misiniz?",
+    "payer": "Ödeme Yapan",
+    "payer_desc": "Ücretleri karşılayacak hesabı seçin.\nSağlayıcılarımız tarafından sağlanan ücretsiz $MANA'yı kullanabilirsiniz.",
+    "advanced_options": "Gelişmiş Seçenekler"
 }

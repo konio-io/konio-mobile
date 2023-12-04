@@ -363,7 +363,6 @@ export interface INameserverGetters {
     getNicNameByAddress: (address: string) => Promise<any | undefined>;
     getKapAddressByName: (name: string) => Promise<string | undefined>;
     getKapProfileByAddress: (address: string) => Promise<any | undefined>;
-    
 }
 
 export interface INameserverStore {
@@ -373,15 +372,46 @@ export interface INameserverStore {
 }
 
 /**
+ * Payer
+ */
+export type Payer = {
+    id: string
+    address: string
+    networkId: string
+    name: string
+}
+
+export type PayerState = Record<string, Payer>
+
+export interface IPayerGetters {
+    getCurrentPayers: () => Array<Payer>;
+}
+
+export interface IPayerActions {
+    refreshPayers: () => void;
+}
+
+export interface IPayerStore {
+    state: State<PayerState>;
+    actions: IPayerActions,
+    getters: IPayerGetters
+}
+
+
+/**
  * Mana
  */
 export type ManaState = {
     mana: number,
+    rcLimit: number,
+    payer: string,
     lastUpdateMana: number
 }
 
 export interface IManaActions {
     refreshMana: () => Promise<void>;
+    setRcLimit: (value: number) => void;
+    setPayer: (payerId: string) => void;
 }
 
 export interface IManaStore {

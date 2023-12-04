@@ -14,7 +14,7 @@ export default (props: {
     const { Color, Border } = theme.vars;
   
     return (
-      <View style={{ ...styles.directionRow, ...styles.paddingBase, ...styles.alignCenterRow }}>
+      <View style={{ ...styles.directionRow, ...styles.paddingSmall, ...styles.alignCenterRow }}>
   
         <TouchableOpacity onPress={() => props.onChange(CATEGORY_COINS)} style={{
           borderTopLeftRadius: Border.radius,

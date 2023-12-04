@@ -11,6 +11,8 @@ import { getStore } from "./registry";
  */
 const ManaStoreDefault = {
     mana: 0,
+    rcLimit: 95, 
+    payer: '',
     lastUpdateMana: new Date().getTime()
 };
 
@@ -18,17 +20,26 @@ const state = hookstate<ManaState>({...ManaStoreDefault});
 
 const actions : IManaActions = {
     refreshMana: async () => {
-        console.log('refresh mana');
+        console.log('refresh mana (reset rcLImit and payer)');
         const accountId = getStore('Setting').state.currentAccountId.get();
         const address = getStore('Account').state.nested(accountId).address.get();
         const provider = getStore('Koin').getters.getProvider();
         const manaBalance = await provider.getAccountRc(address);
+        const rcLimit = getStore('Setting').state.rcLimit.get();
     
         state.merge({
-            mana: Number(manaBalance) / 1e8
+            mana: Number(manaBalance) / 1e8,
+            rcLimit: parseInt(rcLimit),
+            payer: address
         });
+    },
+    setRcLimit: (value: number) => {
+        state.rcLimit.set(value);
+    },
+    setPayer: (payerId: string) => {
+        state.payer.set(payerId);
     }
-}
+};
 
 export default {
     state,

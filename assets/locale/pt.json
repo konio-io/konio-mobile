@@ -147,7 +147,7 @@
   "advanced": "Avançado",
   "advanced_desc": "Configurações avançadas. Aviso.",
   "rc_limit": "Limite de recarga",
-  "rc_limit_desc": "Faixa 0-100",
+  "rc_limit_desc": "Estabeleça o limite de $MANA a ser utilizado",
   "add_network": "Adicionar rede",
   "missing_data": "Faltam alguns valores",
   "are_you_sure": "Tem certeza?",
@@ -250,5 +250,8 @@
   "migrate_data_need": "Konio precisa atualizar os dados locais.",
   "migrate_data": "Atualizar dados",
   "migration_success": "Atualização concluída.\nReinicie o aplicativo.",
-  "contract_as_to": "O endereço de destino parece coincidir com o contrato de uma moeda. Tem certeza de que deseja continuar?"
+  "contract_as_to": "O endereço de destino parece coincidir com o contrato de uma moeda. Tem certeza de que deseja continuar?",
+  "payer": "Pagador",
+  "payer_desc": "Escolha a conta que cobrirá as taxas.\nVocê pode usar o $MANA gratuito fornecido pelos nossos provedores.",
+  "advanced_options": "Opções Avançadas"
 }

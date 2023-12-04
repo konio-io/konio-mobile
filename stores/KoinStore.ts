@@ -1,4 +1,4 @@
-import { Contract, Provider, Signer, utils } from "koilib";
+import { Contract, Provider, Signer, Transaction, utils } from "koilib";
 import { Abi, SendTransactionOptions, TransactionJson, TransactionJsonWait, TransactionReceipt } from "koilib/lib/interface";
 import { IKoinActions, IKoinGetters } from "../types/store";
 import { getStore } from "./registry";
@@ -25,6 +25,14 @@ const actions : IKoinActions = {
         tx: TransactionJson
     ): Promise<TransactionJson> => {
         const transaction = Object.assign({}, tx);
+        if (!transaction.header) {
+            transaction.header = {};
+        }
+    
+        transaction.header.payer = getStore('Mana').state.payer.get();
+        transaction.header.rc_limit = (getStore('Mana').state.rcLimit.get() * Math.pow(10, 6)).toString();
+        transaction.header.nonce = await signer.provider?.getNextNonce(transaction.header.payer);
+    
         return await signer.prepareTransaction(transaction);
     },
     
@@ -33,7 +41,7 @@ const actions : IKoinActions = {
         tx: TransactionJson,
         abis?: Record<string, Abi>
     ): Promise<TransactionJson> => {
-        const transaction = Object.assign({}, tx);
+        const transaction = await actions.prepareTransaction(signer, tx);
         return await signer.signTransaction(transaction, abis);
     },
     
@@ -45,7 +53,7 @@ const actions : IKoinActions = {
         receipt: TransactionReceipt
         transaction: TransactionJsonWait
     }> => {
-        const transaction = Object.assign({}, tx);
+        const transaction = await actions.prepareTransaction(signer, tx);
         return await signer.sendTransaction(transaction, options);
     },
     
@@ -57,8 +65,9 @@ const actions : IKoinActions = {
         receipt: TransactionReceipt
         transaction: TransactionJsonWait
     }> => {
-        const transaction = await actions.signTransaction(signer, tx, options?.abis);
-        return await actions.sendTransaction(signer, transaction, options);
+        const transaction = await actions.prepareTransaction(signer, tx);
+        await signer.signTransaction(transaction, options?.abis);
+        return await signer.sendTransaction(transaction, options);
     },
     
     waitForTransaction: async (

@@ -12,6 +12,7 @@ import ActionSheetRecipient from './ActionSheetRecipient';
 import ActionSheetAssetCoin from './ActionSheetAssetCoin';
 import ActionSheetAssetNft from './ActionSheetAssetNft';
 import ActionSheetDapp from './ActionSheetDapp';
+import ActionSheetFee from './ActionSheetFee';
  
 registerSheet("coin", ActionSheetCoin);
 registerSheet("account",ActionSheetAccount);
@@ -26,5 +27,6 @@ registerSheet("recipient", ActionSheetRecipient);
 registerSheet("asset_coin", ActionSheetAssetCoin);
 registerSheet("asset_nft", ActionSheetAssetNft);
 registerSheet("dapp", ActionSheetDapp);
+registerSheet("fee", ActionSheetFee)
 
 export {};

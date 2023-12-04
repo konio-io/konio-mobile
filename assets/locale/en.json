@@ -147,7 +147,7 @@
   "advanced": "Advanced",
   "advanced_desc": "Advanced settings. Warning.",
   "rc_limit": "Recharge limit",
-  "rc_limit_desc": "Range 0-100",
+  "rc_limit_desc": "Set the limit of $MANA to use",
   "add_network": "Add network",
   "missing_data": "Missing some values",
   "are_you_sure": "Are you sure?",
@@ -250,5 +250,8 @@
   "migrate_data_need": "Konio needs to update local data.",
   "migrate_data": "Update data",
   "migration_success": "Update completed.\nRestart the app.",
-  "contract_as_to": "The destination address seems to coincide with the contract of a coin. Are you sure you want to continue?"
+  "contract_as_to": "The destination address seems to coincide with the contract of a coin. Are you sure you want to continue?",
+  "payer": "Payer",
+  "payer_desc": "Choose the account that will cover the fees.\nYou can use the free $MANA provided by our providers.",
+  "advanced_options": "Advanced Options"
 }

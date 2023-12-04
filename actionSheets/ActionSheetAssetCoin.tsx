@@ -5,6 +5,7 @@ import { useI18n, useTheme } from "../hooks";
 import { useState } from "react";
 import { SettingStore, CoinStore } from "../stores";
 import ActionSheet from "./ActionSheet";
+import { Feather } from '@expo/vector-icons';
 
 export default (props: SheetProps<{
     coinId?: string
@@ -63,7 +64,11 @@ export default (props: SheetProps<{
 
             {
                 data.length > 0 &&
-                <Button title={i18n.t('confirm')} onPress={() => _confirm()} />
+                <Button 
+                    title={i18n.t('confirm')} 
+                    onPress={() => _confirm()} 
+                    icon={<Feather name="check"/>}
+                />
             }
         </ActionSheet>
     );

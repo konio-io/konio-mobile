@@ -19,7 +19,7 @@ import { useHookstate } from '@hookstate/core';
 import { Toast as MyToast } from './components';
 import { View } from 'react-native';
 import { useHydrated } from './hooks';
-import { CoinStore, WalletConnectStore, LogStore, ManaStore, SecureStore } from './stores';
+import { CoinStore, WalletConnectStore, LogStore, ManaStore, SecureStore, PayerStore } from './stores';
 import Toast from 'react-native-toast-message';
 import Migration from './screens/Migration';
 import * as SplashScreen from 'expo-splash-screen';
@@ -193,6 +193,7 @@ const Init = () => {
   useEffect(() => {
     CoinStore.actions.refreshCoins({ balance: true, price: true });
     ManaStore.actions.refreshMana();
+    PayerStore.actions.refreshPayers();
     WalletConnectStore.actions.init();
 
     //network changes

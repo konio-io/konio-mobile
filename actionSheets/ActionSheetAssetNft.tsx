@@ -6,6 +6,7 @@ import { SettingStore, NftCollectionStore, NftStore } from "../stores";
 import { Nft, NftCollection } from "../types/store";
 import { useState } from "react";
 import ActionSheet from "./ActionSheet";
+import { Feather } from '@expo/vector-icons';
 
 export default (props: SheetProps<{
     nftId?: string
@@ -80,7 +81,11 @@ export default (props: SheetProps<{
 
             {
                 data.length > 0 &&
-                <Button title={i18n.t('confirm')} onPress={() => _confirm()} />
+                <Button
+                    title={i18n.t('confirm')} 
+                    onPress={() => _confirm()}
+                    icon={<Feather name="check"/>}
+                />
             }
 
         </ActionSheet>

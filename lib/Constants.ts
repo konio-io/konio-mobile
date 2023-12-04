@@ -1,4 +1,4 @@
-import { Network } from "../types/store";
+import { Network, Payer } from "../types/store";
 
 export const MAINNET = "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==";
 export const DEFAULT_NETWORK = "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==";
@@ -11,7 +11,7 @@ export const DEFAULT_NETWORKS: Record<string, Network> = {
             "https://api.koinos.io",
             "https://api.koinosblocks.com"
         ],
-        koinContractId: "15DJN4a8SgrbGhhGksSBASiSYjGnMU8dGL"
+        koinContractId: "15DJN4a8SgrbGhhGksSBASiSYjGnMU8dGL",
     },
     "EiBncD4pKRIQWco_WRqo5Q-xnXR7JuO3PtZv983mKdKHSQ==": {
         id: "EiBncD4pKRIQWco_WRqo5Q-xnXR7JuO3PtZv983mKdKHSQ==",
@@ -43,6 +43,7 @@ export const WALLET_CONNECT_PROJECT_ID = 'c0d8292ab97b4f7adb8f12f095d2806a';
 export const BROWSER_SEARCH_URL = 'https://duckduckgo.com/?t=h_&q=';
 export const BROWSER_HOME_URL = 'https://konio.io/browser';
 export const TOKENS_URL = 'https://tokens.konio.io';
+export const PAYERS_URL = 'https://payers.konio.io';
 export const TERMS_URL = 'https://konio.io/terms/';
 export const PRIVACY_URL = 'https://konio.io/privacy-policy/';
 export const FAQ_URL = 'https://konio.io/faq/';

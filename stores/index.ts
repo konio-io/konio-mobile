@@ -14,6 +14,7 @@ import SettingStore from "./SettingStore";
 import SpinnerStore from "./SpinnerStore";
 import WalletConnectStore from "./WalletConnectStore";
 import TransactionStore from "./TransactionStore";
+import PayerStore from "./PayerStore";
 
 export {
   AccountStore,
@@ -31,5 +32,6 @@ export {
   SettingStore,
   SpinnerStore,
   WalletConnectStore,
-  TransactionStore
+  TransactionStore,
+  PayerStore
 }

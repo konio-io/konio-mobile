@@ -21,7 +21,8 @@ export const loadedState = hookstate({
   secure: false,
   account: false,
   coin: false,
-  network: false
+  network: false,
+  payer: false
 });
 
 export default stores;

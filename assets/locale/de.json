@@ -147,7 +147,7 @@
   "advanced": "Erweitert",
   "advanced_desc": "Erweiterte Einstellungen. Warnung.",
   "rc_limit": "Aufladelimit",
-  "rc_limit_desc": "Bereich 0-100",
+  "rc_limit_desc": "Legen Sie das Limit von $MANA fest, das verwendet werden soll",
   "add_network": "Netzwerk hinzufügen",
   "missing_data": "Einige Werte fehlen",
   "are_you_sure": "Bist du sicher?",
@@ -250,5 +250,8 @@
   "migrate_data_need": "Konio muss lokale Daten aktualisieren.",
   "migrate_data": "Daten aktualisieren",
   "migration_success": "Aktualisierung abgeschlossen.\nStarte die App neu.",
-  "contract_as_to": "Die Zieladresse scheint mit dem Vertrag einer Münze übereinzustimmen. Sind Sie sicher, dass Sie fortfahren möchten?"
+  "contract_as_to": "Die Zieladresse scheint mit dem Vertrag einer Münze übereinzustimmen. Sind Sie sicher, dass Sie fortfahren möchten?",
+  "payer": "Zahler",
+  "payer_desc": "Wählen Sie das Konto aus, das die Gebühren abdeckt.\nSie können die kostenlosen $MANA unserer Anbieter verwenden.",
+  "advanced_options": "Erweiterte Optionen"
 }

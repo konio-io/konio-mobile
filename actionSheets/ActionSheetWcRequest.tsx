@@ -1,4 +1,4 @@
-import { Button, Text, Accordion, Avatar } from "../components"
+import { Button, Text, Accordion, Avatar, Link } from "../components"
 import { useI18n, useTheme, useCurrentAccount, useCurrentNetwork } from "../hooks";
 import { View, Image, StyleSheet, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
@@ -163,6 +163,19 @@ export default (props: SheetProps) => {
                     ].includes(method) &&
                     <SendTransactionDetail transaction={request.params.request.params.transaction} />
                 }
+
+                <View style={theme.styles.alignCenterColumn}>
+                    <Link text={i18n.t('advanced_options')} onPress={async () => {
+                        SheetManager.hide(props.sheetId)
+                        .then(() => {
+                            SheetManager.show("fee")
+                            .then(() => {
+                                SheetManager.show('wc_request', { payload: { request } });
+                            });
+                        });
+                        
+                    }} />
+                </View>
 
             </ScrollView>
 

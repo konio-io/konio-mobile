@@ -66,12 +66,13 @@ const actions : ICoinActions = {
             throw new Error("Coin not found in store");
         }
     
-        const rcLimit = getStore('Setting').state.rcLimit.get();
         const contract = await getStore('Koin').getters.fetchContract(coin.contractId);
-    
         if (!contract.abi) {
             throw new Error("Contract abi not found");
         }
+
+        const rcLimit = getStore('Mana').state.rcLimit.get();
+        const payer = getStore('Mana').state.payer.get();
     
         // optional: preformat input/output
         //contract.abi.methods.balance_of.preformat_argument = (owner) => ({  owner,});
@@ -88,7 +89,8 @@ const actions : ICoinActions = {
             to,
             value,
         }, {
-            rcLimit: (parseInt(rcLimit) * Math.pow(10, 6)).toString()
+            rcLimit: (rcLimit * Math.pow(10, 6)).toString(),
+            payer
         });
     
         if (!transaction || !transaction.id) {

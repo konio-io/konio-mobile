@@ -17,7 +17,8 @@ import {
     SettingStore,
     SpinnerStore,
     WalletConnectStore,
-    TransactionStore
+    TransactionStore,
+    PayerStore
 } from './stores';
 import { registerStore } from './stores/registry';
 
@@ -39,6 +40,7 @@ registerStore('WalletConnect', WalletConnectStore);
 registerStore('Koin', KoinStore);
 registerStore('Lock', LockStore);
 registerStore('Transaction', TransactionStore);
+registerStore('Payer', PayerStore);
 
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
 // It also ensures that whether you load the app in Expo Go or in a native build,
