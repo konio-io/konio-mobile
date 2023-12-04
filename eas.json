@@ -14,7 +14,7 @@
         "simulator": true
       },
       "android": {
-        "buildType":"apk"
+        "buildType": "apk"
       }
     },
     "preview": {
@@ -22,6 +22,11 @@
     },
     "production": {
       "autoIncrement": true
+    },
+    "release": {
+      "android": {
+        "buildType": "apk"
+      }
     }
   },
   "submit": {

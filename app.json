@@ -2,7 +2,7 @@
   "expo": {
     "name": "Konio",
     "slug": "konio",
-    "version": "2.2.2",
+    "version": "2.2.3",
     "scheme": "konio",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -29,7 +29,7 @@
         "backgroundColor": "#7000f6"
       },
       "appStoreUrl": "https://apps.apple.com/app/konio/id6453561342",
-      "buildNumber": "25"
+      "buildNumber": "26"
     },
     "android": {
       "adaptiveIcon": {
@@ -69,7 +69,7 @@
         "backgroundColor": "#7000f6"
       },
       "playStoreUrl": "https://play.google.com/store/apps/details?id=konio.io",
-      "versionCode": 24
+      "versionCode": 26
     },
     "web": {
       "favicon": "./assets/favicon.png"
