@@ -58,7 +58,6 @@ export default (props: SheetProps<{ selected: string }>) => {
             <ScrollView>
                 <TextInput
                     loading={loading}
-                    autoFocus={true}
                     multiline={true}
                     value={address}
                     onChangeText={(v: string) => _onChange(v)}
@@ -88,7 +87,11 @@ export default (props: SheetProps<{ selected: string }>) => {
                 </View>
             </ScrollView>
 
-            <Button title={i18n.t('confirm')} onPress={() => _confirm()} />
+            <Button 
+                title={i18n.t('confirm')} 
+                onPress={() => _confirm()} 
+                icon={<Feather name="check"/>}
+            />
 
         </ActionSheet>
     );
