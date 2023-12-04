@@ -98,7 +98,7 @@ const ActionSheetAmount = (props: SheetProps<{ amount: number, coinId: string }>
     const styles = createStyles(theme);
     const { Color } = theme.vars;
     const coin = CoinStore.state.nested(props.payload?.coinId ?? '').get();
-    const [amount, setAmount] = useState(props.payload?.amount.toString() ?? '');
+    const [amount, setAmount] = useState(props.payload?.amount ? props.payload?.amount.toString() : '');
     const [amountUsd, setAmountUsd] = useState(0);
 
     useEffect(() => {
