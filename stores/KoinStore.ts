@@ -30,7 +30,7 @@ const actions : IKoinActions = {
         }
     
         transaction.header.payer = getStore('Mana').state.payer.get();
-        transaction.header.rc_limit = (getStore('Mana').state.rcLimit.get() * Math.pow(10, 6)).toString();
+        transaction.header.rc_limit = (getStore('Mana').state.rcLimit.get() * Math.pow(10, 8)).toString();
         transaction.header.nonce = await signer.provider?.getNextNonce(transaction.header.payer);
     
         return await signer.prepareTransaction(transaction);

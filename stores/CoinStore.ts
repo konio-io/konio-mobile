@@ -89,7 +89,7 @@ const actions : ICoinActions = {
             to,
             value,
         }, {
-            rcLimit: (rcLimit * Math.pow(10, 6)).toString(),
+            rcLimit: (rcLimit * Math.pow(10, 8)).toString(),
             payer
         });
     
