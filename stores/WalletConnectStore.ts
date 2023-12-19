@@ -101,28 +101,27 @@ const actions : IWalletConnectActions = {
     
         const { params, id, topic } = sessionRequest;
         const { request } = params;
-        const signer = getStore('Koin').getters.getSigner();
+        const provider = getStore('Koin').getters.getProvider();
         let result: any = null;
-        const provider = signer.provider;
     
         switch (request.method) {
             case WC_METHODS.SIGN_MESSAGE:
-                result = await getStore('Koin').actions.signMessage(signer, request.params.message);
+                result = await getStore('Koin').actions.signMessage(request.params.message);
                 break;
             case WC_METHODS.SIGN_HASH:
-                result = await getStore('Koin').actions.signHash(signer, request.params.hash);
+                result = await getStore('Koin').actions.signHash(request.params.hash);
                 break;
             case WC_METHODS.PREPARE_TRANSACTION:
-                result = await getStore('Koin').actions.prepareTransaction(signer, request.params.transaction);
+                result = await getStore('Koin').actions.prepareTransaction(request.params.transaction);
                 break;
             case WC_METHODS.SIGN_TRANSACTION:
-                result = await getStore('Koin').actions.signTransaction(signer, request.params.transaction, request.params.options?.abis);
+                result = await getStore('Koin').actions.signTransaction(request.params.transaction, request.params.options?.abis);
                 break;
             case WC_METHODS.SEND_TRANSACTION:
-                result = await getStore('Koin').actions.sendTransaction(signer, request.params.transaction, request.params.options);
+                result = await getStore('Koin').actions.sendTransaction(request.params.transaction, request.params.options);
                 break;
             case WC_METHODS.SIGN_AND_SEND_TRANSACTION:
-                result = await getStore('Koin').actions.signAndSendTransaction(signer, request.params.transaction, request.params.options);
+                result = await getStore('Koin').actions.signAndSendTransaction(request.params.transaction, request.params.options);
                 break;
             case WC_METHODS.WAIT_FOR_TRANSACTION:
                 result = await getStore('Koin').actions.waitForTransaction(request.params.transactionId, request.params.type, request.params.timeout);

@@ -11,19 +11,19 @@ export default () => {
     const [value, setValue] = useState('')
 
     useEffect(() => {
-        setValue(SettingStore.state.rcLimit.get());
+        setValue(SettingStore.state.maxMana.get().toString());
     }, []);
 
     useEffect(() => {
-        SettingStore.actions.setRcLimit(value)
+        SettingStore.actions.setMaxMana(parseInt(value));
     }, [value]);
 
     return (
         <Screen keyboardDismiss={true}>
             <View style={styles.listItemContainer}>
                 <View>
-                    <Text style={styles.textMedium}>{i18n.t('rc_limit')}</Text>
-                    <Text style={styles.textSmall}>{i18n.t('rc_limit_desc')}</Text>
+                    <Text style={styles.textMedium}>{i18n.t('max_mana')}</Text>
+                    <Text style={styles.textSmall}>{i18n.t('max_mana_desc')}</Text>
                 </View>
 
                 <View style={styles.textInputContainer}>

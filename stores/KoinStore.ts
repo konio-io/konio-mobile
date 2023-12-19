@@ -5,67 +5,68 @@ import { getStore } from "./registry";
 
 const actions : IKoinActions = {
     signHash: async (
-        signer: Signer,
         hash: string
     ): Promise<string> => {
+        const signer = getters.getSigner();
         const signedHash = await signer.signHash(utils.decodeBase64(hash));
         return btoa(signedHash.toString());
     },
     
     signMessage: async (
-        signer: Signer,
         message: string
     ): Promise<string> => {
+        const signer = getters.getSigner();
         const signedMessage = await signer.signMessage(message);
         return btoa(signedMessage.toString());
     },
     
     prepareTransaction: async (
-        signer: Signer,
         tx: TransactionJson
     ): Promise<TransactionJson> => {
+        
+        const signer = getters.getSigner();
         const transaction = Object.assign({}, tx);
         if (!transaction.header) {
             transaction.header = {};
         }
     
         transaction.header.payer = getStore('Mana').state.payer.get();
-        transaction.header.rc_limit = (getStore('Mana').state.rcLimit.get() * Math.pow(10, 8)).toString();
+        transaction.header.rc_limit = getStore('Mana').getters.getRcLimit().toString();
         transaction.header.nonce = await signer.provider?.getNextNonce(transaction.header.payer);
-    
+
         return await signer.prepareTransaction(transaction);
     },
     
     signTransaction: async (
-        signer: Signer,
         tx: TransactionJson,
         abis?: Record<string, Abi>
     ): Promise<TransactionJson> => {
-        const transaction = await actions.prepareTransaction(signer, tx);
+        const signer = getters.getSigner();
+        const transaction = await actions.prepareTransaction(tx);
         return await signer.signTransaction(transaction, abis);
     },
     
     sendTransaction: async (
-        signer: Signer,
         tx: TransactionJson,
         options?: SendTransactionOptions
     ): Promise<{
         receipt: TransactionReceipt
         transaction: TransactionJsonWait
     }> => {
-        const transaction = await actions.prepareTransaction(signer, tx);
+        const signer = getters.getSigner();
+        const transaction = await actions.prepareTransaction(tx);
         return await signer.sendTransaction(transaction, options);
     },
     
     signAndSendTransaction: async (
-        signer: Signer,
         tx: TransactionJson,
         options?: SendTransactionOptions
     ): Promise<{
         receipt: TransactionReceipt
         transaction: TransactionJsonWait
     }> => {
-        const transaction = await actions.prepareTransaction(signer, tx);
+        const signer = getters.getSigner();
+        const transaction = await actions.prepareTransaction(tx);
         await signer.signTransaction(transaction, options?.abis);
         return await signer.sendTransaction(transaction, options);
     },

@@ -123,7 +123,7 @@ const getters: ITransactionGetters = {
                         continue;
                     }
 
-                    if (transactionBlocks.length > 1) {
+                    if (transactionBlocks.length > 2) {
                         transaction.status = TRANSACTION_STATUS_PENDING;
                     }
 

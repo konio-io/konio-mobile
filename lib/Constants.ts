@@ -1,4 +1,4 @@
-import { Network, Payer } from "../types/store";
+import { Network } from "../types/store";
 
 export const MAINNET = "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==";
 export const DEFAULT_NETWORK = "EiBZK_GGVP0H_fXVAM3j6EAuz3-B-l3ejxRSewi7qIBfSA==";
@@ -24,7 +24,7 @@ export const DEFAULT_NETWORKS: Record<string, Network> = {
         koinContractId: "1FaSvLjQJsCJKq5ybmGsMMQs8RQYyVv8ju"
     }
 }
-
+export const DEFAULT_RC_LIMIT = 1000000000;
 export const TRANSACTION_TYPE_WITHDRAW = 'WITHDRAW';
 export const TRANSACTION_TYPE_DEPOSIT = 'DEPOSIT';
 export const TRANSACTION_TYPE_SWAP = 'SWAP';

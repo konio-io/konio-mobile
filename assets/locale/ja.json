@@ -146,8 +146,8 @@
     "invalid_address": "無効なアドレス",
     "advanced": "高度な設定",
     "advanced_desc": "高度な設定。警告。",
-    "rc_limit": "リチャージ制限",
-    "rc_limit_desc": "$MANA の使用制限を設定する",
+    "max_mana": "リチャージ制限",
+    "max_mana_desc": "$MANA の使用制限を設定する",
     "add_network": "ネットワークを追加",
     "missing_data": "一部の値が不足しています",
     "are_you_sure": "本当によろしいですか？",
@@ -253,5 +253,6 @@
     "contract_as_to": "宛先のアドレスはコインの契約と一致するようです。続行してもよろしいですか？",
     "payer": "支払い者",
     "payer_desc": "手数料をカバーするアカウントを選択してください。\n提供者によって提供される無料の $MANA を利用できます。",
-    "advanced_options": "高度なオプション"
+    "advanced_options": "高度なオプション",
+    "events": "イベント"
 }

@@ -71,7 +71,7 @@ const actions : ICoinActions = {
             throw new Error("Contract abi not found");
         }
 
-        const rcLimit = getStore('Mana').state.rcLimit.get();
+        const rcLimit = getStore('Mana').getters.getRcLimit();
         const payer = getStore('Mana').state.payer.get();
     
         // optional: preformat input/output
@@ -89,7 +89,7 @@ const actions : ICoinActions = {
             to,
             value,
         }, {
-            rcLimit: (rcLimit * Math.pow(10, 8)).toString(),
+            rcLimit: rcLimit.toString(),
             payer
         });
     

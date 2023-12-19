@@ -1,6 +1,7 @@
 import { hookstate } from "@hookstate/core";
-import { IManaActions, ManaState } from "../types/store";
+import { IManaActions, IManaGetters, ManaState } from "../types/store";
 import { getStore } from "./registry";
+import { DEFAULT_RC_LIMIT } from "../lib/Constants";
 
 /**
  * Mana local store
@@ -11,7 +12,7 @@ import { getStore } from "./registry";
  */
 const ManaStoreDefault = {
     mana: 0,
-    rcLimit: 95, 
+    maxMana: 100, 
     payer: '',
     lastUpdateMana: new Date().getTime()
 };
@@ -20,28 +21,45 @@ const state = hookstate<ManaState>({...ManaStoreDefault});
 
 const actions : IManaActions = {
     refreshMana: async () => {
-        console.log('refresh mana (reset rcLImit and payer)');
+        console.log('refresh mana (reset maxMana and payer)');
         const accountId = getStore('Setting').state.currentAccountId.get();
         const address = getStore('Account').state.nested(accountId).address.get();
         const provider = getStore('Koin').getters.getProvider();
         const manaBalance = await provider.getAccountRc(address);
-        const rcLimit = getStore('Setting').state.rcLimit.get();
+        const maxMana = getStore('Setting').state.maxMana.get();
     
         state.merge({
             mana: Number(manaBalance) / 1e8,
-            rcLimit: parseInt(rcLimit),
+            maxMana,
             payer: address
         });
     },
-    setRcLimit: (value: number) => {
-        state.rcLimit.set(value);
+    setMaxMana: (value: number) => {
+        state.maxMana.set(value);
     },
     setPayer: (payerId: string) => {
         state.payer.set(payerId);
     }
 };
 
+const getters : IManaGetters = {
+    getRcLimit: () => {
+        const accountId = getStore('Setting').state.currentAccountId.get();
+        const address = getStore('Account').state.nested(accountId).address.get();
+        const payer = state.payer.get();
+        const mana = state.mana.get();
+        const maxMana = state.maxMana.get();
+
+        if (address === payer) {
+            return Math.trunc(((mana * Math.pow(10, 8)) * maxMana) / 100);
+        }
+     
+        return DEFAULT_RC_LIMIT;
+    }
+}
+
 export default {
     state,
-    actions
+    actions,
+    getters
 };

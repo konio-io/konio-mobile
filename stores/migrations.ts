@@ -1,11 +1,12 @@
 
-import SettingStore from './SettingStore';
+import SettingStore, { SETTING_STORE_DEFAULT } from './SettingStore';
 import ContactStore from './ContactStore';
 import AccountStore from './AccountStore';
 import SecureStore from './SecureStore';
 import CoinStore from './CoinStore';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ExpoSecureStore from 'expo-secure-store';
+import { none } from '@hookstate/core';
 
 export const migrations: Record<string, Function> = {
     '20231003': async () => {
@@ -74,6 +75,10 @@ export const migrations: Record<string, Function> = {
         await ExpoSecureStore.deleteItemAsync('encryptedStore');
         await CoinStore.actions.refreshCoins({ info: true });
     },
+    '20231223': async () => {
+        SettingStore.state.maxMana.set(SETTING_STORE_DEFAULT.maxMana);
+        SettingStore.state.rcLimit.set(none);
+    }
 }
 
 export const executeMigration = async () => {

@@ -146,8 +146,8 @@
   "invalid_address": "Adresse invalide",
   "advanced": "Avancé",
   "advanced_desc": "Paramètres avancés. Avertissement.",
-  "rc_limit": "Limite de recharge",
-  "rc_limit_desc": "Définissez la limite de $MANA à utiliser",
+  "max_mana": "Limite de recharge",
+  "max_mana_desc": "Définissez la limite de $MANA à utiliser",
   "add_network": "Ajouter un réseau",
   "missing_data": "Certaines valeurs sont manquantes",
   "are_you_sure": "Êtes-vous sûr(e) ?",
@@ -253,5 +253,6 @@
   "contract_as_to": "L'adresse de destination semble correspondre au contrat d'une pièce. Êtes-vous sûr de vouloir continuer ?",
   "payer": "Payeur",
   "payer_desc": "Choisissez le compte qui couvrira les frais.\nVous pouvez utiliser le $MANA gratuit fourni par nos fournisseurs.",
-  "advanced_options": "Options Avancées"
+  "advanced_options": "Options Avancées",
+  "events":"Événements"
 }

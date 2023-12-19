@@ -146,8 +146,8 @@
   "invalid_address": "Dirección inválida",
   "advanced": "Avanzado",
   "advanced_desc": "Configuraciones avanzadas. Advertencia.",
-  "rc_limit": "Límite de recarga",
-  "rc_limit_desc": "Establece el límite de $MANA a utilizar",
+  "max_mana": "Límite de recarga",
+  "max_mana_desc": "Establece el límite de $MANA a utilizar",
   "add_network": "Agregar red",
   "missing_data": "Faltan algunos valores",
   "are_you_sure": "¿Estás seguro?",
@@ -253,5 +253,6 @@
   "contract_as_to": "La dirección de destino parece coincidir con el contrato de una moneda. ¿Estás seguro de que quieres continuar?",
   "payer": "Pagador",
   "payer_desc": "Seleccione la cuenta que cubrirá las tarifas.\nPuede utilizar los $MANA gratuitos proporcionados por nuestros proveedores.",
-  "advanced_options": "Opciones Avanzadas"
+  "advanced_options": "Opciones Avanzadas",
+  "events":"Eventos"
 }

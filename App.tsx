@@ -110,7 +110,7 @@ const Wc = () => {
     if (url?.startsWith('konio://wc?uri=')) {
       wcUri = url.replace('konio://wc?uri=', '');
       wcUri = decodeURIComponent(wcUri);
-    } 
+    }
     else if (url?.startsWith('konio.io://wc?uri=')) {
       wcUri = url.replace('konio.io://wc?uri=', '');
       wcUri = decodeURIComponent(wcUri);
@@ -159,7 +159,9 @@ const Wc = () => {
       const onSessionRequest = async (request: SignClientTypes.EventArguments["session_request"]) => {
         console.log('wc_request', request);
         const method = request.params.request.method;
-        if (!WC_SECURE_METHODS.includes(method)) {
+        if (WC_SECURE_METHODS.includes(method)) {
+          SheetManager.show('wc_request', { payload: { request } });
+        } else {
           WalletConnectStore.actions.acceptRequest(request)
             .catch(e => {
               LogStore.actions.logError(e);
@@ -169,9 +171,7 @@ const Wc = () => {
                 text2: i18n.t('check_logs')
               })
             });
-          return;
         }
-        SheetManager.show('wc_request', { payload: { request } });
       }
 
       wallet.on("session_proposal", onSessionProposal);

@@ -9,13 +9,12 @@ import Slider from "@react-native-community/slider";
 import { Payer } from "../types/store";
 import { useEffect, useState } from "react";
 import { Feather } from '@expo/vector-icons';
-import { DEFAULT_PAYERS } from "../lib/Constants";
 import { getStore } from "../stores/registry";
 
 export default (props: SheetProps) => {
     const { styles, vars } = useTheme();
 
-    const [rcLimit, setRcLimit] = useState(ManaStore.state.rcLimit.get());
+    const [maxMana, setMaxMana] = useState(ManaStore.state.maxMana.get());
     const [payer, setPayer] = useState(ManaStore.state.payer.get());
 
     const payers = PayerStore.getters.getCurrentPayers();
@@ -23,7 +22,7 @@ export default (props: SheetProps) => {
 
     const _confirm = () => {
         ManaStore.actions.setPayer(payer);
-        ManaStore.actions.setRcLimit(rcLimit);
+        ManaStore.actions.setMaxMana(maxMana);
         SheetManager.hide(props.sheetId)
     };
 
@@ -32,10 +31,10 @@ export default (props: SheetProps) => {
 
             <View style={{ ...styles.paddingBase, gap: vars.Spacing.large }}>
                 <View style={{ ...styles.alignCenterColumn }}>
-                    <Text style={{ ...styles.textMedium, ...styles.textBold }}>{i18n.t('rc_limit')}</Text>
-                    <Text style={styles.textSmall}>{i18n.t('rc_limit_desc')}</Text>
+                    <Text style={{ ...styles.textMedium, ...styles.textBold }}>{i18n.t('max_mana')}</Text>
+                    <Text style={styles.textSmall}>{i18n.t('max_mana_desc')}</Text>
 
-                    <Text>{rcLimit}%</Text>
+                    <Text>{maxMana}%</Text>
                     <Slider
                         style={{ width: '100%' }}
                         minimumValue={0}
@@ -43,8 +42,8 @@ export default (props: SheetProps) => {
                         minimumTrackTintColor={vars.Color.primary}
                         maximumTrackTintColor={vars.Border.color}
                         thumbTintColor={vars.Border.color}
-                        value={rcLimit}
-                        onValueChange={(v) => setRcLimit(v)}
+                        value={maxMana}
+                        onValueChange={(v) => setMaxMana(v)}
                         step={5}
                     />
                 </View>

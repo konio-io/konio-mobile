@@ -146,8 +146,8 @@
   "invalid_address": "无效地址",
   "advanced": "高级",
   "advanced_desc": "高级设置。警告。",
-  "rc_limit": "充电限制",
-  "rc_limit_desc": "设置要使用的 $MANA 限额",
+  "max_mana": "充电限制",
+  "max_mana_desc": "设置要使用的 $MANA 限额",
   "add_network": "添加网络",
   "missing_data": "缺少一些值",
   "are_you_sure": "您确定吗？",
@@ -253,5 +253,6 @@
   "contract_as_to": "目的地地址似乎与硬币的合同相匹配。您确定要继续吗？",
   "payer": "付款方",
   "payer_desc": "选择支付费用的帐户。\n您可以使用我们提供的免费 $MANA。",
-  "advanced_options": "高级选项"
+  "advanced_options": "高级选项",
+  "events": "事件"
 }

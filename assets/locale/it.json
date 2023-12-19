@@ -146,8 +146,8 @@
   "invalid_address": "Invalid address",
   "advanced": "Avanzate",
   "advanced_desc": "Impostazioni avanzate. Avvertenza.",
-  "rc_limit": "Limite di ricarica",
-  "rc_limit_desc": "Stabilisci il limite di $MANA da utilizzare",
+  "max_mana": "Limite di ricarica",
+  "max_mana_desc": "Stabilisci il limite di $MANA da utilizzare",
   "add_network": "Aggiungi rete",
   "missing_data": "Mancano alcuni valori",
   "are_you_sure": "Sei sicuro?",
@@ -253,5 +253,6 @@
   "contract_as_to":"L'indirizzo di destinazione sembra coincidere con il contratto di una coin. Sei sicuro di voler continuare?",
   "payer":"Pagatore",
   "payer_desc":"Scegli l'account che coprirà le fees.\nPuoi utilizzare i $MANA gratuiti forniti dai nostri provider.",
-  "advanced_options":"Opzioni avanzate"
+  "advanced_options":"Opzioni avanzate",
+  "events":"Eventi"
 }

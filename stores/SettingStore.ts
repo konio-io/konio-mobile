@@ -13,7 +13,7 @@ export const SETTING_STORE_DEFAULT = {
     theme: OS_THEME,
     biometric: false,
     autolock: -1,
-    rcLimit: '95',
+    maxMana: 100,
     version: '20231126',
     askReview: false
 };
@@ -69,8 +69,8 @@ const actions : ISettingActions = {
         }
     },
     
-    setRcLimit: (value: string) => {
-        state.rcLimit.set(value);
+    setMaxMana: (value: number) => {
+        state.maxMana.set(value);
     },
 }
 

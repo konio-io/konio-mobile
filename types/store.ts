@@ -10,7 +10,7 @@ import { Contract, Provider, Signer } from "koilib";
 export type SettingState = {
     currentNetworkId: string,
     currentAccountId: string,
-    rcLimit: string,
+    maxMana: number,
     version: string,
     locale: string,
     theme: string,
@@ -27,7 +27,7 @@ export interface ISettingActions {
     setBiometric(value: boolean): void;
     setAutolock(autolock: number): void;
     showAskReview(): Promise<void>;
-    setRcLimit(value: string): void;
+    setMaxMana(value: number): void;
 }
 
 export interface ISettingStore {
@@ -403,20 +403,25 @@ export interface IPayerStore {
  */
 export type ManaState = {
     mana: number,
-    rcLimit: number,
+    maxMana: number,
     payer: string,
     lastUpdateMana: number
 }
 
 export interface IManaActions {
     refreshMana: () => Promise<void>;
-    setRcLimit: (value: number) => void;
+    setMaxMana: (value: number) => void;
     setPayer: (payerId: string) => void;
+}
+
+export interface IManaGetters {
+    getRcLimit: () => number
 }
 
 export interface IManaStore {
     state: State<ManaState>;
-    actions: IManaActions
+    actions: IManaActions,
+    getters: IManaGetters
 }
 
 /**
@@ -484,15 +489,15 @@ export interface ILockStore {
  * Koin
  */
 export interface IKoinActions {
-    signHash: (signer: Signer, hash: string) => Promise<string>;
-    signMessage: (signer: Signer, message: string) => Promise<string>;
-    prepareTransaction: (signer: Signer, tx: TransactionJson) => Promise<TransactionJson>;
-    signTransaction: (signer: Signer, tx: TransactionJson, abis?: Record<string, Abi>) => Promise<TransactionJson>;
-    sendTransaction: (signer: Signer, tx: TransactionJson, options?: SendTransactionOptions) => Promise<{
+    signHash: (hash: string) => Promise<string>;
+    signMessage: (message: string) => Promise<string>;
+    prepareTransaction: (tx: TransactionJson) => Promise<TransactionJson>;
+    signTransaction: (tx: TransactionJson, abis?: Record<string, Abi>) => Promise<TransactionJson>;
+    sendTransaction: (tx: TransactionJson, options?: SendTransactionOptions) => Promise<{
         receipt: TransactionReceipt;
         transaction: TransactionJsonWait;
     }>;
-    signAndSendTransaction: (signer: Signer, tx: TransactionJson, options?: SendTransactionOptions) => Promise<{
+    signAndSendTransaction: (tx: TransactionJson, options?: SendTransactionOptions) => Promise<{
         receipt: TransactionReceipt;
         transaction: TransactionJsonWait;
     }>;

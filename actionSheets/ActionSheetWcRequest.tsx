@@ -1,4 +1,4 @@
-import { Button, Text, Accordion, Avatar, Link } from "../components"
+import { Button, Text, Avatar, Link } from "../components"
 import { useI18n, useTheme, useCurrentAccount, useCurrentNetwork } from "../hooks";
 import { View, Image, StyleSheet, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
@@ -7,9 +7,11 @@ import { WC_METHODS } from "../lib/Constants";
 import Loading from "../screens/Loading";
 import { SheetManager, SheetProps } from "react-native-actions-sheet";
 import type { Theme } from "../types/ui";
-import { WalletConnectStore, NetworkStore, SettingStore, LogStore, KoinStore } from "../stores";
+import { WalletConnectStore, NetworkStore, SettingStore, LogStore } from "../stores";
 import Toast from "react-native-toast-message";
 import ActionSheet from "./ActionSheet";
+import SendTransactionDetail from "../components/SendTransactionDetail";
+import SignMessageDetail from "../components/SignMessageDetail";
 
 export default (props: SheetProps) => {
     const wallet = WalletConnectStore.state.wallet.get();
@@ -237,90 +239,6 @@ export default (props: SheetProps) => {
             }
 
         </ActionSheet>
-    )
-}
-
-const SignMessageDetail = (props: {
-    message: string
-}) => {
-    const theme = useTheme();
-    const styles = theme.styles;
-    const i18n = useI18n();
-
-    return (
-        <View>
-            <Text style={styles.textSmall}>{i18n.t('message')}</Text>
-            <Text>{props.message}</Text>
-        </View>
-    )
-}
-
-const SendTransactionDetail = (props: {
-    transaction: any
-}) => {
-    const i18n = useI18n();
-    const theme = useTheme();
-    const styles = theme.styles;
-    const [operations, setOperations] = useState<Array<any>>([]);
-
-    const _loadDetails = async () => {
-        for (const operation of props.transaction.operations) {
-            const contractId = operation.call_contract.contract_id;
-
-            try {
-                const contract = await KoinStore.getters.fetchContract(contractId);
-
-                if (contract.abi) {
-                    const decodedOperation = await contract.decodeOperation(operation)
-                    const { name, args } = decodedOperation;
-                    setOperations(current => [
-                        ...current,
-                        {
-                            name,
-                            description: contract.abi?.methods[name].description,
-                            args: JSON.stringify(args)
-                        }
-                    ]);
-                }
-            } catch (e) {
-                console.error(e);
-                LogStore.actions.logError(String(e));
-            }
-        }
-    }
-
-    useEffect(() => {
-        _loadDetails();
-    }, [props.transaction])
-
-    return (
-        <View>
-            <Text style={styles.textSmall}>{i18n.t('operations')}</Text>
-            {
-                operations.map((operation, index) =>
-                    <Accordion
-                        key={index}
-                        header={(
-                            <View style={{ ...styles.paddingVerticalSmall }}>
-                                <Text>{operation.name}</Text>
-                            </View>
-                        )}
-                    >
-                        <View>
-                            {
-                                Object.keys(operation).filter(k => k !== 'name').map(k =>
-                                    <View key={k}>
-                                        <Text style={styles.textSmall}>{k}</Text>
-                                        <Text>{operation[k]}</Text>
-                                    </View>
-                                )
-                            }
-                        </View>
-
-                    </Accordion>
-                )
-            }
-        </View>
     )
 }
 
