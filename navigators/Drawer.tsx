@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, Linking, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Linking, ScrollView, TouchableOpacity } from 'react-native';
 import {
     createDrawerNavigator,
     DrawerItem,
@@ -7,13 +7,14 @@ import {
 import { useCurrentAccount, useI18n, useTheme } from '../hooks';
 import { Avatar, Logo, Separator, Link, Address, WcLogo } from '../components';
 import Root from './Root';
-import { AntDesign, Feather } from '@expo/vector-icons';
+import { AntDesign, Feather, FontAwesome5 } from '@expo/vector-icons';
 import type { Theme } from '../types/ui';
 import Constants from 'expo-constants';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useHookstate } from '@hookstate/core';
 import AccountStore from '../stores/AccountStore';
 import SettingStore from '../stores/SettingStore';
+import { rgba } from '../lib/utils';
 
 const Drawer = createDrawerNavigator();
 export default () => {
@@ -141,12 +142,36 @@ const DrawerContent = (props: any) => {
             </ScrollView>
 
             <View style={styles.drawerFooterContainer}>
-                <Logo width={74} height={74} />
+                <View style={styles.alignCenterColumn}>
+                    <Logo width={74} height={74} />
 
-                <View style={styles.authorContainer}>
-                    <Link text="https://konio.io" onPress={() => Linking.openURL('https://konio.io')} />
-                    <Text style={styles.textVersion}>v{Constants.expoConfig?.version}</Text>
+                    <View style={{ ...styles.directionRow, ...styles.columnGapSmall, alignItems: 'baseline' }}>
+                        <Link text="konio.io" onPress={() => Linking.openURL('https://konio.io')} />
+                        <Text style={styles.textVersion}>v{Constants.expoConfig?.version}</Text>
+                    </View>
                 </View>
+
+                <View style={{ ...styles.directionRow, ...styles.columnGapSmall }}>
+                    <TouchableOpacity onPress={() => Linking.openURL('https://twitter.com/konio_io')}>
+                        <FontAwesome5 name="twitter" size={24} color={rgba(theme.vars.Color.baseContrast, 0.4)} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => Linking.openURL('https://t.me/konio_io')}>
+                        <FontAwesome5 name="telegram" size={24} color={rgba(theme.vars.Color.baseContrast, 0.4)} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => Linking.openURL('https://discord.gg/pUD4b3UDbQ')}>
+                        <FontAwesome5 name="discord" size={24} color={rgba(theme.vars.Color.baseContrast, 0.4)} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => Linking.openURL('https://www.youtube.com/@konio_io')}>
+                        <FontAwesome5 name="youtube" size={24} color={rgba(theme.vars.Color.baseContrast, 0.4)} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => Linking.openURL('https://github.com/konio-io')}>
+                        <FontAwesome5 name="github" size={24} color={rgba(theme.vars.Color.baseContrast, 0.4)} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => Linking.openURL('https://medium.com/@konio_io')}>
+                        <FontAwesome5 name="medium" size={24} color={rgba(theme.vars.Color.baseContrast, 0.4)} />
+                    </TouchableOpacity>
+                </View>
+
             </View>
 
         </View>
@@ -167,10 +192,6 @@ const createStyles = (theme: Theme) => {
             marginVertical: Spacing.base,
             alignItems: 'center',
             rowGap: Spacing.base
-        },
-        authorContainer: {
-            rowGap: Spacing.small,
-            justifyContent: 'center'
         },
         textVersion: {
             ...theme.styles.textCenter,
