@@ -4,12 +4,12 @@ import '@ethersproject/shims'; //needs for etherjs compatibility
 import './actionSheets';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
-import { DarkTheme, DefaultTheme, NavigationContainer, getStateFromPath } from "@react-navigation/native";
+import { DarkTheme, DefaultTheme, NavigationContainer, useNavigation } from "@react-navigation/native";
 import { SheetProvider } from "react-native-actions-sheet";
 import Intro from './navigators/Intro';
 import Spinner from './components/Spinner';
 import Drawer from './navigators/Drawer';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { SheetManager } from 'react-native-actions-sheet';
 import { WC_SECURE_METHODS } from './lib/Constants';
 import NetInfo from '@react-native-community/netinfo';
@@ -19,12 +19,13 @@ import { useHookstate } from '@hookstate/core';
 import { Toast as MyToast } from './components';
 import { View } from 'react-native';
 import { useHydrated } from './hooks';
-import { CoinStore, WalletConnectStore, LogStore, ManaStore, SecureStore, PayerStore } from './stores';
+import { CoinStore, WalletConnectStore, LogStore, ManaStore, PayerStore } from './stores';
 import Toast from 'react-native-toast-message';
 import Migration from './screens/Migration';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Linking from 'expo-linking';
 import Unlock from './components/Unlock';
+import { SettingsNavigationProp } from './types/navigation';
 
 export default function App() {
   const theme = useTheme();
@@ -100,6 +101,7 @@ const Wc = () => {
   const wallet = useHookstate(WalletConnectStore.state.wallet).get();
   const i18n = useI18n();
   const url = Linking.useURL();
+  const settingNavigation = useNavigation<SettingsNavigationProp>();
 
   //
   /**
@@ -143,7 +145,8 @@ const Wc = () => {
           Toast.show({
             type: 'error',
             text1: i18n.t('pairing_error'),
-            text2: i18n.t('check_logs')
+            text2: i18n.t('check_logs'),
+            onPress: () => settingNavigation.navigate('Settings', { screen: 'Logs' })
           });
         });
     }
@@ -171,7 +174,8 @@ const Wc = () => {
               Toast.show({
                 type: 'error',
                 text1: i18n.t('dapp_request_error', { method }),
-                text2: i18n.t('check_logs')
+                text2: i18n.t('check_logs'),
+                onPress: () => settingNavigation.navigate('Settings', { screen: 'Logs' })
               })
             });
         }

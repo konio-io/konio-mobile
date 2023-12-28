@@ -6,7 +6,7 @@ import AmountInput from '../components/AmountInput';
 import { Feather } from '@expo/vector-icons';
 import AssetCoinInput from '../components/AssetCoinInput';
 import { CommonActions, useNavigation } from '@react-navigation/native';
-import { WithdrawNavigationProp } from '../types/navigation';
+import { SettingsNavigationProp, WithdrawNavigationProp } from '../types/navigation';
 import { useEffect, useState } from 'react';
 import { SettingStore, LockStore, SpinnerStore, CoinStore, LogStore } from '../stores';
 import { useHookstate } from '@hookstate/core';
@@ -28,6 +28,7 @@ export default (props: {
     const theme = useTheme();
     const navigation = useNavigation<WithdrawNavigationProp>();
     const lockState = useLockState();
+    const settingNavigation = useNavigation<SettingsNavigationProp>();
 
     useEffect(() => {
         _reset();
@@ -156,7 +157,8 @@ export default (props: {
                         Toast.show({
                             type: 'error',
                             text1: i18n.t('transaction_confirm_failed'),
-                            text2: i18n.t('check_logs')
+                            text2: i18n.t('check_logs'),
+                            onPress: () => settingNavigation.navigate('Settings', { screen: 'Logs' })
                         });
                     });
             })
@@ -166,7 +168,8 @@ export default (props: {
                 Toast.show({
                     type: 'error',
                     text1: i18n.t('transaction_commit_failed'),
-                    text2: i18n.t('check_logs')
+                    text2: i18n.t('check_logs'),
+                    onPress: () => settingNavigation.navigate('Settings', { screen: 'Logs' })
                 });
             });
     };

@@ -12,6 +12,8 @@ import Toast from "react-native-toast-message";
 import ActionSheet from "./ActionSheet";
 import SendTransactionDetail from "../components/SendTransactionDetail";
 import SignMessageDetail from "../components/SignMessageDetail";
+import { useNavigation } from "@react-navigation/native";
+import { SettingsNavigationProp } from "../types/navigation";
 
 export default (props: SheetProps) => {
     const wallet = WalletConnectStore.state.wallet.get();
@@ -21,6 +23,7 @@ export default (props: SheetProps) => {
 
     const account = useCurrentAccount();
     const network = useCurrentNetwork();
+    const settingNavigation = useNavigation<SettingsNavigationProp>();
 
     const request = props.payload.request;
     const theme = useTheme();
@@ -77,7 +80,8 @@ export default (props: SheetProps) => {
                 Toast.show({
                     type: 'error',
                     text1: i18n.t('dapp_request_error', { method }),
-                    text2: i18n.t('check_logs')
+                    text2: i18n.t('check_logs'),
+                    onPress: () => settingNavigation.navigate('Settings', { screen: 'Logs' })
                 })
             });
     }

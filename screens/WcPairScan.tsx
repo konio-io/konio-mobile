@@ -1,6 +1,6 @@
 import { Text, Link, WcLogo } from "../components"
 import { useNavigation } from "@react-navigation/native";
-import { WcPairScanNavigationProp } from "../types/navigation";
+import { SettingsNavigationProp, WcPairScanNavigationProp } from "../types/navigation";
 import { useI18n, useTheme } from "../hooks";
 import { View } from "react-native";
 import CodeScanner from "../components/CodeScanner";
@@ -10,6 +10,7 @@ import Toast from "react-native-toast-message";
 
 export default () => {
     const navigation = useNavigation<WcPairScanNavigationProp>();
+    const settingNavigation = useNavigation<SettingsNavigationProp>();
     const theme = useTheme();
     const styles = theme.styles;
     const i18n = useI18n();
@@ -24,7 +25,8 @@ export default () => {
                 Toast.show({
                     type: 'error',
                     text1: i18n.t('pairing_error'),
-                    text2: i18n.t('check_logs')
+                    text2: i18n.t('check_logs'),
+                    onPress: () => settingNavigation.navigate('Settings', { screen: 'Logs' })
                 });
             });
     }

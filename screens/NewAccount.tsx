@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import type { NewWalletSeedNavigationProp } from '../types/navigation';
+import type { NewWalletSeedNavigationProp, SettingsNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
 import { Button, TextInput, Screen } from '../components';
 import { useI18n, useTheme } from '../hooks';
@@ -11,6 +11,8 @@ import { AccountStore, SpinnerStore, SettingStore, LogStore } from '../stores';
 
 export default () => {
     const navigation = useNavigation<NewWalletSeedNavigationProp>();
+    const settingNavigation = useNavigation<SettingsNavigationProp>();
+    
     const [name, setName] = useState('');
     const i18n = useI18n();
     const theme = useTheme();
@@ -51,7 +53,8 @@ export default () => {
                 Toast.show({
                     type: 'error',
                     text1: i18n.t('unable_to_add_account'),
-                    text2: i18n.t('check_logs')
+                    text2: i18n.t('check_logs'),
+                    onPress: () => settingNavigation.navigate('Settings', { screen: 'Logs' })
                 });
             });
         }, 1000);

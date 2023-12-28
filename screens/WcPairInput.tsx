@@ -1,7 +1,7 @@
 import { Screen, TextInput, Button, TextInputActionPaste } from "../components"
 import { useI18n, useTheme } from "../hooks";
 import { useNavigation } from "@react-navigation/native";
-import { WcPairInputNavigationProp } from "../types/navigation";
+import { SettingsNavigationProp, WcPairInputNavigationProp } from "../types/navigation";
 import { View } from "react-native";
 import { Feather } from '@expo/vector-icons';
 import { useState } from "react";
@@ -10,6 +10,8 @@ import Toast from "react-native-toast-message";
 
 export default () => {
     const navigation = useNavigation<WcPairInputNavigationProp>();
+    const settingNavigation = useNavigation<SettingsNavigationProp>();
+    
     const [uri, setUri] = useState('');
     const theme = useTheme();
     const styles = theme.styles;
@@ -25,7 +27,8 @@ export default () => {
             Toast.show({
                 type: 'error',
                 text1: i18n.t('pairing_error'),
-                text2: i18n.t('check_logs')
+                text2: i18n.t('check_logs'),
+                onPress: () => settingNavigation.navigate('Settings', { screen: 'Logs' })
             });
         });
     }
