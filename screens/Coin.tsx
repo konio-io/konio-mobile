@@ -10,6 +10,7 @@ import Loading from './Loading';
 import { useHookstate } from '@hookstate/core';
 import { CoinStore, SpinnerStore, TransactionStore } from '../stores';
 import { Coin } from '../types/store';
+import { formatCurrency } from '../lib/utils';
 
 export default () => {
     const navigation = useNavigation<HoldingsNavigationProp>();
@@ -48,12 +49,12 @@ export default () => {
                         coin.balance !== undefined && coin.balance >= 0 &&
                         <View>
                             <Text style={{ ...styles.textLarge, ...styles.textCenter }}>
-                                {coin.balance} {coin.symbol}
+                                {formatCurrency(coin.balance)} {coin.symbol}
                             </Text>
 
                             {coin.price !== undefined &&
                                 <Text style={{ ...styles.text, ...styles.textCenter }}>
-                                    {(coin.balance * coin.price).toFixed(2)} USD
+                                    {formatCurrency(coin.balance * coin.price)} USD
                                 </Text>
                             }
                         </View>

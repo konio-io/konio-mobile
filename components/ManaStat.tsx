@@ -4,6 +4,7 @@ import CircularProgress from './CircularProgress';
 import Text from './Text';
 import type { Theme } from '../types/ui';
 import { useI18n } from '../hooks';
+import { formatCurrency } from '../lib/utils';
 
 export default (props: {
     percent: number,
@@ -38,7 +39,7 @@ export default (props: {
 
             <View>
                 <Text style={styles.title}>{i18n.t('balance')}</Text>
-                <Text style={{ ...styles.textCenter, ...styles.text }}>{props.balance.toString()} MANA</Text>
+                <Text style={{ ...styles.textCenter, ...styles.text }}>{formatCurrency(props.balance)} MANA</Text>
             </View>
             
             {

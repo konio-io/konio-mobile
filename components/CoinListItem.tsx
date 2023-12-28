@@ -8,6 +8,7 @@ import { useHookstate } from '@hookstate/core';
 import CoinStore from '../stores/CoinStore';
 import { Coin } from '../types/store';
 import SelectedTicker from './SelectedTicker';
+import { formatCurrency } from '../lib/utils';
 
 export default (props: {
     coin: Coin
@@ -54,12 +55,11 @@ const Price = (props: {
 }) => {
     const price = useHookstate(CoinStore.state.nested(props.coin.id).price).get();
     const { styles } = useTheme();
-    const decimals = price ? Math.max(0, -Math.floor(Math.log10(Math.abs(price!)))) + 2 : 0;
 
     return (
         <View>
             {price !== undefined &&
-                <Text style={{ ...styles.textSmall }}>{price.toFixed(decimals)} USD</Text>
+                <Text style={{ ...styles.textSmall }}>{formatCurrency(price ?? 0)} USD</Text>
             }
         </View>
     )
@@ -77,12 +77,12 @@ const Balance = (props: {
             {balance !== undefined && balance >= 0 &&
                 <View>
                     <Text style={{ ...styles.text, ...styles.textRight }}>
-                        {balance.toFixed(2)} {props.coin.symbol}
+                        {formatCurrency(balance)} {props.coin.symbol}
                     </Text>
 
                     {price !== undefined &&
                         <Text style={{ ...styles.textSmall, ...styles.textRight }}>
-                            {(balance * price).toFixed(2)} USD
+                            {formatCurrency(balance * price)} USD
                         </Text>
                     }
                 </View>

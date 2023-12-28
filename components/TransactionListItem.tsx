@@ -8,7 +8,7 @@ import type { Theme } from '../types/ui';
 import { Coin, Transaction } from '../types/store';
 import Address from './Address';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { rgba } from '../lib/utils';
+import { formatCurrency, rgba } from '../lib/utils';
 import { AccountStore, ContactStore } from '../stores';
 
 export default (props: {
@@ -70,7 +70,7 @@ export default (props: {
 
                     <Text style={{ ...styles.text, color: type === TRANSACTION_TYPE_WITHDRAW ? Color.error : Color.success }}>
                         {type === TRANSACTION_TYPE_WITHDRAW ? '-' : '+'}
-                        {transaction.value ? parseFloat(transaction.value).toFixed(2) : ''} {props.coin?.symbol}
+                        {transaction.value ? formatCurrency(parseFloat(transaction.value)) : ''} {props.coin?.symbol}
                     </Text>
                 </View>
             </View>

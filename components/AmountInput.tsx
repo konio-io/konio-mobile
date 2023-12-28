@@ -6,6 +6,7 @@ import { Theme } from '../types/ui';
 import TextInputContainer from './TextInputContainer';
 import { SheetManager, SheetProps, registerSheet } from 'react-native-actions-sheet';
 import { CoinStore } from '../stores';
+import { formatCurrency } from '../lib/utils';
 
 export default (props: {
     value?: number,
@@ -55,7 +56,7 @@ export default (props: {
 
                     <View style={{minHeight: 60}}>
                         <Text style={{ ...styles.textMedium, ...styles.textBold }}>{props.value}</Text>
-                        <Text>~ {usd.toFixed(2)} USD</Text>
+                        <Text>~ {formatCurrency(usd)} USD</Text>
                     </View>
 
                 </TextInputContainer>
@@ -172,7 +173,7 @@ const ActionSheetAmount = (props: SheetProps<{ amount: number, coinId: string }>
 
                 <View style={{ ...styles.alignCenterColumn, height: 20 }}>
                     {amountUsd !== undefined &&
-                        <Text style={amountUsdStyle}>{amountUsd.toFixed(2)} USD</Text>
+                        <Text style={amountUsdStyle}>{formatCurrency(amountUsd)} USD</Text>
                     }
                 </View>
             </View>

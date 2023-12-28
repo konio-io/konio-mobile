@@ -11,6 +11,7 @@ import { CATEGORY_COINS, CATEGORY_NFTS } from '../lib/Constants';
 import AssetToggler from '../components/AssetToggler';
 import SettingStore from '../stores/SettingStore';
 import { useHookstate } from '@hookstate/core';
+import { formatCurrency } from '../lib/utils';
 
 export default () => {
   const navigation = useNavigation<AssetsNavigationProp>();
@@ -80,6 +81,6 @@ const Summary = () => {
   const total = useAccountValue();
 
   return (
-    <Text style={{ ...styles.textXlarge, lineHeight: 30 }}>{total.toFixed(2)} USD</Text>
+    <Text style={{ ...styles.textXlarge, lineHeight: 30 }}>{formatCurrency(total)} USD</Text>
   )
 }

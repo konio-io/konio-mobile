@@ -72,3 +72,9 @@ export const createWallet = (mnemonic: string, index: number) => {
 export const compactString = (word: string, length: number): string => {
     return `${word.substring(0, length)} ... ${word.substring(word.length - length, word.length)}`;
 }
+
+export const formatCurrency = (price: number) => {
+    return new Intl.NumberFormat('en-US', {
+        maximumSignificantDigits: 6,
+    }).format(price ?? 0);
+}
