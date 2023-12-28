@@ -55,7 +55,7 @@ export default (props: {
                 style={StyleSheet.absoluteFillObject}
             />
 
-            <View style={{ backgroundColor: 'white', position: 'absolute', bottom: 0, left: 0, right: 0, height: '35%' }}>
+            <View style={{ backgroundColor: theme.vars.Color.base, position: 'absolute', bottom: 0, left: 0, right: 0, height: '35%' }}>
                 <View>
                     {props.body}
                     
