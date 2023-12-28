@@ -1,11 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NewCoinNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
-import { TextInput, Button, Screen, Text, ActivityIndicator } from '../components';
+import { TextInput, Button, Screen, Text } from '../components';
 import { useCoins, useCurrentNetwork, useI18n } from '../hooks';
-import { Keyboard, ScrollView, View, TouchableOpacity, Image, FlatList } from 'react-native';
+import { Keyboard, View, TouchableOpacity, Image, FlatList } from 'react-native';
 import { useTheme } from '../hooks';
-import { DEFAULT_NETWORKS, TOKENS_URL } from '../lib/Constants';
+import { TOKENS_URL } from '../lib/Constants';
 import { useEffect, useState } from 'react';
 import Toast from 'react-native-toast-message';
 import { SpinnerStore, CoinStore, LogStore, SettingStore } from '../stores';
