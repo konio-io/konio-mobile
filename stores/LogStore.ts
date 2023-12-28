@@ -13,12 +13,15 @@ const state = hookstate<LogState>(
 
 const actions : ILogActions = {
     logError: (error: any) => {
-        console.error(error);
+        let errorString = (new Date()).toISOString().replace('T',' ').substring(0,19);
+        
         if (typeof error === 'string') {
-            state.merge([error]);
+            errorString += '|' + error;
         } else {
-            state.merge([error.toString()]);
+            errorString += '|' + error.toString();
         }
+
+        state.merge([errorString]);
     },
     
     logReset: () => {
