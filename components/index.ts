@@ -39,6 +39,7 @@ import SelectedTicker from './SelectedTicker';
 import NftListItem from './NftListItem';
 import DappLogo from './DappLogo';
 import NftImage from './NftImage';
+import Unlock from './Unlock';
 
 export {
     ActivityIndicator,
@@ -81,5 +82,6 @@ export {
     WcLogo,
     SelectedTicker,
     DappLogo,
-    NftImage
+    NftImage,
+    Unlock
 }

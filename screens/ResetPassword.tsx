@@ -5,9 +5,8 @@ import { Feather } from '@expo/vector-icons';
 import { useTheme, useI18n } from '../hooks';
 import { View } from 'react-native';
 import { useEffect, useState } from 'react';
-import { SheetManager } from 'react-native-actions-sheet';
 import Toast from 'react-native-toast-message';
-import { SecureStore } from '../stores';
+import { LockStore, SecureStore } from '../stores';
 
 export default () => {
     const navigation = useNavigation<IntroNavigationProp>();
@@ -18,10 +17,18 @@ export default () => {
     const theme = useTheme();
     const styles = theme.styles;
 
+    //relock before go back
+    useEffect(() =>
+        navigation.addListener('beforeRemove', (e) => {
+            LockStore.actions.lock();
+        }),
+        [navigation]
+    );
+
     useEffect(() => {
-        SheetManager.hide('unlock');
+        LockStore.actions.unlock();
         return () => {
-            SheetManager.show('unlock');
+            LockStore.actions.lock();
         };
     }, []);
 

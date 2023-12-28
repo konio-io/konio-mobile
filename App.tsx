@@ -24,6 +24,7 @@ import Toast from 'react-native-toast-message';
 import Migration from './screens/Migration';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Linking from 'expo-linking';
+import Unlock from './components/Unlock';
 
 export default function App() {
   const theme = useTheme();
@@ -227,16 +228,6 @@ const Lock = () => {
   const nextAppState = useAppState();
   const autoLock = useAutolock();
 
-  //intercept lock
-  useEffect(() => {
-    if (lock.get() === true) {
-      setDateLock(0); //ios
-      setTimeout(() => {
-        SheetManager.show('unlock');
-      }, 100);
-    }
-  }, [lock]);
-
   //intercept autolock
   useEffect(() => {
     if (autoLock > -1) {
@@ -245,11 +236,18 @@ const Lock = () => {
       }
       else if (nextAppState === 'active') {
         if (dateLock > 0 && Date.now() > dateLock) {
+          setDateLock(0);
           lock.set(true);
         }
       }
     }
   }, [nextAppState, autoLock, lock]);
 
-  return <></>
+  if (lock.get() === true) {
+    return (
+      <Unlock></Unlock>
+    );
+  }
+
+  return <></>;
 }
