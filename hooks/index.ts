@@ -10,6 +10,7 @@ import { SettingStore, CoinStore, AccountStore, NetworkStore, NameserverStore, L
 import { loadedState } from "../stores/registry";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { migrations } from "../stores/migrations";
+import { registerForPushNotificationsAsync }  from "../lib/PushNotification";
 
 export const useTheme = () => {
     const storeTheme = useHookstate(SettingStore.state.theme).get();
@@ -150,7 +151,7 @@ export const useNeedMigration = (hydrated: boolean) => {
                 }
             });
         }
-    },[hydrated]);
+    }, [hydrated]);
 
     return state;
 }
@@ -160,7 +161,7 @@ export const useCoins = () => {
     const currentNetworkId = useHookstate(SettingStore.state.currentNetworkId).get();
     const coins = useHookstate(CoinStore.state).get();
 
-    return Object.values(coins).filter(coin => 
+    return Object.values(coins).filter(coin =>
         coin.networkId === currentNetworkId
         && coin.accountId === currentAccountId
     );
@@ -171,7 +172,7 @@ export const useNftCollections = () => {
     const currentNetworkId = useHookstate(SettingStore.state.currentNetworkId).get();
     const nftCollections = useHookstate(NftCollectionStore.state).get();
 
-    return Object.values(nftCollections).filter(nft => 
+    return Object.values(nftCollections).filter(nft =>
         nft.networkId === currentNetworkId &&
         nft.accountId === currentAccountId
     );
@@ -182,4 +183,10 @@ export const useKoinBalance = () => {
     const currentNetwork = useCurrentNetwork();
     const coinId = CoinStore.getters.coinId(currentAccountId, currentNetwork.id, currentNetwork.koinContractId);
     return useHookstate(CoinStore.state.nested(coinId).balance).get() ?? 0;
+}
+
+export const usePushNotification = () => {
+    useEffect(() => {
+        registerForPushNotificationsAsync().then(token => console.log('push token', token));
+    }, []);
 }

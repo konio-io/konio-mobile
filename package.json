@@ -55,7 +55,11 @@
     "react-native-webview": "13.2.2",
     "react-native-webview-crypto": "^0.0.25",
     "text-encoding-polyfill": "^0.6.7",
-    "@react-native-community/slider": "4.4.2"
+    "@react-native-community/slider": "4.4.2",
+    "expo-notifications": "~0.20.1",
+    "expo-device": "~5.4.0",
+    "expo-constants": "~14.4.2",
+    "expo-dev-client": "~2.4.12"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

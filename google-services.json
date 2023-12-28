@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "250462225811",
+    "project_id": "konio-377d1",
+    "storage_bucket": "konio-377d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250462225811:android:51fd43ac13c6a663939466",
+        "android_client_info": {
+          "package_name": "konio.io"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXzfOH3lJqwJ6InWzGw7iJE0mQMVcPVnc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
