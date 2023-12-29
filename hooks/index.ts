@@ -6,11 +6,10 @@ import Locales from "../lib/Locales";
 import { I18n } from 'i18n-js';
 import { getLocales } from 'expo-localization';
 import { useEffect, useState } from "react";
-import { SettingStore, CoinStore, AccountStore, NetworkStore, NameserverStore, LockStore, NftCollectionStore } from "../stores";
+import { SettingStore, CoinStore, AccountStore, NetworkStore, LockStore, NftCollectionStore } from "../stores";
 import { loadedState } from "../stores/registry";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { migrations } from "../stores/migrations";
-import { registerForPushNotificationsAsync }  from "../lib/PushNotification";
 
 export const useTheme = () => {
     const storeTheme = useHookstate(SettingStore.state.theme).get();
@@ -183,10 +182,4 @@ export const useKoinBalance = () => {
     const currentNetwork = useCurrentNetwork();
     const coinId = CoinStore.getters.coinId(currentAccountId, currentNetwork.id, currentNetwork.koinContractId);
     return useHookstate(CoinStore.state.nested(coinId).balance).get() ?? 0;
-}
-
-export const usePushNotification = () => {
-    useEffect(() => {
-        registerForPushNotificationsAsync().then(token => console.log('push token', token));
-    }, []);
 }

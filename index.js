@@ -1,4 +1,6 @@
 import { registerRootComponent } from 'expo';
+import { LogLevel, OneSignal } from 'react-native-onesignal';
+import Constants from "expo-constants";
 
 import App from './App';
 import {
@@ -46,3 +48,10 @@ registerStore('Payer', PayerStore);
 // It also ensures that whether you load the app in Expo Go or in a native build,
 // the environment is set up appropriately
 registerRootComponent(App);
+
+
+OneSignal.Debug.setLogLevel(LogLevel.Verbose);
+OneSignal.initialize(Constants.expoConfig.extra.oneSignalAppId);
+
+// Also need enable notifications to complete OneSignal setup
+OneSignal.Notifications.requestPermission(true);

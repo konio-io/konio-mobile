@@ -14,7 +14,7 @@ import { SheetManager } from 'react-native-actions-sheet';
 import { WC_SECURE_METHODS } from './lib/Constants';
 import NetInfo from '@react-native-community/netinfo';
 import { SignClientTypes } from "@walletconnect/types";
-import { useI18n, useTheme, useLockState, useAppState, useAutolock, useCurrentAccountId, useNeedMigration, usePushNotification } from './hooks';
+import { useI18n, useTheme, useLockState, useAppState, useAutolock, useCurrentAccountId, useNeedMigration } from './hooks';
 import { useHookstate } from '@hookstate/core';
 import { Toast as MyToast } from './components';
 import { View } from 'react-native';
@@ -36,8 +36,6 @@ export default function App() {
   const hydrated = useHydrated();
   const needMigration = useNeedMigration(hydrated);
   const [appIsReady, setAppIsReady] = useState(false);
-
-  usePushNotification();
 
   useEffect(() => {
     if (fontsLoaded && hydrated) {
