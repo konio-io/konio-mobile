@@ -83,3 +83,4 @@ export const NIC_PREFIX = '@';
 export const CATEGORY_COINS = 'coins';
 export const CATEGORY_NFTS = 'nfts';
 export const DEFAULT_IPFS_GATEWAY = 'https://${ipfsHash}.ipfs.nftstorage.link';
+export const DISCOVERY_RSS = "https://medium.com/feed/@konio_io";

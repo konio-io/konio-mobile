@@ -255,5 +255,6 @@
   "payer": "Payeur",
   "payer_desc": "Choisissez le compte qui couvrira les frais.\nVous pouvez utiliser le $MANA gratuit fourni par nos fournisseurs.",
   "advanced_options": "Options Avancées",
-  "events":"Événements"
+  "events":"Événements",
+  "discovery": "Discovery"
 }

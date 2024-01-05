@@ -255,5 +255,6 @@
   "payer": "Pagador",
   "payer_desc": "Escolha a conta que cobrirá as taxas.\nVocê pode usar o $MANA gratuito fornecido pelos nossos provedores.",
   "advanced_options": "Opções Avançadas",
-  "events":"Eventos"
+  "events":"Eventos",
+  "discovery": "Discovery"
 }

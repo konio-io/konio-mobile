@@ -255,5 +255,6 @@
     "payer": "Ödeme Yapan",
     "payer_desc": "Ücretleri karşılayacak hesabı seçin.\nSağlayıcılarımız tarafından sağlanan ücretsiz $MANA'yı kullanabilirsiniz.",
     "advanced_options": "Gelişmiş Seçenekler",
-    "events": "Etkinlikler"
+    "events": "Etkinlikler",
+    "discovery": "Keşif"
 }

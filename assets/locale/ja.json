@@ -255,5 +255,6 @@
     "payer": "支払い者",
     "payer_desc": "手数料をカバーするアカウントを選択してください。\n提供者によって提供される無料の $MANA を利用できます。",
     "advanced_options": "高度なオプション",
-    "events": "イベント"
+    "events": "イベント",
+    "discovery": "発見"
 }

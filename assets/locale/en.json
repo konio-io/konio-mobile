@@ -255,5 +255,6 @@
   "payer": "Payer",
   "payer_desc": "Choose the account that will cover the fees.\nYou can use the free $MANA provided by our providers.",
   "advanced_options": "Advanced Options",
-  "events": "Events"
+  "events": "Events",
+  "discovery": "Discovery"
 }

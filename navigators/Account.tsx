@@ -4,12 +4,13 @@ import { View, TouchableOpacity } from "react-native";
 import { useI18n, useTheme } from "../hooks";
 import Unavailable from "../screens/Unavailable";
 import { SheetManager } from "react-native-actions-sheet";
-import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { AntDesign, Ionicons, SimpleLineIcons } from '@expo/vector-icons';
 import Deposit from "../screens/Deposit";
 import Browser from "../screens/Browser";
 import Holdings from "./Holdings";
 import Withdraw from "../screens/Withdraw";
 import { rgba } from "../lib/utils";
+import Discovery from "../screens/Discovery";
 
 const Tab = createBottomTabNavigator();
 export default () => {
@@ -101,6 +102,17 @@ export default () => {
             title: i18n.t('browser'),
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="compass-outline" size={30} color={color} />
+            )
+          }}
+        />
+        <Tab.Screen
+          name="Discovery"
+          component={Discovery}
+          options={{
+            title: i18n.t('discovery'),
+            headerTitleAlign: 'center',
+            tabBarIcon: ({ color, size }) => (
+              <SimpleLineIcons name="feed" size={22} color={color} />
             )
           }}
         />

@@ -255,5 +255,6 @@
   "payer": "付款方",
   "payer_desc": "选择支付费用的帐户。\n您可以使用我们提供的免费 $MANA。",
   "advanced_options": "高级选项",
-  "events": "事件"
+  "events": "事件",
+  "discovery": "发现"
 }

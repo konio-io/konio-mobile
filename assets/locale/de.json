@@ -255,5 +255,6 @@
   "payer": "Zahler",
   "payer_desc": "Wählen Sie das Konto aus, das die Gebühren abdeckt.\nSie können die kostenlosen $MANA unserer Anbieter verwenden.",
   "advanced_options": "Erweiterte Optionen",
-  "events":"Veranstaltungen"
+  "events":"Veranstaltungen",
+  "discovery": "Discovery"
 }
