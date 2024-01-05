@@ -202,6 +202,7 @@
     "homograph_attack_warning": "Bu ad, ASCII dışı karakterler içeriyor. Lütfen İngiliz harflerine özellikle Kiril ve Yunan alfabesinden karakterlerle çok benzer veya tamamen aynı görünen karakterlerin olduğunu unutmayın. Ayrıca geleneksel Çince karakterler, basitleştirilmiş varyantlarıyla aynı veya çok benzer görünebilir.",
     "ok": "Ok",
     "listed_coins": "Listelenen paralar",
+    "listed_collections": "Listelenmiş koleksiyonlar",
     "import_account": "Hesabı İçe Aktar",
     "private_key": "Özel anahtar",
     "show_private_keys": "Özel anahtarları göster",

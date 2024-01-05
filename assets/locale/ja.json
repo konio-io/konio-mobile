@@ -202,6 +202,7 @@
     "homograph_attack_warning": "この名前にはASCII文字と非常に似た外見の文字が含まれています。特にキリル文字やギリシャ文字のように、英字とよく似た文字があります。また、繁体字と簡体字の変種が非常に似た見た目の文字があることに注意してください。",
     "ok": "OK",
     "listed_coins": "リストされたコイン",
+    "listed_collections": "リストされたコレクション",
     "import_account": "アカウントのインポート",
     "private_key": "プライベートキー",
     "show_private_keys": "プライベートキーを表示",

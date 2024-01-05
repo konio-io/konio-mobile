@@ -202,6 +202,7 @@
   "homograph_attack_warning": "此名称包含非ASCII字符。请注意，有些字符看起来与英文字母相同或非常相似，尤其是来自西里尔文和希腊文的字符。此外，繁体中文字符可能与简化变体看起来完全相同或非常相似。",
   "ok": "Ok",
   "listed_coins": "上市硬币",
+  "listed_collections": "上市收藏",
   "import_account": "导入账户",
   "private_key": "私钥",
   "show_private_keys": "显示私钥",

@@ -43,6 +43,7 @@ export const WALLET_CONNECT_PROJECT_ID = 'c0d8292ab97b4f7adb8f12f095d2806a';
 export const BROWSER_SEARCH_URL = 'https://duckduckgo.com/?t=h_&q=';
 export const BROWSER_HOME_URL = 'https://konio.io/browser';
 export const TOKENS_URL = 'https://tokens.konio.io';
+export const COLLECTIONS_URL = 'https://collections.konio.io';
 export const PAYERS_URL = 'https://payers.konio.io';
 export const TERMS_URL = 'https://konio.io/terms/';
 export const PRIVACY_URL = 'https://konio.io/privacy-policy/';

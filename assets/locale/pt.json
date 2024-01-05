@@ -202,6 +202,7 @@
   "homograph_attack_warning": "Este nome contém caracteres não ASCII. Esteja ciente de que existem caracteres que parecem idênticos ou muito semelhantes às letras inglesas, especialmente caracteres cirílicos e gregos. Além disso, os caracteres chineses tradicionais podem parecer idênticos ou muito semelhantes às variantes simplificadas.",
   "ok": "Ok",
   "listed_coins": "Moedas listadas",
+  "listed_collections": "Coleções listadas",
   "import_account": "Importar conta",
   "private_key": "Chave privada",
   "show_private_keys": "Mostrar chaves privadas",

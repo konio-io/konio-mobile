@@ -1,13 +1,21 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NewCoinNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
-import { TextInput, Button, Screen } from '../components';
-import { useI18n } from '../hooks';
-import { View, Keyboard } from 'react-native';
+import { TextInput, Button, Screen, Text } from '../components';
+import { useCurrentNetwork, useI18n, useNftCollections } from '../hooks';
+import { View, Keyboard, FlatList, TouchableOpacity, Image } from 'react-native';
 import { useTheme } from '../hooks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Toast from 'react-native-toast-message';
 import { LogStore, SettingStore, SpinnerStore, NftStore, NftCollectionStore, NameserverStore } from '../stores';
+import { COLLECTIONS_URL } from '../lib/Constants';
+
+type NFTCollection = {
+  contractId: string,
+  chainId: string,
+  name: string,
+  logo: string
+}
 
 export default () => {
   const navigation = useNavigation<NewCoinNavigationProp>();
@@ -17,6 +25,9 @@ export default () => {
   const theme = useTheme();
   const styles = theme.styles;
   const [textLoading, setTextLoading] = useState(false);
+  const [data, setData] = useState<Array<NFTCollection>>([]);
+  const currentNetwork = useCurrentNetwork();
+  const collections = useNftCollections();
 
   const add = async () => {
     Keyboard.dismiss();
@@ -80,12 +91,35 @@ export default () => {
     }
   };
 
+  const loadData = async () => {
+    try {
+      SpinnerStore.actions.showSpinner();
+      const collectionListResponse = await fetch(`${COLLECTIONS_URL}/index.json`);
+      const collectionMap: Array<NFTCollection> = await collectionListResponse.json();
+      console.log(collectionMap);
+      const collectionList = Object.values(collectionMap)
+        .filter(collection => {
+          return collection.chainId === currentNetwork.chainId
+            && !collections.map(c => c.contractId).includes(collection.contractId)
+        })
+        .sort((a, b) => a.name > b.name ? 1 : -1);
+
+      setData(collectionList);
+      SpinnerStore.actions.hideSpinner();
+    } catch (e) {
+      SpinnerStore.actions.hideSpinner();
+    }
+  }
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
   return (
     <Screen keyboardDismiss={true}>
       <View style={{ ...styles.paddingBase, ...styles.rowGapBase }}>
         <TextInput
           multiline={true}
-          autoFocus={true}
           value={contractId}
           onChangeText={(v: string) => _onChange(v.trim())}
           placeholder={i18n.t('contract_address')}
@@ -99,6 +133,25 @@ export default () => {
         />
       </View>
 
+      <FlatList
+        data={data}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => { }}>
+            <ListItem
+              collection={item}
+              selected={item.contractId === contractId}
+              onPress={() => setContractId(item.contractId)}
+            />
+          </TouchableOpacity>
+        )}
+        ItemSeparatorComponent={() => <View style={{ height: theme.vars.Spacing.base }} />}
+        ListHeaderComponent={() =>
+          <View style={{ ...styles.paddingBase }}>
+            <Text style={styles.sectionTitle}>{i18n.t('listed_collections')}</Text>
+          </View>
+        }
+      />
+
       <View style={styles.paddingBase}>
         <Button
           title={i18n.t('add_nft')}
@@ -107,5 +160,30 @@ export default () => {
         />
       </View>
     </Screen>
+  );
+}
+
+const ListItem = (props: {
+  collection: NFTCollection,
+  selected: boolean,
+  onPress: Function
+}) => {
+
+  const theme = useTheme();
+  const styles = theme.styles;
+
+  return (
+    <TouchableOpacity onPress={() => props.onPress(props.collection.contractId)}>
+      <View style={{ ...styles.directionRow, ...styles.columnGapBase, ...styles.alignCenterColumn, paddingHorizontal: theme.vars.Spacing.base }}>
+        <View style={{ width: 52 }}>
+          <Image style={{ width: 48, height: 48, borderRadius: 3 }} source={{ uri: props.collection.logo }} />
+        </View>
+
+        <View>
+          <Text>{props.collection.name}</Text>
+        </View>
+
+      </View>
+    </TouchableOpacity>
   );
 }

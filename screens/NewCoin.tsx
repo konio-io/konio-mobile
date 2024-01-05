@@ -29,19 +29,23 @@ export default () => {
   const coins = useCoins();
 
   const loadData = async () => {
-    SpinnerStore.actions.showSpinner();
-    const tokenListResponse = await fetch(`${TOKENS_URL}/index.json`);
-    const tokenMap: Array<Coin> = await tokenListResponse.json();
-    const tokenList = Object.values(tokenMap)
-      .filter(token => {
-        return token.chainId === currentNetwork.chainId
-          && token.symbol !== "MANA"
-          && !coins.map(coin => coin.contractId).includes(token.address)
-      })
-      .sort((a, b) => a.name > b.name ? 1 : -1);
-
-    setData(tokenList);
-    SpinnerStore.actions.hideSpinner();
+    try {
+      SpinnerStore.actions.showSpinner();
+      const tokenListResponse = await fetch(`${TOKENS_URL}/index.json`);
+      const tokenMap: Array<Coin> = await tokenListResponse.json();
+      const tokenList = Object.values(tokenMap)
+        .filter(token => {
+          return token.chainId === currentNetwork.chainId
+            && token.symbol !== "MANA"
+            && !coins.map(coin => coin.contractId).includes(token.address)
+        })
+        .sort((a, b) => a.name > b.name ? 1 : -1);
+  
+      setData(tokenList);
+      SpinnerStore.actions.hideSpinner();
+    } catch (e) {
+      SpinnerStore.actions.hideSpinner();
+    }
   }
 
   const add = () => {
