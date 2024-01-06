@@ -50,7 +50,7 @@ registerStore('Payer', PayerStore);
 registerRootComponent(App);
 
 
-OneSignal.Debug.setLogLevel(LogLevel.Verbose);
+OneSignal.Debug.setLogLevel(LogLevel.Error);
 OneSignal.initialize(Constants.expoConfig.extra.oneSignalAppId);
 
 // Also need enable notifications to complete OneSignal setup
