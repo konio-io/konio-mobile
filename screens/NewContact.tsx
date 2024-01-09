@@ -97,7 +97,7 @@ export default () => {
                     <TextInput
                         autoFocus={true}
                         value={name}
-                        onChangeText={(v: string) => setName(v.trim())}
+                        onChangeText={(v: string) => setName(v)}
                         placeholder={i18n.t('name')}
                     />
                 </View>
