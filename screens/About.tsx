@@ -33,15 +33,6 @@ export default () => {
                     <TouchableOpacity onPress={() => Linking.openURL('https://discord.gg/pUD4b3UDbQ')}>
                         <FontAwesome5 name="discord" size={24} color={rgba(theme.vars.Color.baseContrast, 0.4)} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => Linking.openURL('https://www.youtube.com/@konio_io')}>
-                        <FontAwesome5 name="youtube" size={24} color={rgba(theme.vars.Color.baseContrast, 0.4)} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => Linking.openURL('https://github.com/konio-io')}>
-                        <FontAwesome5 name="github" size={24} color={rgba(theme.vars.Color.baseContrast, 0.4)} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => Linking.openURL('https://medium.com/@konio_io')}>
-                        <FontAwesome5 name="medium" size={24} color={rgba(theme.vars.Color.baseContrast, 0.4)} />
-                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.alignCenterColumn}>
