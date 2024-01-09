@@ -6,9 +6,16 @@ import { useTheme } from "../hooks";
 import { DISCOVERY_RSS } from "../lib/Constants";
 import { SpinnerStore } from "../stores";
 
+type Post = {
+    id: string,
+    title: string,
+    content: string,
+    published: string
+}
+
 export default () => {
 
-    const [feedData, setFeedData] = useState([]);
+    const [feedData, setFeedData] = useState<Array<Post>>([]);
 
     useEffect(() => {
         const fetchRssFeed = async () => {
@@ -52,7 +59,7 @@ const Article = (props: {
             <View style={{ ...styles.paddingBase, ...styles.directionRow, ...styles.columnGapBase }}>
                 <Thumbnail item={props.item} />
                 <View style={{flex: 1}}>
-                    <Date item={props.item} />
+                    <PublishDate item={props.item} />
                     <Text style={{...styles.textMedium}}>{props.item.title}</Text>
                 </View>
             </View>
@@ -61,7 +68,7 @@ const Article = (props: {
 }
 
 const Thumbnail = (props: {
-    item: any
+    item: Post
 }) => {
     const theme = useTheme();
     const vars = theme.vars;
@@ -74,18 +81,19 @@ const Thumbnail = (props: {
         const imgEnd = content.indexOf(">", imgStart);
         const imgTag = content.substring(imgStart, imgEnd + 1);
         const srcMatch = imgTag.match(/src\s*=\s*"([^"]+)"/i);
-        const src = srcMatch ? srcMatch[1] : null;
+        const src = srcMatch ? srcMatch[1] : '';
         imgSrc = src;
     }
 
     return (<Image source={{ uri: imgSrc }} style={{ width: 80, height: 80, borderRadius: vars.Border.radius }} />)
 }
 
-const Date = (props: {
-    item: any
+const PublishDate = (props: {
+    item: Post
 }) => {
     const theme = useTheme();
     const styles = theme.styles;
+    const date = new Date(props.item.published);
 
-    return (<Text style={styles.textSmall}>{props.item.published}</Text>)
+    return (<Text style={styles.textSmall}>{date.toLocaleDateString()}</Text>)
 }
