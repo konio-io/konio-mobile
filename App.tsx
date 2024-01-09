@@ -194,6 +194,8 @@ const Init = () => {
   const [connectionAvailable, setConnectionAvailable] = useState(true);
   const i18n = useI18n();
 
+
+
   //Refresh coins and mana on init
   useEffect(() => {
     CoinStore.actions.refreshCoins({ balance: true, price: true });
