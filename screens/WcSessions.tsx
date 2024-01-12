@@ -10,7 +10,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { WcSessionsNavigationProp } from "../types/navigation";
 import { SessionTypes } from "@walletconnect/types";
 import { Feather } from '@expo/vector-icons';
-import { WalletConnectStore } from "../stores";
+import { AccountStore, WalletConnectStore } from "../stores";
 
 export default () => {
     const wallet = WalletConnectStore.state.wallet.get();
@@ -120,7 +120,7 @@ const ItemHeader = (props: {
     address: string,
     name: string
 }) => {
-    const account = useCurrentAccount();
+    const account = AccountStore.state.nested(props.address).get();
     const theme = useTheme();
     const styles = theme.styles;
 
