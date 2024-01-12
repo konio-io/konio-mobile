@@ -15,12 +15,14 @@ export default () => {
         <Screen>
             <Wrapper>
                 <View style={styles.alignCenterColumn}>
-                    <Logo width={130} height={130}/>
+                    <Logo width={130} height={130} />
                 </View>
 
                 <View style={styles.alignCenterColumn}>
-                    <Text>v{Constants.expoConfig?.version}</Text>
-                    <Link text="konio.io" onPress={() => Linking.openURL('https://konio.io')} />
+                    <View style={{ ...styles.directionRow, ...styles.columnGapSmall, alignItems: 'baseline' }}>
+                        <Link text="konio.io" onPress={() => Linking.openURL('https://konio.io')} />
+                        <Text style={styles.textVersion}>v{Constants.expoConfig?.version}</Text>
+                    </View>
                 </View>
 
                 <View style={{ ...styles.directionRow, ...styles.columnGapSmall, ...styles.alignCenterRow }}>
