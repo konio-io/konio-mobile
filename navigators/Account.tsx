@@ -4,7 +4,7 @@ import { View, TouchableOpacity } from "react-native";
 import { useI18n, useTheme } from "../hooks";
 import Unavailable from "../screens/Unavailable";
 import { SheetManager } from "react-native-actions-sheet";
-import { AntDesign, Ionicons, SimpleLineIcons } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import Deposit from "../screens/Deposit";
 import Browser from "../screens/Browser";
 import Holdings from "./Holdings";
@@ -112,7 +112,7 @@ export default () => {
             title: i18n.t('discovery'),
             headerTitleAlign: 'center',
             tabBarIcon: ({ color, size }) => (
-              <SimpleLineIcons name="feed" size={22} color={color} />
+              <Ionicons name="albums-outline" size={30} color={color} />
             )
           }}
         />

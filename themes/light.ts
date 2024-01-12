@@ -37,7 +37,7 @@ export const getTheme = () : Theme => {
     const Border = {
         color: 'rgba(220,220,220,1)',
         width: 1,
-        radius: 10
+        radius: 20
     };
 
     const vars : ThemeVars = { Spacing, FontSize, FontFamily, Color, Border };
