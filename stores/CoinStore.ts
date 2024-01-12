@@ -72,7 +72,13 @@ const actions : ICoinActions = {
         }
 
         const rcLimit = getStore('Mana').getters.getRcLimit();
-        const payer = getStore('Mana').state.payer.get();
+        const currentPayerAddress = getStore('Mana').state.payer.get();
+                
+        /**
+         * If payer is free mana set payee as current account
+         */
+        const currentPayer = getStore('Payer').state.nested(currentPayerAddress).get();
+        const payee = (currentPayer && currentPayer.free === true) ? address : undefined;
     
         // optional: preformat input/output
         //contract.abi.methods.balance_of.preformat_argument = (owner) => ({  owner,});
@@ -90,7 +96,8 @@ const actions : ICoinActions = {
             value,
         }, {
             rcLimit: rcLimit.toString(),
-            payer
+            payer: currentPayerAddress,
+            payee
         });
     
         if (!transaction || !transaction.id) {

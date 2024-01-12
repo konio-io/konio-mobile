@@ -29,10 +29,19 @@ const actions : IKoinActions = {
         if (!transaction.header) {
             transaction.header = {};
         }
+
+        /**
+         * If payer is free mana set payee as current account
+         */
+        const currentPayerAddress = getStore('Mana').state.payer.get();
+        const currentPayer = getStore('Payer').state.nested(currentPayerAddress).get();
+        if (currentPayer && currentPayer.free === true) {
+            transaction.header.payee = signer.address;
+        }
     
-        transaction.header.payer = getStore('Mana').state.payer.get();
+        transaction.header.payer = currentPayerAddress;
         transaction.header.rc_limit = getStore('Mana').getters.getRcLimit().toString();
-        transaction.header.nonce = await signer.provider?.getNextNonce(transaction.header.payer);
+        transaction.header.nonce = await signer.provider?.getNextNonce(transaction.header.payee || transaction.header.payer);
 
         return await signer.prepareTransaction(transaction);
     },

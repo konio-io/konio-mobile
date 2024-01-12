@@ -31,7 +31,8 @@ const actions : IPayerActions = {
                 id: item.address,
                 address: item.address,
                 networkId: item.chainId,
-                name: item.name
+                name: item.name,
+                free: true
             } 
         }
 
@@ -50,7 +51,8 @@ const getters : IPayerGetters = {
             id: account.address,
             address: account.address,
             networkId,
-            name: `${account.name} (default)`
+            name: `${account.name} (default)`,
+            free: false
         };
 
         return [

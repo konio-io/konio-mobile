@@ -378,7 +378,8 @@ export type Payer = {
     id: string
     address: string
     networkId: string
-    name: string
+    name: string,
+    free: boolean
 }
 
 export type PayerState = Record<string, Payer>
@@ -535,4 +536,5 @@ export type StoreRegistry = {
     Lock: ILockStore;
     Log: ILogStore;
     Transaction: ITransactionStore;
+    Payer: IPayerStore;
 };
