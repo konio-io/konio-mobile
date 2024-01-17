@@ -31,7 +31,16 @@ export default () => {
                         style={{ ...styles.textInputText, textAlign: 'center', width: 50}}
                         keyboardType='numeric'
                         value={value}
-                        onChangeText={(v: string) => setValue(v)}
+                        onChangeText={(v: string) => {
+                            const value = parseInt(v);
+                            if (value > 100) {
+                                setValue("100")
+                            } else if (value < 1) {
+                                setValue("1")
+                            } else {
+                                setValue(v);
+                            }
+                        }}
                     />
                 </View>
             </View>
