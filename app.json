@@ -2,7 +2,7 @@
   "expo": {
     "name": "Konio",
     "slug": "konio",
-    "version": "2.3.2",
+    "version": "2.4.0",
     "scheme": "konio",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
