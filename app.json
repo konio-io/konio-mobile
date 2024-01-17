@@ -29,7 +29,7 @@
         "backgroundColor": "#7000f6"
       },
       "appStoreUrl": "https://apps.apple.com/app/konio/id6453561342",
-      "buildNumber": "29"
+      "buildNumber": "30"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -70,7 +70,7 @@
         "backgroundColor": "#7000f6"
       },
       "playStoreUrl": "https://play.google.com/store/apps/details?id=konio.io",
-      "versionCode": 30
+      "versionCode": 33
     },
     "web": {
       "favicon": "./assets/favicon.png"
