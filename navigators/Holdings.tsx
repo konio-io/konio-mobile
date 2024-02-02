@@ -49,7 +49,7 @@ export default () => {
         name="NewNft"
         component={NewNft}
         options={{
-          title: i18n.t('add_nft')
+          title: i18n.t('add_nft_collection')
         }}
       />
       <Stack.Screen

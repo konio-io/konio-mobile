@@ -7,7 +7,7 @@ import { View, Keyboard, FlatList, TouchableOpacity, Image } from 'react-native'
 import { useTheme } from '../hooks';
 import { useEffect, useState } from 'react';
 import Toast from 'react-native-toast-message';
-import { LogStore, SettingStore, SpinnerStore, NftStore, NftCollectionStore, NameserverStore } from '../stores';
+import { LogStore, SettingStore, SpinnerStore, NftCollectionStore, NameserverStore } from '../stores';
 import { COLLECTIONS_URL } from '../lib/Constants';
 
 type NFTCollection = {
@@ -20,7 +20,6 @@ type NFTCollection = {
 export default () => {
   const navigation = useNavigation<NewCoinNavigationProp>();
   const [contractId, setContractId] = useState('');
-  const [tokenId, setTokenId] = useState('');
   const i18n = useI18n();
   const theme = useTheme();
   const styles = theme.styles;
@@ -40,22 +39,13 @@ export default () => {
       return;
     }
 
-    if (!tokenId) {
-      Toast.show({
-        type: 'error',
-        text1: i18n.t('missing_token_id')
-      });
-      return;
-    }
-
     SpinnerStore.actions.showSpinner();
 
     try {
+
       await NftCollectionStore.actions.addNftCollection(contractId);
-      await NftStore.actions.addNft({
-        contractId: contractId,
-        tokenId: tokenId
-      });
+      await NftCollectionStore.actions.refreshTokens(contractId);
+
       SpinnerStore.actions.hideSpinner();
       navigation.goBack();
       SettingStore.actions.showAskReview();
@@ -125,11 +115,6 @@ export default () => {
           onStopWriting={(v: string) => _onStopWriting(v.trim())}
           loading={textLoading}
         />
-        <TextInput
-          value={tokenId}
-          onChangeText={(v: string) => setTokenId(v.trim())}
-          placeholder={i18n.t('token_id')}
-        />
       </View>
 
       <FlatList
@@ -153,7 +138,7 @@ export default () => {
 
       <View style={styles.paddingBase}>
         <Button
-          title={i18n.t('add_nft')}
+          title={i18n.t('add_nft_collection')}
           onPress={() => add()}
           icon={<Feather name="plus" />}
         />

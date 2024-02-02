@@ -20,7 +20,7 @@ export default () => {
 
     useEffect(() => {
         navigation.setOptions({
-            title: `#${nft.tokenId}`,
+            title: `${nft.tokenId}`,
             headerRight: () => {
                 return (
                     <MoreVertical onPress={() => {

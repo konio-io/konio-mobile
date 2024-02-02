@@ -1,23 +1,31 @@
-import { View, ScrollView, TouchableOpacity } from 'react-native';
+import { View, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useTheme, useNftCollections } from '../hooks';
-import { ButtonCircle } from '.';
+import { useTheme, useNftCollections, useI18n } from '../hooks';
+import { Button, ButtonCircle } from '.';
 import { AssetsNavigationProp, } from '../types/navigation';
-import { Feather } from '@expo/vector-icons';
+import { Feather, AntDesign } from '@expo/vector-icons';
 import NftListItem from './NftListItem';
 import { SheetManager } from 'react-native-actions-sheet';
 import { Nft, NftCollection } from '../types/store';
 import Text from './Text';
-import { NftStore } from '../stores';
+import { NftCollectionStore, NftStore } from '../stores';
 import { useHookstate } from '@hookstate/core';
+import { useState } from 'react';
 
 export default () => {
   const theme = useTheme();
   const styles = theme.styles;
   const data = useNftCollections();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const _refresh = async () => {
+    setRefreshing(true);
+    await NftStore.actions.refreshTokens();
+    setRefreshing(false);
+  };
 
   if (data.length === 0) {
-    return <Footer/>;
+    return <Footer />;
   }
 
   data.sort((a, b) => {
@@ -26,6 +34,9 @@ export default () => {
 
   return (
     <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={_refresh} />
+      }
       contentContainerStyle={{
         ...styles.alignCenterColumn,
         rowGap: theme.vars.Spacing.medium
@@ -51,6 +62,7 @@ const NftCollectionListItem = (props: {
   const { styles, vars } = useTheme();
   const nfts = useHookstate(NftStore.state).get();
   const data = Object.values(nfts).filter(nft => nft.nftCollectionId === props.nftCollection.id);
+  const i18n = useI18n();
 
   return (
     <View style={{
@@ -68,7 +80,20 @@ const NftCollectionListItem = (props: {
         flexWrap: 'wrap'
       }}>
         {
-          data.map(nft => <TouchableNftListItem key={nft.id} nft={nft} />)
+          data.length > 0 && data.map(nft => <TouchableNftListItem key={nft.id} nft={nft} />)
+        }
+        {
+          data.length === 0 &&
+          <View style={{
+            width: '100%'
+          }}>
+            <Button
+              type="secondary"
+              title={i18n.t('delete')}
+              icon={<AntDesign name="delete"/>}
+              onPress={() => NftCollectionStore.actions.deleteNftCollection(props.nftCollection.id)}
+            />
+          </View>
         }
       </View>
     </View>

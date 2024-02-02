@@ -31,8 +31,6 @@ const actions : INftActions = {
             tokenId
         });
     
-        //to do check owner_of
-    
         const id = getters.nftId(accountId, networkId, contractId, tokenId);
 
         const nft: Nft = {
@@ -53,12 +51,7 @@ const actions : INftActions = {
     
     deleteNft: (id: string) => {
         const nft = state.nested(id);
-        const nftCollectionId = nft.nftCollectionId.get({noproxy: true});
         nft.set(none);
-        const nftsInSameCollection = Object.values(state.get()).filter(nft => nft.nftCollectionId === nftCollectionId);
-        if (nftsInSameCollection.length === 0) {
-            getStore('NftCollection').actions.deleteNftCollection(nftCollectionId);
-        }
     },
     
     withdrawNft: async (args: {
@@ -82,12 +75,18 @@ const actions : INftActions = {
         actions.deleteNft(id);
         return true;
     },
+
+    refreshTokens: async () => {
+        for (const collection of Object.values(getStore('NftCollection').state.get())) {
+            await getStore('NftCollection').actions.refreshTokens(collection.contractId);
+        }
+    },
 }
 
 const getters : INftGetters = {
     fetchNft: async (args: {
         uri: string,
-        tokenId: string
+        tokenId: string //hexString
     }) => {
         const { uri, tokenId } = args;
         const url = convertIpfsToHttps(uri, DEFAULT_IPFS_GATEWAY);

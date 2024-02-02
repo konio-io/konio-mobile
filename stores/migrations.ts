@@ -81,7 +81,7 @@ export const migrations: Record<string, Function> = {
         SettingStore.state.maxMana.set(SETTING_STORE_DEFAULT.maxMana);
         SettingStore.state.rcLimit.set(none);
     },
-    '20240204': async () => {
+    '20240202': async () => {
         const nfts = NftStore.state.get();
 
         for (const nftId of Object.keys(nfts)) {

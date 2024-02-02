@@ -34,7 +34,7 @@ export default (props: {
                         borderBottomRightRadius: Border.radius
                     }}>
                         <Text style={{ ...styles.Text, color: Color.base }}>
-                            #{props.nft.tokenId}
+                            {props.nft.tokenId}
                         </Text>
                     </View>
             }
