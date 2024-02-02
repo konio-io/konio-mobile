@@ -25,8 +25,8 @@ export default (props: {
                 events = res.receipt.events;
             }
         } catch (e) {
-            console.error(e);
-            LogStore.actions.logError(String(e));
+            //console.error(e);
+            //LogStore.actions.logError(String(e));
         }
 
         if (events.length > 0) {
