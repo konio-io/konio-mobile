@@ -70,12 +70,11 @@ const actions : INftActions = {
         const nft = state.nested(args.id).get();
         
         const contract = await getStore('Koin').getters.fetchContract(nft.contractId);
-        const tokenIdHex = "0x" + utils.toHexString(new TextEncoder().encode(nft.tokenId));
     
         return contract.functions.transfer({
             from: currentAddress,
             to: args.to,
-            token_id: tokenIdHex
+            token_id: nft.tokenId
         });
     },
     
@@ -92,9 +91,8 @@ const getters : INftGetters = {
     }) => {
         const { uri, tokenId } = args;
         const url = convertIpfsToHttps(uri, DEFAULT_IPFS_GATEWAY);
-        const tokenIdHex = "0x" + utils.toHexString(new TextEncoder().encode(tokenId));
     
-        const dataResponse = await fetch(`${url}/${tokenIdHex}`);
+        const dataResponse = await fetch(`${url}/${tokenId}`);
         if (!dataResponse) {
             throw new Error(`Unable to retrieve NFT url ${url}/${tokenId}`);
         }

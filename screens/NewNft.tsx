@@ -96,7 +96,6 @@ export default () => {
       SpinnerStore.actions.showSpinner();
       const collectionListResponse = await fetch(`${COLLECTIONS_URL}/index.json`);
       const collectionMap: Array<NFTCollection> = await collectionListResponse.json();
-      console.log(collectionMap);
       const collectionList = Object.values(collectionMap)
         .filter(collection => {
           return collection.chainId === currentNetwork.chainId

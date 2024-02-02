@@ -7,6 +7,8 @@ import CoinStore from './CoinStore';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ExpoSecureStore from 'expo-secure-store';
 import { none } from '@hookstate/core';
+import NftStore from './NftStore';
+import { utils } from 'koilib';
 
 export const migrations: Record<string, Function> = {
     '20231003': async () => {
@@ -78,6 +80,16 @@ export const migrations: Record<string, Function> = {
     '20231223': async () => {
         SettingStore.state.maxMana.set(SETTING_STORE_DEFAULT.maxMana);
         SettingStore.state.rcLimit.set(none);
+    },
+    '20240204': async () => {
+        const nfts = NftStore.state.get();
+
+        for (const nftId of Object.keys(nfts)) {
+            const tokenId = NftStore.state.nested(nftId).tokenId.get();
+            NftStore.state.nested(nftId).merge({
+                tokenId: "0x" + utils.toHexString(new TextEncoder().encode(tokenId))
+            });
+        }
     }
 }
 
