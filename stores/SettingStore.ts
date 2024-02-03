@@ -13,7 +13,7 @@ export const SETTING_STORE_DEFAULT = {
     theme: OS_THEME,
     biometric: false,
     autolock: -1,
-    maxMana: 100,
+    maxMana: 10,
     version: '20240203',
     askReview: false
 };

@@ -90,6 +90,11 @@ export const migrations: Record<string, Function> = {
                 tokenId: "0x" + utils.toHexString(new TextEncoder().encode(tokenId))
             });
         }
+    },
+    '20240203': async () => {
+        if (SettingStore.state.maxMana.get() === 100) {
+            SettingStore.state.maxMana.set(10);
+        }
     }
 }
 

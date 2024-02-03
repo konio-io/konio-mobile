@@ -59,44 +59,45 @@ export default () => {
 const NftCollectionListItem = (props: {
   nftCollection: NftCollection
 }) => {
-  const { styles, vars } = useTheme();
+  const { styles } = useTheme();
   const nfts = useHookstate(NftStore.state).get();
   const data = Object.values(nfts).filter(nft => nft.nftCollectionId === props.nftCollection.id);
   const i18n = useI18n();
 
   return (
-    <View style={{
-      width: 330,
-      ...styles.rowGapSmall
-    }}>
-      <Text style={styles.textMedium}>
-        {props.nftCollection.name}
-      </Text>
-
+    <TouchableOpacity
+      onLongPress={() => {
+        SheetManager.show('nft_collection', { payload: { nftCollectionId: props.nftCollection.id } });
+      }}
+    >
       <View style={{
-        ...styles.directionRow,
-        ...styles.columnGapBase,
-        ...styles.rowGapBase,
-        flexWrap: 'wrap'
+        width: 330,
+        ...styles.rowGapSmall
       }}>
-        {
-          data.length > 0 && data.map(nft => <TouchableNftListItem key={nft.id} nft={nft} />)
-        }
-        {
-          data.length === 0 &&
-          <View style={{
-            width: '100%'
-          }}>
-            <Button
-              type="secondary"
-              title={i18n.t('delete')}
-              icon={<AntDesign name="delete"/>}
-              onPress={() => NftCollectionStore.actions.deleteNftCollection(props.nftCollection.id)}
-            />
-          </View>
-        }
+
+        <Text style={styles.textMedium}>
+          {props.nftCollection.name}
+        </Text>
+
+
+        <View style={{
+          ...styles.directionRow,
+          ...styles.columnGapBase,
+          ...styles.rowGapBase,
+          flexWrap: 'wrap'
+        }}>
+          {
+            data.length > 0 && data.map(nft => <TouchableNftListItem key={nft.id} nft={nft} />)
+          }
+          {
+            data.length === 0 &&
+            <View style={{...styles.alignCenterColumn, width: '100%'}}>
+              <Text>{i18n.t('no_assets')}</Text>
+            </View>
+          }
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 
