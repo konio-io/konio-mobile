@@ -46,7 +46,7 @@ export default (props: SheetProps<{
         },
         {
             title: i18n.t('token_id'),
-            description: nft.tokenId,
+            description: `${NftStore.getters.tokenId(nft.id)} (${nft.tokenId})`,
             icon: <AntDesign name="codesquareo"/>,
             onPress: () => _copyTokenId()
         },

@@ -71,7 +71,7 @@ const Nft = (props: {
 
             <View>
                 <Text>{nftCollection.name}</Text>
-                <Text>{nft.tokenId}</Text>
+                <Text>{`${NftStore.getters.tokenId(nft.id)} (${nft.tokenId})`}</Text>
             </View>
         </View>
     );
