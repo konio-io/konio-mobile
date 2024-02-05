@@ -63,12 +63,13 @@ const actions : INftActions = {
         const nft = state.nested(args.id).get();
         
         const contract = await getStore('Koin').getters.fetchContract(nft.contractId);
+        const transactionOptions = await getStore('Koin').getters.getTransactionOptions();
     
         return contract.functions.transfer({
             from: currentAddress,
             to: args.to,
             token_id: nft.tokenId
-        });
+        }, transactionOptions);
     },
     
     withdrawNftConfirm: async (id: string) => {
@@ -77,8 +78,12 @@ const actions : INftActions = {
     },
 
     refreshTokens: async () => {
-        for (const collection of Object.values(getStore('NftCollection').state.get())) {
-            await getStore('NftCollection').actions.refreshTokens(collection.contractId);
+        const collections = Object.values(getStore('NftCollection').state.get());
+        if (collections.length > 0) {
+            for (const collection of collections) {
+                console.log('refresh nft', collection.contractId);
+                await getStore('NftCollection').actions.refreshTokens(collection.contractId);
+            }
         }
     },
 }
@@ -106,6 +111,11 @@ const getters : INftGetters = {
     
     nftId: (accountId: string, networkId: string, contractId: string, tokenId: string) => {
         return [accountId, networkId, contractId, tokenId].join('/');
+    },
+
+    tokenId: (nftId: string) => {
+        const tokenIdHex = getStore('Nft').state.nested(nftId).tokenId.get();
+        return new TextDecoder().decode(utils.toUint8Array(tokenIdHex))
     }
 }
 

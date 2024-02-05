@@ -1,7 +1,7 @@
 import { SessionTypes, SignClientTypes } from "@walletconnect/types";
 import { IWeb3Wallet } from "@walletconnect/web3wallet";
 import { State } from "@hookstate/core";
-import { Abi, OperationJson, SendTransactionOptions, TransactionJson, TransactionJsonWait, TransactionReceipt } from "koilib/lib/interface";
+import { Abi, OperationJson, SendTransactionOptions, TransactionJson, TransactionJsonWait, TransactionOptions, TransactionReceipt } from "koilib/lib/interface";
 import { Contract, Provider, Signer } from "koilib";
 
 /**
@@ -272,6 +272,7 @@ export interface INftGetters {
         tokenId: string;
     }) => Promise<any>;
     nftId: (accountId: string, networkId: string, contractId: string, tokenId: string) => string;
+    tokenId: (nftId: string) => string;
 }
 
 export interface INftStore {
@@ -515,6 +516,7 @@ export interface IKoinGetters {
     fetchContract: (contractId: string) => Promise<Contract>;
     getProvider: () => Provider;
     getSigner: () => Signer;
+    getTransactionOptions: () => Promise<TransactionOptions>
 }
 
 export interface IKoinStore {

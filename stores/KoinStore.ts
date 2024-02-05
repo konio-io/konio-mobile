@@ -26,22 +26,16 @@ const actions : IKoinActions = {
         
         const signer = getters.getSigner();
         const transaction = Object.assign({}, tx);
+        const transactionOptions = await getters.getTransactionOptions();
+
         if (!transaction.header) {
             transaction.header = {};
         }
 
-        /**
-         * If payer is free mana set payee as current account
-         */
-        const currentPayerAddress = getStore('Mana').state.payer.get();
-        const currentPayer = getStore('Payer').state.nested(currentPayerAddress).get();
-        if (currentPayer && currentPayer.free === true) {
-            transaction.header.payee = signer.address;
-        }
-    
-        transaction.header.payer = currentPayerAddress;
-        transaction.header.rc_limit = getStore('Mana').getters.getRcLimit().toString();
-        transaction.header.nonce = await signer.provider?.getNextNonce(transaction.header.payee || transaction.header.payer);
+        transaction.header.nonce = transactionOptions.nonce;
+        transaction.header.payee = transactionOptions.payee;
+        transaction.header.payer = transactionOptions.payer;
+        transaction.header.rc_limit = transactionOptions.rcLimit;
 
         return await signer.prepareTransaction(transaction);
     },
@@ -139,6 +133,28 @@ const getters : IKoinGetters = {
         signer.provider = provider;
         return signer;
     },
+
+    getTransactionOptions: async () => {
+        const currentAccountId = getStore('Setting').state.currentAccountId.get();
+        const currentAddress = getStore('Account').state.nested(currentAccountId).address.get();
+
+        const rcLimit = getStore('Mana').getters.getRcLimit();
+        const payer = getStore('Mana').state.payer.get();
+                
+        /**
+         * If payer is free mana set payee as current account
+         */
+        const currentPayer = getStore('Payer').state.nested(payer).get();
+        const payee = (currentPayer && currentPayer.free === true) ? currentAddress : undefined;
+        const nonce = await getters.getProvider().getNextNonce(payee || payer);
+
+        return {
+            rcLimit: rcLimit.toString(),
+            payer,
+            payee,
+            nonce
+        };
+    }
 }
 
 export default {
