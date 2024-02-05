@@ -19,7 +19,7 @@ import { useHookstate } from '@hookstate/core';
 import { Toast as MyToast } from './components';
 import { View } from 'react-native';
 import { useHydrated } from './hooks';
-import { CoinStore, WalletConnectStore, LogStore, ManaStore, PayerStore, NftStore } from './stores';
+import { CoinStore, WalletConnectStore, LogStore, ManaStore, PayerStore, NftCollectionStore } from './stores';
 import Toast from 'react-native-toast-message';
 import Migration from './screens/Migration';
 import * as SplashScreen from 'expo-splash-screen';
@@ -197,7 +197,7 @@ const Init = () => {
   //Refresh coins and mana on init
   useEffect(() => {
     CoinStore.actions.refreshCoins({ balance: true, price: true });
-    NftStore.actions.refreshTokens();
+    NftCollectionStore.actions.refreshNftCollections();
     ManaStore.actions.refreshMana();
     PayerStore.actions.refreshPayers();
     WalletConnectStore.actions.init();

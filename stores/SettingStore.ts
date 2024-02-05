@@ -32,12 +32,14 @@ const actions : ISettingActions = {
         state.currentAccountId.set(accountId);
         getStore('Coin').actions.refreshCoins({balance: true, price: true});
         getStore('Mana').actions.refreshMana();
+        //refreshNftCollections
     },
     
     setCurrentNetwork: (networkId: string) => {
         state.currentNetworkId.set(networkId);
         getStore('Coin').actions.refreshCoins({balance: true, price: true});
         getStore('Mana').actions.refreshMana();
+        //refreshNftCollections
     },
     
     setLocale: (locale: string) => {

@@ -15,24 +15,6 @@ const state = hookstate<NftCollectionState>(
 
 const actions: INftCollectionActions = {
 
-    refreshTokens: async (contractId: string) => {
-        const accountId = getStore('Setting').state.currentAccountId.get();
-        const tokenIds = await getters.getNftOwnedTokenIds(contractId, accountId);
-
-        for (const tokenId of tokenIds) {
-            await getStore('Nft').actions.addNft({
-                contractId,
-                tokenId
-            });
-        }
-
-        for (const nft of Object.values(getStore('Nft').state.get())) {
-            if (nft.id.includes(contractId) && !tokenIds.includes(nft.tokenId)) {
-                getStore('Nft').state.nested(nft.id).set(none);
-            }
-        }
-    },
-
     addNftCollection: async (contractId: string) => {
         const accountId = getStore('Setting').state.currentAccountId.get();
         const networkId = getStore('Setting').state.currentNetworkId.get();
@@ -62,6 +44,51 @@ const actions: INftCollectionActions = {
         const nfts = Object.values(getStore('Nft').state.get()).filter(nft => nft.nftCollectionId === id);
         nfts.map(nft => getStore('Nft').actions.deleteNft(nft.id));
     },
+
+    refreshNftCollections: () => {
+        const collections = getters.getNftCollections();
+    
+        const promises = [];
+    
+        for (const collection of collections) {
+            const promise = actions.refreshNftCollection(collection.id);
+            promises.push(promise);
+        }
+    
+        return Promise.all(promises);
+    },
+    
+    refreshNftCollection: async (id: string) => {
+        const { contractId } = state.nested(id).get();
+        const accountId = getStore('Setting').state.currentAccountId.get();
+        const networkId = getStore('Setting').state.currentAccountId.get();
+        const tokenIds = await getters.getNftOwnedTokenIds(contractId, accountId);
+
+        if (tokenIds.length > 0) {
+            console.log(`refresh nft collection`, contractId);
+
+            for (const tokenId of tokenIds) {
+                await getStore('Nft').actions.addNft({
+                    contractId,
+                    tokenId
+                });
+            }
+
+            const nfts = Object.values(getStore('Nft').state.get());
+            if (nfts.length > 0) {
+                for (const nft of nfts) {
+                    if (
+                        nft.id.includes(contractId) && 
+                        nft.id.includes(accountId) && 
+                        nft.id.includes(networkId) &&
+                        !tokenIds.includes(nft.tokenId)
+                    ) {
+                        getStore('Nft').state.nested(nft.id).set(none);
+                    }
+                }
+            }
+        }
+    }
 }
 
 const getters: INftCollectionGetters = {
@@ -124,7 +151,17 @@ const getters: INftCollectionGetters = {
         }
 
         return tokenIds;
-    }
+    },
+
+    getNftCollections: () => {
+        const accountId = getStore('Setting').state.currentAccountId.get();
+        const networkId = getStore('Setting').state.currentNetworkId.get();
+
+        return Object.values(state.get({noproxy: true})).filter(collection => 
+            collection.networkId === networkId &&
+            collection.accountId === accountId
+        );
+    },
 }
 
 export default {

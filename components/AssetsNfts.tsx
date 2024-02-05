@@ -1,9 +1,9 @@
 import { View, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme, useNftCollections, useI18n } from '../hooks';
-import { Button, ButtonCircle } from '.';
+import { ButtonCircle } from '.';
 import { AssetsNavigationProp, } from '../types/navigation';
-import { Feather, AntDesign } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import NftListItem from './NftListItem';
 import { SheetManager } from 'react-native-actions-sheet';
 import { Nft, NftCollection } from '../types/store';
@@ -20,7 +20,7 @@ export default () => {
 
   const _refresh = async () => {
     setRefreshing(true);
-    await NftStore.actions.refreshTokens();
+    await NftCollectionStore.actions.refreshNftCollections();
     setRefreshing(false);
   };
 

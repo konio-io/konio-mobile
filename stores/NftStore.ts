@@ -73,19 +73,10 @@ const actions : INftActions = {
     },
     
     withdrawNftConfirm: async (id: string) => {
+        getStore('Mana').actions.refreshMana();
         actions.deleteNft(id);
         return true;
-    },
-
-    refreshTokens: async () => {
-        const collections = Object.values(getStore('NftCollection').state.get());
-        if (collections.length > 0) {
-            for (const collection of collections) {
-                console.log('refresh nft', collection.contractId);
-                await getStore('NftCollection').actions.refreshTokens(collection.contractId);
-            }
-        }
-    },
+    }
 }
 
 const getters : INftGetters = {

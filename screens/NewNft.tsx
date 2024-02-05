@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NewCoinNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
-import { TextInput, Button, Screen, Text } from '../components';
+import { TextInput, Button, Screen, Text, TextInputActionPaste } from '../components';
 import { useCurrentNetwork, useI18n, useNftCollections } from '../hooks';
 import { View, Keyboard, FlatList, TouchableOpacity, Image } from 'react-native';
 import { useTheme } from '../hooks';
@@ -43,8 +43,8 @@ export default () => {
 
     try {
 
-      await NftCollectionStore.actions.addNftCollection(contractId);
-      await NftCollectionStore.actions.refreshTokens(contractId);
+      const collection = await NftCollectionStore.actions.addNftCollection(contractId);
+      await NftCollectionStore.actions.refreshNftCollection(collection.id);
 
       SpinnerStore.actions.hideSpinner();
       navigation.goBack();
@@ -114,6 +114,9 @@ export default () => {
           placeholder={i18n.t('contract_address')}
           onStopWriting={(v: string) => _onStopWriting(v.trim())}
           loading={textLoading}
+          actions={(
+            <TextInputActionPaste onPaste={(v: string) => setContractId(v.trim())} />
+          )}
         />
       </View>
 

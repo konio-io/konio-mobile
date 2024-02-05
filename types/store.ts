@@ -214,15 +214,17 @@ export type NftCollection = {
 export type NftCollectionState = Record<string, NftCollection>
 
 export interface INftCollectionActions {
-    refreshTokens: (contractId: string) => Promise<void>;
     addNftCollection: (contractId: string) => Promise<NftCollection>;
     deleteNftCollection: (id: string) => void;
+    refreshNftCollections: () => Promise<void[]>;
+    refreshNftCollection: (id: string) => Promise<any>;
 }
 
 export interface INftCollectionGetters {
     getNftContract: (contractId: string) => Promise<any>;
     nftCollectionId: (accountId: string, networkId: string, contractId: string) => string;
     getNftOwnedTokenIds: (contractId: string, accountId: string) => Promise<Array<string>>;
+    getNftCollections: () => Array<NftCollection>;
 }
 
 export interface INftCollectionStore {
@@ -263,7 +265,6 @@ export interface INftActions {
         receipt?: TransactionReceipt | undefined;
     }>;
     withdrawNftConfirm: (id: string) => Promise<boolean>;
-    refreshTokens: () => Promise<void>;
 }
 
 export interface INftGetters {
