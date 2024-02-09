@@ -1,7 +1,7 @@
 import { SessionTypes, SignClientTypes } from "@walletconnect/types";
 import { IWeb3Wallet } from "@walletconnect/web3wallet";
 import { State } from "@hookstate/core";
-import { Abi, OperationJson, SendTransactionOptions, TransactionJson, TransactionJsonWait, TransactionReceipt } from "koilib/lib/interface";
+import { Abi, OperationJson, SendTransactionOptions, TransactionJson, TransactionJsonWait, TransactionOptions, TransactionReceipt } from "koilib/lib/interface";
 import { Contract, Provider, Signer } from "koilib";
 
 /**
@@ -216,11 +216,15 @@ export type NftCollectionState = Record<string, NftCollection>
 export interface INftCollectionActions {
     addNftCollection: (contractId: string) => Promise<NftCollection>;
     deleteNftCollection: (id: string) => void;
+    refreshNftCollections: () => Promise<void[]>;
+    refreshNftCollection: (id: string) => Promise<any>;
 }
 
 export interface INftCollectionGetters {
     getNftContract: (contractId: string) => Promise<any>;
     nftCollectionId: (accountId: string, networkId: string, contractId: string) => string;
+    getNftOwnedTokenIds: (contractId: string, accountId: string) => Promise<Array<string>>;
+    getNftCollections: () => Array<NftCollection>;
 }
 
 export interface INftCollectionStore {
@@ -269,6 +273,7 @@ export interface INftGetters {
         tokenId: string;
     }) => Promise<any>;
     nftId: (accountId: string, networkId: string, contractId: string, tokenId: string) => string;
+    tokenId: (nftId: string) => string;
 }
 
 export interface INftStore {
@@ -512,6 +517,7 @@ export interface IKoinGetters {
     fetchContract: (contractId: string) => Promise<Contract>;
     getProvider: () => Provider;
     getSigner: () => Signer;
+    getTransactionOptions: () => Promise<TransactionOptions>
 }
 
 export interface IKoinStore {

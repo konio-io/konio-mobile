@@ -20,15 +20,6 @@ export default (props: SheetProps<{
     const i18n = useI18n();
     const navigation = useNavigation<HoldingsNavigationProp>();
     const nft = NftStore.state.nested(nftId).get();
-    
-    const _delete = () => {
-        navigation.navigate('Holdings', {
-            screen: 'Assets'
-        });
-        setTimeout(() => {
-            NftStore.actions.deleteNft(nftId);
-        }, 1000)
-    };
 
     const _copyContractId = async () => {
         await Clipboard.setStringAsync(nft.contractId);
@@ -55,14 +46,9 @@ export default (props: SheetProps<{
         },
         {
             title: i18n.t('token_id'),
-            description: nft.tokenId,
+            description: `${NftStore.getters.tokenId(nft.id)} (${nft.tokenId})`,
             icon: <AntDesign name="codesquareo"/>,
             onPress: () => _copyTokenId()
-        },
-        {
-            title: i18n.t('delete'),
-            icon: <AntDesign name="delete"/>,
-            onPress: async () => _delete()
         },
         {
             title: i18n.t('send'),

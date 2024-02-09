@@ -31,8 +31,6 @@ const actions : INftActions = {
             tokenId
         });
     
-        //to do check owner_of
-    
         const id = getters.nftId(accountId, networkId, contractId, tokenId);
 
         const nft: Nft = {
@@ -53,12 +51,7 @@ const actions : INftActions = {
     
     deleteNft: (id: string) => {
         const nft = state.nested(id);
-        const nftCollectionId = nft.nftCollectionId.get({noproxy: true});
         nft.set(none);
-        const nftsInSameCollection = Object.values(state.get()).filter(nft => nft.nftCollectionId === nftCollectionId);
-        if (nftsInSameCollection.length === 0) {
-            getStore('NftCollection').actions.deleteNftCollection(nftCollectionId);
-        }
     },
     
     withdrawNft: async (args: {
@@ -70,31 +63,31 @@ const actions : INftActions = {
         const nft = state.nested(args.id).get();
         
         const contract = await getStore('Koin').getters.fetchContract(nft.contractId);
-        const tokenIdHex = "0x" + utils.toHexString(new TextEncoder().encode(nft.tokenId));
+        const transactionOptions = await getStore('Koin').getters.getTransactionOptions();
     
         return contract.functions.transfer({
             from: currentAddress,
             to: args.to,
-            token_id: tokenIdHex
-        });
+            token_id: nft.tokenId
+        }, transactionOptions);
     },
     
     withdrawNftConfirm: async (id: string) => {
+        getStore('Mana').actions.refreshMana();
         actions.deleteNft(id);
         return true;
-    },
+    }
 }
 
 const getters : INftGetters = {
     fetchNft: async (args: {
         uri: string,
-        tokenId: string
+        tokenId: string //hexString
     }) => {
         const { uri, tokenId } = args;
         const url = convertIpfsToHttps(uri, DEFAULT_IPFS_GATEWAY);
-        const tokenIdHex = "0x" + utils.toHexString(new TextEncoder().encode(tokenId));
     
-        const dataResponse = await fetch(`${url}/${tokenIdHex}`);
+        const dataResponse = await fetch(`${url}/${tokenId}`);
         if (!dataResponse) {
             throw new Error(`Unable to retrieve NFT url ${url}/${tokenId}`);
         }
@@ -109,6 +102,11 @@ const getters : INftGetters = {
     
     nftId: (accountId: string, networkId: string, contractId: string, tokenId: string) => {
         return [accountId, networkId, contractId, tokenId].join('/');
+    },
+
+    tokenId: (nftId: string) => {
+        const tokenIdHex = getStore('Nft').state.nested(nftId).tokenId.get();
+        return new TextDecoder().decode(utils.toUint8Array(tokenIdHex))
     }
 }
 

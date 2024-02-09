@@ -26,7 +26,7 @@ export default (props: {
                 borderRadius: Border.radius
             }}
         >
-            <NftImage nft={props.nft} width={100} height={100} showId={true}/>
+            <NftImage nft={props.nft} width={100} height={100} showId={false}/>
 
             {
                 selected === true &&

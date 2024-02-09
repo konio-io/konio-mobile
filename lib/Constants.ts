@@ -84,3 +84,4 @@ export const CATEGORY_COINS = 'coins';
 export const CATEGORY_NFTS = 'nfts';
 export const DEFAULT_IPFS_GATEWAY = 'https://${ipfsHash}.ipfs.nftstorage.link';
 export const DISCOVERY_RSS = "https://medium.com/feed/@konio_io";
+export const KOLLECTION_OWNERSHIP_API_URL = "https://kollection.app/api/v1/nfts_by_owner";

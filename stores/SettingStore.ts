@@ -13,8 +13,8 @@ export const SETTING_STORE_DEFAULT = {
     theme: OS_THEME,
     biometric: false,
     autolock: -1,
-    maxMana: 100,
-    version: '20240117',
+    maxMana: 10,
+    version: '20240204',
     askReview: false
 };
 
@@ -32,12 +32,14 @@ const actions : ISettingActions = {
         state.currentAccountId.set(accountId);
         getStore('Coin').actions.refreshCoins({balance: true, price: true});
         getStore('Mana').actions.refreshMana();
+        //refreshNftCollections
     },
     
     setCurrentNetwork: (networkId: string) => {
         state.currentNetworkId.set(networkId);
         getStore('Coin').actions.refreshCoins({balance: true, price: true});
         getStore('Mana').actions.refreshMana();
+        //refreshNftCollections
     },
     
     setLocale: (locale: string) => {

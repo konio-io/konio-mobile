@@ -70,15 +70,6 @@ const actions : ICoinActions = {
         if (!contract.abi) {
             throw new Error("Contract abi not found");
         }
-
-        const rcLimit = getStore('Mana').getters.getRcLimit();
-        const currentPayerAddress = getStore('Mana').state.payer.get();
-                
-        /**
-         * If payer is free mana set payee as current account
-         */
-        const currentPayer = getStore('Payer').state.nested(currentPayerAddress).get();
-        const payee = (currentPayer && currentPayer.free === true) ? address : undefined;
     
         // optional: preformat input/output
         //contract.abi.methods.balance_of.preformat_argument = (owner) => ({  owner,});
@@ -91,14 +82,11 @@ const actions : ICoinActions = {
             };
         }
     
+        const transactionOptions = await getStore('Koin').getters.getTransactionOptions();
         const { transaction, receipt } = await contract.functions.transfer({
             to,
             value,
-        }, {
-            rcLimit: rcLimit.toString(),
-            payer: currentPayerAddress,
-            payee
-        });
+        }, transactionOptions);
     
         if (!transaction || !transaction.id) {
             throw new Error("Error during transaction, not return transaction or its id");

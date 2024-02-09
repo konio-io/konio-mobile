@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NewCoinNavigationProp } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
-import { TextInput, Button, Screen, Text } from '../components';
+import { TextInput, Button, Screen, Text, TextInputActionPaste } from '../components';
 import { useCoins, useCurrentNetwork, useI18n } from '../hooks';
 import { Keyboard, View, TouchableOpacity, Image, FlatList } from 'react-native';
 import { useTheme } from '../hooks';
@@ -90,6 +90,9 @@ export default () => {
           value={contractId}
           onChangeText={(v: string) => setContractId(v.trim())}
           placeholder={i18n.t('contract_address')}
+          actions={(
+            <TextInputActionPaste onPaste={(v: string) => setContractId(v.trim())} />
+          )}
         />
       </View>
 

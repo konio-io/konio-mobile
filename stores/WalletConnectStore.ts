@@ -98,80 +98,94 @@ const actions : IWalletConnectActions = {
         if (!wallet) {
             throw new Error("W3 Wallet not available");
         }
-    
+
         const { params, id, topic } = sessionRequest;
         const { request } = params;
         const provider = getStore('Koin').getters.getProvider();
-        let result: any = null;
-    
-        switch (request.method) {
-            case WC_METHODS.SIGN_MESSAGE:
-                result = await getStore('Koin').actions.signMessage(request.params.message);
-                break;
-            case WC_METHODS.SIGN_HASH:
-                result = await getStore('Koin').actions.signHash(request.params.hash);
-                break;
-            case WC_METHODS.PREPARE_TRANSACTION:
-                result = await getStore('Koin').actions.prepareTransaction(request.params.transaction);
-                break;
-            case WC_METHODS.SIGN_TRANSACTION:
-                result = await getStore('Koin').actions.signTransaction(request.params.transaction, request.params.options?.abis);
-                break;
-            case WC_METHODS.SEND_TRANSACTION:
-                result = await getStore('Koin').actions.sendTransaction(request.params.transaction, request.params.options);
-                break;
-            case WC_METHODS.SIGN_AND_SEND_TRANSACTION:
-                result = await getStore('Koin').actions.signAndSendTransaction(request.params.transaction, request.params.options);
-                break;
-            case WC_METHODS.WAIT_FOR_TRANSACTION:
-                result = await getStore('Koin').actions.waitForTransaction(request.params.transactionId, request.params.type, request.params.timeout);
-                getStore('Mana').actions.refreshMana();
-                getStore('Coin').actions.refreshCoins({balance: true});
-                break;
-            case WC_METHODS.READ_CONTRACT:
-                result = await provider?.readContract(request.params.operation);
-                break;
-            case WC_METHODS.JSON_RPC_CALL:
-                result = await provider?.call(request.params.method, request.params.params);
-                break;
-            case WC_METHODS.GET_NONCE:
-                result = await provider?.getNonce(request.params.address);
-                break;
-            case WC_METHODS.GET_NEXT_NONCE:
-                result = await provider?.getNextNonce(request.params.address);
-                break;
-            case WC_METHODS.GET_ACCOUNT_RC:
-                result = await provider?.getAccountRc(request.params.address);
-                break;
-            case WC_METHODS.GET_TRANSACTIONS_BY_ID:
-                result = await provider?.getTransactionsById(request.params.transactionIds);
-                break;
-            case WC_METHODS.GET_BLOCKS_BY_ID:
-                result = await provider?.getBlocksById(request.params.blockIds);
-                break;
-            case WC_METHODS.GET_HEAD_INFO:
-                result = await provider?.getHeadInfo();
-                break;
-            case WC_METHODS.GET_CHAIN_ID:
-                result = await provider?.getChainId();
-                break;
-            case WC_METHODS.GET_BLOCKS:
-                result = await provider?.getBlocks(request.params.height, request.params.numBlocks, request.params.idRef);
-                break;
-            case WC_METHODS.GET_BLOCK:
-                result = await provider?.getBlock(request.params.height);
-                break;
-            case WC_METHODS.SUBMIT_BLOCK:
-                result = await provider?.submitBlock(request.params.block);
-                break;
-        }
-    
-        if (result !== null) {
+
+        try {
+            let result: any = null;
+
+            switch (request.method) {
+                case WC_METHODS.SIGN_MESSAGE:
+                    result = await getStore('Koin').actions.signMessage(request.params.message);
+                    break;
+                case WC_METHODS.SIGN_HASH:
+                    result = await getStore('Koin').actions.signHash(request.params.hash);
+                    break;
+                case WC_METHODS.PREPARE_TRANSACTION:
+                    result = await getStore('Koin').actions.prepareTransaction(request.params.transaction);
+                    break;
+                case WC_METHODS.SIGN_TRANSACTION:
+                    result = await getStore('Koin').actions.signTransaction(request.params.transaction, request.params.options?.abis);
+                    break;
+                case WC_METHODS.SEND_TRANSACTION:
+                    result = await getStore('Koin').actions.sendTransaction(request.params.transaction, request.params.options);
+                    break;
+                case WC_METHODS.SIGN_AND_SEND_TRANSACTION:
+                    result = await getStore('Koin').actions.signAndSendTransaction(request.params.transaction, request.params.options);
+                    break;
+                case WC_METHODS.WAIT_FOR_TRANSACTION:
+                    result = await getStore('Koin').actions.waitForTransaction(request.params.transactionId, request.params.type, request.params.timeout);
+                    getStore('Mana').actions.refreshMana();
+                    getStore('Coin').actions.refreshCoins({balance: true});
+                    break;
+                case WC_METHODS.READ_CONTRACT:
+                    result = await provider?.readContract(request.params.operation);
+                    break;
+                case WC_METHODS.JSON_RPC_CALL:
+                    result = await provider?.call(request.params.method, request.params.params);
+                    break;
+                case WC_METHODS.GET_NONCE:
+                    result = await provider?.getNonce(request.params.address);
+                    break;
+                case WC_METHODS.GET_NEXT_NONCE:
+                    result = await provider?.getNextNonce(request.params.address);
+                    break;
+                case WC_METHODS.GET_ACCOUNT_RC:
+                    result = await provider?.getAccountRc(request.params.address);
+                    break;
+                case WC_METHODS.GET_TRANSACTIONS_BY_ID:
+                    result = await provider?.getTransactionsById(request.params.transactionIds);
+                    break;
+                case WC_METHODS.GET_BLOCKS_BY_ID:
+                    result = await provider?.getBlocksById(request.params.blockIds);
+                    break;
+                case WC_METHODS.GET_HEAD_INFO:
+                    result = await provider?.getHeadInfo();
+                    break;
+                case WC_METHODS.GET_CHAIN_ID:
+                    result = await provider?.getChainId();
+                    break;
+                case WC_METHODS.GET_BLOCKS:
+                    result = await provider?.getBlocks(request.params.height, request.params.numBlocks, request.params.idRef);
+                    break;
+                case WC_METHODS.GET_BLOCK:
+                    result = await provider?.getBlock(request.params.height);
+                    break;
+                case WC_METHODS.SUBMIT_BLOCK:
+                    result = await provider?.submitBlock(request.params.block);
+                    break;
+            }
+        
+            if (result === null) {
+                throw {error: "empty_response", logs: ["No response from execution"]};
+            }
+
             const response = formatJsonRpcResult(id, result);
             await wallet.respondSessionRequest({
                 topic,
                 response,
             });
+
+        //KONIO respond ALWAYS to walletconnect request, even if there is an error
+        } catch (e: any) {
+            const response = formatJsonRpcError(id, e.toString());
+            await wallet.respondSessionRequest({
+                topic,
+                response,
+            });
+            throw e;
         }
     },
     

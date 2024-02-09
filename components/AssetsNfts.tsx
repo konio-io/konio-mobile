@@ -1,6 +1,6 @@
-import { View, ScrollView, TouchableOpacity } from 'react-native';
+import { View, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useTheme, useNftCollections } from '../hooks';
+import { useTheme, useNftCollections, useI18n } from '../hooks';
 import { ButtonCircle } from '.';
 import { AssetsNavigationProp, } from '../types/navigation';
 import { Feather } from '@expo/vector-icons';
@@ -8,16 +8,24 @@ import NftListItem from './NftListItem';
 import { SheetManager } from 'react-native-actions-sheet';
 import { Nft, NftCollection } from '../types/store';
 import Text from './Text';
-import { NftStore } from '../stores';
+import { NftCollectionStore, NftStore } from '../stores';
 import { useHookstate } from '@hookstate/core';
+import { useState } from 'react';
 
 export default () => {
   const theme = useTheme();
   const styles = theme.styles;
   const data = useNftCollections();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const _refresh = async () => {
+    setRefreshing(true);
+    await NftCollectionStore.actions.refreshNftCollections();
+    setRefreshing(false);
+  };
 
   if (data.length === 0) {
-    return <Footer/>;
+    return <Footer />;
   }
 
   data.sort((a, b) => {
@@ -26,6 +34,9 @@ export default () => {
 
   return (
     <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={_refresh} />
+      }
       contentContainerStyle={{
         ...styles.alignCenterColumn,
         rowGap: theme.vars.Spacing.medium
@@ -48,30 +59,45 @@ export default () => {
 const NftCollectionListItem = (props: {
   nftCollection: NftCollection
 }) => {
-  const { styles, vars } = useTheme();
+  const { styles } = useTheme();
   const nfts = useHookstate(NftStore.state).get();
   const data = Object.values(nfts).filter(nft => nft.nftCollectionId === props.nftCollection.id);
+  const i18n = useI18n();
 
   return (
-    <View style={{
-      width: 330,
-      ...styles.rowGapSmall
-    }}>
-      <Text style={styles.textMedium}>
-        {props.nftCollection.name}
-      </Text>
-
+    <TouchableOpacity
+      onLongPress={() => {
+        SheetManager.show('nft_collection', { payload: { nftCollectionId: props.nftCollection.id } });
+      }}
+    >
       <View style={{
-        ...styles.directionRow,
-        ...styles.columnGapBase,
-        ...styles.rowGapBase,
-        flexWrap: 'wrap'
+        width: 330,
+        ...styles.rowGapSmall
       }}>
-        {
-          data.map(nft => <TouchableNftListItem key={nft.id} nft={nft} />)
-        }
+
+        <Text style={styles.textMedium}>
+          {props.nftCollection.name}
+        </Text>
+
+
+        <View style={{
+          ...styles.directionRow,
+          ...styles.columnGapBase,
+          ...styles.rowGapBase,
+          flexWrap: 'wrap'
+        }}>
+          {
+            data.length > 0 && data.map(nft => <TouchableNftListItem key={nft.id} nft={nft} />)
+          }
+          {
+            data.length === 0 &&
+            <View style={{...styles.alignCenterColumn, width: '100%'}}>
+              <Text>{i18n.t('no_assets')}</Text>
+            </View>
+          }
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 
