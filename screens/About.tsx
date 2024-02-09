@@ -36,11 +36,19 @@ export default () => {
                         <FontAwesome5 name="discord" size={24} color={rgba(theme.vars.Color.baseContrast, 0.4)} />
                     </TouchableOpacity>
                 </View>
-
+                
                 <View style={styles.alignCenterColumn}>
                     <Link text={i18n.t('terms_of_service')} onPress={() => Linking.openURL(TERMS_URL)}></Link>
                     <Link text={i18n.t('privacy_policy')} onPress={() => Linking.openURL(PRIVACY_URL)}></Link>
                 </View>
+
+                <View style={styles.alignCenterColumn}>
+                    <Text>Credits</Text>
+                    <Link text="kollection.app" onPress={() => Linking.openURL('https://kollection.app')} />
+                    <Link text="koincrew.com" onPress={() => Linking.openURL('https://koincrew.app')} />
+                </View>
+
+
             </Wrapper>
         </Screen>
     )
